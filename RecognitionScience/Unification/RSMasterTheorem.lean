@@ -51,40 +51,28 @@ open Foundation.QuarkColors
 
 /-! ## Part 1: The Primitive (T0) -/
 
-/-- **T0: Logic is the foundation**
     
     The Recognition Composition Law (RCL) is the single primitive.
     All else derives from this. -/
-theorem T0_logic_primitive : True := trivial
 
 /-! ## Part 2: The Forcing Chain (T1-T5) -/
 
-/-- **T1: Meta-Principle (MP)**
     
     MP = "Recognize the pattern, not memorize the instance."
     This forces the cost function structure. -/
-theorem T1_meta_principle : True := trivial
 
-/-- **T2: Discreteness**
     
     MP forces discrete structure (continuous is the limit). -/
-theorem T2_discreteness : True := trivial
 
-/-- **T3: Ledger**
     
     Discreteness forces a ledger (state recording structure). -/
-theorem T3_ledger : True := trivial
 
-/-- **T4: Recognition**
     
     The ledger supports recognition (pattern matching). -/
-theorem T4_recognition : True := trivial
 
-/-- **T5: J-Cost Uniqueness**
     
     J(x) = ½(x + 1/x) - 1 is the unique cost function satisfying
     J(x) = J(1/x) and minimality at x=1. -/
-theorem T5_j_uniqueness : True := trivial
 
 /-! ## Part 3: The Core Forcing (T6-T8) -/
 
@@ -180,21 +168,15 @@ theorem three_neutrino_masses : face_pairs D_physical = 3 := by
 
 /-! ## Part 6: Cosmology from Ledger -/
 
-/-- **Flatness**: Ω_total = 1 (no fine-tuning) -/
-theorem flatness_omega_one : True := trivial
 
 /-- **No Singularity**: Discrete ledger prevents r=0.
     The minimum cost unit E_coh = φ⁻⁵ > 0 prevents zero-radius states.
     **Proved**: E_coh > 0 ensures the minimum energy is always positive. -/
 theorem no_big_bang_singularity : Constants.E_coh > 0 := Constants.E_coh_pos
 
-/-- **Inflation**: 8-tick synchronization phase.
     The 8-tick cycle forces quantized expansion steps with φ-ladder spacing. -/
-theorem inflation_from_8tick : True := trivial
 
-/-- **Dark Matter**: Substrate (not particles).
     The RS dark substrate has positive recognition cost. -/
-theorem dark_matter_is_substrate : True := trivial
 
 /-- **Dark Energy**: Λ = 11/16 - α/π > 0.
     **Proved**: Ω_Λ = 11/16 - α/π > 0, consistent with observations Ω_Λ ≈ 0.7. -/
@@ -269,7 +251,6 @@ theorem rs_unification_complete : ∃ _ : RSMasterCert, True :=
 
 /-! ## Part 9: Falsification Criteria -/
 
-/-- **FALSIFICATION OF RS FRAMEWORK**
     
     The RS framework is falsified if any of the following are observed:
     
@@ -283,11 +264,9 @@ theorem rs_unification_complete : ∃ _ : RSMasterCert, True :=
     8. **Non-emergent gravity**: Detection of fundamental graviton
     
     **Status**: All 8 criteria testable; none currently violated. -/
-theorem falsification_criteria : True := trivial
 
 /-! ## Summary -/
 
-/-- **THE RECOGNITION SCIENCE FRAMEWORK**
     
     **Primitive**: Recognition Composition Law (RCL)
     **Forcing Chain**: T0 → T1 → T2 → T3 → T4 → T5 → T6 → T7 → T8
@@ -300,7 +279,6 @@ theorem falsification_criteria : True := trivial
     
     **The RS framework is a complete, falsifiable, zero-parameter
     theory of fundamental physics and mathematics.** -/
-theorem rs_framework_complete : True := trivial
 
 end RSMasterTheorem
 end Unification

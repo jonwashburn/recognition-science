@@ -79,7 +79,6 @@ theorem G_si_value : ∃ (G_SI : ℝ), G_SI > 6e-11 ∧ G_SI < 7e-11 := by
 
 /-! ## Section G-002: Nature of Spacetime -/
 
-/-- **G-002**: Spacetime is emergent from ledger density.
     
     **Problem**: What is spacetime? Fundamental or emergent?
     Continuum or discrete?
@@ -96,21 +95,15 @@ theorem G_si_value : ∃ (G_SI : ℝ), G_SI > 6e-11 ∧ G_SI < 7e-11 := by
     of the discrete ledger.
     
     **Status**: DERIVED — Emergent spacetime from ILG. -/
-theorem spacetime_is_emergent : True := trivial
 
-/-- **G-002 Corollary**: The continuum is an approximation.
     At the Planck scale (ℓ₀ = 1), spacetime is discrete.
     
     This resolves the "problem of the continuum" (Einstein). -/
-theorem continuum_is_approximation : True := trivial
 
-/-- **G-002 Formula**: Metric g_μν = ⟨ledger_density⟩ × J-cost_structure
     The metric emerges from averaging the discrete ledger. -/
-theorem metric_from_ledger : True := trivial
 
 /-! ## Section G-003: Information Paradox Resolution -/
 
-/-- **G-003**: No information paradox in RS.
     
     **Problem**: Hawking radiation appears thermal. Where does
     the information go? Paradox: QM unitarity vs. BH evaporation.
@@ -126,16 +119,11 @@ theorem metric_from_ledger : True := trivial
     not from the discrete ledger.
     
     **Status**: DERIVED — Information preserved in ledger. -/
-theorem no_information_paradox : True := trivial
 
-/-- **G-003 Resolution**: Information is preserved in the ledger
     substrate. Hawking radiation correlations encode the BH interior. -/
-theorem information_preserved_in_ledger : True := trivial
 
-/-- **G-003 Corollary**: The Page curve is natural in RS.
     Entropy first increases (BH formation), then decreases
     (evaporation + information release). -/
-theorem page_curve_natural : True := trivial
 
 /-! ## Section G-004: Black Hole Entropy -/
 
@@ -159,17 +147,12 @@ theorem bh_entropy_ledger_capacity :
   use 1.0
   positivity
 
-/-- **G-004 Formula**: S_BH/A = 1/(4G) = π/(4φ⁵)
     This matches the Bekenstein-Hawking formula. -/
-theorem entropy_area_formula : True := trivial
 
-/-- **G-004 Microstates**: The microstates are the 2^(A/ℓ₀²)
     ledger configurations on the horizon surface. -/
-theorem microstates_count : True := trivial
 
 /-! ## Section G-005: Firewall Paradox Resolution -/
 
-/-- **G-005**: No firewall paradox in RS.
     
     **Problem**: If information escapes, the horizon must
     be "hot" (firewall). But equivalence principle says
@@ -188,20 +171,14 @@ theorem microstates_count : True := trivial
     divergence.
     
     **Status**: DERIVED — Smooth horizon from ILG. -/
-theorem no_firewall : True := trivial
 
-/-- **G-005 Resolution**: The horizon is smooth because the
     discrete ledger prevents the divergences that lead
     to the firewall argument. -/
-theorem smooth_horizon : True := trivial
 
-/-- **G-005 Corollary**: Equivalence principle preserved.
     Free-fallers see nothing special at horizon. -/
-theorem equivalence_principle_preserved : True := trivial
 
 /-! ## Section G-006: Holographic Principle -/
 
-/-- **G-006**: Holography automatic in D=3.
     
     **Problem**: Why does the holographic principle hold?
     Why does D-dimensional bulk have D-1 dimensional
@@ -219,23 +196,17 @@ theorem equivalence_principle_preserved : True := trivial
     physics is projected.
     
     **Status**: DERIVED — Holography from D=3 forcing. -/
-theorem holography_automatic : True := trivial
 
-/-- **G-006 Formula**: Bulk physics in D dimensions =
     Boundary physics in D-1 dimensions =
     3D ledger structure with φ-ladder organization
     
     All equivalent descriptions of the same ledger. -/
-theorem bulk_boundary_equivalence : True := trivial
 
-/-- **G-006 Corollary**: AdS/CFT is natural in RS.
     The CFT is the boundary ledger, AdS is emergent
     curvature from J-cost. -/
-theorem ads_cft_natural : True := trivial
 
 /-! ## Section G-007: Singularity Resolution -/
 
-/-- **G-007**: No singularities in RS.
     
     **Problem**: GR predicts singularities (r=0 in Schwarzschild,
     Big Bang). Physics breaks down. What replaces them?
@@ -251,17 +222,12 @@ theorem ads_cft_natural : True := trivial
     Maximum curvature: R_max ~ 1/ℓ₀² = 1 (bounded)
     
     **Status**: DERIVED — Discrete ledger prevents singularities. -/
-theorem no_singularities : True := trivial
 
-/-- **G-007 Resolution**: Maximum curvature bounded by ℓ₀.
     The discrete structure prevents the infinities of GR. -/
-theorem curvature_bounded : True := trivial
 
-/-- **G-007 Corollary**: The "singularity theorems" of
     Penrose and Hawking are inapplicable to discrete
     spacetime. The conditions for the theorems (trapped
     surfaces with continuous geometry) are not satisfied. -/
-theorem singularity_theorems_inapplicable : True := trivial
 
 /-! ## Gravity Certificate -/
 
@@ -291,7 +257,6 @@ theorem gravity_cert_exists : ∃ _ : GravityCert, True := by
 
 /-! ## Summary -/
 
-/-- **RS Gravity Framework**: Gravity is emergent from the ledger:
     
     - G = φ⁵ (not free parameter)
     - Spacetime = ledger density topology
@@ -306,7 +271,6 @@ theorem gravity_cert_exists : ∃ _ : GravityCert, True := by
     
     **Falsifier**: Detection of a fundamental graviton (spin-2
     quantum) would challenge the emergent gravity framework. -/
-theorem gravity_framework_summary : True := trivial
 
 end GravityDerivation
 end Gravity

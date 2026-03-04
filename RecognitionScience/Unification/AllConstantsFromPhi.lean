@@ -239,7 +239,6 @@ theorem all_constants_cert_exists : ∃ _ : AllConstantsFromPhiCert, True := by
 
 /-! ## Section 8: Summary Table -/
 
-/-- **Constant Summary**: All fundamental constants from φ.
 
     | Constant | RS Value | SI Value | Formula |
     |----------|----------|----------|---------|
@@ -251,7 +250,6 @@ theorem all_constants_cert_exists : ∃ _ : AllConstantsFromPhiCert, True := by
     | m_e | 0.511 MeV | 0.511 MeV | yardstick·φ^(r_e-8+gap) |
     
     **Note**: SI values require calibration seam (single-anchor protocol). -/
-theorem constant_summary : True := trivial
 
 /-! ## Section 9: Falsification Criteria -/
 

@@ -92,8 +92,6 @@ structure MassRatioCert where
 theorem mass_ratio_cert_exists : ∃ _ : MassRatioCert, True := by
   refine ⟨⟨phi_6_bounds_mass_ratio.1, phi_6_bounds_mass_ratio.2⟩, trivial⟩
 
-/-- **SUMMARY**: All mass ratios derive from φ-ladder structure. -/
-theorem mass_ratios_summary : True := trivial
 
 end MassRatiosProved
 end Masses
