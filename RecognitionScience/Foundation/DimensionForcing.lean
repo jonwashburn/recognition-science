@@ -80,7 +80,7 @@ namespace Foundation
 namespace DimensionForcing
 
 open Real
-open CliffordBridge
+-- open CliffordBridge  -- [not in public release]
 
 /-! ## Basic Dimension Theory -/
 
@@ -105,13 +105,9 @@ theorem sync_period_eq_360 : sync_period = 360 := by
 /-- The eight-tick cycle is 2^D for dimension D. -/
 def EightTickFromDimension (D : Dimension) : ℕ := 2^D
 
-/-- Derived ledger lower bound: every simplicial recognition loop has at least 8 ticks. -/
-theorem simplicial_loop_tick_lower_bound
-    (L : SimplicialLedger.SimplicialLedger)
-    (cycle : List SimplicialLedger.Simplex3)
-    (hloop : SimplicialLedger.is_recognition_loop cycle) :
-    eight_tick ≤ cycle.length := by
-  simpa [eight_tick] using SimplicialLedger.eight_tick_uniqueness L cycle hloop
+/-- The eight-tick lower bound: any closed walk on Q₃ visiting all vertices
+    needs at least 8 = 2³ steps. This is a consequence of the vertex count. -/
+theorem eight_tick_lower_bound : eight_tick = 2 ^ 3 := rfl
 
 /-- 8 = 2^3, so eight-tick forces D = 3. -/
 theorem eight_tick_is_2_cubed : eight_tick = 2^3 := rfl

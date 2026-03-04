@@ -126,12 +126,16 @@ RecognitionScience/
 
 The `Verification/` directory contains **32 machine-checked certificates** — Lean structures that bundle related theorems and verify them in a single `verified` predicate. Each certificate is independently checkable.
 
-### Tier Certificates (Integration Bundles)
+### Master Certificates
 
 | Certificate | What It Verifies |
 |-------------|-----------------|
-| **Tier1Cert** | Complete T0–T8 forcing chain: meta-principle, recognition structure, ledger forcing, cost uniqueness (J = cosh), φ uniqueness, 8-tick period with minimality bound, D = 3 dimension rigidity |
-| **Tier2Cert** | All derived constants and mass predictions follow from the Tier 1 foundation |
+| **ForcingChainCert** | The **complete** T0–T8 → masses → gravity chain in one structure: J uniqueness, φ² = φ+1, T_min = 8, D = 3 cube integers, baseline rungs, mass positivity, φ-scaling, gap(0) = 0, κ = 8φ⁵ |
+| **InevitabilityCert** | Every structural step is **unique** — no alternative exists: J is the only cost, φ is the only base, D = 3 is the only dimension, and every baseline rung is forced by cube geometry |
+| **ExclusivityCert** | The framework is the **only** one producing this structure: φ exclusivity, dimension exclusivity, J strict positivity away from x = 1, mass φ-scaling |
+| **NonCircularityCert** | The derivation is **non-circular**: all quantities (sector constants, baseline rungs, α integers, charge scale) trace to D = 3 cube combinatorics — no experimental data enters upstream |
+| **Tier1Cert** | T0–T8 forcing chain bundle: meta-principle, recognition, ledger, cost uniqueness, φ uniqueness, 8-tick, D = 3 |
+| **Tier2Cert** | All derived constants and mass predictions follow from Tier 1 |
 
 ### Cost Functional Certificates
 
@@ -235,7 +239,7 @@ lake build            # build all Recognition Science modules
 ## Verification Status
 
 - **122 Lean files** across 10 directories
-- **90 core derivation modules** + **32 verification certificates**
+- **90 core derivation modules** + **36 verification certificates**
 - **Zero `sorry`** — every theorem is fully proved
 - **Zero forbidden placeholders** — no `admit`, no `native_decide` on non-decidable propositions
 

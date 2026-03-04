@@ -187,32 +187,16 @@ theorem phi_unique_self_similar {r : ℝ} (hr_pos : 0 < r) (hr_eq : satisfies_go
     r = φ :=
   golden_constraint_unique hr_pos hr_eq
 
-/-! ## Discrete Ledger with Self-Similarity -/
+/-! ## Phi Forcing Theorem (self-contained version) -/
 
-/-- A discrete ledger structure (from LedgerForcing). -/
-structure DiscreteLedger where
-  /-- The ledger structure -/
-  ledger : LedgerForcing.Ledger
-  /-- A concrete discrete configuration space witnessing finite step structure. -/
-  discrete_space : DiscretenessForcing.DiscreteConfigSpace
+/-- **PHI FORCING THEOREM**: Any self-similar structure with scale ratio r > 0
+    satisfying the compositional constraint r² = r + 1 has r = φ.
 
-/-- Self-similarity property for a discrete ledger. -/
-def is_self_similar (_L : DiscreteLedger) (r : ℝ) : Prop :=
-  ∃ S : SelfSimilar, S.ratio = r
-
-/-! ## Phi Forcing Theorem -/
-
-/-- **PHI FORCING THEOREM**: In a self-similar discrete ledger, the scale ratio is φ.
-
-If:
-1. L is a discrete ledger (from DiscretenessForcing + LedgerForcing)
-2. L is self-similar with scale ratio r
-3. r satisfies the compositional constraint r² = r + 1
-
-Then: r = φ = (1 + √5)/2 -/
-theorem phi_forced (L : DiscreteLedger) (r : ℝ) (hr : is_self_similar L r) : r = φ := by
-  rcases hr with ⟨S, rfl⟩
-  exact golden_constraint_unique S.ratio_pos (self_similar_forces_golden_constraint S)
+This is the core uniqueness result: the golden ratio is the ONLY positive
+real number that is its own self-similar fixed point under the Fibonacci
+recurrence. -/
+theorem phi_forced (r : ℝ) (hr_pos : 0 < r) (hr_eq : r ^ 2 = r + 1) : r = φ :=
+  golden_constraint_unique hr_pos hr_eq
 
 /-! ## Consequences of φ -/
 
