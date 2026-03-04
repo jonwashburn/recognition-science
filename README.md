@@ -63,20 +63,54 @@ RecognitionScience/
 │   ├── HierarchyDissolution.lean     # No hierarchy problem
 │   ├── Determinism.lean              # Determinism from J-cost
 │   └── UnifiedForcingChain.lean      # T0–T8 chain
-├── Masses/
+├── Masses/                           # 26 files — complete mass framework
 │   ├── MassLaw.lean                  # m = A_s · φ^(r−8+gap(Z))
 │   ├── BaselineDerivation.lean       # r_e=2, r_q=4, r_ν=−54
-│   ├── Anchor.lean                   # Sector yardsticks
-│   ├── GapFunctionForcing.lean       # gap(Z) uniqueness
+│   ├── Anchor.lean                   # Sector yardsticks from cube geometry
+│   ├── AnchorDerivation.lean         # Full anchor chain derivation
+│   ├── GapFunctionForcing.lean       # gap(Z) = log_φ(1+Z/φ) uniqueness
 │   ├── MassRatiosProved.lean         # Mass ratios = φ^Δr
-│   └── ZMapForcing.lean              # Charge index Z-map
-├── Gravity/
+│   ├── MassHierarchy.lean            # Mass hierarchy structure
+│   ├── LeptonMassLadder.lean         # e/μ/τ mass ladder
+│   ├── JCostPerturbation.lean        # J-cost perturbation theory (1633 lines)
+│   ├── CoherenceExponent.lean        # E_coh = φ⁻⁵ derivation
+│   ├── ZMapForcing.lean              # Charge index Z-map
+│   ├── RungConstructor/              # Rung construction machinery
+│   ├── Ribbons/                      # Ribbon algebra for mass braids
+│   └── ...                           # + 13 more supporting modules
+├── Gravity/                          # 18 files — complete gravity framework
 │   ├── ZeroParameterGravity.lean     # κ = 8φ⁵, equivalence principle
 │   ├── EquivalencePrinciple.lean     # m_inertial = m_grav
 │   ├── NoGraviton.lean               # Gravity is emergent
 │   ├── PropagationSpeed.lean         # c_grav = c (exact)
-│   ├── ILGDerivation.lean            # Inherent Lattice Gravity
-│   └── GravityDerivation.lean        # G-001 through G-007
+│   ├── ILG.lean                      # Inherent Lattice Gravity core
+│   ├── ILGDerivation.lean            # ILG time-kernel, flat rotation curves
+│   ├── GravityDerivation.lean        # G-001 through G-007
+│   ├── GravityParameters.lean        # Complete parameter table (340 lines)
+│   ├── RunningG.lean                 # Running gravitational coupling
+│   ├── RunningGDerivation.lean       # Running G derivation chain
+│   ├── RotationILG.lean              # Galaxy rotation from ILG
+│   ├── BTFREmergence.lean            # Baryonic Tully-Fisher emergence
+│   ├── RAREmergence.lean             # Radial Acceleration Relation
+│   ├── CausalKernelChain.lean        # Causal kernel structure (305 lines)
+│   └── ...                           # + 4 more supporting modules
+├── Cost/
+│   ├── FunctionalEquation.lean       # RCL → d'Alembert → J uniqueness
+│   ├── JcostCore.lean                # J-cost core properties
+│   ├── AczelTheorem.lean             # Aczél smoothness theorem
+│   ├── Convexity.lean                # J strict convexity
+│   ├── Derivative.lean               # J derivatives and bounds
+│   ├── ClassicalResults.lean         # Classical functional equation results
+│   ├── Ndim/                         # N-dimensional cost extension (9 files)
+│   └── ...                           # Calibration, FixedPoint
+├── Physics/
+│   ├── ForcingChainUnification.lean  # Cost–φ consistency, zero-parameter structure
+│   └── ThreeGenerations.lean         # Three generations from D = 3
+├── Patterns/
+│   ├── GrayCycle.lean                # Gray code Hamiltonian cycle on Q₃
+│   └── ...                           # Pattern infrastructure
+├── Derivations/
+│   └── MassToLight.lean              # φ-power mass-to-light bridge
 ├── Unification/
 │   ├── RSMasterTheorem.lean          # Master theorem
 │   └── AllConstantsFromPhi.lean      # All constants from φ
@@ -200,8 +234,8 @@ lake build            # build all Recognition Science modules
 
 ## Verification Status
 
-- **71 Lean files** across 7 directories
-- **39 core derivation modules** + **32 verification certificates**
+- **122 Lean files** across 10 directories
+- **90 core derivation modules** + **32 verification certificates**
 - **Zero `sorry`** — every theorem is fully proved
 - **Zero forbidden placeholders** — no `admit`, no `native_decide` on non-decidable propositions
 
