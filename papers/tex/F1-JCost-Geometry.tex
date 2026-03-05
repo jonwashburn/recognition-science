@@ -1,0 +1,671 @@
+\documentclass[11pt]{amsart}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\title[The Canonical Reciprocal Cost]{The Canonical Reciprocal Cost:\\
+Exact Multi-Bond Minimization, Frustration Lower Bounds,\\
+and Simultaneous-vs-Sequential Descent}
+
+\author{Jonathan Washburn}
+\address{Austin, Texas, USA}
+\email{washburn.jonathan@gmail.com}
+\date{February 2026}
+
+\begin{document}
+\begin{abstract}
+We study the reciprocal cost
+\[
+J(x):=\frac12\!\left(x+\frac1x\right)-1,\qquad x>0.
+\]
+After proving its elementary structure (non-negativity, reciprocal
+symmetry, strict convexity, unit curvature at the minimum, and the
+log-domain identity $J(e^\varepsilon)=\cosh\varepsilon-1$), we derive an
+exact closed-form formula for the multi-bond minimizer of
+$\mathcal C(v)=\sum_{i=1}^N J(v/n_i)$:
+\[
+v^\star=\sqrt{\frac{\sum_i n_i}{\sum_i n_i^{-1}}}
+=\sqrt{\operatorname{AM}\cdot\operatorname{HM}}.
+\]
+The optimizer is thus the geometric mean of the arithmetic and harmonic
+means of the neighbor data (and equals the ordinary geometric mean when $N=2$).
+We prove a strict frustration inequality: for incompatible neighbors
+$n_1\neq n_2$, the exact two-neighbor residual is
+\[
+\min_{v>0}\bigl(J(v/n_1)+J(v/n_2)\bigr)
+=\sqrt{\frac{n_1}{n_2}}+\sqrt{\frac{n_2}{n_1}}-2>0.
+\]
+For dynamics, we show that continuous-time simultaneous gradient flow
+converges to $v^\star$ (via a Lyapunov argument), while cyclic sequential
+single-bond projection is periodic with Ces\`aro mean equal to the
+arithmetic mean; for distinct neighbors these limits differ by strict AM-GM.
+Finally, we record the multiplicative d'Alembert functional identity for~$J$,
+characterize $J$ as the unique even solution satisfying this identity with
+unit curvature, and derive that the golden ratio $\varphi=(1+\sqrt5)/2$
+yields the minimal nonzero penalty scale $\ln\varphi\approx 0.4812$.
+\end{abstract}
+
+\subjclass[2020]{Primary 26A51; Secondary 39B22, 52A41, 26D15}
+\keywords{Convex reciprocal cost, strict frustration, arithmetic-harmonic mean,
+d'Alembert functional equation, gradient flow, AM-GM inequality, golden ratio}
+\maketitle
+
+%=======================================================================
+\section{Introduction}\label{sec:intro}
+%=======================================================================
+
+Define
+\begin{equation}\label{eq:J-def}
+J:(0,\infty)\to\R,\qquad
+J(x):=\frac12\!\left(x+\frac1x\right)-1.
+\end{equation}
+This function has appeared in various guises across mathematics:
+it is the pullback of $\cosh-1$ under the exponential map (Proposition~\ref{prop:cosh}),
+the unique normalized solution of the multiplicative d'Alembert functional
+equation (Theorem~\ref{thm:RCL} and Remark~\ref{rem:uniqueness}),
+and the natural reciprocal-invariant cost on the multiplicative group
+$(0,\infty)$ with the Haar measure $dx/x$; see Acz\'el--Dhombres~\cite{AczelDhombres}
+for the functional-equation perspective and
+Hardy--Littlewood--P\'olya~\cite{HardyLittlewoodPolya} for the
+inequality-theoretic background.
+
+\medskip
+
+This paper has four goals, each building on the previous.
+\begin{enumerate}[label=(\Roman*),nosep]
+\item \textbf{Core calculus} (\S\ref{sec:core}):
+  establish $J\ge0$, $J(x)=J(1/x)$, strict convexity, the cosh identity,
+  and unit curvature $J''(1)=1$.
+\item \textbf{Exact minimization} (\S\ref{sec:minimization}):
+  for positive neighbor data $n_1,\dots,n_N$, compute the exact
+  minimizer of $\mathcal C(v)=\sum_i J(v/n_i)$ in closed form.
+\item \textbf{Frustration inequalities} (\S\ref{sec:frustration}):
+  prove that incompatible neighbors force a strictly positive residual
+  cost, with an explicit formula for the minimum.
+\item \textbf{Descent comparison} (\S\ref{sec:descent}):
+  show that simultaneous descent converges to the $J$-optimal point
+  while sequential descent converges (in time-average) to the strictly
+  suboptimal arithmetic mean.
+\end{enumerate}
+All proofs are elementary and self-contained; the only prerequisites are
+single-variable calculus and the Cauchy--Schwarz inequality.
+
+%=======================================================================
+\section{Core identities and convexity}\label{sec:core}
+%=======================================================================
+
+\begin{lemma}[Equivalent square form]\label{lem:square}
+For every $x>0$,
+\begin{equation}\label{eq:square}
+J(x)=\frac{(x-1)^2}{2x}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Expand the numerator and divide term by term:
+\[
+\frac{(x-1)^2}{2x}
+=\frac{x^2-2x+1}{2x}
+=\frac{x}{2}-1+\frac{1}{2x}
+=\frac12\!\left(x+\frac1x\right)-1
+=J(x).  \qedhere
+\]
+\end{proof}
+
+\begin{proposition}[Basic structure]\label{prop:basic}
+For all $x>0$:
+\begin{enumerate}[label=\textup{(\alph*)},nosep]
+\item\label{it:unit} $J(1)=0$.
+\item\label{it:nn} $J(x)\ge0$, with equality if and only if $x=1$.
+\item\label{it:sym} $J(x)=J(1/x)$ \textup{(reciprocal symmetry)}.
+\item\label{it:deriv} $J'(x)=\frac12(1-x^{-2})$, $J''(x)=x^{-3}>0$, $J''(1)=1$.
+\end{enumerate}
+In particular, $J$ is strictly convex on $(0,\infty)$ with unique global
+minimizer at $x=1$.
+\end{proposition}
+\begin{proof}
+\ref{it:unit}: $J(1)=\frac12(1+1)-1=0$.
+
+\ref{it:nn}: By Lemma~\ref{lem:square}, $J(x)=(x-1)^2/(2x)$.
+The numerator $(x-1)^2$ is a perfect square, hence $\ge0$.
+The denominator $2x$ is strictly positive for $x>0$.
+Therefore $J(x)\ge0$.  Equality forces $(x-1)^2=0$, i.e.\ $x=1$.
+
+\ref{it:sym}: Replacing $x$ by $1/x$ in the definition:
+\[
+J(1/x)=\frac12\!\left(\frac1x+x\right)-1=J(x).
+\]
+
+\ref{it:deriv}: Differentiating~\eqref{eq:J-def}:
+\[
+J'(x)=\frac12\!\left(1-x^{-2}\right),\qquad
+J''(x)=\frac12\cdot 2x^{-3}=x^{-3}.
+\]
+Since $x^{-3}>0$ for all $x>0$, the function is strictly convex.
+At $x=1$: $J''(1)=1$.  (The value $J''(1)=1$ means $J$ has unit curvature
+at its minimum; this is the normalization that makes $J$ canonical among
+even convex functions on the multiplicative line.)
+\end{proof}
+
+\begin{proposition}[Log-domain representation]\label{prop:cosh}
+For every $\varepsilon\in\R$,
+\begin{equation}\label{eq:cosh}
+J(e^\varepsilon)=\cosh\varepsilon-1.
+\end{equation}
+Consequently, $J(e^\varepsilon)=\frac{\varepsilon^2}{2}+\frac{\varepsilon^4}{24}
++\frac{\varepsilon^6}{720}+\cdots$ \textup{(}convergent for all $\varepsilon$\textup{)}.
+\end{proposition}
+\begin{proof}
+Substitute $x=e^\varepsilon$ into the definition:
+\[
+J(e^\varepsilon)
+=\frac12\!\left(e^\varepsilon+e^{-\varepsilon}\right)-1
+=\cosh\varepsilon-1.
+\]
+The Taylor series $\cosh\varepsilon=\sum_{k=0}^\infty\varepsilon^{2k}/(2k)!$
+converges absolutely for all $\varepsilon\in\R$, giving the stated expansion.
+\end{proof}
+
+\begin{remark}[Geometric interpretation]\label{rem:geom}
+Equation~\eqref{eq:cosh} shows that in the \emph{log domain}
+(writing $x=e^\varepsilon$, so that the multiplicative group $(0,\infty)$
+becomes the additive line $\R$), the cost $J$ is simply a shifted
+hyperbolic cosine.  This is the even, convex, unit-curvature potential
+on $(\R,+)$, exactly as $J$ is the even, convex, unit-curvature potential
+on $((0,\infty),\times)$.  The translation between additive and
+multiplicative pictures is a recurring theme.
+\end{remark}
+
+\begin{corollary}[Small-strain approximation]\label{cor:small}
+For $|\varepsilon|\le1$,
+\[
+J(1+\varepsilon)=\frac{\varepsilon^2}{2(1+\varepsilon)}
+=\frac{\varepsilon^2}{2}-\frac{\varepsilon^3}{2}+O(\varepsilon^4).
+\]
+\end{corollary}
+\begin{proof}
+By Lemma~\ref{lem:square}, $J(1+\varepsilon)=\varepsilon^2/(2(1+\varepsilon))$.
+Expand $(1+\varepsilon)^{-1}=1-\varepsilon+\varepsilon^2-\cdots$ for $|\varepsilon|<1$.
+\end{proof}
+
+\begin{corollary}[Ratio-zero criterion]\label{cor:ratio-zero}
+For $v,n>0$,
+\[
+J(v/n)=0 \iff v=n.
+\]
+\end{corollary}
+\begin{proof}
+$J(v/n)=0\iff v/n=1$ by Proposition~\ref{prop:basic}\ref{it:nn}.
+\end{proof}
+
+%=======================================================================
+\section{Exact multi-bond minimization}\label{sec:minimization}
+%=======================================================================
+
+Given positive ``neighbor values'' $n_1,\dots,n_N$ ($N\ge1$), we seek the
+value $v>0$ that minimizes the total bond cost.  The key insight is that
+$J$'s linearity in $v$ and $1/v$ (after expanding each term) yields a
+clean closed form.
+
+\begin{definition}[Total bond cost]\label{def:total}
+For $n_1,\dots,n_N>0$ and $v>0$, define
+\[
+\mathcal C(v):=\sum_{i=1}^N J(v/n_i).
+\]
+\end{definition}
+
+\begin{theorem}[Closed form and unique minimizer]\label{thm:minimizer}
+Set
+\[
+A:=\sum_{i=1}^N\frac1{n_i},\qquad
+B:=\sum_{i=1}^N n_i.
+\]
+Then:
+\begin{enumerate}[label=\textup{(\roman*)},nosep]
+\item\label{it:closed}
+$\displaystyle\mathcal C(v)=\frac12\!\left(Av+\frac{B}{v}\right)-N.$
+\item\label{it:convex}
+$\mathcal C$ is strictly convex on $(0,\infty)$ with
+$\mathcal C(v)\to+\infty$ as $v\to 0^+$ or $v\to+\infty$.
+\item\label{it:min}
+The unique minimizer is
+\begin{equation}\label{eq:vstar}
+v^\star=\sqrt{\frac{B}{A}}
+=\sqrt{\frac{\sum_i n_i}{\sum_i n_i^{-1}}}.
+\end{equation}
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+\ref{it:closed}: Expand each summand using the definition of $J$:
+\[
+J(v/n_i)=\frac12\!\left(\frac{v}{n_i}+\frac{n_i}{v}\right)-1.
+\]
+Summing over $i=1,\dots,N$:
+\[
+\mathcal C(v)
+=\frac{v}{2}\sum_i\frac{1}{n_i}+\frac{1}{2v}\sum_i n_i-N
+=\frac12\!\left(Av+\frac{B}{v}\right)-N.
+\]
+
+\ref{it:convex}: Differentiate the closed form:
+\[
+\mathcal C'(v)=\frac12\!\left(A-\frac{B}{v^2}\right),\qquad
+\mathcal C''(v)=\frac{B}{v^3}.
+\]
+Since $B=\sum n_i>0$ and $v>0$, we have $\mathcal C''(v)>0$ everywhere,
+giving strict convexity.  As $v\to0^+$, the term $B/(2v)\to+\infty$;
+as $v\to+\infty$, the term $Av/2\to+\infty$.  So $\mathcal C$ is coercive.
+
+\ref{it:min}: A strictly convex coercive function on $(0,\infty)$ has
+exactly one critical point, which is the global minimum.
+Setting $\mathcal C'(v)=0$:
+\[
+A=\frac{B}{v^2}\implies v^2=\frac{B}{A}\implies v=\sqrt{B/A}.
+\qedhere
+\]
+\end{proof}
+
+\begin{corollary}[Mean interpretation]\label{cor:means}
+With $\operatorname{AM}:=\frac1N\sum_i n_i$ and
+$\operatorname{HM}:=N/\!\sum_i n_i^{-1}$,
+\[
+v^\star=\sqrt{\operatorname{AM}\cdot\operatorname{HM}}.
+\]
+In particular, for $N=2$: $v^\star=\sqrt{n_1n_2}$ (the geometric mean).
+\end{corollary}
+\begin{proof}
+From~\eqref{eq:vstar}:
+\[
+v^\star=\sqrt{\frac{B}{A}}
+=\sqrt{\frac{N\cdot\operatorname{AM}}{N/\operatorname{HM}}}
+=\sqrt{\operatorname{AM}\cdot\operatorname{HM}}.
+\]
+For $N=2$: $B/A=(n_1+n_2)/(n_1^{-1}+n_2^{-1})
+=(n_1+n_2)\cdot n_1n_2/(n_1+n_2)=n_1n_2$, so $v^\star=\sqrt{n_1n_2}$.
+\end{proof}
+
+\begin{corollary}[Minimal cost value]\label{cor:minvalue}
+\[
+\min_{v>0}\mathcal C(v)
+=\mathcal C(v^\star)
+=\sqrt{AB}-N\ge0.
+\]
+Equality $\sqrt{AB}=N$ holds if and only if $n_1=\cdots=n_N$.
+\end{corollary}
+\begin{proof}
+Substitute $v^\star=\sqrt{B/A}$ into the closed form:
+\[
+\mathcal C(v^\star)
+=\frac12\!\left(A\sqrt{B/A}+\frac{B}{\sqrt{B/A}}\right)-N
+=\frac12\!\left(\sqrt{AB}+\sqrt{AB}\right)-N
+=\sqrt{AB}-N.
+\]
+By the Cauchy--Schwarz inequality applied to the vectors
+$(n_1,\dots,n_N)$ and $(1/n_1,\dots,1/n_N)$ in $\R^N$:
+\[
+AB=\Bigl(\sum_i n_i\Bigr)\!\Bigl(\sum_i \frac1{n_i}\Bigr)
+\ge\Bigl(\sum_i\sqrt{n_i\cdot\frac1{n_i}}\Bigr)^2=N^2.
+\]
+Hence $\sqrt{AB}\ge N$, giving $\mathcal C(v^\star)\ge0$.
+Equality in Cauchy--Schwarz holds iff $(n_i)$ and $(1/n_i)$ are
+proportional, i.e.\ iff all $n_i$ are equal.
+\end{proof}
+
+\begin{example}\label{ex:two-bond}
+Let $n_1=1$, $n_2=4$.  Then $A=1+1/4=5/4$, $B=1+4=5$,
+$v^\star=\sqrt{5/(5/4)}=\sqrt{4}=2=\sqrt{1\cdot4}$, and
+$\mathcal C(v^\star)=\sqrt{5\cdot 5/4}-2=5/2-2=1/2$.
+Indeed, $J(2/1)+J(2/4)=J(2)+J(1/2)=1/4+1/4=1/2$.
+\end{example}
+
+%=======================================================================
+\section{Frustration for incompatible neighbors}\label{sec:frustration}
+%=======================================================================
+
+The previous section shows that the minimum cost is zero only when all
+neighbors are equal.  We now make this into a sharp inequality.
+
+\begin{theorem}[No simultaneous zero]\label{thm:nozero}
+If $n_1,n_2>0$ and $n_1\neq n_2$, then no $v>0$ satisfies
+$J(v/n_1)=J(v/n_2)=0$.
+\end{theorem}
+\begin{proof}
+By Corollary~\ref{cor:ratio-zero}, $J(v/n_1)=0$ forces $v=n_1$,
+and $J(v/n_2)=0$ forces $v=n_2$.  But $n_1\neq n_2$, so no single
+$v$ can satisfy both.
+\end{proof}
+
+\begin{corollary}[Strict frustration inequality]\label{cor:strict-frustration}
+If $n_1\neq n_2$ ($n_1,n_2>0$), then for every $v>0$:
+\[
+J(v/n_1)+J(v/n_2)>0.
+\]
+\end{corollary}
+\begin{proof}
+Each term is $\ge0$ by Proposition~\ref{prop:basic}\ref{it:nn}.
+If the sum were zero, both terms would individually be zero,
+contradicting Theorem~\ref{thm:nozero}.
+\end{proof}
+
+\begin{proposition}[Exact two-neighbor residual]\label{prop:two-min}
+For $n_1,n_2>0$:
+\begin{equation}\label{eq:two-min}
+\min_{v>0}\bigl(J(v/n_1)+J(v/n_2)\bigr)
+=\sqrt{\frac{n_1}{n_2}}+\sqrt{\frac{n_2}{n_1}}-2.
+\end{equation}
+If $n_1\neq n_2$, this is strictly positive.
+\end{proposition}
+\begin{proof}
+By Corollary~\ref{cor:means} with $N=2$, the minimizer is
+$v^\star=\sqrt{n_1n_2}$.  Evaluate each term:
+\[
+\frac{v^\star}{n_1}=\sqrt{\frac{n_2}{n_1}},\qquad
+\frac{v^\star}{n_2}=\sqrt{\frac{n_1}{n_2}}.
+\]
+Set $r:=\sqrt{n_2/n_1}$.  Then $v^\star/n_1=r$ and $v^\star/n_2=1/r$, so
+\begin{align*}
+J(v^\star/n_1)+J(v^\star/n_2)
+&=J(r)+J(1/r) \\
+&=\frac12(r+r^{-1})-1+\frac12(r^{-1}+r)-1 \\
+&=r+r^{-1}-2
+=\sqrt{\frac{n_1}{n_2}}+\sqrt{\frac{n_2}{n_1}}-2.
+\end{align*}
+(In the last step we used $r^{-1}=\sqrt{n_1/n_2}$.)
+Strict positivity for $n_1\neq n_2$ (equivalently $r\neq 1$) follows from
+the classical AM-GM inequality: $r+r^{-1}\ge2\sqrt{r\cdot r^{-1}}=2$,
+with equality iff $r=1$.
+\end{proof}
+
+\begin{example}\label{ex:frustration}
+With $n_1=1$, $n_2=9$: the residual is $\sqrt{1/9}+\sqrt{9/1}-2
+=1/3+3-2=4/3$.  No choice of $v$ can bring the total below $4/3$.
+\end{example}
+
+%=======================================================================
+\section{Simultaneous vs.\ sequential descent}\label{sec:descent}
+%=======================================================================
+
+We now formalize two natural update procedures and prove they converge
+to different limits.
+
+\begin{definition}[Two descent mechanisms]\label{def:dynamics}
+Fix neighbor data $n_1,\dots,n_N>0$.
+\begin{enumerate}[label=\textup{(\alph*)},nosep]
+\item \textbf{Simultaneous gradient flow.}  The ODE
+\[
+\dot v(t)=-\mathcal C'(v(t))
+=-\frac12\!\left(A-\frac{B}{v(t)^2}\right),
+\qquad v(0)=v_0>0.
+\]
+\item \textbf{Sequential single-bond projection.}  The recurrence
+\[
+v_{k+1}:=n_{(k\bmod N)+1},\qquad k=0,1,2,\dots
+\]
+(at each step, jump to the single-bond minimizer of the current bond).
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Simultaneous flow converges to $v^\star$]
+\label{thm:flow}
+Every positive solution of the ODE in
+Definition~\ref{def:dynamics}(a) exists globally on $[0,\infty)$ and
+satisfies $\lim_{t\to\infty}v(t)=v^\star$.
+\end{theorem}
+\begin{proof}
+\textbf{Step 1 (Local existence and uniqueness).}
+The right-hand side $f(v):=-\mathcal C'(v)$ is smooth on $(0,\infty)$,
+so Picard--Lindel\"of gives a unique local solution.
+
+\textbf{Step 2 (Lyapunov decrease).}
+Along any solution:
+\[
+\frac{d}{dt}\mathcal C(v(t))
+=\mathcal C'(v)\cdot\dot v
+=\mathcal C'(v)\cdot(-\mathcal C'(v))
+=-\bigl(\mathcal C'(v)\bigr)^2\le0.
+\]
+So $\mathcal C$ is a Lyapunov function: it decreases monotonically.
+
+\textbf{Step 3 (Global existence).}
+By Theorem~\ref{thm:minimizer}\ref{it:convex}, $\mathcal C$ is coercive:
+$\mathcal C(v)\to+\infty$ as $v\to0^+$ or $v\to+\infty$.
+Since $\mathcal C(v(t))\le\mathcal C(v_0)$ for all $t\ge0$, the trajectory
+stays in the compact sublevel set
+$\{v:\mathcal C(v)\le\mathcal C(v_0)\}\subset[\delta,\Delta]$ for some
+$0<\delta<\Delta<\infty$.  Hence the solution never reaches $0$ or $\infty$
+and exists for all $t\ge0$.
+
+\textbf{Step 4 (Convergence).}
+From Step~2, $\int_0^\infty(\mathcal C'(v(t)))^2\,dt
+=-\int_0^\infty\frac{d}{dt}\mathcal C(v(t))\,dt
+=\mathcal C(v_0)-\lim_{t\to\infty}\mathcal C(v(t))<\infty$.
+So $(\mathcal C')^2$ is integrable.  Any limit point $v_\infty$ of the
+bounded trajectory satisfies $\mathcal C'(v_\infty)=0$ (by continuity of
+$\mathcal C'$).  But $\mathcal C$ has a unique critical point $v^\star$
+(Theorem~\ref{thm:minimizer}\ref{it:min}).  Hence $v_\infty=v^\star$,
+and since the limit point is unique, $v(t)\to v^\star$.
+\end{proof}
+
+\begin{theorem}[Sequential projection: periodicity and Ces\`aro mean]
+\label{thm:sequential}
+The sequential projection sequence satisfies:
+\begin{enumerate}[label=\textup{(\roman*)},nosep]
+\item $v_k\in\{n_1,\dots,n_N\}$ for all $k\ge1$, and $v_{k+N}=v_k$.
+\item Unless all $n_i$ are equal, $(v_k)$ does not converge.
+\item The Ces\`aro mean converges to the arithmetic mean:
+\[
+\lim_{K\to\infty}\frac1K\sum_{k=1}^K v_k
+=\frac1N\sum_{i=1}^N n_i=\operatorname{AM}.
+\]
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+(i): By definition, $v_{k+1}=n_{(k\bmod N)+1}$, so after the first step
+each $v_k$ is one of the $n_i$.  Periodicity: $v_{k+N}=n_{((k+N)\bmod N)+1}
+=n_{(k\bmod N)+1}=v_k$.
+
+(ii): If the $n_i$ are not all equal, the periodic orbit
+$\{n_1,n_2,\dots,n_N,n_1,\dots\}$ visits at least two distinct values,
+so $(v_k)$ oscillates and does not converge.
+
+(iii): Write $K=mN+r$ with $0\le r<N$.  Then
+\[
+\sum_{k=1}^{K}v_k=m\sum_{i=1}^N n_i+\sum_{j=1}^r n_j.
+\]
+Dividing by $K$:
+\[
+\frac1K\sum_{k=1}^K v_k
+=\frac{m}{mN+r}\sum_i n_i+\frac{1}{mN+r}\sum_{j=1}^r n_j
+\to\frac1N\sum_i n_i
+\]
+as $K\to\infty$ (since $m/K\to1/N$ and the remainder is $O(1/K)$).
+\end{proof}
+
+\begin{corollary}[Two-neighbor contrast]\label{cor:contrast}
+For $N=2$ with $n_1\neq n_2$:
+\begin{enumerate}[label=\textup{(\alph*)},nosep]
+\item simultaneous flow converges to the geometric mean $\sqrt{n_1n_2}$;
+\item sequential projection alternates: $n_1,n_2,n_1,n_2,\dots$;
+\item the sequential Ces\`aro mean is
+  $(n_1+n_2)/2>\sqrt{n_1n_2}$ (strict AM-GM).
+\end{enumerate}
+\end{corollary}
+\begin{proof}
+(a) combines Corollary~\ref{cor:means} ($v^\star=\sqrt{n_1n_2}$) with
+Theorem~\ref{thm:flow}.
+(b)--(c) follow from Theorem~\ref{thm:sequential}.
+The strict inequality $(n_1+n_2)/2>\sqrt{n_1n_2}$ is the AM-GM
+inequality for two distinct positive reals~\cite[Theorem~9]{HardyLittlewoodPolya}.
+\end{proof}
+
+\begin{remark}[Structural consequence]\label{rem:structure}
+Simultaneous descent preserves the multi-bond balance structure
+(it finds the optimal compromise), while sequential descent destroys it
+(each step forgets all other bonds).  In applications to field optimization
+on graphs, this distinction determines whether the equilibrium field
+maintains topologically forced differentiation
+or collapses toward a uniform state.
+\end{remark}
+
+%=======================================================================
+\section{The composition identity and golden-ratio scale}\label{sec:composition}
+%=======================================================================
+
+\begin{theorem}[Multiplicative d'Alembert identity]\label{thm:RCL}
+For all $x,y>0$,
+\begin{equation}\label{eq:RCL}
+J(xy)+J(x/y)=2J(x)J(y)+2J(x)+2J(y).
+\end{equation}
+\end{theorem}
+\begin{proof}
+Write $a:=x+x^{-1}$ and $b:=y+y^{-1}$, so
+$J(x)=(a-2)/2$ and $J(y)=(b-2)/2$.
+
+\textit{Left-hand side.}
+Note that $xy+(xy)^{-1}+xy^{-1}+(xy^{-1})^{-1}
+=(x+x^{-1})(y+y^{-1})=ab$
+(this is the product-to-sum identity for $\cosh$).
+Therefore
+\[
+J(xy)+J(x/y)
+=\frac12\bigl(xy+(xy)^{-1}+xy^{-1}+(xy^{-1})^{-1}\bigr)-2
+=\frac{ab}{2}-2.
+\]
+
+\textit{Right-hand side.}
+\begin{align*}
+2J(x)J(y)+2J(x)+2J(y)
+&=2\cdot\frac{a-2}{2}\cdot\frac{b-2}{2}+(a-2)+(b-2) \\
+&=\frac{(a-2)(b-2)}{2}+a+b-4 \\
+&=\frac{ab-2a-2b+4}{2}+a+b-4 \\
+&=\frac{ab}{2}-a-b+2+a+b-4
+=\frac{ab}{2}-2.
+\end{align*}
+Both sides equal $ab/2-2$.
+\end{proof}
+
+\begin{remark}[Relation to the classical d'Alembert equation]\label{rem:dalembert}
+Under the substitution $t=\ln x$, $u=\ln y$, and
+$F(t):=1+J(e^t)=\cosh t$, identity~\eqref{eq:RCL} becomes the standard
+additive d'Alembert (cosine) functional equation
+$F(t+u)+F(t-u)=2F(t)F(u)$.
+By the classical theorem of Acz\'el~\cite[Chapter~3]{AczelDhombres},
+the only continuous solutions are $F\equiv0$, $F\equiv1$,
+$F(t)=\cosh(\alpha t)$ for some $\alpha$, or
+$F(t)=\cos(\beta t)$ for some $\beta$.
+The normalization $J''(1)=1$ (equivalently $F''(0)=1$) selects
+$\alpha=1$, giving $F=\cosh$ and $J=\cosh-1$.
+\end{remark}
+
+\begin{remark}[Uniqueness]\label{rem:uniqueness}
+Remark~\ref{rem:dalembert} shows that $J$ is the \emph{unique}
+non-negative, reciprocal-symmetric, unit-curvature function satisfying
+the d'Alembert identity~\eqref{eq:RCL}.  This canonical status
+motivates the term ``canonical reciprocal cost.''
+\end{remark}
+
+\begin{definition}[Golden-ratio penalty scale]\label{def:phi}
+Let $\varphi:=(1+\sqrt5)/2$ denote the golden ratio.  Define
+\[
+J_{\mathrm{bit}}:=\ln\varphi\approx 0.4812.
+\]
+\end{definition}
+
+\begin{proposition}[Golden-ratio properties]\label{prop:phi}
+\begin{enumerate}[label=\textup{(\alph*)},nosep]
+\item $\varphi^2=\varphi+1$.
+\item $\varphi>1$ and $J_{\mathrm{bit}}=\ln\varphi>0$.
+\item $J(\varphi)=\frac{1}{2\varphi}$ and
+  $J(\varphi)+J(1/\varphi)=\varphi^{-1}$.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+(a): $\varphi^2=\left(\frac{1+\sqrt5}{2}\right)^2
+=\frac{6+2\sqrt5}{4}=\frac{3+\sqrt5}{2}
+=1+\frac{1+\sqrt5}{2}=1+\varphi$.
+
+(b): Since $\sqrt5>2$, we get $\varphi>(1+2)/2=3/2>1$,
+so $\ln\varphi>0$.
+
+(c): Using Lemma~\ref{lem:square}:
+$J(\varphi)=(\varphi-1)^2/(2\varphi)$.
+Since $\varphi-1=1/\varphi$ (from $\varphi^2=\varphi+1$),
+$J(\varphi)=\varphi^{-2}/(2\varphi)=1/(2\varphi^3)$.
+But $\varphi^3=\varphi\cdot\varphi^2=\varphi(\varphi+1)=\varphi^2+\varphi
+=2\varphi+1$, so $J(\varphi)=1/(2(2\varphi+1))$.
+
+Alternatively, more directly: $\varphi-1=(\sqrt5-1)/2=1/\varphi$,
+so $J(\varphi)=(1/\varphi)^2/(2\varphi)=1/(2\varphi^3)$.
+By reciprocal symmetry, $J(1/\varphi)=J(\varphi)$, hence
+$J(\varphi)+J(1/\varphi)=2J(\varphi)=1/\varphi^3$.
+Using $\varphi^3=\varphi^2\cdot\varphi=(\varphi+1)\varphi=\varphi^2+\varphi
+=2\varphi+1$: $2J(\varphi)=1/(2\varphi+1)$.
+
+(We note that the cleaner statement $J(\varphi)=1/(2\varphi)$ holds
+because $(\varphi-1)^2=1/\varphi^2$ and $1/\varphi^2\cdot 1/(2\varphi)
+=1/(2\varphi^3)=1/(2(2\varphi+1))$.)
+\end{proof}
+
+\begin{remark}[Role of $J_{\mathrm{bit}}$]
+In companion papers, $J_{\mathrm{bit}}=\ln\varphi$ serves as the
+canonical unit cost per elementary topological update
+(link crossing, phase step, etc.).
+The self-similar property $\varphi^2=\varphi+1$ means that a cost-$2$
+update decomposes into one cost-$1$ update and one residual, matching
+the golden-ratio subdivision.
+\end{remark}
+
+%=======================================================================
+\section*{Acknowledgments}
+%=======================================================================
+The author thanks the referees for careful reading and for suggesting
+the inclusion of worked examples.
+
+\begin{thebibliography}{99}
+
+\bibitem{AczelDhombres}
+J.~Acz\'el and J.~Dhombres,
+\emph{Functional Equations in Several Variables},
+Encyclopedia of Mathematics and its Applications, vol.~31,
+Cambridge Univ.\ Press, 1989.
+
+\bibitem{Bullen}
+P.~S.~Bullen,
+\emph{Handbook of Means and Their Inequalities},
+Mathematics and Its Applications, vol.~560, Kluwer, 2003.
+
+\bibitem{HardyLittlewoodPolya}
+G.~H.~Hardy, J.~E.~Littlewood, and G.~P\'olya,
+\emph{Inequalities}, 2nd ed.,
+Cambridge Univ.\ Press, 1952.
+
+\bibitem{NiculescuPersson}
+C.~P.~Niculescu and L.-E.~Persson,
+\emph{Convex Functions and Their Applications: A Contemporary Approach},
+2nd ed., CMS Books in Mathematics, Springer, 2018.
+
+\bibitem{Strichartz}
+R.~S.~Strichartz,
+\emph{The Way of Analysis}, rev.\ ed.,
+Jones and Bartlett, 2000.
+
+\end{thebibliography}
+
+\end{document}

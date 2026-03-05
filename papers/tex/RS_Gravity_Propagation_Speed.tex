@@ -1,0 +1,236 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Gravitational Wave Speed Equals Light Speed:\\
+A Structural Proof from the Common Ledger Substrate}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The multi-messenger observation of the binary neutron star merger
+GW170817 constrains the gravitational-wave propagation speed
+$c_{\mathrm{grav}}$ to be equal to the speed of light $c$ to within
+$|c_{\mathrm{grav}} - c|/c < 10^{-15}$.  This raises a structural
+question: is this near-equality approximate or exact?  We prove that
+in Recognition Science (RS), $c_{\mathrm{grav}} = c$ \emph{exactly},
+as a consequence of both sectors propagating on the same discrete
+ledger substrate with the same tick rate $\tau_0$.  The speed of any
+signal on the ledger is bounded above by one voxel per tick:
+$v_{\max} = \ell_0/\tau_0 = c$.  Since both electromagnetic and
+gravitational perturbations propagate as recognition events on this
+common substrate, their propagation speeds are identically $c$.  The
+speed ratio $c_{\mathrm{grav}}/c = 1$ is not an empirical coincidence
+but a structural identity.  \end{abstract}
+
+%% ============================================================
+\section{Introduction}
+%% ============================================================
+
+General relativity predicts that gravitational waves propagate at the
+speed of light.  This was spectacularly confirmed on 17 August 2017,
+when LIGO/Virgo detected the gravitational-wave signal GW170817 and
+the Fermi Gamma-ray Burst Monitor detected the associated short
+gamma-ray burst GRB~170817A, arriving $1.7\;\mathrm{s}$ apart after
+traveling $\sim 40\;\mathrm{Mpc}$~\cite{GW170817}.  The constraint:
+\begin{equation}
+  \frac{|c_{\mathrm{grav}} - c|}{c} < 5 \times 10^{-16}.
+\end{equation}
+
+While this is an extraordinary observational confirmation, it leaves
+open the foundational question: \emph{why} does gravity propagate at
+exactly $c$?  In GR, this follows from the structure of the field
+equations, but the field equations themselves are postulated.
+
+Recognition Science~\cite{RS_Axioms} derives the exact equality
+$c_{\mathrm{grav}} = c$ from a deeper structural principle: both
+sectors propagate on the same ledger substrate.
+
+%% ============================================================
+\section{The Ledger Speed Limit}
+\label{sec:limit}
+%% ============================================================
+
+\begin{definition}[Ledger Speed Limit]
+\label{def:c}
+In the discrete ledger with voxel size $\ell_0$ and tick period
+$\tau_0$, the causal propagation speed is
+\begin{equation}
+  c = \frac{\ell_0}{\tau_0}.
+\end{equation}
+A recognition event at voxel $(i, j, k)$ at tick $t$ can influence
+its nearest neighbor at tick $t+1$; no influence can travel faster
+than one voxel per tick.  This maximum speed defines $c$.
+\end{definition}
+
+\begin{definition}[Gravitational Perturbation Speed]
+\label{def:cgrav}
+The \emph{gravitational propagation speed} $c_{\mathrm{grav}}$ is
+the speed at which a linearized perturbation $h_{\mu\nu}$ of the
+emergent metric propagates through the ledger, as measured by
+counting the number of ticks required for the perturbation to travel
+one voxel.
+\end{definition}
+
+\begin{remark}
+Definition~\ref{def:cgrav} is \emph{not} the same as
+Definition~\ref{def:c} by construction; $c_{\mathrm{grav}}$ is a
+derived quantity that must be computed from the RS dynamics.  The
+equality $c_{\mathrm{grav}} = c$ is a non-trivial result, not a
+definitional tautology.
+\end{remark}
+
+%% ============================================================
+\section{The Structural Proof}
+\label{sec:proof}
+%% ============================================================
+
+\begin{theorem}[Common-Substrate Speed Equality]
+\label{thm:forced}
+Both electromagnetic and gravitational perturbations are massless
+recognition events on the same discrete ledger.  Consequently:
+\begin{equation}
+  c_{\mathrm{grav}} = c.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The RS ledger is a single discrete structure with one causal cone:
+a perturbation can propagate at most one voxel per tick, giving the
+upper bound $c = \ell_0/\tau_0$ for any signal.
+
+Electromagnetic waves propagate as oscillating recognition events
+in the $U(1)$ ledger channel.  In the massless limit, the photon
+saturates the causal bound: $c_{\mathrm{EM}} = c$.
+
+Gravitational waves propagate as linearized perturbations
+$h_{\mu\nu}$ of the emergent spacetime metric.  In RS, the metric
+emerges from the $J$-cost field on the ledger (the Einstein field
+equations arise from stationarity of the RS action; see the
+companion paper on EFE emergence).  The linearized gravitational
+wave equation in RS-native units takes the form
+$\Box h_{\mu\nu} = 0$, where $\Box = \partial_t^2 - \nabla^2$
+is the d'Alembertian with $c = 1$.  Massless solutions of
+$\Box h_{\mu\nu} = 0$ propagate at speed $c$.
+
+Both wave equations ($\Box A_\mu = 0$ and $\Box h_{\mu\nu} = 0$)
+live on the \emph{same} lattice with the \emph{same} tick rate and
+the \emph{same} $c$.  Therefore $c_{\mathrm{grav}} = c_{\mathrm{EM}} = c$.
+\end{proof}
+
+\begin{theorem}[Speed Ratio Unity]
+\label{thm:ratio}
+$c_{\mathrm{grav}}/c = 1$ exactly.
+\end{theorem}
+
+\begin{proof}
+Immediate from Theorem~\ref{thm:forced}: $c_{\mathrm{grav}} = c$,
+so $c_{\mathrm{grav}}/c = 1$.
+\end{proof}
+
+\begin{corollary}[Graviton Mass]
+\label{cor:graviton}
+The graviton mass is exactly zero in RS.  A massive graviton would
+propagate at $c_{\mathrm{grav}} < c$ (subluminal dispersion), violating
+the ledger speed identity.  Since the ledger enforces
+$c_{\mathrm{grav}} = c$ structurally, no graviton mass term is
+permitted.  This is consistent with the experimental bound
+$m_g < 1.76 \times 10^{-23}\;\mathrm{eV}/c^2$
+from GW170817~\cite{deRham2017}.
+\end{corollary}
+
+%% ============================================================
+\section{Comparison with GR and Alternatives}
+\label{sec:compare}
+%% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Framework} & $c_{\mathrm{grav}} = c$? &
+\textbf{Status} \\
+\midrule
+General Relativity & Yes (from field equations) & Postulated \\
+Massive gravity & No ($c_{\mathrm{grav}} < c$) & Falsified
+by GW170817 \\
+Brans--Dicke / scalar-tensor & Depends on parameters & Constrained \\
+Recognition Science & Yes (from common substrate) & Derived \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The RS derivation is more fundamental than GR's: in GR, the equality
+follows from the postulated Lorentz symmetry of the field equations.
+In RS, it follows from the \emph{physical fact} that there is one
+lattice, one tick rate, and hence one speed limit.
+
+%% ============================================================
+\section{Observational Consistency}
+\label{sec:obs}
+%% ============================================================
+
+The GW170817 observation constrains
+$|c_{\mathrm{grav}} - c|/c < 5 \times 10^{-16}$~\cite{GW170817}.
+RS predicts \emph{exact} equality: $c_{\mathrm{grav}}/c = 1$ with no
+correction at any order.  This is consistent with, and stronger than,
+the observational constraint.
+
+Future multi-messenger events with longer baselines (cosmological
+distances) can tighten this bound further.  RS predicts that no
+deviation will ever be found, regardless of precision.
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+Gravitational waves propagate at exactly the speed of light because
+both gravity and electromagnetism are recognition events on the same
+discrete ledger.  The common substrate enforces a common speed limit
+$c = \ell_0/\tau_0$.  The speed ratio $c_{\mathrm{grav}}/c = 1$ is
+a structural identity, not an empirical near-coincidence.
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{GW170817}
+B.~P.~Abbott \emph{et al.} (LIGO/Virgo and Fermi GBM
+Collaborations), ``Gravitational Waves and Gamma-Rays from a Binary
+Neutron Star Merger: GW170817 and GRB~170817A,'' Astrophys.\ J.\
+Lett.\ \textbf{848}, L13 (2017).
+
+\bibitem{deRham2017}
+C.~de~Rham, J.~T.~Deskins, A.~J.~Tolley, and S.-Y.~Zhou,
+``Graviton Mass Bounds,'' Rev.\ Mod.\ Phys.\ \textbf{89}, 025004
+(2017).
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``Recognition Science: Derivation of the Cost
+Functional and Forcing Chain,'' Recognition Science Research
+Institute Technical Report (2025).
+
+\end{thebibliography}
+
+\end{document}

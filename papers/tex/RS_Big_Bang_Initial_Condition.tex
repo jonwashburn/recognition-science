@@ -1,0 +1,289 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Big Bang Initial Condition from Recognition Science:\\
+Zero-Defect Ledger State and No-Singularity Resolution}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We derive the cosmological initial condition from Recognition Science (RS).
+The origin of the universe is the unique zero-defect ledger configuration:
+all entries equal unity, total defect vanishes, and this state is the global
+minimum of the cost functional.
+The Big Bang is interpreted as the first nonzero-defect activation (first tick),
+not a physical singularity with divergent density.
+We show that Penrose's low-entropy puzzle is resolved: the initial state is
+the unique cost minimizer, so low entropy is a theorem rather than a hypothesis.
+\end{abstract}
+
+\section{Introduction}
+
+\subsection{The Singularity Problem in Standard Cosmology}
+
+Standard cosmology traces the expansion of the universe backward in time.
+Under general relativity, the Penrose--Hawking singularity theorems
+\cite{hawking1970singularities,penrose1979singularities} establish that
+under generic conditions (reasonable energy conditions, causal structure),
+a past-incomplete geodesic implies an initial singularity: a boundary
+at which curvature and density diverge.
+The Friedmann equations yield $\rho \propto a^{-3(1+w)}$, so as $a \to 0$,
+density $\rho \to \infty$ and the classical description breaks down.
+
+This raises a fundamental question: what happened at $t = 0$?
+The singularity is not a point in spacetime---it is a boundary beyond which
+the theory does not extend.
+Quantum gravity proposals (loop quantum cosmology, string cosmology, etc.)
+attempt to resolve or replace the singularity, but typically introduce
+new degrees of freedom or pre-Big-Bang phases.
+
+\subsection{Recognition Science Approach}
+
+Recognition Science (RS) provides a different resolution.
+Rather than modifying general relativity or adding pre-inflationary physics,
+RS derives the initial condition from the structure of the cost functional
+itself.
+The universe is modeled as a ledger: a discrete structure whose entries
+evolve according to a cost that penalizes deviation from unity.
+The initial state is then the unique configuration that minimizes this cost---a
+finite, well-defined state with no singularity.
+
+\section{Recognition Science Framework}
+\label{sec:framework}
+
+All results follow from the unique cost functional determined by
+three axioms~\cite{RS_Axioms}.
+
+\noindent\textbf{Axiom A1 (Normalization):} $J(1) = 0$.\\
+\textbf{Axiom A2 (Recognition Composition Law):}
+$J(xy)+J(x/y)=2J(x)J(y)+2J(x)+2J(y)$ for all $x,y>0$.\\
+\textbf{Axiom A3 (Calibration):} $J''_{\log}(0) = 1$.
+
+\begin{theorem}[Cost Uniqueness]
+\label{thm:cost-unique}
+The continuous solution to \textup{(A1)--(A3)} is unique:
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Setting $H(t)=J_{\log}(t)+1$ transforms A2 into the d'Alembert
+equation $H(s+t)+H(s-t)=2H(s)H(t)$.  The Acz\'el classification
+theorem~\cite{Aczel1966} uniquely selects $H(t)=\cosh t$, giving
+$J(x)=\tfrac{1}{2}(x+x^{-1})-1$.
+\end{proof}
+
+\noindent The global minimizer of $J$ is $x=1$ with $J(1)=0$.
+This zero-cost ground state is the RS initial condition.
+
+\section{Cost Functional and Total Defect}
+
+\begin{definition}[Cost Functional]
+For $x > 0$, the RS cost functional is
+\begin{equation}
+J(x) = \frac{1}{2}\left(x + x^{-1}\right) - 1.
+\end{equation}
+\end{definition}
+
+\begin{definition}[Configuration and Total Defect]
+A \emph{configuration} of size $N \geq 1$ is a tuple $c = (x_1, \ldots, x_N)$
+with each $x_i > 0$.
+The \emph{total defect} (or defect functional) is
+\begin{equation}
+D(c) = \sum_{i=1}^{N} J(x_i).
+\end{equation}
+\end{definition}
+
+\begin{definition}[Unity Configuration]
+The \emph{unity configuration} $c_{\mathrm{unity}}$ is the configuration
+in which every entry equals 1: $x_i = 1$ for all $i$.
+\end{definition}
+
+\section{Initial-Condition Theorems}
+
+\begin{theorem}[Zero Cost at Unity]
+$J(1) = 0$, and $J(x) > 0$ for all $x > 0$ with $x \neq 1$.
+\end{theorem}
+
+\begin{proof}
+Direct computation: $J(1) = \frac{1}{2}(1 + 1) - 1 = 0$.
+For $x \neq 1$, the arithmetic--geometric inequality gives
+$x + x^{-1} > 2$ (strict for $x \neq 1$), hence
+$J(x) = \frac{1}{2}(x + x^{-1}) - 1 > 0$.
+\end{proof}
+
+\begin{corollary}[Zero Defect of Unity Configuration]
+$D(c_{\mathrm{unity}}) = 0$.
+\end{corollary}
+
+\begin{proof}
+Each entry of $c_{\mathrm{unity}}$ equals 1, so $J(x_i) = 0$ for all $i$.
+Thus $D(c_{\mathrm{unity}}) = \sum_i J(1) = 0$.
+\end{proof}
+
+\begin{theorem}[Uniqueness of Zero-Defect State]
+If $D(c) = 0$, then $c = c_{\mathrm{unity}}$.
+\end{theorem}
+
+\begin{proof}
+$D(c) = \sum_{i=1}^{N} J(x_i)$ is a sum of non-negative terms ($J(x_i) \geq 0$).
+Hence $D(c) = 0$ if and only if $J(x_i) = 0$ for every $i$.
+By Theorem 1, $J(x_i) = 0$ if and only if $x_i = 1$.
+Therefore every entry of $c$ equals 1, so $c = c_{\mathrm{unity}}$.
+\end{proof}
+
+\begin{theorem}[Global Minimum]
+The unity configuration is the unique global minimizer of $D$.
+\end{theorem}
+
+\begin{proof}
+$D(c) \geq 0$ for all configurations, and $D(c) = 0$ only for $c = c_{\mathrm{unity}}$
+by Theorem 2.
+Thus $c_{\mathrm{unity}}$ attains the minimum value 0 and is the only configuration
+that does so.
+\end{proof}
+
+\begin{remark}
+These results hold for any finite $N$.
+The initial-condition structure is independent of ledger size.
+\end{remark}
+
+\section{No-Singularity Resolution}
+
+The RS framework replaces the cosmological singularity with a well-defined
+initial state:
+
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{Initial total defect is zero.} The universe begins at $D = 0$.
+\item \textbf{That state is globally minimal.} No configuration has lower cost.
+\item \textbf{The state is unique.} There is no ambiguity about the initial condition.
+\end{enumerate}
+
+Therefore RS does not require an infinite-density boundary condition.
+The origin is a unique, finite, minimum-cost ledger state.
+There is no divergence of curvature or density---only the first transition
+away from the zero-defect baseline.
+
+\section{Penrose's Low-Entropy Puzzle}
+
+Penrose \cite{penrose1979singularities,penrose1989emperor} emphasized a deep
+puzzle: the universe began in an extraordinarily low-entropy state.
+The phase-space volume of configurations that could have evolved into our
+observed universe is fantastically small compared to the volume of
+``typical'' high-entropy states.
+Why did the universe start in such a special condition?
+
+In standard cosmology, this is treated as a hypothesis or fine-tuning.
+In RS, it is a \emph{theorem}.
+The initial state is the unique minimizer of the cost functional $D$.
+By construction, the zero-defect configuration has the lowest possible
+entropy (identified with total defect in RS).
+No statistical reasoning, no measure theory on phase space, and no
+fine-tuning are required---the low-entropy initial condition follows from
+the uniqueness of the cost minimizer.
+
+\section{The First Tick: Physical Interpretation}
+
+What does ``first tick'' mean physically?
+
+In RS, time advances via \emph{recognition events}: discrete updates to the
+ledger in which configurations are identified and the cost is reduced.
+At $t = 0$, the ledger is in the unity configuration---no recognition events
+have occurred, no causal structure has been established.
+
+The \emph{first tick} is the first recognition event: the first moment at
+which some ledger entry deviates from unity, activating a nonzero defect.
+This is not a singularity---it is the first discrete step in a well-defined
+dynamics.
+The 8-tick epoch ($\tau = 2^D$ with $D = 3$) structures the subsequent
+evolution, but the initial condition itself requires no prior physics.
+
+\section{Predictions and Consequences}
+
+The RS initial-condition framework yields several predictions:
+
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{No pre-Big-Bang physics.} The zero-defect state is the absolute
+starting point; there is no preceding phase to explain or model.
+\item \textbf{No bouncing cosmology.} The framework does not require a
+contracting phase before expansion; the first tick initiates expansion from
+a finite baseline.
+\item \textbf{No initial singularity.} Density and curvature remain finite;
+the ``origin'' is a minimum-cost ledger state, not a divergent boundary.
+\item \textbf{Deterministic initial condition.} The unity configuration is
+unique; there is no ensemble of possible initial states to average over.
+\end{enumerate}
+
+These predictions are falsifiable: observation of a pre-Big-Bang phase,
+a bounce, or evidence for an initial singularity would challenge the RS
+picture.
+
+\section{Scope and Limitations}
+
+\begin{itemize}
+\item \textbf{Proved:} Uniqueness and minimality of the zero-defect initial
+state; $J(1) = 0$ and the implication $D(c) = 0 \Rightarrow c = c_{\mathrm{unity}}$.
+\item \textbf{Interpreted:} The no-singularity reading of the cosmological
+origin; the identification of the Big Bang with the first recognition event.
+\item \textbf{Deferred:} Full observational reconstruction of the earliest
+post-activation epochs (inflation, reheating, BBN) is treated in companion
+papers on the early universe.
+\end{itemize}
+
+\section{Conclusion}
+
+Recognition Science closes the cosmological initial-condition problem as a
+zero-defect theorem.
+The universe begins at a unique minimum-cost ledger state: all entries equal
+unity, total defect zero.
+The Penrose--Hawking singularity is replaced by a finite, well-defined
+baseline; Penrose's low-entropy puzzle is resolved because the initial state
+is the unique cost minimizer.
+The Big Bang is the first tick---the first recognition event away from that
+baseline---not a physical singularity with divergent density.
+
+\begin{thebibliography}{9}
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+
+\bibitem{Aczel1966}
+J.~Acz\'el, \textit{Lectures on Functional Equations and Their Applications},
+Academic Press, New York (1966).
+
+\bibitem{hawking1970singularities}
+S.\,W. Hawking and R. Penrose,
+``The singularities of gravitational collapse and cosmology,''
+\textit{Proc. R. Soc. Lond. A} \textbf{314}, 529--548 (1970).
+
+\bibitem{penrose1979singularities}
+R. Penrose,
+``Singularities and time-asymmetry,''
+in \textit{General Relativity: An Einstein Centenary Survey},
+eds. S.\,W. Hawking and W. Israel (Cambridge University Press, 1979), pp. 581--638.
+
+\bibitem{penrose1989emperor}
+R. Penrose,
+\textit{The Emperor's New Mind} (Oxford University Press, 1989).
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,471 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Planck's Constant from Recognition Science:\\
+$\hbar = \varphi^{-5}$ in RS-Native Units}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We derive Planck's reduced constant $\hbar$ from Recognition
+Science (RS) with zero free parameters.  In RS-native units
+($\ell_0 = \tau_0 = 1$), the action quantum is:
+$\hbar = E_{\mathrm{coh}} \cdot \tau_0 = \varphi^{-5}$,
+where $E_{\mathrm{coh}} = \varphi^{-5}$ is the coherence energy
+(the minimum energy for a recognition event) and $\tau_0 = 1$ is
+the tick duration.  The exponent $5 = 2^D - D$ counts the compact
+modes of the 8-tick epoch ($D = 3$).  We prove $\hbar > 0$,
+$0.088 < \hbar < 0.093$ (in RS-native units), and the
+quantum-gravitational duality $G \cdot \hbar = 1$, where
+$G = \varphi^5$ is Newton's constant.  The SI value
+$\hbar = 1.055 \times 10^{-34}\;\mathrm{J\,s}$ is recovered
+through an external calibration seam (identification of
+$\tau_0$ with the Planck time $t_P$).  $\hbar$ is not an
+independent constant but a derived quantity---the minimum action
+for a single recognition event.
+\end{abstract}
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+Planck's constant $\hbar = h/(2\pi)$ is the quantum of action,
+setting the scale at which quantum effects become important.  In
+conventional physics it is a measured constant; no theory derives
+its value from more fundamental principles.
+
+Recognition Science~\cite{RS_Axioms} derives $\hbar$ as a
+$\varphi$-power.  The derivation has two ingredients: the
+coherence energy $E_{\mathrm{coh}}$ (a property of the
+$\varphi$-ladder) and the tick duration $\tau_0$ (a property of
+the 8-tick epoch).  Their product is the minimum action for a
+recognition event.
+
+%% ============================================================
+\section{Recognition Science Framework}
+\label{sec:framework}
+%% ============================================================
+
+Recognition Science derives all physics from a single primitive,
+the \emph{recognition cost functional} $J(x)$, uniquely determined
+by three axioms.
+
+\begin{definition}[RS Cost Functional]
+For $x > 0$: $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{definition}
+
+\noindent\textbf{Axiom A1 (Normalization):} $J(1) = 0$.\\
+\textbf{Axiom A2 (Recognition Composition Law, RCL):}
+$J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y)$ for all $x, y > 0$.\\
+\textbf{Axiom A3 (Calibration):} $J''_{\log}(0) = 1$, where
+$J_{\log}(t) := J(e^t)$.
+
+\begin{theorem}[Cost Uniqueness]
+\label{thm:unique}
+The unique continuous solution to \textup{(A1)--(A3)} is
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Setting $f(t) = J_{\log}(t) + 1$ and rewriting \textup{(A2)} gives
+the d'Alembert equation $f(s+t) + f(s-t) = 2f(s)f(t)$.  By the
+Acz\'el classification theorem~\cite{Aczel1966}, the unique continuous
+solution with $f(0) = 1$ and $f''(0) = 1$ is $f(t) = \cosh t$.
+\end{proof}
+
+\noindent The golden ratio $\varphi = (1+\sqrt{5})/2$ satisfies
+$J(\varphi) = \varphi - 1$ and is forced by the $\varphi$-ladder
+self-similarity.  Spatial dimension $D = 3$ is forced by the gap-45
+synchronization $\operatorname{lcm}(8, 45) = 360$.  The coherence
+energy $E_{\rm coh} = \varphi^{-5}$ and Newton's constant $G = \varphi^5$
+sit at opposite rungs of the ladder, which is the RS resolution of the
+quantum-gravity hierarchy.
+
+%% ============================================================
+\section{The Coherence Energy}
+\label{sec:ecoh}
+%% ============================================================
+
+\begin{definition}[Coherence Energy]
+\label{def:ecoh}
+The coherence energy is the minimum energy quantum for a
+recognition event:
+\begin{equation}
+  E_{\mathrm{coh}} = \varphi^{-5},
+\end{equation}
+where $\varphi = (1+\sqrt{5})/2$ is the golden ratio.
+\end{definition}
+
+\begin{proposition}[Origin of the Exponent]
+\label{prop:exponent}
+The exponent $5$ is determined by $D = 3$:
+\begin{equation}
+  5 = 2^D - D = 8 - 3.
+\end{equation}
+This counts the number of compact (non-spatial) modes of the
+8-tick epoch.
+\end{proposition}
+
+\begin{proof}[Structural argument]
+The 8-tick epoch has $2^D = 8$ binary configurations.  Of these,
+$D = 3$ correspond to the spatial dimensions (the ``visible''
+directions along which particles propagate).  The remaining
+$2^D - D = 5$ are compact modes---internal phase-space directions
+that are integrated over when projecting to 3+1 spacetime.  The
+coherence energy is the $\varphi$-suppression from integrating
+over these 5 compact modes:
+$E_{\mathrm{coh}} = \varphi^{-(2^D - D)} = \varphi^{-5}$.
+
+\emph{Status note.}  The identification of the 5 remaining
+configurations as ``compact modes'' integrated over to produce
+$\varphi$-suppression is a structural interpretation, not yet a
+fully rigorous derivation from the 8-tick Hamiltonian cycle.
+The exponent $5 = 2^D - D$ for $D = 3$ is the key claim; the
+exact mechanism of $\varphi$-suppression per compact mode is an
+open problem in RS.
+\end{proof}
+
+\begin{remark}[$E_{\mathrm{coh}}$ Bounds]
+\label{thm:ecoh-bounds}
+$E_{\mathrm{coh}} > 0$ (since $\varphi > 0$) and
+$0.088 < E_{\mathrm{coh}} < 0.093$: from
+$1.61 < \varphi < 1.62$, we get $10.7 < \varphi^5 < 11.4$,
+hence $0.088 < \varphi^{-5} < 0.093$.
+The exact value is $\varphi^{-5} = (7 - 3\sqrt{5})/2 \approx 0.09017$.
+\end{remark}
+
+%% ============================================================
+\section{Derivation of $\hbar$}
+\label{sec:derivation}
+%% ============================================================
+
+\begin{proposition}[Planck's Constant --- Structural Identification]
+\label{thm:hbar}
+In RS-native units ($\tau_0 = 1$), the action quantum is identified as:
+\begin{equation}
+  \boxed{\hbar = E_{\mathrm{coh}} \cdot \tau_0 = \varphi^{-5}
+  \approx 0.0902.}
+\end{equation}
+\end{proposition}
+
+\begin{proof}[Structural argument]
+The RS identification is that the quantum of action equals the minimum
+energy times the minimum time.  Both are forced by $D = 3$:
+\begin{enumerate}[label=(\roman*),nosep]
+  \item $E_{\mathrm{coh}} = \varphi^{-5}$: the minimum energy
+  quantum (Definition~\ref{def:ecoh}).
+  \item $\tau_0 = 1$: the minimum time quantum (one tick).
+\end{enumerate}
+By dimensional analysis, $[\text{action}] = [\text{energy}] \times [\text{time}]$,
+so $\hbar = \varphi^{-5} \cdot 1 = \varphi^{-5}$.
+
+\emph{Status note}: This is a structural identification ($\hbar$ is
+identified with $E_\mathrm{coh} \cdot \tau_0$) rather than a
+derivation of why the quantum of action should equal the product of
+the minimum energy and minimum time.  The non-trivial content is
+that $E_\mathrm{coh} = \varphi^{-5}$ (itself a structural argument,
+Proposition~\ref{prop:exponent}).  A rigorous derivation connecting
+the RS action quantum to $\hbar$ via the path integral or commutation
+relations from first principles is an identified open problem.
+\end{proof}
+
+%% ============================================================
+\section{Quantum--Gravitational Duality}
+\label{sec:duality}
+%% ============================================================
+
+\begin{proposition}[Quantum-Gravitational Duality]
+\label{thm:duality}
+Under the RS identifications $G = \varphi^5$ and $\hbar = \varphi^{-5}$
+(complementary rungs on the $\varphi$-ladder):
+\begin{equation}
+  \boxed{G \cdot \hbar = \varphi^5 \cdot \varphi^{-5} = 1.}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+$\varphi^{5} \cdot \varphi^{-5} = \varphi^{5+(-5)} = \varphi^0 = 1$.
+The RS content is that $G$ and $\hbar$ sit at equal and opposite rungs
+of the $\varphi$-ladder ($G$ at rung $+5$, $\hbar$ at rung $-5$),
+making their product the ladder identity.  The identification
+$G = \varphi^5$ (derived separately in the companion paper on Newton's
+constant) is assumed here.
+\end{proof}
+
+\begin{remark}
+The identity $G \cdot \hbar = 1$ is the RS resolution of the
+hierarchy problem.  In conventional physics, the gravitational
+and quantum scales differ by $\sim 10^{38}$ in SI units---a
+``hierarchy'' that demands explanation.  In RS-native units,
+they are exact reciprocals on the $\varphi$-ladder: $G$ is
+rung $+5$, $\hbar$ is rung $-5$.  The apparent hierarchy in
+SI units is an artifact of the calibration seam, not a physical
+puzzle.
+\end{remark}
+
+\begin{remark}[$G$ convention]
+An alternative RS derivation (recognition-wavelength
+extremum) yields $G = \varphi^5/\pi$, giving
+$G \cdot \hbar = 1/\pi$ instead of~$1$ and
+$\ell_P = 1/\sqrt{\pi}$.
+The duality ($G$ and~$\hbar$ at opposite rungs) is
+preserved; only the product acquires a geometric
+prefactor.  See the companion paper on Newton's constant.
+\end{remark}
+
+\begin{corollary}[Planck Mass]
+In RS-native units ($c = 1$):
+\begin{equation}
+  M_{\mathrm{Pl}} = \sqrt{\frac{\hbar c}{G}}
+  = \sqrt{\frac{\varphi^{-5}}{\varphi^5}}
+  = \varphi^{-5} \approx 0.090.
+\end{equation}
+\end{corollary}
+
+%% ============================================================
+\section{Path Integral Regularization}
+\label{sec:path}
+%% ============================================================
+
+\begin{proposition}[Natural UV Cutoff]
+\label{prop:uv}
+The path integral is naturally regularized by the discrete
+ledger.
+\end{proposition}
+
+\begin{proof}[Argument]
+In Feynman's path integral, amplitudes are:
+$\mathcal{A} = \int \mathcal{D}[x]\, e^{iS[x]/\hbar}$.
+In RS, each history is a finite sequence of recognition events,
+each contributing action $\geq \hbar$.  The minimum action
+$\hbar = E_{\mathrm{coh}} \cdot \tau_0$ means no process can
+contribute less than one energy quantum in less than one tick.
+The lattice spacing $\ell_0$ and tick duration $\tau_0$ provide
+the natural UV cutoff:
+\begin{equation}
+  \Lambda_{\mathrm{UV}} = \frac{1}{\ell_0}
+  = \frac{c}{\tau_0 \cdot c} = \frac{1}{\tau_0}
+  \quad (\text{in } c = 1 \text{ units}).
+\end{equation}
+There is no need for an ad hoc regularization scheme; the
+discreteness of the ledger provides it.
+\end{proof}
+
+%% ============================================================
+\section{SI Calibration}
+\label{sec:si}
+%% ============================================================
+
+The RS derivation yields $\hbar = \varphi^{-5}$ as an identity
+in RS-native units.  The SI value requires an external
+calibration seam: one measured quantity ($\tau_0$ in seconds)
+anchors the conversion.
+
+The natural calibration identifies $\tau_0$ with the Planck time:
+\begin{equation}
+  \tau_0 = t_P = \sqrt{\frac{\hbar G}{c^5}}
+  \approx 5.39 \times 10^{-44}\;\mathrm{s}.
+\end{equation}
+In RS, the Planck time is the fundamental tick because
+$G \cdot \hbar = 1$ in RS-native units forces $\ell_P = \ell_0 = 1$.
+The coherence energy in SI then equals the Planck energy:
+\begin{equation}
+  E_{\mathrm{coh}}^{\mathrm{SI}} = \frac{\hbar}{t_P}
+  = \sqrt{\frac{\hbar c^5}{G}}
+  = E_P \approx 1.956 \times 10^{9}\;\mathrm{J},
+\end{equation}
+and the RS-native value $\varphi^{-5} \approx 0.090$ is the
+coherence energy \emph{in units of the Planck energy}: the
+coherence quantum is approximately $9\%$ of the Planck energy.
+Restoring SI:
+\begin{equation}
+  \hbar = E_{\mathrm{coh}}^{\mathrm{SI}} \cdot t_P
+  = E_P \cdot t_P
+  \approx 1.956 \times 10^{9} \times 5.39 \times 10^{-44}
+  \approx 1.055 \times 10^{-34}\;\mathrm{J\,s},
+\end{equation}
+matching the CODATA value~\cite{CODATA2024}
+$\hbar = 1.054\,571\,817 \times 10^{-34}\;\mathrm{J\,s}$.
+
+\begin{remark}[Why the RS-native value is not in eV]
+The dimensionless RS-native quantity is
+$\hbar_{\mathrm{RS}} = \varphi^{-5} \approx 0.090$; this is
+a ratio in Planck units, not an energy.  In SI, the coherence
+quantum $E_{\mathrm{coh}} = E_P \approx 1.96\times10^9\,\mathrm{J}$
+(the Planck energy), which when multiplied by $t_P$ gives
+$\hbar_{\mathrm{SI}}$.  The often-cited ``$E_{\mathrm{coh}}
+\approx 90\,\mathrm{MeV}$'' refers to the hadronic calibration
+anchor used in mass derivations, not to the Planck-unit
+interpretation here.  The two calibrations address different
+physical scales; the RS framework accommodates both through
+different choices of the calibration seam.
+\end{remark}
+
+\begin{remark}[Calibration Honesty]
+The SI numerical value of $\hbar$ is not predicted by RS alone
+---it requires one external anchor ($\tau_0$ in seconds).  What
+RS predicts without any external input is the
+\emph{dimensionless} structure: $\hbar = \varphi^{-5}$,
+$G = \varphi^5$, $G \cdot \hbar = 1$, and the exponent
+$5 = 2^D - D$.  These are the falsifiable, zero-parameter
+results.
+\end{remark}
+
+%% ============================================================
+\section{Relation to Other Constants}
+\label{sec:relations}
+%% ============================================================
+
+In RS-native units ($\ell_0 = \tau_0 = 1$), the fundamental
+constants form a coherent $\varphi$-ladder:
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Quantity} & \textbf{RS-native value} &
+\textbf{$\varphi$-rung} \\
+\midrule
+Speed of light $c$ & $\ell_0/\tau_0 = 1$ & 0 \\
+Action quantum $\hbar$ & $\varphi^{-5}$ & $-5$ \\
+Coherence energy $E_{\mathrm{coh}}$ & $\varphi^{-5}$ & $-5$ \\
+Thermal quantum $k_R$ & $\ln\varphi$ & (logarithmic) \\
+Newton's constant $G$ & $\varphi^5$ & $+5$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{proposition}[$c$, $\hbar$, $G$ Identities]
+\label{prop:cGhbar}
+$c$, $\hbar$, and $G$ are related by three identities:
+\begin{enumerate}[label=(\roman*),nosep]
+  \item $c = 1$ (one voxel per tick),
+  \item $G \cdot \hbar = 1$ (quantum-gravitational duality),
+  \item The Planck length
+  $\ell_P = \sqrt{\hbar G / c^3} = 1$ in RS-native units.
+\end{enumerate}
+\end{proposition}
+
+%% ============================================================
+\section{Comparison}
+\label{sec:comparison}
+%% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lll@{}}
+\toprule
+& \textbf{Standard Model} & \textbf{RS} \\
+\midrule
+$\hbar$ & Free parameter (measured) & $\varphi^{-5}$ (derived) \\
+$G$ & Free parameter (measured) & $\varphi^5$ (derived) \\
+$G \cdot \hbar$ in RS-native units & $---$ & $= 1$ (exact) \\
+Hierarchy problem & Unexplained & Reciprocal rungs \\
+UV regularization & Ad hoc & Natural ($\ell_0, \tau_0$) \\
+Free parameters & $\geq 2$ ($\hbar, G$) & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{remark}[Hierarchy in SI]
+In SI, $G \cdot \hbar \approx 7.0 \times 10^{-45}\,\mathrm{m}^3\,\mathrm{kg}^{-1}\,\mathrm{s}^{-1} \cdot \mathrm{J\,s}$
+has units and is not directly comparable to the dimensionless
+RS-native identity $G_{\rm RS} \cdot \hbar_{\rm RS} = 1$.  The
+``hierarchy problem'' refers to the fact that in SI units, $G$
+and $\hbar$ appear at vastly different scales only because SI
+uses human-defined reference units.  In Planck units, the
+hierarchy disappears: $G \cdot \hbar = (\hbar c / E_P^2)
+\cdot (\hbar) = \hbar^2 c / E_P^2$.  The RS resolution is that
+this dimensionless ratio equals 1 by the $\varphi^5 \cdot \varphi^{-5}
+= 1$ identity.
+\end{remark}
+
+%% ============================================================
+\section{Predictions and Falsifiers}
+\label{sec:predictions}
+%% ============================================================
+
+\begin{enumerate}
+  \item \textbf{$\hbar = \varphi^{-5}$}: Dimensionless identity
+  in RS-native units.  The exponent $5 = 2^D - D$ is fixed by
+  $D = 3$.
+
+  \item \textbf{$G \cdot \hbar = 1$}: Zero-parameter prediction.
+  Any deviation would falsify the $\varphi$-ladder structure.
+
+  \item \textbf{No running of $\hbar$}: $\hbar$ is a fixed
+  $\varphi$-power, not scale-dependent.
+
+  \item \textbf{Minimum action}: No physical process can have
+  action less than $\hbar$.  At the Planck scale, discreteness
+  corrections of order $(\ell_0/\lambda)^2$ may become
+  observable.
+
+  \item \textbf{Falsifier}: An independent derivation of
+  $\hbar$ from $D = 3$ geometry yielding an exponent
+  $\neq 5 = 2^D - D$ would falsify the compact-mode
+  interpretation.
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+Planck's constant is not a free parameter but the minimum action
+quantum: $\hbar = E_{\mathrm{coh}} \cdot \tau_0 = \varphi^{-5}$
+in RS-native units.  The exponent $5 = 2^D - D$ counts the
+compact modes of the 8-tick epoch.  Newton's constant
+$G = \varphi^5$ is the exact reciprocal, giving the duality
+$G \cdot \hbar = 1$.  The apparent hierarchy between quantum
+and gravitational scales is an artifact of the SI calibration
+seam; in RS-native units, they are mirror-image rungs on the
+$\varphi$-ladder.
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{Aczel1966}
+J.~Acz\'el, \emph{Lectures on Functional Equations and Their Applications},
+Academic Press, New York (1966).
+
+\bibitem{CODATA2024}
+E.~Tiesinga, P.~J.~Mohr, D.~B.~Newell, and B.~N.~Taylor,
+``CODATA Recommended Values of the Fundamental Physical
+Constants: 2022,'' Rev.\ Mod.\ Phys.\ \textbf{96}, 025004
+(2024).
+
+\bibitem{Feynman1948}
+R.~P.~Feynman, ``Space-Time Approach to Non-Relativistic
+Quantum Mechanics,'' Rev.\ Mod.\ Phys.\ \textbf{20}, 367
+(1948).
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+\texttt{doi:10.3390/axioms15020090}
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,95 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\phig}{\varphi}
+\newcommand{\Ecoh}{E_{\mathrm{coh}}}
+\newcommand{\muStar}{\mu_{\star}}
+\newcommand{\mRS}{m^{\mathrm{RS}}}
+\newcommand{\mdata}{m^{\mathrm{data}}}
+\newcommand{\fRG}{f^{\mathrm{RG}}}
+\newcommand{\fRec}{f^{\mathrm{Rec}}}
+\newcommand{\Epass}{E_{\mathrm{passive}}}
+\newcommand{\RS}{Recognition Science}
+\newcommand{\SM}{Standard Model}
+\newcommand{\PROVED}{\textcolor{blue!70!black}{\footnotesize\textsf{[PROVED]}}}
+\newcommand{\HYP}{\textcolor{orange!80!black}{\footnotesize\textsf{[HYP]}}}
+\newcommand{\CERT}{\textcolor{teal}{\footnotesize\textsf{[CERT]}}}
+\newcommand{\VAL}{\textcolor{purple!70!black}{\footnotesize\textsf{[VAL]}}}
+
+\title{\textbf{The Single-Anchor Scale and Transport Discipline\\for Particle Mass Phenomenology}\\[0.5em]\large Paper IV of VI: Anchor Derivation, Non-Circularity,\\and the Structural--Transport Separation}
+\author{Jonathan Washburn\\\small Recognition Science Research Institute, Austin, Texas\\\small \texttt{washburn.jonathan@gmail.com}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Any comparison between a structural mass framework and experiment requires careful treatment of scale, scheme, and transport. This paper establishes the single-anchor discipline for the RS mass series. We derive $\muStar=182.201\,\mathrm{GeV}$ from mass-free PMS/BLM stationarity, prove non-circularity (no measured mass enters its own prediction), and develop the clean separation between two fundamentally distinct exponents: $\fRec(Z)=\mathrm{gap}(Z)$ (large, $\sim 6$--$14$, band-defining) and $\fRG$ (small, $\sim 10^{-2}$--$10^{-1}$ for leptons, bookkeeping-only). A Lean-proved no-go theorem shows $\fRG$ cannot equal $\mathrm{gap}(Z)$. The full RG transport policy (4-loop QCD, 2-loop QED) is pinned and certified. Equal-$Z$ clustering survives all tested scheme/loop/threshold variations.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Anchor Scale Derivation}
+\subsection{Stationarity principle}
+$\muStar$ satisfies $d\gamma_m/d\ln\mu|_{\mu=\muStar}=0$ (PMS criterion). \CERT{}
+
+\subsection{Mass-free derivation}
+The SM beta function $\beta_0(n_f)=11-2n_f/3$ depends only on group theory, not fermion masses. The stationarity optimization yields: \CERT{}
+\begin{equation}\muStar=182.201\,\mathrm{GeV}.\end{equation}
+
+\subsection{Non-circularity certificate}
+\begin{theorem}[Anchor non-circularity]
+There exists a certified $\muStar$ such that: (1) stationarity holds, (2) $\beta_0$ contains no mass parameters, (3) no measured fermion mass enters $\muStar$, (4) no adjustable parameters enter. \PROVED{}
+\end{theorem}
+Lean module: \texttt{IndisputableMonolith.Verification.AnchorNonCircularityCert} (zero \texttt{sorry}).
+
+\section{Two Distinct Exponents}
+\subsection{Structural residue $\fRec(Z)$}
+$\fRec(Z):=\mathrm{gap}(Z)=\log_\phig(1+Z/\phig)$. Values: $\mathrm{gap}(24)\approx 5.74$, $\mathrm{gap}(276)\approx 10.69$, $\mathrm{gap}(1332)\approx 13.95$. Large, family-defining, integer-organized. \PROVED{}
+
+\subsection{Transport exponent $\fRG$}
+$\fRG_i(\muStar,\mu_{\mathrm{target}}):=\log_\phig[m_i(\mu_{\mathrm{target}})/m_i(\muStar)]$. For leptons $O(10^{-2})$; for quarks $O(1)$; always $\ll\fRec(Z)$. \CERT{}
+
+\subsection{No-conflation theorem}
+\begin{theorem}
+For $Z\in\{24,276,1332\}$: $|\fRG_i-\fRec(Z_i)|>10$ for $Z=1332$.
+\end{theorem}
+Lean: \texttt{IndisputableMonolith.Physics.MassResidueNoGo}. The structural band coordinate is not the SM running correction. \PROVED{}
+
+\section{RG Transport Policy}
+\begin{center}\begin{tabular}{ll}\toprule Parameter & Value \\\midrule QCD anomalous dim. & 4-loop \\ QED anomalous dim. & 2-loop \\ $\alpha_s$ running & 4-loop \\ $\alpha_{\mathrm{EM}}$ & frozen at $M_Z$ \\ Thresholds & $\overline{\mathrm{MS}}$ at $m_c,m_b,m_t$ \\ Integrator & RK4, $10^4$ steps/decade \\\bottomrule\end{tabular}\end{center}
+Certified in \texttt{data/certificates/rg\_transport/canonical\_2025\_q4.json}. \CERT{}
+
+\section{Robustness}
+Equal-$Z$ clustering (tolerance $\sim 5\times 10^{-6}$) survives: 3-loop/5-loop QCD; 1-loop/2-loop QED; pole vs.\ $\overline{\mathrm{MS}}$ thresholds; running vs.\ frozen $\alpha_{\mathrm{EM}}$; anchor recalibration under each variant. Ablations destroying the $Z$-map break clustering by orders of magnitude. \VAL{}
+
+\section{Calibration Seam}
+All RS outputs are dimensionless $\phig$-ladder quantities. SI reporting requires one global scalar $\tau_0$ (seconds per tick). This seam is: fixed once (not per species); version-controlled; not a fit parameter.
+
+\section{Reviewer Checklist}
+Any numerical objection must specify: (1) the exact equation; (2) target scheme; (3) target scale; (4) loop/threshold policy; (5) whether any $m_i$ entered its own RHS; (6) computation steps and outputs.
+
+\section{Conclusions}
+$\muStar$ is mass-free and non-circular. The structural--transport separation is Lean-proved. The transport policy is pinned and auditable. The calibration seam is global, not per-species.
+
+\begin{thebibliography}{99}
+\bibitem{PDG2024} R.~L.~Workman \textit{et al.} [PDG], PTEP \textbf{2022}, 083C01.
+\bibitem{PMS} P.~M.~Stevenson, Phys.\ Rev.\ D~\textbf{23}, 2916 (1981).
+\bibitem{BLM} S.~J.~Brodsky et al., Phys.\ Rev.\ D~\textbf{28}, 228 (1983).
+\bibitem{Washburn2025} J.~Washburn, \textit{Axioms} \textbf{15}(2), 90 (2025).
+\end{thebibliography}
+\end{document}

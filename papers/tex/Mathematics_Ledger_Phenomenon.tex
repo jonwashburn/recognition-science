@@ -1,0 +1,658 @@
+\documentclass[11pt]{article}
+
+% ── Page geometry ──
+\usepackage[
+  top=1.15in, bottom=1.15in,
+  left=1.25in, right=1.25in
+]{geometry}
+
+% ── Fonts and typography ──
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% ── Mathematics ──
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+% ── Tables and lists ──
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\setlist{leftmargin=*, itemsep=2pt, parsep=0pt}
+
+% ── Colour (restrained) ──
+\usepackage[dvipsnames]{xcolor}
+\definecolor{secblue}{RGB}{20,60,120}
+\definecolor{linkblue}{RGB}{0,60,140}
+
+% ── Hyperlinks ──
+\usepackage[
+  colorlinks=true,
+  linkcolor=linkblue,
+  citecolor=linkblue,
+  urlcolor=linkblue
+]{hyperref}
+\usepackage[nameinlink,capitalize]{cleveref}
+
+% ── Headers ──
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyhead[L]{\small\textsc{The Law of Mathematical Inevitability}}
+\fancyhead[R]{\small\thepage}
+
+% ── Theorem environments ──
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% ── Notation ──
+\newcommand{\phig}{\varphi}
+\newcommand{\Jcost}{J}
+\newcommand{\Jbit}{J_{\mathrm{bit}}}
+\newcommand{\Rpos}{\mathbb{R}_{>0}}
+\newcommand{\Rnn}{\mathbb{R}_{\ge 0}}
+\DeclareMathOperator{\lcm}{lcm}
+
+% ══════════════════════════════════════════════════════════════
+\begin{document}
+% ══════════════════════════════════════════════════════════════
+
+\thispagestyle{empty}
+
+\begin{center}
+  {\LARGE\bfseries The Law of Mathematical Inevitability:\\[4pt]
+   Numbers, Proofs, and Universal Reference\\[4pt]
+   Forced by the d'Alembert Cost Equation}
+
+  \bigskip
+
+  {\large Jonathan Washburn}\\[4pt]
+  {\small Recognition Science Research Institute, Austin, Texas}\\
+  {\small\ttfamily washburn.jonathan@gmail.com}
+
+  \bigskip
+
+  {\small February 2026}
+\end{center}
+
+\medskip\hrule\medskip
+
+\noindent\textbf{Abstract.}\;
+The d'Alembert functional equation on $(\Rpos,\cdot)$, under
+normalization and non-degeneracy, uniquely determines the cost
+functional $\Jcost(x) = \tfrac{1}{2}(x+x^{-1})-1$~\cite{CostFunctional2026,Aczel1966}.
+We derive three consequences for the foundations of inference:
+\textbf{(1)}~the logarithm is the unique continuous additive
+invariant vanishing on product-one sequences (via Cauchy's theorem);
+\textbf{(2)}~the golden ratio $\phig$ is the unique base whose
+geometric lattice admits a Fibonacci-type recursion;
+\textbf{(3)}~a space is a universal referent for all positive-cost
+objects if and only if its infimal cost is zero.
+We compute explicit costs for a propositional-resolution example,
+characterize the generators of the balanced-proof monoid, and pose
+open problems connecting the framework to proof complexity.
+
+\medskip\noindent
+\textbf{MSC 2020:}\; 39B22 (functional equations), 03F20 (complexity
+of proofs), 03A05 (philosophical and critical aspects of logic).
+
+\medskip\noindent
+\textbf{Keywords:}\; d'Alembert functional equation, Cauchy equation,
+cost functional, golden ratio, proof complexity, universal reference,
+Wigner effectiveness.
+
+\medskip\hrule
+
+\bigskip
+\tableofcontents
+
+\newpage
+
+% ══════════════════════════════════════════════════════════════
+\section{Introduction}\label{sec:intro}
+% ══════════════════════════════════════════════════════════════
+
+The \emph{d'Alembert functional equation}
+\begin{equation}\label{eq:dalembert}
+  g(s+t) + g(s-t) \;=\; 2\,g(s)\,g(t), \qquad s,t \in \mathbb{R},
+\end{equation}
+has been studied since d'Alembert~(1769) and Cauchy; its continuous
+solutions are $g(t) = \cosh(\lambda t)$ for
+$\lambda \in \mathbb{R}$~\cite{Aczel1966,Kannappan2009}.  The
+\emph{multiplicative form}, via $x = e^s$, $y = e^t$,
+$F(x) = g(\ln x) - 1$, yields
+\begin{equation}\label{eq:rcl}
+  F(xy) + F(x/y) \;=\; 2F(x)F(y) + 2F(x) + 2F(y),
+  \qquad x,y > 0.
+\end{equation}
+Under normalization $F(1)=0$, non-degeneracy $F(x)>0$ for $x\ne 1$,
+and calibration $F''_{\!\log}(0) = 1$, the unique solution
+is~\cite{CostFunctional2026}
+\begin{equation}\label{eq:jcost}
+  \boxed{\;\Jcost(x) \;:=\; \tfrac{1}{2}\!\bigl(x + x^{-1}\bigr) - 1
+  \;=\; \cosh(\ln x) - 1, \qquad x > 0.\;}
+\end{equation}
+This functional arises as the ``recognition cost''
+in~\cite{RecognitionGeometry2025,Foundations2026,DimensionalRigidity2026}
+and as the unique symmetric non-negative solution
+to~\eqref{eq:rcl}~\cite{CostFunctional2026}.
+
+In this paper we derive three consequences of $\Jcost$ for the
+\emph{foundations of inference}: a uniqueness theorem for balance
+conditions (\cref{sec:proofs}), a characterization of the self-similar
+lattice (\cref{sec:numbers}), and an if-and-only-if characterization
+of universal reference (\cref{sec:wigner}).  We state what is proved,
+what is conjectured, and what remains open.
+
+% ══════════════════════════════════════════════════════════════
+\section{The Cost Functional}\label{sec:cost}
+% ══════════════════════════════════════════════════════════════
+
+\begin{definition}[Axioms]\label{def:axioms}
+A \emph{d'Alembert cost functional} is a continuous function
+$F : \Rpos \to \Rnn$ satisfying:
+\begin{enumerate}[label=\textup{(A\arabic*)},nosep]
+  \item\label{ax:norm} $F(1)=0$ and $F(x)>0$ for $x\ne 1$;
+  \item\label{ax:recip} $F(x)=F(x^{-1})$ for all $x>0$;
+  \item\label{ax:dalembert} $F(xy)+F(x/y)=2F(x)F(y)+2F(x)+2F(y)$
+    for all $x,y>0$.
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Uniqueness; {\cite[Thm.~1]{CostFunctional2026},
+cf.~\cite[Ch.~3]{Aczel1966}}]\label{thm:unique_cost}
+The unique d'Alembert cost functional is
+$\Jcost(x) = \tfrac{1}{2}(x+x^{-1})-1$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Set $G(t):=F(e^t)+1$.  Then \ref{ax:dalembert} becomes the classical
+$G(s+t)+G(s-t)=2G(s)G(t)$.  By~\cite[Thm.~3.1.3]{Aczel1966},
+$G=\cosh(\lambda\,\cdot\,)$.
+\ref{ax:norm} forces $\lambda\ne 0$; calibration fixes $\lambda=1$.
+Hence $F=\cosh\circ\ln - 1 = \frac{1}{2}(x+x^{-1})-1$.
+\end{proof}
+
+\begin{remark}[Heritage]
+The additive form~\eqref{eq:dalembert} was solved by d'Alembert~(1769);
+Acz\'el~\cite{Aczel1966} and Acz\'el--Dhombres~\cite{AczelDhombres1989}
+provide the modern theory.
+Ref.~\cite{CostFunctional2026} adds the calibrated multiplicative form
+with \ref{ax:norm}, selecting the cosh branch.
+\end{remark}
+
+\smallskip\noindent
+\textbf{Key properties} (all \emph{derived}, not assumed):\;
+$\Jcost\ge 0$ with $\Jcost=0 \Leftrightarrow x=1$\; (AM--GM);\;
+$\Jcost(x)=\Jcost(x^{-1})$;\;
+$\Jcost''(x)=x^{-3}>0$\; (strict convexity).
+
+\begin{definition}\label{def:phi}
+$\phig:=(1+\sqrt{5})/2$ (the golden ratio);
+\quad $\Jbit:=\ln\phig\approx 0.4812$ (the ledger bit cost).
+\end{definition}
+
+% ══════════════════════════════════════════════════════════════
+\section{The Self-Similar Lattice}\label{sec:numbers}
+% ══════════════════════════════════════════════════════════════
+
+\begin{definition}[$\phig$-Ladder]\label{def:ladder}
+$L:\mathbb{Z}\to\Rpos$, $L(n)=\phig^n$.
+\end{definition}
+
+\begin{theorem}[Ladder]\label{thm:ladder}
+$L$ is positive, strictly monotone, satisfies $L(0)=1$, and obeys the
+Fibonacci recursion $L(n{+}2)=L(n{+}1)+L(n)$.
+\end{theorem}
+
+\begin{proof}
+$\phig>1$ gives positivity and monotonicity.
+$\phig^{n+2}=\phig^n\phig^2=\phig^n(\phig+1)=\phig^{n+1}+\phig^n$.
+\end{proof}
+
+\begin{theorem}[Uniqueness]\label{thm:self_similar}
+If $\alpha>1$ satisfies $\alpha^2=\alpha+1$, then $\alpha=\phig$.
+\end{theorem}
+
+\begin{proof}
+$\alpha=(1\pm\sqrt{5})/2$; the constraint $\alpha>1$ selects $\phig$.
+\end{proof}
+
+\begin{remark}
+The condition $\alpha^2=\alpha+1$ arises precisely when
+$\alpha^{n+2}=\alpha^{n+1}+\alpha^n$ (Fibonacci recursion on the
+lattice).  No other base $\alpha>1$ satisfies this;
+e.g., $2^{n+2}=4\cdot 2^n\ne 3\cdot 2^n$.
+\end{remark}
+
+\begin{definition}[Metric]\label{def:distance}
+$d(m,n):=|m-n|\cdot\ln\phig$.
+\end{definition}
+
+\begin{proposition}\label{prop:metric}
+$d$ is a metric on $\mathbb{Z}$.\; ($\ln\phig$ times the standard
+metric.)
+\end{proposition}
+
+\begin{remark}
+The cost $\Jcost(\phig^n)=\cosh(d(n,0))-1$ is a strictly monotone
+convex function of $d$---not itself a metric, but an equivalent
+measure of distance from unity.
+\end{remark}
+
+\begin{corollary}[Zeckendorf~{\cite{Zeckendorf1972}}]
+Every positive integer has a unique sum of non-consecutive Fibonacci
+numbers.
+\end{corollary}
+
+% ══════════════════════════════════════════════════════════════
+\section{Balanced Ledger Sequences}\label{sec:proofs}
+% ══════════════════════════════════════════════════════════════
+
+\begin{definition}[Proof]\label{def:proof}
+A \emph{recognition proof} $p=(r_1,\dots,r_N)$ with $r_k>0$ has
+cost $C(p)=\sum\Jcost(r_k)$ and log-balance
+$\beta(p)=\sum\ln r_k$.  It is \emph{balanced} when $\beta(p)=0$.
+\end{definition}
+
+\subsection*{Uniqueness of the balance condition}
+
+\begin{theorem}[Cauchy on $(\Rpos,\cdot)$;
+{\cite[Ch.~2]{Aczel1966}}]\label{thm:cauchy}
+Every continuous homomorphism $\phi:(\Rpos,\cdot)\to(\mathbb{R},+)$
+has the form $\phi=\lambda\ln$ for some $\lambda\in\mathbb{R}$.
+\end{theorem}
+
+\begin{proof}
+Set $f(u):=\phi(e^u)$; then $f(u+v)=f(u)+f(v)$ continuously, so
+$f=\lambda\,\mathrm{id}$~\cite[Thm.~2.1.1]{Aczel1966}.
+\end{proof}
+
+\begin{theorem}[Unique Balance]\label{thm:unique_balance}
+If $\Phi$ is continuous, additive on sequences, and vanishes on every
+product-one chain ($\prod r_k=1$), then
+$\Phi=\lambda\sum\ln r_k$.
+\end{theorem}
+
+\begin{proof}
+Additivity: $\Phi=\sum\phi(r_k)$.  Pair $(t,t^{-1})$ gives
+$\phi(t)+\phi(t^{-1})=0$.  Triple $(r,s,(rs)^{-1})$ gives
+$\phi(rs)=\phi(r)+\phi(s)$.
+Apply \cref{thm:cauchy}.
+\end{proof}
+
+\begin{corollary}\label{cor:forced_balance}
+Log-balance is the unique continuous additive closed-chain invariant
+on $(\Rpos,\cdot)$.
+\end{corollary}
+
+\begin{theorem}[Monoid]\label{thm:compose}
+Balanced proofs form a monoid; $C$ is a homomorphism to
+$(\Rnn,+)$.
+\end{theorem}
+
+\begin{example}[Minimal balanced proof]\label{ex:phi_pair}
+$p=(\phig,\phig^{-1})$:\;
+$\beta=0$,\;
+$C=2\Jcost(\phig)=\sqrt{5}-2\approx 0.236$.
+\end{example}
+
+\begin{remark}[Semantics]
+The ratio $r$ of a proof step models an ``informational exchange
+rate.''  \Cref{thm:unique_balance} holds \emph{regardless} of the
+concrete assignment $r\mapsto$~inference-rule.  The mapping to
+specific formal systems is an open problem
+(\cref{sec:formal}).
+\end{remark}
+
+% ══════════════════════════════════════════════════════════════
+\section{Further Consequences}\label{sec:further}
+% ══════════════════════════════════════════════════════════════
+
+\begin{proposition}[Canonical ordering]\label{prop:beauty}
+$C$ induces a total preorder on balanced proofs, independent of the
+choice of decreasing beauty functional.  A cost-minimizer
+$p^*=\arg\min C$ exists for any provable theorem (cf.\
+Erd\H{o}s's ``Proof from the Book''~\cite{Erdos1998}).
+\end{proposition}
+
+\begin{conjecture}[G\"odel saddle]\label{conj:saddle}
+If a sentence requires unbounded self-reference depth, both proof and
+refutation have unbounded $\Jcost$.
+\end{conjecture}
+
+The self-reference cost $S(n)\ge n\Jbit=n\ln\phig$ diverges
+(Archimedean property).  The contribution is the interpretation:
+$\Jbit$ is uniquely fixed by \ref{ax:norm}--\ref{ax:dalembert},
+giving a machine-independent analogue of
+Chaitin's~\cite{Chaitin1987} algorithmic incompleteness.
+
+% ══════════════════════════════════════════════════════════════
+\section{Toward Formal Proof Theory}\label{sec:formal}
+% ══════════════════════════════════════════════════════════════
+
+\begin{definition}[Complexity ratio]\label{def:ratio}
+For a complexity measure $\kappa:\text{Formulas}\to\mathbb{N}$,
+\begin{equation}\label{eq:ratio}
+  r(A\to B) \;:=\; \frac{\kappa(B)+1}{\kappa(A)+1}.
+\end{equation}
+\end{definition}
+
+\begin{proposition}\label{prop:tautology}
+$A=B\implies r=1$, $\Jcost=0$.\;
+A cyclic derivation $A\to\cdots\to A$ has $\prod r_k=1$ (balanced).
+\end{proposition}
+
+\subsection*{Worked example: propositional resolution}
+
+\begin{example}\label{ex:resolution}
+$(A\lor B)\land(\lnot A\lor B)\implies B$ by resolution on $A$,
+with $\kappa=$\,clause width.
+
+\smallskip
+\begin{center}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Step & From & To & $r$ & $\Jcost(r)$ \\
+\midrule
+1 & $A\lor B\;(\kappa{=}2)$ & $B\;(\kappa{=}1)$ & $2/3$ & $1/12$ \\
+2 & $\lnot A\lor B\;(\kappa{=}2)$ & $B\;(\kappa{=}1)$ & $2/3$ & $1/12$ \\
+\midrule
+\multicolumn{3}{@{}l}{Balance to cycle: add steps $(3/2,3/2)$}
+  & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\smallskip\noindent
+Derivation: $\beta=2\ln(2/3)\approx{-0.81}\ne 0$ (not balanced).\\
+Balanced cycle $p'=(2/3,\,2/3,\,3/2,\,3/2)$:\;
+$\beta=0$,\; $C=4/12=1/3$.
+\end{example}
+
+\subsection*{Proof monoid generators}
+
+\begin{proposition}[Generators]\label{prop:generators}
+The balanced-proof monoid over the $\phig$-lattice is generated by
+the pairs $(\phig^k,\phig^{-k})$, $k\ge 1$.  The cheapest generator
+is $(\phig,\phig^{-1})$ with $C=\sqrt{5}-2$.
+\end{proposition}
+
+\begin{proof}
+Any balanced sequence $\sum n_k=0$ decomposes into matched
+$\pm$\nobreakdash-pairs.  The cost
+$2\Jcost(\phig^k)=\phig^k+\phig^{-k}-2$ is minimized at $k=1$.
+\end{proof}
+
+\subsection*{Open problems}
+
+\begin{enumerate}[label=\textup{(Q\arabic*)},nosep]
+  \item Does $C$ correlate with Frege proof length or resolution width?
+  \item Is $C$-minimality equivalent to a known proof optimality?
+  \item Does the generator structure correspond to an algebraic
+    invariant of proof systems?
+\end{enumerate}
+
+% ══════════════════════════════════════════════════════════════
+\section{Axiom of Choice: A Cost Interpretation}\label{sec:choice}
+% ══════════════════════════════════════════════════════════════
+
+\begin{theorem}\label{thm:finite}
+$\Jcost(x)<\infty$ for all $x>0$.
+\end{theorem}
+
+\begin{theorem}\label{thm:empty}
+$\Jcost(x)\to+\infty$ as $x\to 0^+$.
+\end{theorem}
+
+\begin{remark}
+We do not derive AC from weaker axioms.  In any cost landscape where
+$\Jcost<\infty$ on $\Rpos$ and $\Jcost(0^+)=\infty$, selection from
+nonempty sets is always finitely accessible.  In compact settings,
+$\arg\min_A\Jcost$ gives a constructive choice.
+\end{remark}
+
+% ══════════════════════════════════════════════════════════════
+\section{Zero-Cost Universal Reference}\label{sec:wigner}
+% ══════════════════════════════════════════════════════════════
+
+\begin{theorem}[Backbone]\label{thm:backbone}
+For any $(P,\Jcost_P)$ with $\Jcost_P(o)>0$, there exists $(M,0)$
+with $\Jcost_M(s)=0<\Jcost_P(o)$.
+\end{theorem}
+
+\begin{theorem}[Necessity]\label{thm:only_zero}
+If $M$ is a universal referent (i.e., for every $(P,\Jcost_P)$ and
+$o$ with $\Jcost_P(o)>0$ there exists $s\in M$ with
+$\Jcost_M(s)<\Jcost_P(o)$), then $\inf_M\Jcost_M=0$.
+\end{theorem}
+
+\begin{proof}
+If $\inf=c>0$, take $P=\{o\}$ with $\Jcost_P(o)=c/2$: contradiction.
+\end{proof}
+
+\begin{theorem}[Sufficiency]\label{thm:converse}
+If $\inf_M\Jcost_M=0$, then $M$ is a universal referent.
+\end{theorem}
+
+\begin{proof}
+Given $\varepsilon=\Jcost_P(o)>0$, choose $s\in M$ with
+$\Jcost_M(s)<\varepsilon$.
+\end{proof}
+
+\begin{corollary}[Characterization]\label{cor:iff}
+$M$ is a universal referent $\;\Longleftrightarrow\;$ $\inf_M\Jcost_M=0$.
+\end{corollary}
+
+\begin{corollary}[Existence]\label{cor:exist}
+$\ker(\Jcost)=\{1\}$ satisfies $\inf\Jcost=0$.
+\end{corollary}
+
+\begin{remark}[Wigner]
+\Cref{cor:iff} is analogous to Shannon's source coding
+theorem~\cite{Shannon1948}: zero intrinsic cost $\Leftrightarrow$
+optimal compression.  Wigner's puzzle~\cite{Wigner1960} becomes a
+theorem about cost asymmetry.
+\end{remark}
+
+% ══════════════════════════════════════════════════════════════
+\section{Summary}\label{sec:summary}
+% ══════════════════════════════════════════════════════════════
+
+\begin{theorem}[Main]\label{thm:main}
+Any d'Alembert cost functional (\cref{def:axioms}) determines:
+\begin{enumerate}[nosep]
+  \item $F=\Jcost$ uniquely \hfill (\cref{thm:unique_cost});
+  \item $\phig$ as the unique self-similar base
+    \hfill (\cref{thm:self_similar});
+  \item the metric $d=|m-n|\ln\phig$
+    \hfill (\cref{prop:metric});
+  \item $\ln$ as the unique balance invariant
+    \hfill (\cref{thm:unique_balance});
+  \item the zero-cost subspace as the unique universal referent
+    \hfill (\cref{cor:iff}).
+\end{enumerate}
+The $\phig$-lattice proof monoid is generated by
+$\{(\phig^k,\phig^{-k}):k\ge 1\}$ (\cref{prop:generators}).
+\end{theorem}
+
+\begin{remark}[Scope]
+These are necessary \emph{infrastructure} for mathematical reasoning,
+not a derivation of ZFC or second-order arithmetic.  The contribution
+is that this infrastructure is uniquely forced by a single functional
+equation, and that concrete open problems
+(\cref{sec:formal}) connect it to proof complexity.
+\end{remark}
+
+% ══════════════════════════════════════════════════════════════
+\section{Discussion}\label{sec:discussion}
+% ══════════════════════════════════════════════════════════════
+
+\subsection*{Claims and non-claims}
+Three structures (ordered lattice, balance condition, zero-cost
+reference) are uniquely forced.  We do \emph{not} derive ZFC, refute
+G\"odel, or derive AC from weaker axioms.
+
+\subsection*{Prior work}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}>{\bfseries}l p{9cm}@{}}
+\toprule
+Reference & Relation to this work \\
+\midrule
+Acz\'el~\cite{Aczel1966}
+  & Classical d'Alembert theory; we apply it to cost and derive
+    mathematical structures. \\
+Tegmark~\cite{Tegmark2008}
+  & Postulates math is fundamental; we derive \emph{specific}
+    structures from one equation. \\
+Wheeler~\cite{Wheeler1990}
+  & ``It from Bit''; we quantify the bit: $\Jbit=\ln\phig$. \\
+Chaitin~\cite{Chaitin1987}
+  & Algorithmic incompleteness; $\Jcost$ replaces Kolmogorov
+    complexity with a \emph{unique} measure. \\
+Shannon~\cite{Shannon1948}
+  & Source coding; zero-cost reference $\approx$ optimal
+    compression (structural analogy). \\
+Cauchy
+  & $f(x{+}y)=f(x){+}f(y)$; \cref{thm:unique_balance} is a
+    direct application to $(\Rpos,\cdot)$. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Open questions}
+
+\begin{enumerate}[label=\textup{(Q\arabic*)},nosep,start=4]
+  \item Completion of $(\mathbb{Z},d)$ to a $\phig$-adic space?
+  \item Topos structure on balanced proofs?
+  \item Constructive selection via $\Jcost$-minimization in
+    non-compact settings?
+\end{enumerate}
+
+% ══════════════════════════════════════════════════════════════
+\section{Conclusion}\label{sec:conclusion}
+% ══════════════════════════════════════════════════════════════
+
+We have derived three consequences of the d'Alembert cost equation.
+
+\emph{Balance uniqueness} (\cref{thm:unique_balance}): log-balance is
+the unique continuous additive closed-chain invariant, by Cauchy's
+classical theorem.  The worked resolution example
+(\cref{ex:resolution}) and monoid generators
+(\cref{prop:generators}) give a first algebraic picture.
+
+\emph{Lattice uniqueness} (\cref{thm:self_similar}): $\phig$ is the
+unique base admitting a Fibonacci recursion.
+
+\emph{Universality} (\cref{cor:iff}): a space is a universal referent
+iff its infimal cost is zero---both necessary and sufficient.
+
+The most promising direction is the connection to proof complexity
+(\cref{sec:formal}): does $\Jcost$-cost correlate with standard
+proof-length measures?
+
+\bigskip
+
+% ══════════════════════════════════════════════════════════════
+\begin{thebibliography}{99}
+\small
+
+\bibitem{Aczel1966}
+J.~Acz\'el,
+\emph{Lectures on Functional Equations and Their Applications},
+Academic Press, 1966.
+
+\bibitem{AczelDhombres1989}
+J.~Acz\'el and J.~Dhombres,
+\emph{Functional Equations in Several Variables},
+Cambridge Univ.\ Press, 1989.
+
+\bibitem{Kannappan2009}
+P.~Kannappan,
+\emph{Functional Equations and Inequalities with Applications},
+Springer, 2009.
+
+\bibitem{CostFunctional2026}
+J.~Washburn and M.~Zlatanovi\'c,
+Uniqueness of the canonical reciprocal cost,
+arXiv:2602.05753 [math.CA], 2026.
+
+\bibitem{RecognitionGeometry2025}
+J.~Washburn,
+The algebra of reality: a recognition science derivation of
+physical law,
+\emph{Axioms} \textbf{15}(2):90, 2025.
+
+\bibitem{Foundations2026}
+J.~Washburn,
+Coherent comparison as information cost: a cost-first ledger
+framework for discrete dynamics, 2026.
+
+\bibitem{DimensionalRigidity2026}
+J.~Washburn,
+Dimensional rigidity: $D{=}3$ from linking and gap-45
+synchronization, 2026.
+
+\bibitem{Aboutness2026}
+J.~Washburn,
+The algebra of aboutness: reference as cost-minimizing
+compression,
+\emph{Entropy} (submitted), 2026.
+
+\bibitem{Wigner1960}
+E.\,P.~Wigner,
+The unreasonable effectiveness of mathematics in the natural
+sciences,
+\emph{Comm.\ Pure Appl.\ Math.} \textbf{13}:1--14, 1960.
+
+\bibitem{Tegmark2008}
+M.~Tegmark,
+The mathematical universe,
+\emph{Found.\ Phys.} \textbf{38}:101--150, 2008.
+
+\bibitem{Wheeler1990}
+J.\,A.~Wheeler,
+Information, physics, quantum: the search for links,
+in \emph{Complexity, Entropy, and the Physics of Information},
+1990.
+
+\bibitem{Shannon1948}
+C.\,E.~Shannon,
+A mathematical theory of communication,
+\emph{Bell Syst.\ Tech.\ J.} \textbf{27}:379--423, 1948.
+
+\bibitem{Chaitin1987}
+G.\,J.~Chaitin,
+\emph{Algorithmic Information Theory},
+Cambridge Univ.\ Press, 1987.
+
+\bibitem{Erdos1998}
+M.~Aigner and G.\,M.~Ziegler,
+\emph{Proofs from THE BOOK},
+Springer, 1998.
+
+\bibitem{Zeckendorf1972}
+E.~Zeckendorf,
+Repr\'esentation des nombres naturels par une somme de nombres
+de Fibonacci ou de nombres de Lucas,
+\emph{Bull.\ Soc.\ Roy.\ Sci.\ Li\`ege}
+\textbf{41}:179--182, 1972.
+
+\end{thebibliography}
+
+\end{document}

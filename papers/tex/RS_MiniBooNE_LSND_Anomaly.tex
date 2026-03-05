@@ -1,0 +1,362 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm,booktabs}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The MiniBooNE/LSND Anomaly and Sterile Neutrino Exclusion\\
+from $D = 3$}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We analyze the MiniBooNE/LSND anomaly within Recognition Science (RS).
+Both experiments report excess $\bar{\nu}_e$ appearance in $\nu_\mu$
+beams, consistent with neutrino oscillations at $\Delta m^2 \sim
+1~\mathrm{eV}^2$---a mass splitting incompatible with the standard
+three-neutrino framework.  The conventional explanation invokes a
+sterile neutrino with $m_4 \sim 1$~eV.  RS \emph{excludes} this
+interpretation: the spatial dimension $D = 3$ forces exactly three
+neutrino generations via the face-pair count of the recognition cube,
+$N_\nu = \mathrm{face\_pairs}(3) = 3$, leaving no structural slot for a
+fourth mass eigenstate.  We further propose that the $\varphi$-ladder
+spacing of the three active neutrino masses
+($m_i \propto \varphi^{n_i}$) produces $L/E$-dependent interference
+modulations that can, at specific baselines, mimic a sterile oscillation
+signal.  This mechanism is a hypothesis, not a proved theorem; it is
+offered as a falsifiable alternative to sterile neutrino models.  The
+MicroBooNE experiment (2021) has demonstrated that a significant fraction
+of the MiniBooNE excess can be explained by standard-model backgrounds
+(radiative $\Delta \to N\gamma$ decays); the RS analysis is consistent
+with this finding.  The structural theorem ($N_\nu = 3$) follows from the RS forcing
+chain; the $\varphi$-aliasing hypothesis awaits full quantitative
+treatment.  The Short-Baseline Neutrino (SBN) program at
+Fermilab---SBND, MicroBooNE, and ICARUS---provides the decisive
+experimental test.
+\end{abstract}
+
+%% ============================================================
+\section{Recognition Science Framework}
+\label{sec:framework}
+%% ============================================================
+
+The structural exclusion of sterile neutrinos follows from the RS
+forcing chain, which originates in the cost axioms.
+
+\begin{definition}[RS Cost Functional]
+For $x > 0$: $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{definition}
+
+\noindent\textbf{Axiom A1 (Normalization):} $J(1) = 0$.\\
+\textbf{Axiom A2 (Recognition Composition Law, RCL):}
+$J(xy)+J(x/y)=2J(x)J(y)+2J(x)+2J(y)$ for all $x,y>0$.\\
+\textbf{Axiom A3 (Calibration):} $J''_{\log}(0) = 1$, where
+$J_{\log}(t) := J(e^t)$.
+
+\begin{theorem}[Cost Uniqueness]
+\label{thm:unique}
+The continuous solution to \textup{(A1)--(A3)} is unique:
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Set $H(t) = J_{\log}(t)+1$.  Axiom A2 transforms into the d'Alembert
+equation $H(s+t)+H(s-t)=2H(s)H(t)$.  By the Acz\'el classification
+theorem~\cite{Aczel1966}, the unique continuous solution with $H(0)=1$
+and $H''(0)=1$ is $H(t)=\cosh t$, giving
+$J(x)=\tfrac{1}{2}(x+x^{-1})-1$.
+\end{proof}
+
+\noindent The recognition cube $Q_D$ has spatial dimension $D=3$ forced
+by $2^D=8$ (the 8-tick epoch) and three independent dimension-forcing
+arguments.  Its face-pair count $\mathrm{face\_pairs}(3)=3$ is the
+structural origin of exactly three active neutrino generations.  The
+$\varphi$-ladder ($\varphi=(1+\sqrt{5})/2$ forced by RCL self-similarity)
+assigns masses $m_i \propto \varphi^{n_i}$ to the three mass eigenstates.
+No fourth mass eigenstate is admitted by the RS cube structure.
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+The three-neutrino oscillation framework successfully describes solar,
+atmospheric, and long-baseline reactor data with two independent mass
+splittings: $\Delta m^2_{21} \approx 7.5 \times 10^{-5}~\mathrm{eV}^2$
+(solar) and $|\Delta m^2_{32}| \approx 2.5 \times 10^{-3}~\mathrm{eV}^2$
+(atmospheric)~\cite{PDG}.
+
+Two experiments report anomalous $\bar{\nu}_e$ appearance that does
+not fit this framework:
+\begin{itemize}[nosep]
+  \item \textbf{LSND} (1996--2001): excess $\bar{\nu}_e$ in a
+  $\bar{\nu}_\mu$ beam from $\mu^+$ decay at rest; $L \approx 30$~m,
+  $E \sim 20$--$200$~MeV; $\Delta m^2 \sim
+  1~\mathrm{eV}^2$~\cite{LSND}.
+  \item \textbf{MiniBooNE} (2018, 2020): excess low-energy $\nu_e$-like
+  events in a $\nu_\mu$ beam at Fermilab; $L \approx 500$~m,
+  $E \sim 200$--$3000$~MeV; combined significance ${\sim}\,4.8\sigma$
+  after 12.84$\times 10^{20}$ protons on target~\cite{MiniBooNE2020}.
+\end{itemize}
+
+The combined LSND+MiniBooNE significance exceeds $6\sigma$.  The
+canonical new-physics interpretation is a sterile neutrino with
+$m_4 \sim 1$~eV and mixing $|U_{e4}|^2 \sim 10^{-3}$, forming a
+``3+1'' oscillation model.  This is in tension with:
+\begin{itemize}[nosep]
+  \item Muon-neutrino disappearance bounds (IceCube, MINOS+).
+  \item Cosmological limits on $N_{\mathrm{eff}}$ and the sum of
+  neutrino masses.
+  \item MicroBooNE's identification of radiative backgrounds in the
+  same energy region~\cite{MicroBooNE2021}.
+\end{itemize}
+
+The status of the anomaly is therefore \emph{ambiguous}: it may reflect
+an uncontrolled background, a systematic error, or genuine new physics
+incompatible with the standard three-neutrino picture.  The RS
+analysis~\cite{RS_Axioms} below offers a structural argument against
+sterile neutrinos and a
+qualitative model for residual excess events.
+
+%% ============================================================
+\section{The Structural Argument: $N_\nu = 3$ from $D = 3$}
+\label{sec:structure}
+%% ============================================================
+
+\begin{theorem}[Exactly Three Neutrino Generations]
+\label{thm:3nu}
+In Recognition Science, the spatial dimension $D = 3$ forces exactly
+three active neutrino generations:
+\begin{equation}
+  N_{\nu} = \mathrm{face\_pairs}(D) = D = 3.
+\end{equation}
+A fourth (sterile) neutrino is excluded by the spinor structure of the
+$D$-dimensional recognition cube.
+\end{theorem}
+
+\begin{proof}
+The recognition cube $Q_D$ has $2D$ faces organized into $D$ orthogonal
+face pairs (top/bottom, front/back, left/right for $D = 3$).  Each
+face pair generates one independent chiral spinor mode; these are the
+three active neutrino flavors $\nu_e, \nu_\mu, \nu_\tau$.  With $D = 3$:
+$\mathrm{face\_pairs}(3) = 3$.  There is no fourth face pair; hence
+there is no structural slot for a fourth light neutrino species.
+\end{proof}
+
+\begin{corollary}
+$\mathrm{face\_pairs}(3) \neq 4$: a sterile neutrino at $m_4 \sim 1$~eV
+is excluded by RS.  The correct prediction from RS is $N_\nu = 3$
+active flavors with masses on the $\varphi$-ladder.
+\end{corollary}
+
+\begin{remark}
+The dimension $D = 3$ is itself forced in RS by three independent
+arguments derived from the RS forcing chain~\cite{RS_Axioms}: (i)
+Alexander duality requires integer linking invariants only in $D = 3$;
+(ii) Kepler stability of near-circular orbits requires $D = 3$;
+(iii) the minimum dyadic-to-sexagesimal synchronization (8-tick and
+45-tick cycles) achieves $\mathrm{lcm}(8, 45) = 360$ exactly at $D = 3$.
+\end{remark}
+
+%% ============================================================
+\section{The $\varphi$-Aliasing Hypothesis}
+\label{sec:aliasing}
+%% ============================================================
+
+The exclusion of sterile neutrinos raises the question: what produces
+the LSND/MiniBooNE excess?  We propose, as a hypothesis to be tested
+quantitatively, the following mechanism.
+
+\begin{proposition}[$\varphi$-Ladder Neutrino Masses]
+\label{prop:nu-masses}
+In RS, the three active neutrino masses sit on the $\varphi$-ladder:
+\begin{equation}
+  m_i \approx m_0 \, \varphi^{n_i}, \quad n_1 < n_2 < n_3,
+\end{equation}
+where $m_0$ is a reference mass set by the coherence energy scale and
+$\varphi = (1+\sqrt{5})/2$.
+\end{proposition}
+
+\begin{definition}[$\varphi$-Aliasing]
+\label{def:aliasing}
+At baseline $L$ and energy $E$, the two-flavor oscillation probability
+$P(\nu_\mu \to \nu_e)$ receives contributions from all three mass
+splittings $\Delta m^2_{ij}$.  For $\varphi$-spaced masses, higher
+rungs give $\Delta m^2_{3i} \sim \varphi^{2(n_3 - n_i)} \Delta
+m^2_{21}$.  At baselines $L/E$ tuned to a high rung splitting, the
+summed oscillation probability can exhibit a beat frequency that
+is numerically consistent with a \emph{new} splitting $\Delta
+m^2_{\mathrm{eff}} \sim 1~\mathrm{eV}^2$, without introducing a fourth
+eigenstate.
+\end{definition}
+
+\begin{remark}
+This mechanism is qualitatively analogous to aliasing in signal
+processing: the discrete $\varphi$-ladder spacing can create apparent
+``extra'' oscillation frequencies in a finite baseline window.  However,
+the analogy requires a quantitative calculation to determine whether the
+$\varphi$-spaced active masses can actually produce an apparent
+$\Delta m^2 \sim 1~\mathrm{eV}^2$ at the LSND and MiniBooNE baselines.
+This calculation is \emph{not} completed in the present paper and
+represents an open question.  The hypothesis is stated here as a
+target for future work.
+\end{remark}
+
+%% ============================================================
+\section{MicroBooNE and Background Explanations}
+\label{sec:microboone}
+%% ============================================================
+
+The MicroBooNE experiment~\cite{MicroBooNE2021} operated in the same
+neutrino beam as MiniBooNE with a liquid-argon time-projection chamber
+that allows event-by-event particle identification.  Key findings:
+
+\begin{itemize}
+  \item MicroBooNE found no excess of charged-current quasi-elastic
+  $\nu_e$ events consistent with a simple sterile neutrino oscillation.
+  \item Radiative $\Delta^+ \to p + \gamma$ decays, in which the photon
+  mimics an electron in the MiniBooNE Cherenkov detector, account for
+  a substantial fraction of the observed excess in the MiniBooNE signal
+  region.
+  \item A residual excess may remain in some MicroBooNE channels, but
+  its nature and significance continue to be analyzed.
+\end{itemize}
+
+\begin{theorem}[RS Consistency with Background Explanations]
+\label{thm:bg-ok}
+If the MiniBooNE excess is entirely due to mis-identified
+$\Delta \to N\gamma$ and $\pi^0$ backgrounds, the three-generation RS
+prediction is confirmed: no fourth neutrino eigenstate exists.
+\end{theorem}
+
+\begin{proof}
+The background explanation requires only standard-model processes and
+the three active neutrinos.  This is entirely consistent with
+$N_\nu = 3$ (Theorem~\ref{thm:3nu}).
+\end{proof}
+
+%% ============================================================
+\section{Comparison with Other Explanations}
+\label{sec:compare}
+%% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{3.2cm}p{3.8cm}p{5.2cm}}
+\toprule
+\textbf{Explanation} & \textbf{Prediction} & \textbf{Status} \\
+\midrule
+Sterile neutrino (3+1) & $\nu_4$ with $m_4 \sim 1$~eV & Tension with
+IceCube, MINOS+, $N_{\rm eff}$; excluded by RS ($N_\nu = 3$) \\
+SM backgrounds ($\Delta$, $\pi^0$) & No fourth mass eigenstate & 
+Supported by MicroBooNE; consistent with RS \\
+Lorentz violation & CPT-odd oscillations & No evidence; not predicted by RS \\
+RS $\varphi$-aliasing & Three-active-$\nu$ beat frequency & 
+Hypothesis; quantitative calculation needed \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%% ============================================================
+\section{Predictions and Falsifiers}
+\label{sec:predict}
+%% ============================================================
+
+\begin{enumerate}
+  \item \textbf{No sterile neutrino discovery.}  The SBN program
+  (SBND, MicroBooNE, ICARUS) will not find evidence for a
+  fourth neutrino mass eigenstate.  Any residual excess will be
+  consistent with backgrounds or the $\varphi$-aliasing mechanism,
+  not a new oscillation frequency.  \emph{Falsifier}: a confirmed
+  oscillation minimum at the predicted $\Delta m^2_{14}$ in a
+  disappearance channel.
+
+  \item \textbf{$N_{\mathrm{eff}} = 3.044$.}  The effective number of
+  thermalized neutrino species remains at the standard three-generation
+  value.  A measurement of $N_{\mathrm{eff}} > 3.1$ at $>5\sigma$
+  would challenge RS.
+
+  \item \textbf{$\varphi$-aliasing test.}  If the $\varphi$-aliasing
+  hypothesis is developed quantitatively, it predicts a specific $L/E$
+  dependence for any residual excess---one consistent with an
+  interference pattern of three $\varphi$-spaced oscillation
+  frequencies, not a simple two-frequency pattern.  High-statistics SBN
+  data can distinguish these.
+
+  \item \textbf{Background-only explanation.}  If MicroBooNE's full
+  analysis and the SBND data find that all excess events are accounted
+  for by known backgrounds, the RS three-generation prediction stands.
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+The MiniBooNE/LSND anomaly remains \emph{ambiguous} pending final SBN
+results.  The RS analysis provides one firm structural conclusion: there
+is no fourth neutrino mass eigenstate.  The dimension $D = 3$ of the
+recognition framework forces exactly three active neutrino generations,
+and a sterile neutrino at $m_4 \sim 1$~eV is structurally excluded.
+The $\varphi$-aliasing hypothesis offers a qualitative mechanism for
+residual excess events, but quantitative derivation remains as future
+work.  MicroBooNE data supporting background explanations are consistent
+with the RS prediction.  The SBN program will provide the definitive
+test.
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+\texttt{doi:10.3390/axioms15020090}
+
+\bibitem{Aczel1966}
+J.~Acz\'el, \emph{Lectures on Functional Equations and Their
+Applications} (Academic Press, 1966).
+
+\bibitem{PDG}
+S.~Navas \textit{et al.}\ (Particle Data Group),
+``Review of Particle Physics,'' Phys.\ Rev.\ D \textbf{110}, 030001 (2024).
+
+\bibitem{LSND}
+A.~Aguilar et al.\ (LSND Collaboration),
+``Evidence for neutrino oscillations from the observation of
+$\bar\nu_e$ appearance in a $\bar\nu_\mu$ beam,''
+Phys.\ Rev.\ D \textbf{64}, 112007 (2001).
+
+\bibitem{MiniBooNE2020}
+A.~A.~Aguilar-Arevalo et al.\ (MiniBooNE Collaboration),
+``Updated MiniBooNE neutrino oscillation results with increased data
+and new background studies,''
+Phys.\ Rev.\ D \textbf{103}, 052002 (2021).
+
+\bibitem{MicroBooNE2021}
+P.~Abratenko et al.\ (MicroBooNE Collaboration),
+``Search for an anomalous excess of inclusive charged-current
+$\nu_e$ interactions in the MicroBooNE experiment using Wire-Cell
+reconstruction,''
+Phys.\ Rev.\ D \textbf{105}, 112005 (2022).
+
+\end{thebibliography}
+
+\end{document}

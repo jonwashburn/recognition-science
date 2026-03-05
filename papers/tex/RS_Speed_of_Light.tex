@@ -1,0 +1,513 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The Speed of Light from Recognition Science:\\
+One Voxel per Tick as Structural Speed Limit}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We derive the speed of light $c$ from the discrete structure of the
+recognition ledger.  The ledger consists of voxels of size $\ell_0$
+updated at tick intervals $\tau_0$.  The maximum propagation speed is
+one voxel per tick: $c = \ell_0/\tau_0$.  In RS-native units
+($\ell_0 = \tau_0 = 1$), $c = 1$ exactly.  The light-cone identity
+$c\,\tau_0 = \ell_0$ is a structural consequence, not a coincidence.
+The constancy of $c$ (its independence from source motion) follows from
+the fact that the lattice tick rate is universal.  The SI value
+$c = 299\,792\,458\;\mathrm{m/s}$ is recovered through the calibration
+seam (identification of $\ell_0 = \ell_P$, $\tau_0 = t_P$).
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+The speed of light $c$ is the universal speed limit in physics.
+Einstein's 1905 postulate~\cite{Einstein1905}---that $c$ is the
+same in all inertial frames---is confirmed to extraordinary
+precision, most dramatically by the Michelson--Morley null
+result~\cite{MichelsonMorley1887} and the coincident detection
+of gravitational and electromagnetic signals from
+GW170817~\cite{GW170817}.  Yet special relativity offers no
+explanation for \emph{why} there is a universal speed limit or
+why it takes the value it does.
+
+Recognition Science~\cite{RS_Axioms} derives $c$ from the discrete
+ledger.  The ledger is a $D = 3$ cubic lattice of voxels with
+spatial quantum $\ell_0$ and tick duration $\tau_0$.  Information
+propagates at most one voxel per tick; massless signals saturate
+this bound.  The speed of light is therefore
+\begin{equation}
+  c = \frac{\ell_0}{\tau_0} = 1\quad\text{(RS-native units)}.
+\end{equation}
+Its constancy, its role as a speed limit, and the Lorentz group
+all follow from the lattice structure.
+
+\section{Recognition Science Framework}
+\label{sec:framework}
+
+Recognition Science derives all physics from a single primitive,
+the \emph{recognition cost functional} $J(x)$, uniquely determined
+by three axioms.
+
+\begin{definition}[RS Cost Functional]
+For $x > 0$:
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{definition}
+
+\noindent\textbf{A1 (Normalization):} $J(1) = 0$.\quad
+\textbf{A2 (RCL):} $J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y)$.\quad
+\textbf{A3 (Calibration):} $J''_{\log}(0) = 1$.
+
+\begin{theorem}[Cost Uniqueness~\cite{Aczel1966}]
+\label{thm:unique}
+The continuous solution to \textup{(A1)--(A3)} is $J(x) =
+\tfrac{1}{2}(x + x^{-1}) - 1$ (unique by the Acz\'el classification of
+d'Alembert's functional equation).
+\end{theorem}
+
+\noindent The golden ratio $\varphi = (1+\sqrt{5})/2$ is forced by
+self-similarity.  Spatial dimension $D = 3$ is forced by the linking
+condition $\operatorname{lcm}(2^D,45) = 360$: the 8-tick
+epoch ($2^3 = 8$) and the angular quantum ($45^\circ$) tile the
+full circle ($360^\circ$) only when $D = 3$.
+The $J$-cost depends only on ratios, giving the ledger its
+translation-invariant and Lorentz-compatible structure.
+
+\section{The Ledger Structure}
+
+\begin{definition}[Fundamental Scales]
+The recognition ledger has:
+\begin{itemize}
+  \item Voxel size $\ell_0 > 0$ (the minimum resolvable length).
+  \item Tick duration $\tau_0 > 0$ (the minimum resolvable time).
+\end{itemize}
+Both are forced by the 8-tick epoch: $\tau_0$ is one tick of the
+$2^D = 8$ cycle ($D = 3$); $\ell_0$ is the corresponding spatial
+quantum.
+\end{definition}
+
+\section{Derivation}
+
+\begin{proposition}[Speed of Light --- Structural Derivation]
+\begin{equation}
+  \boxed{c = \frac{\ell_0}{\tau_0}.}
+\end{equation}
+In RS-native units ($\ell_0 = \tau_0 = 1$): $c = 1$.
+\end{proposition}
+
+\begin{proof}
+The ledger is a discrete lattice: voxels at integer coordinates
+$(i,j,k) \in \mathbb{Z}^3$ updated at integer ticks $t \in
+\mathbb{Z}$.  A recognition event at voxel $\mathbf{x} = (i,j,k)$ at
+tick $t$ can influence only those voxels that share an edge, face, or
+vertex with $\mathbf{x}$ at tick $t+1$---the nearest neighbors in the
+$3+1$ causal graph.  The maximum spatial displacement in one tick is
+one voxel: $\|\Delta\mathbf{x}\| \leq \ell_0$ when $\Delta t =
+\tau_0$.  Therefore
+\begin{equation}
+  v_{\max} = \frac{\|\Delta\mathbf{x}\|_{\max}}{\Delta t}
+  = \frac{\ell_0}{\tau_0}.
+\end{equation}
+Massless signals (electromagnetic and gravitational) propagate by
+nearest-neighbor ledger updates; they saturate this bound.  Hence
+$c = \ell_0/\tau_0$.  The bound is structural: no physical process
+can propagate faster without violating the discrete causal structure.
+\end{proof}
+
+\begin{corollary}[Light-Cone Identity]
+$c\,\tau_0 = \ell_0$, and $c > 0$.
+\end{corollary}
+
+\section{Why $c$ Is Constant}
+\label{sec:constant}
+
+\begin{proposition}[Frame Independence --- Structural Argument]
+\label{thm:constant}
+The speed $c = \ell_0/\tau_0$ is independent of the motion of
+the source or the observer.
+\end{proposition}
+
+\begin{proof}
+Three properties of the ledger force this:
+\begin{enumerate}[label=(\roman*),nosep]
+  \item \emph{Universal tick rate.}  There is one ledger, not
+  many.  The tick rate $\tau_0$ is a global property of the
+  ledger, not a local property of any source or observer.
+  \item \emph{Homogeneity.}  The voxel size $\ell_0$ is
+  uniform---the ledger has no distinguished location because the
+  $J$-cost depends only on ratios, not absolute positions.
+  \item \emph{Cost invariance.}  The $J$-cost functional
+  $J(x) = \frac{1}{2}(x+x^{-1})-1$ depends only on ratios,
+  so the dynamics are invariant under lattice translations.
+\end{enumerate}
+Since both $\ell_0$ and $\tau_0$ are universal, their ratio is
+the same for all observers:
+$c = \ell_0/\tau_0$ regardless of relative motion.
+\end{proof}
+
+\begin{remark}
+In special relativity, the constancy of $c$ is an axiom.  In RS,
+it is a theorem: a consequence of the ledger having one global
+tick rate and uniform voxel size.  The Michelson--Morley null
+result~\cite{MichelsonMorley1887} is explained structurally:
+there is no ``ether'' to produce directional variation because
+the lattice is isotropic (Proposition~\ref{prop:isotropy}).
+\end{remark}
+
+\section{Lorentz Invariance}
+\label{sec:lorentz}
+
+\begin{proposition}[Lattice Isotropy]
+\label{prop:isotropy}
+The $D = 3$ cubic lattice has discrete rotation symmetry
+(the octahedral group $O_h$, 48 elements).  In the continuum
+limit $\ell_0 \to 0$, this discrete symmetry is promoted to
+full $SO(3)$ rotational invariance.
+\end{proposition}
+
+\begin{proposition}[Minkowski Metric from the Lattice --- Continuum Limit]
+\label{thm:minkowski}
+In the continuum limit $\ell_0, \tau_0 \to 0$ with $c = \ell_0/\tau_0$
+fixed, the discrete causal structure of the ledger becomes the
+invariant interval
+\begin{equation}
+  ds^2 = c^2\,dt^2 - dx^2 - dy^2 - dz^2.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+On the lattice, causal separation is classified by the number
+of ticks and voxel steps between two events.
+Nearest-neighbor propagation at one voxel per tick gives
+$c\,\Delta t = \|\Delta\mathbf{x}\|$, i.e.,
+$ds^2 = 0$ (null separation).  Events with $ds^2 > 0$ are
+timelike (connected by sub-light paths); events with
+$ds^2 < 0$ are spacelike (no causal connection).  The discrete
+light cone---all voxels reachable in exactly $n$ ticks---defines
+the null surface.  In the continuum limit
+$\ell_0, \tau_0 \to 0$ with $c = \ell_0/\tau_0$ fixed, the
+discrete rotational symmetry ($O_h$) is promoted to $SO(3)$,
+and the lattice causal structure becomes the Minkowski metric
+$\eta_{\mu\nu} = \mathrm{diag}(+1,-1,-1,-1)$.
+\end{proof}
+
+\begin{remark}[Non-triviality of the continuum limit]
+The promotion from discrete $O_h$ (octahedral, 48 elements) to
+continuous $SO(3,1)$ (Lorentz group) in the continuum limit is
+non-trivial.  The cubic lattice has 48 rotational symmetries, not
+the full $SO(3)$.  At the level of the $J$-cost functional (which
+depends only on ratios, not absolute directions), the lattice lacks
+a preferred frame, and the Lorentz group emerges as the symmetry of
+the causal cone in the limit $\ell_0 \to 0$.  However, a complete
+proof that discrete $O_h$ is promoted to continuous $SO(3,1)$ in this
+limit requires a careful treatment of how lattice symmetry is enhanced
+at long wavelengths.  This is an identified open problem in the RS
+formalism.
+\end{remark}
+
+\begin{remark}
+A discrete lattice naively breaks continuous Lorentz invariance.
+RS addresses this in two ways:
+\begin{enumerate}[label=(\roman*),nosep]
+  \item The $J$-cost functional $J(x) = \frac{1}{2}(x+x^{-1})-1$
+  depends only on ratios, not absolute positions---the lattice
+  has no preferred ``rest frame'' at the cost level.
+  \item In the continuum limit, all lattice artifacts vanish at
+  scales $\lambda \gg \ell_0$; deviations from Lorentz symmetry
+  are suppressed by $(\ell_0/\lambda)^2$.
+\end{enumerate}
+This is analogous to how lattice QCD preserves gauge invariance
+despite working on a discrete grid.
+\end{remark}
+
+\section{Why $c$ Cannot Be Exceeded}
+
+\begin{proposition}[Speed Limit from $J$-Cost --- Structural Argument]
+No signal can propagate faster than $c = \ell_0/\tau_0$.
+\end{proposition}
+
+\begin{proof}
+Suppose a signal propagated at speed $v > c$.  In one tick $\tau_0$, it
+would traverse a distance $v\,\tau_0 > \ell_0$, skipping over at least
+one voxel.  The ledger would then record an influence at a voxel
+$\mathbf{x}'$ that is not a nearest neighbor of the source voxel
+$\mathbf{x}$ at the previous tick.  Such a ``jump'' creates an
+unbalanced ledger entry: a debit (or credit) at $\mathbf{x}'$ without
+a corresponding credit (or debit) at an intermediate voxel along the
+path.  By the double-entry axiom of the recognition ledger, unbalanced
+entries have infinite $J$-cost.  Cost-minimizing dynamics therefore
+exclude any propagation with $v > c$.  Hence $v \leq c$ for all
+physical signals.
+\end{proof}
+
+\begin{corollary}
+Massive particles have $v < c$ because they require multiple ticks per
+voxel step (they do not saturate the light cone).  Only massless
+signals achieve $v = c$.
+\end{corollary}
+
+\section{Gravitational Waves at $c$}
+
+Gravitational waves propagate at exactly $c = \ell_0/\tau_0$.  Both
+EM and GW signals are massless excitations of the same discrete
+ledger, so both saturate the structural speed bound.
+
+\begin{proposition}[GW Propagation Speed --- Structural Argument]
+$c_{\mathrm{gw}} = c = \ell_0/\tau_0$.
+\end{proposition}
+
+\begin{proof}[Structural argument]
+The RS ledger has one causal cone: one voxel per tick.  Both
+electromagnetic and gravitational perturbations propagate on the same
+lattice with the same voxel size $\ell_0$ and tick duration $\tau_0$.
+The key RS claim is that the same causal structure governs all massless
+excitations, so $c_{\mathrm{gw}} = \ell_0/\tau_0 = c$.
+
+\emph{Note on circularity}: The wave equation $\Box h_{\mu\nu} = 0$
+with $\Box = \partial_t^2 - c^2\nabla^2$ has $c$ built in by definition,
+making it appear circular to conclude $c_{\mathrm{gw}} = c$ from this
+equation.  The non-circular content of the RS argument is that the
+d'Alembertian is defined by the \emph{same} lattice parameters
+($\ell_0$, $\tau_0$) for gravitons as for photons---i.e., gravity
+and electromagnetism propagate on the same substrate, not different
+substrates with different speeds.
+\end{proof}
+
+\begin{remark}
+The argument just given is the RS structural proof that $c_{\mathrm{gw}} = c$
+is a \emph{non-trivial identity}, not a definitional tautology: both
+quantities are independently defined (the ledger causal speed and the
+GW propagation speed), and their equality follows from the single-substrate
+lattice structure.  See the companion paper on GW propagation for a
+more detailed treatment.
+\end{remark}
+
+\begin{remark}
+GW170817 (binary neutron star merger with coincident gamma-ray burst
+GRB~170817A) confirmed $|c_{\mathrm{gw}}/c - 1| < 10^{-15}$~\cite{GW170817}.
+RS predicts the ratio is exactly 1---a structural identity, not an
+approximation.
+\end{remark}
+
+\section{Connection to Other Constants}
+\label{sec:constants}
+
+The speed of light sits at the head of the RS derivation chain:
+\begin{equation}
+  \mathrm{RCL} \;\to\; J \;\to\; \varphi \;\to\;
+  \tau_0\;\text{(8-tick)} \;\to\;
+  \boxed{c = \frac{\ell_0}{\tau_0} = 1} \;\to\;
+  \hbar = \varphi^{-5} \;\to\; G = \varphi^5.
+\end{equation}
+Once $c$ is established, the remaining fundamental constants follow:
+
+\begin{proposition}[Planck Length Identity]
+\label{prop:planck}
+In RS-native units ($c = 1$, $\hbar = \varphi^{-5}$,
+$G = \varphi^5$):
+\begin{equation}
+  \ell_P = \sqrt{\frac{\hbar G}{c^3}}
+  = \sqrt{\frac{\varphi^{-5} \cdot \varphi^5}{1}}
+  = 1.
+\end{equation}
+\end{proposition}
+
+\begin{remark}
+The Planck length equals the voxel size, and the Planck time
+equals the tick duration.  There is no hierarchy between the lattice
+scale and the Planck scale---they are the same scale.  This is a
+structural identity, not a numerical coincidence.
+\end{remark}
+
+\begin{remark}[Convention dependence of $G$]
+\label{rem:G-convention}
+The identity $\ell_P = 1$ depends on the normalization of $G$.
+The formula displayed above uses $G = \varphi^5$ in RS-native
+units ($c = \hbar = 1$), which gives $\ell_P = 1$ exactly.
+An alternative RS derivation yields $G = \varphi^5/\pi$ (with
+the factor of $\pi$ absorbed into the recognition wavelength
+convention); under that convention $\ell_P = 1/\sqrt{\pi}$
+and the voxel--Planck identification acquires a geometric
+prefactor.  The precise $G$ formula and its interplay with the
+Planck scale are treated in the companion paper on the
+gravitational constant.
+\end{remark}
+
+\section{SI Calibration}
+\label{sec:si}
+
+The calibration seam maps RS-native units to SI by identifying
+$\ell_0$ with the Planck length and $\tau_0$ with the Planck time.
+Since $\ell_P = \ell_0 = 1$ in RS-native units:
+\begin{align}
+  \ell_0 &= \ell_P \approx 1.616 \times 10^{-35}\;\mathrm{m}, \\
+  \tau_0 &= t_P \approx 5.39 \times 10^{-44}\;\mathrm{s}.
+\end{align}
+The SI speed of light is then:
+\begin{equation}
+  c_{\mathrm{SI}} = \frac{\ell_P}{t_P}
+  = \frac{1.616 \times 10^{-35}}{5.39 \times 10^{-44}}
+  \approx 2.998 \times 10^8\;\mathrm{m/s}.
+\end{equation}
+This reproduces the exact SI definition
+$c = 299\,792\,458\;\mathrm{m/s}$.  RS does not predict this
+number---it is a unit convention.  What RS predicts is that $c = 1$
+in natural units, i.e., the speed of light equals one voxel per tick.
+
+\section{No-Dispersion Theorem}
+\label{sec:dispersion}
+
+Some discrete-spacetime models predict energy-dependent photon
+velocities.  RS does not.
+
+\begin{proposition}[No Dispersion --- Structural Prediction]
+\label{thm:nodispersion}
+All massless signals propagate at exactly $c = \ell_0/\tau_0$,
+independent of wavelength, polarization, or energy.
+\end{proposition}
+
+\begin{proof}
+The bound $v \leq \ell_0/\tau_0$ is purely structural: it
+depends only on the nearest-neighbor topology of the lattice,
+not on the energy or frequency of the signal.  A massless signal
+saturates the bound regardless of its wavelength $\lambda$
+(provided $\lambda \geq \ell_0$, which is always true below
+the Planck energy).  No energy-dependent correction to $c$
+exists because no RS mechanism introduces one: the $J$-cost
+of a nearest-neighbor update is the same for all massless modes.
+\end{proof}
+
+\begin{remark}
+This prediction is testable.  Fermi-LAT observations of
+GRB~090510 constrain Lorentz-violating dispersion to
+$|v(E)/c - 1| < 10^{-20}$ at photon energies
+$E \sim 30\;\mathrm{GeV}$~\cite{FermiLAT2009}.  RS predicts
+exact equality $v(E) = c$ at all energies---a stronger claim
+than current bounds can test.
+\end{remark}
+
+\section{Predictions}
+\label{sec:predictions}
+
+\begin{enumerate}
+  \item \textbf{Exact $c_{\mathrm{gw}}/c = 1$.}  Gravitational and
+  electromagnetic waves propagate at identical speeds.  Any future
+  measurement showing $|c_{\mathrm{gw}}/c - 1| > 10^{-20}$ would
+  falsify RS.
+
+  \item \textbf{No superluminal signaling.}  No physical process
+  (including quantum entanglement) can transmit information faster than
+  $c$.  The ledger update propagates at one voxel per tick; no
+  mechanism can skip voxels without infinite $J$-cost.
+
+  \item \textbf{Zero photon dispersion.}  All massless fields
+  propagate at exactly $c$, independent of energy.  RS predicts
+  no Lorentz-violating dispersion at any scale, including the
+  Planck scale (Theorem~\ref{thm:nodispersion}).
+
+  \item \textbf{Planck-scale discrete light cone.}  At the Planck
+  scale, the light cone is a discrete lattice surface, not a smooth
+  null cone.  Continuum relativity emerges from coarse-graining at
+  $\lambda \gg \ell_0 = \ell_P$.
+
+  \item \textbf{No massive photon.}  The photon mass is exactly
+  zero: photons saturate the causal bound.  Any nonzero mass
+  would yield $v < c$, contradicting the structural identity
+  $v_{\gamma} = \ell_0/\tau_0$.
+\end{enumerate}
+
+\section{Comparison}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{3.2cm}p{5.5cm}p{5.5cm}}
+\toprule
+\textbf{Feature} & \textbf{Special Relativity} & \textbf{Recognition Science} \\
+\midrule
+Origin of $c$ & Postulate (invariant speed) & Derivation ($\ell_0/\tau_0$) \\
+Why $c$ is constant & Axiom & Lattice universality \\
+Speed limit & Postulate (no $v > c$) & $J$-cost (unbalanced entries forbidden) \\
+Minkowski metric & Postulate & Emerges from discrete light cone \\
+$c_{\mathrm{gw}} = c$ & Assumed in GR & Structural identity \\
+Lorentz group & Symmetry of spacetime & Symmetry of causal lattice \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Conclusion}
+
+The speed of light is derived from the discrete ledger:
+$c = \ell_0/\tau_0 = 1$ voxel per tick.  Its constancy follows
+from lattice universality; it cannot be exceeded because
+superluminal propagation incurs infinite $J$-cost.  The Minkowski
+metric emerges from the discrete causal structure in the continuum
+limit; the Lorentz group is the symmetry of the causal lattice.
+No dispersion or energy-dependent deviation from $c$ exists in RS.
+
+The connection to other constants is structural: $\ell_0 = \ell_P$,
+$\tau_0 = t_P$, and the Planck length identity $\ell_P = 1$ in
+RS-native units follows from $G \cdot \hbar = 1$.  The speed of
+light is not a free parameter but the first link in the derivation
+chain from $\varphi$ to all physical constants.
+
+\begin{thebibliography}{99}
+
+\bibitem{Aczel1966}
+J.~Acz\'el, \emph{Lectures on Functional Equations and Their Applications},
+Academic Press, New York (1966).
+
+\bibitem{Einstein1905}
+A.~Einstein, ``On the Electrodynamics of Moving Bodies,'' Ann.\
+Phys.\ \textbf{17}, 891 (1905).
+
+\bibitem{MichelsonMorley1887}
+A.~A.~Michelson and E.~W.~Morley, ``On the Relative Motion of the
+Earth and the Luminiferous Ether,'' Am.\ J.\ Sci.\
+\textbf{34}, 333 (1887).
+
+\bibitem{GW170817}
+LIGO/Virgo Collaboration, ``Gravitational Waves and Gamma-Rays from
+a Binary Neutron Star Merger: GW170817 and GRB~170817A,''
+Astrophys.\ J.\ Lett.\ \textbf{848}, L13 (2017).
+
+\bibitem{FermiLAT2009}
+Fermi LAT Collaboration, ``A Limit on the Variation of the Speed of
+Light Arising from Quantum Gravity Effects,'' Nature \textbf{462},
+331 (2009).
+
+\bibitem{CODATA2022}
+E.~Tiesinga, P.~J.~Mohr, D.~B.~Newell, and B.~N.~Taylor,
+``CODATA Recommended Values of the Fundamental Physical
+Constants: 2022,'' Rev.\ Mod.\ Phys.\ \textbf{96}, 025004 (2024).
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+\texttt{doi:10.3390/axioms15020090}
+
+\end{thebibliography}
+
+\end{document}

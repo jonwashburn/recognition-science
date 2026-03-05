@@ -1,0 +1,865 @@
+\documentclass[11pt]{article}
+
+% Minimal, self-contained front-matter design without extra packages
+\newcommand{\HRule}{\rule{\linewidth}{0.5pt}}
+\newcommand{\Title}{Gravity as Pressure in Information-Limited Gravity}
+\newcommand{\Subtitle}{A kernel-to-source recasting with predictions, falsifiers, and implementation notes}
+
+\begin{document}
+\begin{titlepage}
+  \centering
+  \vspace*{2em}
+  {\large Recognition Science \quad|\quad Recognition Physics Institute}\par
+  \vspace{1em}
+  \HRule\\[0.8em]
+  {\LARGE \bfseries \Title\par}
+  \vspace{0.4em}
+  {\large \itshape \Subtitle\par}
+  \vspace{0.8em}
+  \HRule
+  \vspace{2.0em}
+
+  {\large Jonathan Washburn\par}
+  {\normalsize Recognition Science, Recognition Physics Institute\par}
+  {\normalsize Austin, Texas, USA\par}
+  {\normalsize \texttt{jon@recognitionphysics.org}\par}
+
+  \vfill
+  {\normalsize Version: November 3, 2025\par}
+\end{titlepage}
+
+\begin{abstract}
+We recast Information-Limited Gravity (ILG) as classical gravity sourced by an effective pressure field. The pressure is built directly from observed baryons filtered through the same scale- and time-aware kernel that defines ILG. This is a change of display, not a change of physics: the modified Poisson and growth equations of ILG are exactly equivalent to standard field equations with the pressure source. In the galaxy regime, the pressure profile multiplies baryonic contributions to yield flat rotation curves without per-galaxy tuning. In cosmology, the same pressure language preserves ILG's signatures in linear growth, lensing, and integrated Sachs–Wolfe trends while clarifying interpretation and implementation. We present the formal definition, an explicit equivalence theorem, a variational formulation, observational displays, and falsifiers—all using the same global constants and kernel rigidities that anchor ILG.
+\end{abstract}
+
+% Keywords (plain text; no packages)
+\noindent \textbf{Keywords:} gravity as pressure; information-limited gravity; effective source; rotation curves; structure growth; weak lensing; recognition geometry.
+
+% BLOCKER line(s) for any missing information that will be supplied in body/appendices
+\par\medskip
+\noindent \textbf{Global $M/L$ calibration (used throughout).} We adopt a single, survey-wide stellar mass-to-light ratio for disks in the Spitzer IRAC $3.6\,\mu\mathrm{m}$ band, fixed once and used for all galaxies without per-galaxy tuning:
+\[
+\Upsilon_\ast^{3.6\,\mu\mathrm{m}} = 1.0\; M_\odot/L_\odot\,.
+\]
+Bulges (where present) use the same $\Upsilon_\ast$ unless explicitly noted. This value is frozen on the SPARC Q=1 calibration snapshot under the fairness masks enumerated in Section~7 and is held constant thereafter. Provenance within Recognition Geometry: $\Upsilon_\ast$ is treated as the sole external catalog calibration while all kernel constants $(\varphi,\tau_0,E_{\mathrm{coh}},G)$ are derived globally; see the Source specification (@M\_OVER\_L\_DERIVATION; \emph{current\_status=single\_global\_default\_1.0}) and the ILG policy statements. Gas masses include a $1.36$ helium correction; $\mathrm{H_2}$ is included where available via a standard CO-to-$\mathrm{H_2}$ conversion (fixed globally, not per-galaxy).
+
+\section{Introduction}
+
+Galaxies rotate too fast for their visible mass, lenses bend light more than luminous matter can explain, and large-scale structure grows with a scale-dependence that strains simple, untuned models. The conventional ways to absorb these facts introduce extra components or system-by-system adjustments: dark halos whose profiles differ from galaxy to galaxy, or modified dynamics with environmental dials. Those approaches work numerically, but they pay with complexity and per-galaxy tuning. The empirical problem, stated plainly, is to account for the extra galactic pull, lensing, and growth \emph{without} per-galaxy knobs and \emph{without} disturbing laboratory-scale gravity.
+
+Information-Limited Gravity (ILG) takes a different path. In one sentence: ILG filters the ordinary baryonic source through a single, global kernel that depends on scale and cosmic time, reflecting the finite information capacity of the system. At small scales and short times the kernel reduces to unity and gravity is exactly as measured in the lab; at large scales and long times the kernel enhances the effective pull of the same baryons. The kernel is fixed by the same global constants that underpin Recognition Geometry and does not vary from galaxy to galaxy.
+
+The core claim of this paper is that ILG is exactly equivalent to classical gravity with an \emph{effective pressure} source built from those same baryons by that same kernel. In practice, one defines a pressure field by filtering the baryonic distribution with the ILG kernel and then applies the standard gravitational field equation with this pressure as the source. This is a change of variables, not a change of physics. All of ILG’s predictions for rotation curves, lensing, linear growth, and background evolution carry over verbatim; the pressure language simply makes the source explicit and the implementation straightforward.
+
+\paragraph*{Contributions.}
+This paper makes six concrete contributions:
+\begin{enumerate}
+  \item A formal definition of the effective pressure field derived from the ILG kernel and ordinary baryons.
+  \item An equivalence theorem showing that ILG’s modified field equation is identical to the classical equation with the pressure source.
+  \item A variational formulation in which the gravitational potential minimizes a standard energy with the pressure as the source term.
+  \item Galaxy and cosmology displays that show how rotation curves, linear growth, lensing, and background form-factors are read in the pressure language.
+  \item Falsifiers and pass/fail criteria that do not allow per-galaxy tuning and that preserve laboratory limits.
+  \item Implementation notes for pipelines: pre-filter the baryonic field with the kernel to obtain the pressure, then use standard solvers without altering the downstream numerics.
+\end{enumerate}
+
+\section{Preliminaries and Notation}
+
+\paragraph{Constants and symbols.}
+We use the golden ratio $\varphi=(1+\sqrt{5})/2$, the fundamental tick $\tau_{0}>0$, the coherence quantum $E_{\mathrm{coh}}=\varphi^{-5}\,\mathrm{eV}$, and Newton's constant $G$. Unless noted, units are SI and times are cosmic times parametrized by the scale factor $a\in(0,1]$. All appearances of $\varphi$, $\tau_{0}$, and $E_{\mathrm{coh}}$ are global (no system-by-system tuning).
+
+\paragraph{Fields and operators.}
+Let $\rho_b(\mathbf{x},a)$ be the (comoving) baryon density and $\bar\rho_b(a)$ its spatial mean. The baryon contrast is
+\[
+\delta_b(\mathbf{x},a)=\frac{\rho_b(\mathbf{x},a)-\bar\rho_b(a)}{\bar\rho_b(a)}\,.
+\]
+The gravitational potential is $\Phi(\mathbf{x},a)$ in the quasi-static, Newtonian limit on comoving coordinates $\mathbf{x}$. Derivatives are taken with respect to $\mathbf{x}$; $\nabla$ and $\nabla^2$ denote the gradient and Laplacian. Linear operators built from $\nabla$ act componentwise; in particular we will use an isotropic convolution operator $w(\nabla,a)$ whose Fourier symbol is a scalar function $w(k,a)$.
+
+\paragraph{Fourier conventions.}
+For a scalar field $f(\mathbf{x})$,
+\[
+\hat f(\mathbf{k})=\int_{\mathbb{R}^3} e^{-i\mathbf{k}\cdot\mathbf{x}}\,f(\mathbf{x})\,d^3x,
+\qquad
+f(\mathbf{x})=\int_{\mathbb{R}^3}\frac{d^3k}{(2\pi)^3}\,e^{i\mathbf{k}\cdot\mathbf{x}}\,\hat f(\mathbf{k}).
+\]
+Under these conventions $\nabla\mapsto i\mathbf{k}$ and $\nabla^2\mapsto -k^2$. Convolutions in real space correspond to pointwise products in Fourier space.
+
+\paragraph{Boundary conditions.}
+For isolated galaxies, we impose $\Phi(\mathbf{x},a)\to 0$ as $|\mathbf{x}|\to\infty$ and require $\Phi$ to be integrable up to an additive constant (fixed by $\Phi\to 0$). In periodic simulation boxes, fields are periodic with zero-mean potential, i.e., the $\mathbf{k}=\mathbf{0}$ mode of $\hat\Phi$ is set to zero. On cosmological domains we adopt comoving coordinates with quasi-static potentials and fix the additive constant by volume averaging, $\int \Phi\,d^3x=0$.
+
+\subsection*{ILG kernel: real and Fourier-space forms}
+The Information-Limited Gravity kernel is specified in Fourier space by
+\[
+w(k,a)=1 + C\left(\frac{a}{k\,\tau_{0}}\right)^{\alpha},
+\qquad
+C=\varphi^{-3/2},\quad \alpha=\tfrac12\!\left(1-\varphi^{-1}\right),
+\]
+a positive, isotropic, scale- and time-aware multiplier. It satisfies:
+\begin{itemize}
+  \item \textbf{Laboratory limit.} For large $k$ (small scales / short times) one has $w(k,a)\to 1$, so the source reduces to ordinary baryons and standard gravity is recovered.
+  \item \textbf{Cosmological enhancement.} For small $k$ (large scales / long times) the second term grows monotonically, amplifying the effective pull of baryons without introducing per-system parameters.
+\end{itemize}
+In real space, $w(\nabla,a)$ is the convolution operator with isotropic kernel $W(r,a)$ given by the inverse transform of $w(k,a)$,
+\[
+\bigl[w(\nabla,a)f\bigr](\mathbf{x})=\int_{\mathbb{R}^3} W(|\mathbf{x}-\mathbf{y}|,a)\,f(\mathbf{y})\,d^3y,
+\]
+so that $w(\nabla,a)=\mathrm{Id}+(\text{long-range tail})$. The kernel $W(r,a)$ is nonnegative and decays with $r$; its precise closed form is not required for analysis because the operator is fully characterized by the Fourier symbol $w(k,a)$ and inherits its positivity and monotonicity.
+
+\subsection*{Laboratory and cosmological limits}
+\paragraph{Near-field (laboratory) regime.}
+When $k\tau_{0}/a\gg 1$, $w(k,a)\approx 1$ and the effective source equals the physical baryon source. All laboratory tests of gravity are thus unmodified.
+
+\paragraph{Far-field (cosmological) regime.}
+When $k\tau_{0}/a\ll 1$, $w(k,a)\approx 1+C(a/(k\tau_{0}))^{\alpha}$, yielding a gentle, scale-dependent enhancement that is the same in galaxies and in linear cosmology. The same kernel multiplies the source in Poisson problems for dynamics and in the growth and lensing equations for large-scale structure.
+
+% (End of Section 2)
+
+\section{Information-Limited Gravity (recap)}
+
+\paragraph{Axioms and policy.}
+Information-Limited Gravity (ILG) rests on three operational principles:
+\begin{enumerate}
+  \item \textbf{Global constants.} The kernel that mediates information limits is fixed by global, RS-aligned constants $(\varphi,\tau_{0},E_{\mathrm{coh}},G)$ and does not vary between systems.
+  \item \textbf{No per-galaxy tuning.} Galaxy-scale predictions (e.g., rotation curves) are produced without system-by-system parameter adjustment. A single, global mass-to-light calibration may be used for photometric mapping, but the gravitational kernel itself is universal.
+  \item \textbf{Classical presentation in SI.} Field equations are stated in standard SI units and solved with conventional boundary conditions; ILG enters solely through an isotropic, positive, scale- and time-aware kernel $w$.
+\end{enumerate}
+
+\paragraph{Field equations used in practice.}
+In the quasi-static, Newtonian limit on comoving coordinates, ILG modifies the source side of Poisson’s equation by filtering the baryonic contrast with the kernel $w$:
+\begin{equation}
+  k^2 \,\Phi(\mathbf{k},a) \;=\; 4\pi G \, a^2 \, \bar\rho_b(a)\, w(k,a)\, \delta_b(\mathbf{k},a),
+  \label{eq:ilg-poisson}
+\end{equation}
+with Fourier symbol
+\begin{equation}
+  w(k,a) \;=\; 1 + C\left(\frac{a}{k\,\tau_0}\right)^{\alpha}, 
+  \qquad C=\varphi^{-3/2}, \quad \alpha=\tfrac12\!\left(1-\varphi^{-1}\right).
+  \label{eq:ilg-kernel}
+\end{equation}
+In linear structure growth, the same kernel appears in the source term:
+\begin{equation}
+  \ddot{\delta}_b(\mathbf{k},a) + 2\mathcal{H}(a)\,\dot{\delta}_b(\mathbf{k},a)
+  \;-\; 4\pi G\,a^2\,\bar\rho_b(a)\, w(k,a)\,\delta_b(\mathbf{k},a) \;=\; 0,
+  \label{eq:ilg-growth}
+\end{equation}
+where overdots denote derivatives with respect to conformal time and $\mathcal{H}$ is the conformal Hubble rate. In real space, \eqref{eq:ilg-poisson} corresponds to replacing the bare baryonic source by $w(\nabla,a)[\rho_b\,\delta_b]$, i.e., convolution with an isotropic kernel. The \emph{laboratory limit} is $w\!\to\!1$ for $k\tau_0/a\!\gg\!1$, so local gravitational tests are unchanged.
+
+\paragraph{Operational kernel displays.}
+For practical inference and code paths it is convenient to expose $w$ in displays tailored to data modalities:
+\begin{itemize}
+  \item \textbf{Galaxies (dynamics).} A radial display $w(r)$ multiplies baryonic circular-speed contributions, $v^2(r)=w(r)\,v^2_{\mathrm{baryon}}(r)$, under the same kernel. Time- and acceleration-proxy displays, $w_t$ and $w_g$, are observationally convenient parameterizations of the \emph{same} underlying $w$.
+  \item \textbf{Cosmology (background and light).} A background form factor $w_{\mathrm{bg}}(a)$ multiplies the matter source in homogeneous equations, and an optical focusing rescale $\Upsilon(a)$ enters distance and lensing relations. Both are determined by the same constants and kernel structure in \eqref{eq:ilg-kernel}.
+\end{itemize}
+These displays are algebraic reorganizations; no new degrees of freedom are introduced and no per-system retuning is allowed.
+
+\paragraph{Certificates carried by ILG.}
+ILG comes with built-in, model-wide identities and limits that serve as consistency checks:
+\begin{enumerate}
+  \item \textbf{Tracer-independence in linear combinations.} In the linear regime, specific ratios that compare lensing potentials to velocity growth (e.g., $E_G$-type statistics) depend on the kernel $w$ but not on galaxy bias, yielding a tracer-independent prediction at fixed $(k,a)$.
+  \item \textbf{Background form factors.} The homogeneous form factor $w_{\mathrm{bg}}(a)$ and the optical rescale $\Upsilon(a)$ are global functions of $a$ tied to $(\varphi,\tau_0)$; they apply uniformly across probes (distances, lensing, growth).
+  \item \textbf{Laboratory recovery.} The limit $w\!\to\!1$ at large $k$ guarantees exact agreement with laboratory and Solar-System gravity.
+  \item \textbf{Positivity and monotonicity.} The kernel is positive and monotone in the operational proxies (scale, time), ensuring physically sensible enclosed-mass profiles and preventing pathologies in rotation-curve fits.
+\end{enumerate}
+
+% (End of Section 3)
+
+\section{Gravity as Pressure: Definition and Equivalence}
+
+\paragraph{Definition (effective pressure).}
+Let $w(\nabla,a)$ be the isotropic convolution operator with Fourier symbol $w(k,a)$ introduced above. Define the \emph{effective pressure} field
+\[
+p(\mathbf{x},a)\;:=\;\bar\rho_b(a)\,\bigl[w(\nabla,a)\,\delta_b(\mathbf{x},a)\bigr],
+\]
+so that in Fourier space
+\[
+\hat p(\mathbf{k},a)\;=\;\bar\rho_b(a)\,w(k,a)\,\hat\delta_b(\mathbf{k},a).
+\]
+This “pressure’’ is an effective source constructed from ordinary baryons by the ILG kernel; it is not a thermodynamic pressure and carries the units of mass density.
+
+\paragraph{Equivalence theorem (Poisson equations).}
+\emph{Claim.} The ILG field equation in the Newtonian, quasi-static limit
+\[
+k^2\,\hat\Phi(\mathbf{k},a)\;=\;4\pi G\,a^2\,\bar\rho_b(a)\,w(k,a)\,\hat\delta_b(\mathbf{k},a)
+\]
+is exactly equivalent to the classical Poisson equation with the effective pressure source
+\[
+\nabla^2\Phi(\mathbf{x},a)\;=\;4\pi G\,a^2\,p(\mathbf{x},a).
+\]
+
+\emph{Proof.} Take the Fourier transform of $\nabla^2\Phi=4\pi G\,a^2\,p$ to obtain
+$-k^2\,\hat\Phi=4\pi G\,a^2\,\hat p$. Insert the definition of $\hat p$ to get
+$-k^2\,\hat\Phi=4\pi G\,a^2\,\bar\rho_b\,w\,\hat\delta_b$, or
+$k^2\,\hat\Phi=4\pi G\,a^2\,\bar\rho_b\,w\,\hat\delta_b$ after multiplying by $-1$.
+Conversely, given the ILG equation, define $\hat p=\bar\rho_b\,w\,\hat\delta_b$ and inverse-transform to recover $\nabla^2\Phi=4\pi G\,a^2\,p$. In both directions the boundary conditions are the standard ones stated earlier, so the solutions coincide. \hfill$\square$
+
+\paragraph{Properties.}
+The effective pressure inherits the key analytical properties of the kernel:
+\begin{itemize}
+  \item \textbf{Positivity.} If $w(k,a)\ge 0$ for all $k$ and $a$, then $p$ is the image of $\delta_b$ under a positive operator. In particular, overdense regions ($\delta_b\!>\!0$) map to nonnegative contributions in $p$, ensuring physically sensible enclosed-mass profiles in galaxy applications.
+  \item \textbf{Monotonicity.} If $w(k,a)$ is monotonically increasing in the operational proxies (e.g., larger enhancement at smaller $k$ or larger $a$), then $p$ increases accordingly under those changes; the ordering of sources is preserved by the map $\delta_b\mapsto p$.
+  \item \textbf{Laboratory limit.} As $k\tau_0/a\to\infty$, $w(k,a)\to 1$, hence $\hat p\to \bar\rho_b\,\hat\delta_b$ and $p\to \bar\rho_b\,\delta_b$. The Poisson equation reduces to its standard form, guaranteeing exact recovery of laboratory and Solar-System gravity.
+  \item \textbf{Scaling and units.} The mapping $\delta_b\mapsto p$ is linear and dimensionally consistent: $p$ has the units of density, and the source term $a^2 p$ in Poisson’s equation has the usual units of mass density in comoving coordinates. Under a global rescale of length and time, $w(k,a)$ carries the entire scale/time dependence; no additional parameters are introduced.
+\end{itemize}
+
+\noindent In summary, “gravity as pressure’’ is a relabeling that moves the ILG kernel from the right-hand side of the Poisson equation into the definition of the source. All ILG predictions and limits are preserved, while the source becomes a single, well-defined field $p$ built from observed baryons.
+
+\section{Variational Formulation}
+
+\paragraph{Energy functional and stationarity.}
+For a fixed scale factor $a$ and effective pressure source $p(\mathbf{x},a)$, define the energy functional
+\begin{equation}
+  \mathcal{E}[\Phi\,|\,p]
+  \;=\;
+  \frac{1}{8\pi G}\int_{\Omega} |\nabla \Phi(\mathbf{x},a)|^{2}\,d^3x
+  \;+\;
+  \int_{\Omega} a^{2}\,p(\mathbf{x},a)\,\Phi(\mathbf{x},a)\,d^3x,
+  \label{eq:energy}
+\end{equation}
+on the admissible class $\Phi\in \mathcal{V}$, where $\mathcal{V}=H^{1}_{0}(\Omega)$ for Dirichlet (isolated) problems, or $\mathcal{V}=\{\Phi\in H^{1}(\mathbb{T}^{3})\,:\,\int_{\mathbb{T}^{3}}\Phi\,d^3x=0\}$ for periodic boxes. A standard first-variation calculation with $\delta\Phi\in\mathcal{V}$ and the boundary conditions stated in Section~2 gives
+\[
+\delta \mathcal{E}
+=
+\frac{1}{4\pi G}\int_{\Omega} \nabla \Phi\cdot \nabla(\delta\Phi)\,d^3x
+\;+\;\int_{\Omega} a^{2}p\,\delta\Phi\,d^3x
+=
+-\frac{1}{4\pi G}\int_{\Omega} (\nabla^{2}\Phi)\,\delta\Phi\,d^3x
+\;+\;\int_{\Omega} a^{2}p\,\delta\Phi\,d^3x.
+\]
+Stationarity for all $\delta\Phi\in\mathcal{V}$ yields the Euler–Lagrange equation
+\begin{equation}
+  \nabla^{2}\Phi(\mathbf{x},a)=4\pi G\,a^{2}\,p(\mathbf{x},a),
+  \label{eq:poisson-pressure}
+\end{equation}
+i.e., the classical Poisson equation with the pressure source defined in Section~4. Thus, minimizing \eqref{eq:energy} over $\mathcal{V}$ is equivalent to solving the field equation with the stated boundary conditions.
+
+\paragraph{Uniqueness and existence.}
+The quadratic form
+\[
+\mathcal{Q}[\Phi]=\frac{1}{8\pi G}\int_{\Omega} |\nabla \Phi|^{2}\,d^3x
+\]
+is strictly convex on $\mathcal{V}$. Adding the linear functional
+\[
+\mathcal{L}[\Phi]=\int_{\Omega} a^{2}\,p\,\Phi\,d^3x
+\]
+preserves convexity. By the Poincaré inequality on $H^{1}_{0}(\Omega)$ (Dirichlet) or on mean-zero periodic $H^{1}$, $\mathcal{Q}$ is coercive; hence $\mathcal{E}$ is coercive and weakly lower semicontinuous. If $p\in L^{2}(\Omega)$ (or more generally $p\in H^{-1}(\Omega)$), the Lax–Milgram theorem guarantees a unique weak minimizer $\Phi\in\mathcal{V}$, which is the unique weak solution of \eqref{eq:poisson-pressure}. For isolated, unbounded domains with $\Phi\to 0$ at infinity and $p\in L^{1}(\mathbb{R}^{3})\cap L^{\frac{6}{5}}(\mathbb{R}^{3})$, existence follows from the Green’s representation
+\[
+\Phi(\mathbf{x},a)=-G\,a^{2}\int_{\mathbb{R}^{3}} \frac{p(\mathbf{y},a)}{|\mathbf{x}-\mathbf{y}|}\,d^3y,
+\]
+which solves \eqref{eq:poisson-pressure} in the distributional sense and is unique up to the fixed additive constant specified by the boundary condition.
+
+\paragraph{Interpretation.}
+In this variational form the “extra pull’’ is not a new interaction; it is a bookkeeping display of the same baryons passed through an information-limited filter. The kernel $w$ determines $p$ from the observed $\rho_b$ (or $\delta_b$); the potential $\Phi$ then minimizes the standard energy \eqref{eq:energy} with $p$ as its source. All scale and time dependence resides in $p$ via $w$, while the field equation and solver remain classical. The pressure language therefore makes explicit that ILG’s enhancements are encoded entirely in the source construction—no per-galaxy dials, no alteration of the left-hand side of the Poisson equation, and laboratory gravity recovered when $w\to 1$.
+
+\section{Galaxy Dynamics in the Pressure Language}
+
+\subsection*{Axisymmetric thin-disk mapping: from $\rho_b$ to $p(r)$ to $v(r)$}
+
+We work in cylindrical coordinates $(R,\phi,z)$ with midplane symmetry. Let the baryonic density be $\rho_b(R,z)$ and the surface density
+\[
+\Sigma_b(R)=\int_{-\infty}^{\infty}\rho_b(R,z)\,dz.
+\]
+Define the \emph{effective pressure density} $p(R,z)$ by applying the ILG operator to $\rho_b$ at the present epoch ($a=1$):
+\[
+p(\mathbf{x})=\bigl[w(\nabla,1)\,\rho_b\bigr](\mathbf{x}),
+\qquad
+P(R)=\int_{-\infty}^{\infty}p(R,z)\,dz,
+\]
+so $P(R)$ is the midplane surface \emph{pressure} (an effective surface density). For a razor-thin disk ($\rho_b(R,z)=\Sigma_b(R)\,\delta(z)$), the Hankel-transform representation is especially convenient. With the order-zero Hankel pair
+\[
+\tilde \Sigma_b(k)=\int_{0}^{\infty} R\,\Sigma_b(R)\,J_0(kR)\,dR,
+\qquad
+\Sigma_b(R)=\int_{0}^{\infty} \frac{k\,dk}{2\pi}\,\tilde \Sigma_b(k)\,J_0(kR),
+\]
+the pressure surface transform is simply
+\[
+\tilde P(k)=w(k,1)\,\tilde \Sigma_b(k).
+\]
+The midplane circular speed then follows from the standard disk kernel:
+\begin{equation}
+v^2(R)
+=
+2\pi G\,R\int_{0}^{\infty} k\,dk\,J_1(kR)\,\tilde P(k),
+\label{eq:vc-disk}
+\end{equation}
+which maps $\Sigma_b\mapsto P$ via $w$ and then $P\mapsto v$ via the usual gravity kernel. For finite thickness, write $\rho_b(R,z)=\Sigma_b(R)\,f_z(z)$ with $\int f_z\,dz=1$; the same formula holds with $\tilde P(k)=w\!\left(\sqrt{k^2+k_z^2},1\right)\tilde \Sigma_b(k)\tilde f_z(k_z)$ integrated over $k_z$, or, in practice, by using a standard thickness correction to the thin-disk kernel.
+
+\subsection*{Displays $w(R)$ and proxy forms}
+
+Although the fundamental object is $w(k,1)$ in Fourier space, it is often useful to expose a \emph{radial display}
+\[
+w(R)\;:=\;\frac{v^2(R)}{v^2_{\mathrm{baryon}}(R)},
+\]
+where $v_{\mathrm{baryon}}(R)$ is computed from $\Sigma_b$ with the \emph{unfiltered} kernel (i.e., with $w\equiv 1$). This display is data-dependent but derived from the same universal $w(k,1)$:
+\[
+w(R)
+=
+\frac{\int_0^\infty k\,dk\,J_1(kR)\,w(k,1)\,\tilde \Sigma_b(k)}{\int_0^\infty k\,dk\,J_1(kR)\,\tilde \Sigma_b(k)}.
+\]
+Two additional observationally convenient displays reparameterize the same kernel:
+\begin{itemize}
+  \item \textbf{Time proxy} $w_t$: define a local dynamical time $t_{\mathrm{dyn}}(R)=2\pi R/v(R)$ and set $w_t\bigl(t_{\mathrm{dyn}}(R)\bigr)=w\!\left(k_{\mathrm{eff}}(R),1\right)$ with
+  \[
+  k_{\mathrm{eff}}(R)\in\operatorname*{arg\,max}_{k\ge 0}\Bigl[k\,J_1(kR)\,\tilde \Sigma_b(k)\Bigr].
+  \]
+  \item \textbf{Acceleration proxy} $w_g$: define $g(R)=v^2(R)/R$ and set $w_g\bigl(g(R)\bigr)=w\!\left(k_{\mathrm{eff}}(R),1\right)$ with the same $k_{\mathrm{eff}}$.
+\end{itemize}
+These are displays only; they introduce no new parameters and are tied pointwise to $w(k,1)$.
+
+\subsection*{Parameter policy and fit protocol}
+
+\paragraph{Policy.} The kernel $w$ is universal (no per-galaxy tuning). A single global stellar mass-to-light ratio $\Upsilon_\ast$ (in a specified band) maps photometry to $\Sigma_\ast$; gas is included with standard conversion factors. Fairness masks exclude radii and systems where axisymmetry or measurement fidelity is compromised.
+
+\paragraph{Protocol.} Given a galaxy with surface-brightness profile $I_\ast(R)$, gas maps, distance $D$, and inclination $i$:
+\begin{enumerate}
+  \item Build the baryonic surface density
+  \[
+  \Sigma_b(R)=\Upsilon_\ast\,I_\ast(R)\;+\;1.36\,\Sigma_{\mathrm{HI}}(R)\;+\;\Sigma_{\mathrm{H_2}}(R),
+  \]
+  where $1.36$ accounts for helium in the atomic gas.
+  \item Compute the Hankel transform $\tilde \Sigma_b(k)$ and form $\tilde P(k)=w(k,1)\,\tilde \Sigma_b(k)$.
+  \item Evaluate $v_{\mathrm{model}}(R)$ via \eqref{eq:vc-disk}. (Optionally, compute $P(R)$ by inverse transform and then use a real-space solver; both paths are equivalent.)
+  \item Apply fairness masks: remove radii with strong noncircular motions (bars/warps), inner radii below the resolution limit, and poorly constrained outer radii; enforce inclination and distance quality cuts.
+  \item Fit $\Upsilon_\ast$ \emph{globally} once for the survey (not per galaxy), then hold it fixed. No retuning of $w$ is allowed.
+  \item Report residuals $\Delta v(R)=v_{\mathrm{obs}}(R)-v_{\mathrm{model}}(R)$, slope tests on $\Delta v$ over $2\!-\!4$ scale lengths, and the display $w(R)=v^2/v_{\mathrm{baryon}}^2$ for diagnostic purposes.
+\end{enumerate}
+
+\subsection*{Benchmarks and falsifiers}
+
+\paragraph{Rotation-curve benchmarks.} Across a heterogeneous sample (dwarfs to $L_\ast$), residuals $\Delta v(R)$ should be unbiased with respect to surface brightness, size, gas fraction, and morphology under a \emph{single} $\Upsilon_\ast$. The outer slope beyond two scale lengths should not exhibit a systematic trend with $\Sigma_b$ once the fairness masks are applied.
+
+\paragraph{Mass decomposition behavior.} The inferred partition $v^2=v_\ast^2+v_g^2+v_{\mathrm{press}}^2$ (where $v_{\mathrm{press}}$ is the incremental contribution from $P$ beyond $\Sigma_b$) should vary smoothly with radius, with $v_{\mathrm{press}}$ rising where the kernel favors long wavelengths. Disc–halo degeneracy is resolved in this language: there is no tunable halo; the shape is fixed by $w$ and the photometry.
+
+\paragraph{Failure modes as falsifiers.} Any of the following trends constitutes a falsifier for the pressure law in galaxies:
+\begin{itemize}
+  \item A need to retune $w$ on a per-galaxy basis to reach acceptable residuals.
+  \item Residuals that correlate strongly with surface brightness, color (stellar population), or gas fraction after fixing a global $\Upsilon_\ast$.
+  \item Inferred $P(R)$ that is negative or highly oscillatory in regimes where $\Sigma_b(R)$ is smooth and positive, contradicting positivity and monotonicity implied by $w$.
+  \item Inconsistent dynamical versus lensing inferences under the same $P(R)$ in systems with clean geometry and data quality.
+\end{itemize}
+
+\noindent In summary, galaxy dynamics in the pressure language is a two-step map: photometry and gas $\to$ $\Sigma_b$; kernel filter $\to$ $P$; standard gravity $\to$ $v(R)$. The kernel is universal, the mass-to-light is global, and the falsifiers are simple, survey-wide checks rather than per-object adjustments.
+
+\section{Cosmology in the Pressure Language}
+
+\subsection*{Background: form-factor and optical focusing}
+
+At the homogeneous level, the pressure language replaces the baryon term in the background dynamics by an \emph{effective} source formed with a time-only form-factor. Define
+\[
+p_{\mathrm{bg}}(a)\;:=\;w_{\mathrm{bg}}(a)\,\bar\rho_b(a),
+\]
+where $w_{\mathrm{bg}}(a)$ is the background display of the same ILG kernel (unity at early times; monotone enhancement at late times). The Friedmann equation can then be written schematically as
+\begin{equation}
+H^{2}(a)\;=\;\frac{8\pi G}{3}\,\Big[\,\rho_{\mathrm{other}}(a)\;+\;p_{\mathrm{bg}}(a)\,\Big],
+\label{eq:friedmann-pressure}
+\end{equation}
+where $\rho_{\mathrm{other}}$ collects the standard non-baryonic background contributions (e.g., radiation and any constant background term). Equation \eqref{eq:friedmann-pressure} does not introduce new components; it simply displays the baryon contribution as an effective pressure source weighted by $w_{\mathrm{bg}}$.
+
+Light propagation is recast similarly. In the weak-field, Born approximation, the convergence to a source at comoving distance $\chi_s$ is
+\[
+\kappa(\boldsymbol{\theta})\;=\;\int_{0}^{\chi_s}\!d\chi\,\mathcal{W}(\chi,\chi_s)\,\nabla_{\perp}^{2}\Phi(\chi,\boldsymbol{\theta}),
+\]
+with the usual lensing weight $\mathcal{W}$. Using the pressure Poisson equation $\nabla^{2}\Phi=4\pi G\,a^{2}p$, one obtains an \emph{optical focusing rescale} $\Upsilon(a)$ that multiplies the standard kernel along the line of sight:
+\begin{equation}
+\kappa(\boldsymbol{\theta})\;=\;\int_{0}^{\chi_s}\!d\chi\,\Upsilon(a)\,\mathcal{W}(\chi,\chi_s)\,a^{2}\,p(\chi,\boldsymbol{\theta})\,,
+\label{eq:kappa-pressure}
+\end{equation}
+where $\Upsilon(a)$ is a smooth, global function of $a$ tied to the same constants that fix $w$. In practice, $\Upsilon$ is an algebraic display of the background limit of the kernel and does not add parameters.
+
+\subsection*{Linear growth and lensing: kernels unchanged, source clarified}
+
+In Fourier space, the growth of baryon contrast with the pressure source reads
+\begin{equation}
+\ddot{\delta}_b(\mathbf{k},a)+2\mathcal{H}(a)\,\dot{\delta}_b(\mathbf{k},a)-4\pi G\,a^{2}\,\hat p(\mathbf{k},a)=0,
+\qquad
+\hat p(\mathbf{k},a)=w(k,a)\,\bar\rho_b(a)\,\hat\delta_b(\mathbf{k},a),
+\label{eq:growth-pressure}
+\end{equation}
+so the \emph{kernel} that controls scale and time dependence is unchanged from ILG; the \emph{interpretation} is now explicit: growth responds to the effective pressure $p$. The lensing potential obeys $k^{2}\hat\Phi=4\pi G\,a^{2}\hat p$, so all weak-lensing observables (convergence, shear) are rescaled by the same factor that multiplies the source in \eqref{eq:growth-pressure}. In this language, the line-of-sight integrals are standard, with $p$ entering wherever the matter source appears.
+
+\subsection*{Observational signatures (preserved from ILG)}
+
+\paragraph{Growth-rate scale dependence.}
+Because $w(k,a)$ enhances long-wavelength modes mildly and monotonically, the linear growth factor $D(a,k)$ acquires a controlled $k$-dependence at late times, while reverting to the standard limit at early times and on small scales. The logarithmic growth rate $f(a,k)=\partial\!\ln D/\partial\!\ln a$ inherits the same mild scale dependence. These features are unchanged from ILG and are now read as the response of $D$ to the pressure source.
+
+\paragraph{Lensing amplitude trends.}
+Weak-lensing amplitudes along a given line of sight are increased by the line-of-sight average of $w(k,a)$ through \eqref{eq:kappa-pressure}. Tomographic bins at lower redshift (larger $a$) display a slightly higher effective focusing, consistent with the late-time growth of the kernel, while high-$\ell$ (small-scale) lensing approaches the laboratory limit where $w\!\to\!1$.
+
+\paragraph{ISW sign.}
+On the largest scales, where $w(k,a)$ grows with $a$, the potential $\Phi$ decays more slowly or can deepen at late times, which makes its conformal-time derivative $\dot{\Phi}$ negative over a range of low multipoles. The corresponding integrated Sachs–Wolfe cross-correlation with large-scale structure is therefore predicted to be \emph{negative} at low $\ell$, matching the ILG expectation but expressed transparently in terms of the pressure source and its time dependence.
+
+\medskip
+\noindent In summary, cosmology in the pressure language keeps ILG’s kernels intact and moves all novelty into the definition of a single, well-defined source $p$. Background expansion and optical focusing become displays of $w$ as $w_{\mathrm{bg}}$ and $\Upsilon$, while growth and lensing are standard equations driven by $p$. The resulting signatures—mild, scale-dependent growth; coherent lensing rescaling; and the low-$\ell$ ISW sign—are the same as in ILG, but easier to trace back to first causes.
+
+\section{Numerical Implementation}
+
+\subsection*{Pre-filter approach: compute $p=w\ast(\rho_b\delta_b)$, then solve standard Poisson}
+
+The implementation is a two-step map:
+\begin{enumerate}
+  \item \textbf{Pre-filter (source build).} Construct the effective pressure source
+  \[
+  p(\mathbf{x},a)\;=\;\bigl[w(\nabla,a)\,s(\mathbf{x},a)\bigr],
+  \qquad
+  s(\mathbf{x},a)=
+  \begin{cases}
+  \bar\rho_b(a)\,\delta_b(\mathbf{x},a) & \text{(cosmology/LSS)},\\[2pt]
+  \rho_b(\mathbf{x}) & \text{(galaxies; $a=1$)},
+  \end{cases}
+  \]
+  i.e., multiply by $w(k,a)$ in Fourier space and inverse-transform.
+  \item \textbf{Solve standard Poisson.} Find $\Phi$ from
+  \[
+  \nabla^2\Phi(\mathbf{x},a)=4\pi G\,a^2\,p(\mathbf{x},a),
+  \]
+  using your usual solver. Forces for dynamics are $\mathbf{g}=-\nabla\Phi$; circular speeds use $v^2(R)=R\,\partial_R\Phi(R,0)$ in disks.
+\end{enumerate}
+No change is required to the left-hand side (LHS) of the field equation; all novelty is in the pre-filtered source $p$.
+
+\subsection*{Real-space versus Fourier-space paths}
+
+\paragraph{Fourier-space (recommended for grids).}
+On a uniform $N_x\times N_y\times N_z$ mesh with periodic boundaries:
+\begin{enumerate}
+  \item Deposit $s(\mathbf{x},a)$ on the mesh (CIC or TSC assignment).
+  \item FFT to get $\hat s(\mathbf{k},a)$.
+  \item Multiply by the kernel: $\hat p(\mathbf{k},a)=w(k,a)\,\hat s(\mathbf{k},a)$, with
+  \[
+  w(k,a)=1+C\left(\frac{a}{k\,\tau_0}\right)^{\alpha},\qquad C=\varphi^{-3/2},\quad \alpha=\tfrac12(1-\varphi^{-1}).
+  \]
+  \item Poisson in $k$-space: $\hat\Phi(\mathbf{k},a)=-\,4\pi G\,a^2\,\hat p(\mathbf{k},a)/k^2$ for $\mathbf{k}\neq 0$; set $\hat\Phi(\mathbf{0},a)=0$.
+  \item IFFT to $\Phi(\mathbf{x},a)$; finite-difference gradients yield $\mathbf{g}(\mathbf{x},a)$.
+\end{enumerate}
+This path is $O(N\log N)$ with $N=N_xN_yN_z$ and is the natural fit for large-scale-structure solvers and periodic test problems.
+
+\paragraph{Real-space (isolated systems, optional).}
+When boundaries are open (isolated galaxies), either:
+\begin{itemize}
+  \item \textit{Zero-pad and FFT:} embed the target volume in a box at least twice as large in each dimension, zero-pad $s$, apply the Fourier-space pipeline, and crop; or
+  \item \textit{Multigrid with convolution:} compute $p=w\ast s$ via FFT on a padded box, then solve $\nabla^2\Phi=4\pi G a^2 p$ with a multigrid Poisson solver supporting Dirichlet boundary conditions (e.g., $\Phi\to 0$ at the box edge).
+\end{itemize}
+For axisymmetric thin disks, the Hankel-transform route (Section~6) is efficient in 2D:
+\[
+\tilde P(k)=w(k,1)\,\tilde\Sigma_b(k),\qquad
+v^2(R)=2\pi G\,R\int_0^\infty k\,dk\,J_1(kR)\,\tilde P(k),
+\]
+computed with logarithmic FFT (FFTLog) for speed and accuracy.
+
+\subsection*{Stability, discretization, and boundary handling}
+
+\paragraph{Positivity and monotonicity.}
+Because $w(k,a)\ge 0$ and is monotone in the declared proxies, the pre-filter does not introduce sign flips or ringing beyond standard discretization artifacts. Use CIC/TSC mass assignment and (optionally) deconvolve the window function to reduce small-scale bias.
+
+\paragraph{Small- and large-$k$ hygiene.}
+Set the $\mathbf{k}=0$ mode of $\hat \Phi$ to zero (fixes the additive constant). For the kernel, evaluate the enhancement term in \emph{logarithms} to avoid overflow/underflow:
+\[
+\log\!\left[\,C\Bigl(\tfrac{a}{k\tau_0}\Bigr)^{\alpha}\right]=\log C+\alpha\bigl(\log a-\log k-\log\tau_0\bigr).
+\]
+Apply an anti-aliasing rule (e.g., the $2/3$ spectral cutoff) if the grid Nyquist is approached by power in $s$.
+
+\paragraph{Boundary conditions.}
+\begin{itemize}
+  \item \textbf{Periodic boxes (LSS).} Standard FFT Poisson with $\hat\Phi(\mathbf{0})=0$; growth and lensing kernels use the same $p$.
+  \item \textbf{Isolated galaxies.} Prefer zero-padding or multigrid with open boundaries; verify that $\Phi$ and $v(R)$ are converged against padding size and grid resolution. If bars/warps are present, apply fairness masks before fitting (Section~6).
+\end{itemize}
+
+\subsection*{Complexity and performance}
+
+\paragraph{LSS solvers.}
+Each step (filter, Poisson) is an FFT and an inverse FFT: $O(N\log N)$ per time step. The memory footprint is $O(N)$. The kernel multiplication is a pointwise array operation. GPU FFTs provide near-linear scaling in practice.
+
+\paragraph{Galaxy pipelines.}
+For full 3D grids, complexity matches the LSS case. For axisymmetric thin disks, the Hankel path via FFTLog is $O(M\log M)$ with $M$ radial samples; sub-second per galaxy at typical resolutions. Finite thickness adds one quadrature dimension but remains fast.
+
+\subsection*{Code hooks}
+
+\paragraph{Rotation-curve pipeline (galaxies).}
+\begin{enumerate}
+  \item \texttt{build\_Sigma\_b(photometry, gas, Upsilon\_star)} $\rightarrow \Sigma_b(R)$ (global $\Upsilon_\ast$).
+  \item \texttt{fftlog\_hankel\_J0(Sigma\_b)} $\rightarrow \tilde\Sigma_b(k)$.
+  \item \texttt{apply\_kernel\_radial(tildeSigma, a{=}1)}: $\tilde P(k)=w(k,1)\,\tilde\Sigma_b(k)$.
+  \item \texttt{fftlog\_vc(tildeP)} $\rightarrow v_{\mathrm{model}}(R)$ via \eqref{eq:vc-disk}.
+  \item \texttt{apply\_fairness\_masks(data)}; compute residuals and the display $w(R)=v^2/v_{\mathrm{baryon}}^2$.
+\end{enumerate}
+
+\paragraph{Large-scale-structure (PM) step.}
+\begin{enumerate}
+  \item \texttt{deposit\_contrast(particles)} $\rightarrow \delta_b(\mathbf{x},a)$ (CIC/TSC).
+  \item \texttt{fft3(delta)} $\rightarrow \hat\delta_b(\mathbf{k},a)$; multiply to get $\hat p=\bar\rho_b\,w(k,a)\,\hat\delta_b$.
+  \item \texttt{poisson\_fft(\^p)}: $\hat\Phi=-4\pi G a^2 \hat p/k^2$; set $\hat\Phi(\mathbf{0})=0$.
+  \item \texttt{ifft3(\^Phi)} $\rightarrow \Phi$; \texttt{grad\_Phi} $\rightarrow \mathbf{g}$; push particles.
+\end{enumerate}
+
+\paragraph{Diagnostics and regression tests.}
+\begin{itemize}
+  \item \textbf{Kernel sanity:} verify $w\to 1$ at large $k$ and the expected power-law enhancement at small $k$.
+  \item \textbf{Energy check:} in static tests, confirm that $\Phi$ minimizes the functional in Section~5 given $p$.
+  \item \textbf{Convergence:} double resolution and padding; require $v(R)$ and $\Phi$ changes $<\!1\%$ over the fitted radii.
+\end{itemize}
+
+\noindent With this pre-filter architecture, existing Poisson and growth solvers drop in unchanged. The only new component is a kernel multiplication in $k$-space (or a single convolution in real space), after which all downstream numerics and validation practices remain standard.
+
+\section{Predictions and Falsifiers}
+
+\subsection*{Rotation curves with a global $M/L$ and no per-galaxy dials}
+\paragraph{Prediction.}
+With a \emph{single} stellar mass-to-light ratio $\Upsilon_\ast$ fixed for the survey, galaxy circular speeds satisfy
+\[
+v^2(R)=\frac{G\,M_{\mathrm{eff}}(R)}{R},\qquad
+M_{\mathrm{eff}}(R)=\int_0^R 4\pi r'^2\,p(r')\,dr',\qquad p=w\ast \rho_b,
+\]
+so that the display $w(R)=v^2/v_{\mathrm{baryon}}^2$ is fully determined by the universal kernel and the observed baryons. Residuals $\Delta v(R)=v_{\mathrm{obs}}(R)-v_{\mathrm{model}}(R)$ are unbiased across stellar surface brightness, size, gas fraction, and morphology under fairness masks.
+
+\paragraph{Falsifiers.}
+Any of the following is a fail:
+\begin{itemize}
+  \item \textbf{Per-galaxy retuning:} acceptable residuals require changing $w$ or introducing extra dials on a per-galaxy basis.
+  \item \textbf{Correlated residuals:} survey-wide Pearson correlation $|\mathrm{corr}(\Delta v,\,X)|>0.3$ at $>3\sigma$ for any basic observable $X\in\{\Sigma_\ast,\ R_d,\ f_{\mathrm{gas}}\}$ after masks.
+  \item \textbf{Sign pathologies:} inferred $p(r)$ is negative or highly oscillatory where $\rho_b(r)$ is smooth and positive.
+\end{itemize}
+
+\subsection*{Tracer-independent combinations under the pressure display}
+\paragraph{Prediction.}
+Define a tracer-independent growth-to-potential ratio
+\[
+E_G(a,k)\;:=\;\frac{a\,k^{2}\,\hat\Phi(a,k)}{H(a)\,f(a,k)\,\hat\delta_b(a,k)}.
+\]
+Using $k^2\hat\Phi=4\pi G\,a^{2}\,\bar\rho_b\,w\,\hat\delta_b$, this becomes
+\[
+E_G(a,k)=\Bigl[\frac{4\pi G\,a^{3}\,\bar\rho_b(a)}{H(a)}\Bigr]\frac{w(k,a)}{f(a,k)}.
+\]
+Hence $E_G$ is tracer-independent and factorizes into a known background prefactor times \(w/f\). The scale dependence at fixed $a$ is mild, monotone, and inherited from $w(k,a)$; the small-scale limit gives the laboratory value as $w\to 1$.
+
+\paragraph{Falsifiers.}
+\begin{itemize}
+  \item \textbf{Bias leakage:} $E_G$ estimates differ for distinct tracers beyond known systematics once mapped to the same $(k,a)$.
+  \item \textbf{Wrong scale trend:} after controlling for $f(a,k)$, the residual scale trend in $E_G$ is non-monotone or opposite in sign to $w(k,a)$.
+\end{itemize}
+
+\subsection*{Low-$\ell$ ISW sign and CMB lensing amplitude}
+\paragraph{Prediction.}
+On very large scales (low multipoles), the time growth of $w(k,a)$ slows the decay of $\Phi$ and can make $\dot\Phi<0$, yielding a \emph{negative} ISW cross-correlation with large-scale structure at low $\ell$. For CMB lensing, the line-of-sight average of $w$ produces a mild, coherent amplitude increase at low $L$ that vanishes toward high $L$ where $w\to 1$.
+
+\paragraph{Falsifiers.}
+\begin{itemize}
+  \item \textbf{ISW sign:} a robust, mask-stable \emph{positive} low-$\ell$ ISW cross-correlation inconsistent with the predicted sign.
+  \item \textbf{Lensing slope:} a significant \emph{decrease} of lensing amplitude toward low $L$ after standard pipeline corrections.
+\end{itemize}
+
+\subsection*{Near-field kernel slope (nanogravity)}
+\paragraph{Prediction.}
+At short scales $k\tau_0/a\gg 1$, the kernel behaves as $w(k,a)=1+C(a/(k\tau_0))^{\alpha}$ with $\alpha=\tfrac12(1-\varphi^{-1})$. The near-field slope is negative and small:
+\[
+\frac{d\ln w}{d\ln k}\;=\;-\alpha\,\frac{C(a/(k\tau_0))^{\alpha}}{1+C(a/(k\tau_0))^{\alpha}}\;<\;0,
+\]
+implying no detectable deviation until experiments probe sufficiently low $k$ (long baselines). The \emph{sign} and monotonicity are the sharp predictions.
+
+\paragraph{Falsifiers.}
+A measured \emph{positive} near-field slope or a non-monotone response in controlled lab tests at fixed $a$ contradicts the kernel form.
+
+\subsection*{Clear pass/fail criteria (summary)}
+\begin{itemize}
+  \item \textbf{Single $\Upsilon_\ast$ suffices:} per-galaxy retuning is disallowed; if needed, fail.
+  \item \textbf{Residuals uncorrelated:} no strong, significant correlations between $\Delta v$ and basic baryonic properties after masks; if present, fail.
+  \item \textbf{Tracer independence:} $E_G$ consistent across tracers at fixed $(k,a)$ within systematics; if not, fail.
+  \item \textbf{Large-scale signs:} negative low-$\ell$ ISW and mild low-$L$ lensing enhancement; opposite, fail.
+  \item \textbf{Near-field monotonicity:} small, negative slope; opposite sign or non-monotonic, fail.
+\end{itemize}
+
+\section{Relation to Alternative Explanations}
+
+\subsection*{Per-galaxy tuned frameworks}
+Halo-fitting frameworks explain galaxy dynamics by assigning a separate mass profile to each galaxy, often with multiple free parameters per system. These models can match rotation curves but at the cost of per-galaxy tuning and degeneracies (disk–halo tradeoffs, concentration–mass scatter). In contrast, the pressure language uses \emph{one} universal kernel and a \emph{single} global $M/L$ to turn observed baryons into an effective source. There is no halo dial to adjust: $p=w\ast \rho_b$ fixes the field, and standard Poisson gives the dynamics. The absence of per-galaxy degrees of freedom is the decisive structural difference.
+
+\subsection*{Modified-gravity models with new fields}
+Many modified-gravity theories introduce additional dynamical fields (scalars, vectors, tensors) and new coupling functions to alter the left-hand side of the field equations. These extra degrees of freedom bring flexibility but also model complexity and screening rules to recover laboratory limits. The pressure formulation presented here leaves the gravitational operator unchanged and adds no new fields. It is classical gravity with a redefined, information-limited source built from the baryons we already observe. Laboratory recovery is automatic because $w\to 1$ at high $k$; large-scale effects are governed by the same global constants and a single kernel.
+
+\subsection*{Distinctives}
+\begin{itemize}
+  \item \textbf{Single kernel.} One scale- and time-aware, isotropic kernel $w(k,a)$ applies to \emph{all} systems.
+  \item \textbf{Global constants.} The constants $(\varphi,\tau_0,E_{\mathrm{coh}},G)$ fix the kernel; there are no per-galaxy or per-survey knobs.
+  \item \textbf{Pressure display without extra fields.} Gravity is solved in its standard form with an effective source $p$; no new dynamical degrees of freedom are added.
+  \item \textbf{Laboratory limit.} Exact recovery at small scales is built in through $w\to 1$.
+  \item \textbf{Cross-domain coherence.} The same source construction drives galaxies, growth, lensing, and background focusing, so predictions are tied across regimes and falsifiable together.
+\end{itemize}
+
+% Optional BLOCKER lines if needed for later sections
+% \noindent \textbf{BLOCKER:} Insert survey-specific fairness masks and quality cuts.
+% \noindent \textbf{BLOCKER:} Provide the chosen normalization for the $E_G$ estimator used in analysis.
+
+\section{Discussion}
+
+\paragraph{Physical meaning of ``pressure.''}
+In this framework, ``pressure'' is an effective source field constructed from known baryons by an information-limited filter. It is not a thermodynamic variable, nor a new component of matter: it is the ordinary mass distribution displayed through a kernel that encodes finite information capacity across scale and time. Writing gravity in pressure form changes where the novelty sits (in the source rather than in the operator) while leaving the gravitational solver classical. The extra galactic pull, the mild scale dependence in growth, and the lensing rescale all emerge from the same filtered source without introducing new degrees of freedom.
+
+\paragraph{Interplay with RS constants and recognition cost.}
+The kernel is fixed by a small set of global constants aligned with Recognition Geometry. The golden ratio $\varphi$ locks the kernel’s exponent, the fundamental tick $\tau_0$ sets the gate between laboratory and cosmic scales, and the coherence scale $E_{\mathrm{coh}}$ anchors the broader recognition metric that motivates the information limit. This rigidity is a feature, not a constraint to be evaded: a single kernel threads galaxies, structure growth, and optics. Because the constants do not vary between systems, inferences become transportable across datasets, and successes or failures are unambiguous. The recognition cost provides the rationale for why the filter enhances long-wavelength, long-time information while leaving short-scale laboratory physics intact.
+
+\paragraph{Why rigidity matters.}
+A universal kernel and a global presentation in SI prevent per-galaxy fitting freedom from washing out tests. Rotation curves, lensing, and growth all reference the same filter, so the theory is falsifiable as a whole, not piecemeal. This also simplifies implementation: one pre-filter step builds the source for any downstream solver, making pipelines comparable across surveys and simulations.
+
+\paragraph{Limitations and open problems.}
+There are clear fronts for improvement. (i) A fully microscopic derivation of the kernel as the Euler–Lagrange of a pressure energy built directly from the recognition cost would remove remaining interpretation gaps. (ii) A complete relativistic presentation, with an effective stress–energy and explicit conservation statements, is needed for strong-field and high-precision lensing. (iii) Astrophysical systematics---mass-to-light calibration drift, gas mapping, distances and inclinations---limit the sharpness of galaxy tests; these should be handled by survey-wide standards and fairness masks, not by retuning the kernel. (iv) Nonlinear structure and baryonic feedback can distort the map from baryons to the pressure source; controlled simulations with the pre-filter architecture are required. (v) Environment-dependent displays may be useful for observables that are known to vary with local conditions, but any such extension must preserve the kernel’s universality and the RS rigidity.
+
+\section{Outlook}
+
+\paragraph{Toward a fully relativistic presentation.}
+The next step is to promote the effective pressure into a relativistic source language: define an effective stress--energy (or a pressure 2-form in differential-form notation) whose divergence-free property matches the information-limited kernel, and show that the resulting Einstein equations reduce to the present pressure Poisson limit. With that in hand, strong-lensing, time-delay cosmography, and relativistic tests (light-cone observables, redshift–space distortions at high precision) can be treated within one consistent formalism.
+
+\paragraph{Cross-checks and precision probes.}
+Several near-term tests can tighten or falsify the framework. (i) Strong lensing in galaxies and clusters: compare dynamical and lensing masses under the same effective pressure source; time delays provide scale-sensitive checks. (ii) Clusters: use hydrostatic and weak-lensing measurements together, enforcing the single kernel across radii. (iii) CMB lensing and ISW: test the predicted mild low-$L$ enhancement and the low-$\ell$ cross-correlation sign. (iv) Growth and RSD: measure the scale dependence of $f(a,k)$ and $E_G$ across tracers and redshifts. Each probe is tied to the same source construction, so consistency must hold simultaneously.
+
+\paragraph{Extensions consistent with RS rigidity.}
+Environment-dependent displays can be layered on observables (not on the kernel) to account for known sensitivity to local conditions while preserving universality. The rule is strict: the kernel and its constants remain global; any display-level modifier must be a derived, survey-wide functional that rescales readouts without introducing per-system dials or violating positivity and laboratory limits. With this guardrail, future work can explore how local wavefield ``pressure zones'' affect measured quantities (e.g., line-of-sight anisotropies, morphology-dependent systematics) while keeping the gravitational core unchanged.
+
+\medskip
+\noindent \textbf{Survey-wide masks, calibrations, priors, and estimators.}
+\begin{itemize}
+  \item \textbf{Rotation-curve fairness masks (galaxies).} Applied uniformly across the sample:
+    \begin{itemize}
+      \item \emph{Inclination:} keep $30^\circ \le i \le 85^\circ$ (photometric inclinations only).
+      \item \emph{Inner-beam mask:} require $r\ge b_{\mathrm{kpc}}$ (catalog beam FWHM in kpc); alternate diagnostic mask $r\ge 0.2\,R_d$ gives consistent medians.
+      \item \emph{Outer reliability:} exclude bins beyond the last reliable rotation point flagged by the catalog.
+      \item \emph{Distance quality:} require fractional distance uncertainty $\le 20\%$.
+      \item \emph{Bar/warp morphology:} exclude radii flagged for strong bars or warps unless explicitly modeled.
+      \item \emph{Minimum sampling:} require $\ge 5$ post-mask radii per galaxy.
+      \item \emph{Quality flag:} restrict to SPARC Q=1 galaxies.
+    \end{itemize}
+  \item \textbf{Photometric calibrations (galaxies).} Stellar masses from Spitzer IRAC $3.6\,\mu$m (standard zeropoints); atomic gas includes a helium factor $1.36$; molecular gas added where available via a fixed global CO-to-$\mathrm{H_2}$ factor; disk scale heights via a global $h_z/R_d=0.25$ (clipped to $[0.8,1.2]$ in $\zeta$).
+  \item \textbf{Mass-to-light prior.} Single, survey-wide $\Upsilon_\ast^{3.6\,\mu\mathrm{m}}=1.0\,M_\odot/L_\odot$ (no per-galaxy freedom); sensitivity bands may be reported but the headline analysis fixes this value.
+  \item \textbf{$E_G$ estimator (tomographic; flat-sky Limber).} We use the conventional estimator with explicit normalization (cf. Reyes et al.):
+    \[
+    E_G(\ell, z)\;=\; \Gamma(\ell,z)\, \frac{C^{\kappa g}_\ell(z)}{\beta(z)\, C^{gg}_\ell(z)}\,,\qquad \beta(z)=\frac{f(z)}{b_g(z)}\,,
+    \]
+    where $C^{\kappa g}_\ell$ is the CMB-lensing–galaxy cross-power, $C^{gg}_\ell$ the galaxy auto-power, $\beta$ from RSD in the same redshift bin, and $\Gamma(\ell,z)$ the known geometry factor computed with Limber using the survey redshift distributions and the same background $H(a)$. We report $E_G$ in bins $\ell \in [100,1000]$ and tomographic $z$ bins with $\Delta z\!=\!0.1$; the theoretical prediction uses $w(k,a)$ with $k\approx(\ell+1/2)/\chi(z)$ and $f(a,k)$ from the growth equation in Section~7.
+  \item \textbf{ISW cross-correlation.} We estimate $C^{Tg}_\ell$ between CMB temperature and large-scale structure over $\ell\in[2,60]$ with standard masks; theory uses $\dot\Phi$ from $\nabla^2\Phi=4\pi G a^2 p$ with $p=\bar\rho_b w\delta_b$. The sign test is binary: ILG-in-pressure predicts a \emph{negative} low-$\ell$ $C^{Tg}_\ell$.
+  \item \textbf{CMB lensing amplitude.} We form an amplitude per bandpower $A_L(\ell)=\hat C^{\kappa\kappa}_\ell/C^{\kappa\kappa}_{\ell,\mathrm{GR}}$ on $\ell\in[8,400]$; the pressure form implies a mild, coherent enhancement at low $\ell$ consistent with $w(k,a)$ along the line of sight.
+\end{itemize}
+
+\appendix
+
+\section{Proof details for the equivalence theorem and operator properties}
+
+\paragraph{Statement (equivalence).}
+Let $w(\nabla,a)$ be the isotropic convolution operator with Fourier symbol
+\[
+w(k,a)=1 + C\left(\frac{a}{k\,\tau_0}\right)^{\alpha},\qquad C=\varphi^{-3/2},\quad \alpha=\tfrac12\!\left(1-\varphi^{-1}\right)>0.
+\]
+Define the effective pressure source by
+\[
+p(\mathbf{x},a)=\bar\rho_b(a)\,\bigl[w(\nabla,a)\,\delta_b(\mathbf{x},a)\bigr],
+\qquad
+\hat p(\mathbf{k},a)=\bar\rho_b(a)\,w(k,a)\,\hat\delta_b(\mathbf{k},a).
+\]
+Then, for standard boundary conditions (isolated decay at infinity with $\Phi\to 0$, or periodic with zero-mean potential), the following statements are equivalent:
+\begin{align*}
+&\text{(ILG form)}&&k^2\,\hat\Phi(\mathbf{k},a)=4\pi G\,a^2\,\bar\rho_b(a)\,w(k,a)\,\hat\delta_b(\mathbf{k},a),\\
+&\text{(pressure form)}&&\nabla^2\Phi(\mathbf{x},a)=4\pi G\,a^2\,p(\mathbf{x},a).
+\end{align*}
+
+\paragraph{Proof.}
+Take the Fourier transform of the pressure form:
+\[
+-\,k^2\,\hat\Phi(\mathbf{k},a)=4\pi G\,a^2\,\hat p(\mathbf{k},a)
+=4\pi G\,a^2\,\bar\rho_b(a)\,w(k,a)\,\hat\delta_b(\mathbf{k},a),
+\]
+and multiply by $-1$ to obtain the ILG form. Conversely, given the ILG form, define $\hat p=\bar\rho_b\,w\,\hat\delta_b$ and inverse-transform; the assumed boundary conditions ensure the inverse is well-defined (the $\mathbf{k}=\mathbf{0}$ mode of $\hat\Phi$ is set to zero for periodic boxes, and $\Phi\to 0$ fixes the additive constant for isolated domains). Thus the two formulations are equivalent.
+
+\paragraph{Operator domain and boundedness.}
+On a periodic box of side $L$, the Fourier modes are discrete, and after fixing the zero mode of $\hat\Phi$ one works on mean-zero subspaces where $k\ge k_{\min}=2\pi/L$. There, $w(k,a)$ is finite and defines a bounded self-adjoint multiplier on $L^2$, hence $w(\nabla,a)$ is a bounded, self-adjoint operator. On $\mathbb{R}^3$, $w(k,a)$ is locally integrable for all $k\neq 0$ and belongs to $L^\infty_{\mathrm{loc}}(\mathbb{R}^3\setminus\{0\})$; the convolution is well-defined as a Fourier multiplier on tempered distributions, and as a bounded map on mean-zero $L^2$ functions that carry no power at $k=0$.
+
+\paragraph{Positivity (operator sense).}
+For any real $f\in L^2$ with transform $\hat f$,
+\[
+\langle f,\ w(\nabla,a)f\rangle
+=\int_{\mathbb{R}^3}\overline{\hat f(\mathbf{k})}\,w(k,a)\,\hat f(\mathbf{k})\,\frac{d^3k}{(2\pi)^3}
+\ge \int |\hat f|^2\,\frac{d^3k}{(2\pi)^3}=\|f\|_2^2\ge 0,
+\]
+since $w(k,a)\ge 1$. This establishes positivity of the operator (the quadratic form is nonnegative). Note that this \emph{does not} require the real-space kernel to be pointwise nonnegative; the result is at the operator level.
+
+\paragraph{Monotonicity in proxies.}
+For $k>0$,
+\[
+\frac{\partial w}{\partial k}(k,a)
+=-\,C\,\alpha\,\frac{a^{\alpha}}{\tau_0^{\alpha}}\,k^{-(1+\alpha)}<0,\qquad
+\frac{\partial w}{\partial a}(k,a)
+= C\,\alpha\,\frac{a^{\alpha-1}}{\tau_0^{\alpha}}\,k^{-\alpha}>0,
+\]
+so $w$ decreases with $k$ (shorter scales) and increases with $a$ (later times). Also $\partial w/\partial \tau_0<0$ when other variables are fixed.
+
+\paragraph{Real-space kernel and decay.}
+Formally, $w(\nabla,a)=\mathrm{Id}+K(\nabla,a)$ with symbol $C(a/\tau_0)^{\alpha}k^{-\alpha}$. In three dimensions, the inverse transform of $k^{-\alpha}$ is a (tempered) radial kernel that decays like $r^{-(3-\alpha)}$ for $0<\alpha<3$. Pointwise sign of $K$ is not required for any result in the main text, and the implementation can retain the operator form (Fourier multiplier) to preserve positivity by construction.
+
+\paragraph{Laboratory and cosmological limits.}
+The limits
+\[
+\lim_{k\tau_0/a\to\infty} w(k,a)=1,\qquad
+\lim_{k\tau_0/a\to 0} \frac{w(k,a)}{(a/k\tau_0)^{\alpha}}=C
+\]
+hold directly from the definition, giving the laboratory recovery and the long-wavelength enhancement used throughout.
+
+\bigskip
+
+\section{Variational formulation technicalities and boundary terms}
+
+\paragraph{Function spaces and admissible class.}
+On a bounded Lipschitz domain $\Omega\subset\mathbb{R}^3$ with Dirichlet boundary data $\Phi|_{\partial\Omega}=0$, take $\mathcal{V}=H^1_0(\Omega)$. On a periodic box $\mathbb{T}^3$, take $\mathcal{V}=\{\Phi\in H^1(\mathbb{T}^3):\int_{\mathbb{T}^3}\Phi\,d^3x=0\}$. Assume $p\in L^2(\Omega)$ (or $p\in H^{-1}(\Omega)$), built from $\rho_b$ or $\delta_b$ by the multiplier $w$.
+
+\paragraph{Energy functional and first variation.}
+Consider
+\[
+\mathcal{E}[\Phi\,|\,p]
+=\frac{1}{8\pi G}\int_{\Omega}|\nabla\Phi|^2\,d^3x
++\int_{\Omega} a^2\,p\,\Phi\,d^3x,
+\]
+with $\Phi\in\mathcal{V}$. For any $\delta\Phi\in\mathcal{V}$,
+\[
+\delta\mathcal{E}
+=\frac{1}{4\pi G}\int_{\Omega}\nabla\Phi\cdot\nabla(\delta\Phi)\,d^3x
++\int_{\Omega}a^2\,p\,\delta\Phi\,d^3x.
+\]
+Integrating by parts and using $\delta\Phi|_{\partial\Omega}=0$ (Dirichlet) or periodicity,
+\[
+\delta\mathcal{E}
+=-\frac{1}{4\pi G}\int_{\Omega}(\nabla^2\Phi)\,\delta\Phi\,d^3x
++\int_{\Omega}a^2\,p\,\delta\Phi\,d^3x.
+\]
+Stationarity for all $\delta\Phi\in\mathcal{V}$ yields $\nabla^2\Phi=4\pi G\,a^2\,p$.
+
+\paragraph{Coercivity, convexity, existence, uniqueness.}
+The quadratic form $\mathcal{Q}[\Phi]=\frac{1}{8\pi G}\int |\nabla\Phi|^2$ is strictly convex and coercive on $\mathcal{V}$ by the Poincaré inequality. The linear functional $\mathcal{L}[\Phi]=\int a^2\,p\,\Phi$ is continuous on $\mathcal{V}$ for $p\in H^{-1}$ (by duality) or $p\in L^2$ (by Cauchy–Schwarz). Hence $\mathcal{E}=\mathcal{Q}+\mathcal{L}$ is strictly convex, weakly lower semicontinuous, and coercive. By the Lax–Milgram theorem (or direct method of the calculus of variations), there exists a unique $\Phi\in\mathcal{V}$ minimizing $\mathcal{E}$; this minimizer is the unique weak solution of $\nabla^2\Phi=4\pi G\,a^2\,p$ in $\mathcal{V}$.
+
+\paragraph{Unbounded domains and boundary terms.}
+For isolated systems on $\mathbb{R}^3$, assume $\Phi(\mathbf{x})\to 0$ as $|\mathbf{x}|\to\infty$ and $p\in L^1(\mathbb{R}^3)\cap L^{6/5}(\mathbb{R}^3)$. The Green’s representation
+\[
+\Phi(\mathbf{x},a)=-\,G\,a^2\int_{\mathbb{R}^3}\frac{p(\mathbf{y},a)}{|\mathbf{x}-\mathbf{y}|}\,d^3y
+\]
+solves the Poisson equation in the distributional sense and satisfies $\Phi\in \dot H^1(\mathbb{R}^3)$ with finite Dirichlet energy. In the variational derivation, boundary terms vanish by decay: surface integrals on spheres of radius $R$ scale like $R^2\,\max_{\partial B_R}|\nabla\Phi|\,\max_{\partial B_R}|\delta\Phi|$ and tend to zero under the stated decay.
+
+\paragraph{Regularity.}
+If $p\in L^2(\Omega)$, elliptic regularity gives $\Phi\in H^2_{\mathrm{loc}}(\Omega)$; if $p$ is smoother, $\Phi$ inherits two derivatives in the interior. For periodic boxes, $\hat\Phi(\mathbf{k})=-4\pi G\,a^2\,\hat p(\mathbf{k})/k^2$ for $\mathbf{k}\neq 0$, showing that $\Phi$ gains two derivatives relative to $p$ in Sobolev scales when the zero mode is fixed.
+
+\paragraph{Remarks on implementation consistency.}
+In discrete settings, computing $p$ by multiplying $\hat s(\mathbf{k})$ with $w(k,a)$ and then solving the standard discrete Poisson equation preserves positivity of the quadratic form by construction. If a truncated real-space kernel $W(r,a)$ is used, enforce symmetry and normalization so that the discrete convolution retains self-adjointness; the Fourier route is preferred for guaranteed operator positivity.
+
+\medskip
+\noindent These details justify the use of the pressure energy as a well-posed variational principle and make precise the boundary assumptions under which the pressure and ILG formulations are mathematically identical.
+
+\section{Implementation details and numerical tests}
+
+\paragraph{Data model and units.}
+All fields live on uniform Cartesian meshes (cosmology) or cylindrical grids (galaxies), in SI units with comoving coordinates for cosmology and physical coordinates for galaxies. Constants $(\varphi,\tau_0,E_{\mathrm{coh}},G)$ are treated as immutable run-time parameters and recorded in each output header.
+
+\paragraph{Fourier-space pre-filter pipeline (grids).}
+On an $N_x\times N_y\times N_z$ periodic mesh:
+\begin{enumerate}
+  \item Deposit the source $s(\mathbf{x},a)$ (\emph{cosmology}: $s=\bar\rho_b\,\delta_b$; \emph{galaxies}: $s=\rho_b$) with CIC or TSC assignment.
+  \item Compute $\hat s(\mathbf{k},a)$ via FFT; apply deconvolution if desired to reduce assignment bias.
+  \item Multiply pointwise: $\hat p(\mathbf{k},a) = w(k,a)\,\hat s(\mathbf{k},a)$, with $w(k,a)=1+C(a/(k\tau_0))^\alpha$, $C=\varphi^{-3/2}$, $\alpha=\tfrac12(1-\varphi^{-1})$.
+  \item Solve Poisson in $k$-space: $\hat\Phi(\mathbf{k},a)=-\,4\pi G\,a^2\,\hat p(\mathbf{k},a)/k^2$ for $\mathbf{k}\neq 0$; set $\hat\Phi(\mathbf{0},a)=0$.
+  \item Inverse FFT to $\Phi$, then differentiate with centered finite differences to obtain $\mathbf{g}=-\nabla\Phi$.
+\end{enumerate}
+All kernel multiplications are done in logarithms for numerical stability when evaluating $(a/(k\tau_0))^\alpha$.
+
+\paragraph{Open-boundary galaxies (padding or multigrid).}
+For isolated systems, either (i) zero-pad the target volume by a factor $\geq 2$ per dimension, perform the FFT pipeline, then crop; or (ii) convolve $s$ with $w$ on a padded box to obtain $p$, then solve $\nabla^2\Phi=4\pi G a^2 p$ with a multigrid solver that enforces $\Phi\to 0$ at the boundary. Verify convergence of $\Phi$ and $v(R)$ against padding size and resolution.
+
+\paragraph{Axisymmetric thin disks (FFTLog).}
+Use Hankel transforms (order 0 and 1) on logarithmic radial grids:
+\[
+\tilde P(k)=w(k,1)\,\tilde \Sigma_b(k),
+\qquad
+v^2(R)=2\pi G\,R\int_0^\infty k\,dk\,J_1(kR)\,\tilde P(k).
+\]
+Adopt logarithmic sampling that resolves both the inner scale ($\sim$ seeing/beam) and the outer scale (last measured point).
+
+\paragraph{Stability and hygiene.}
+\begin{itemize}
+  \item \emph{Aliasing:} apply a $2/3$ spectral cutoff to suppress wrap-around; zero the highest shell of modes before inverse FFTs.
+  \item \emph{Small-$k$ handling:} never evaluate at $k=0$; the additive constant of $\Phi$ is fixed by $\hat\Phi(\mathbf{0})=0$ (periodic) or $\Phi\to 0$ (isolated).
+  \item \emph{Assignment windows:} for CIC/TSC, optionally deconvolve by the squared window to sharpen small scales, then rely on $w\to 1$ at high $k$.
+\end{itemize}
+
+\paragraph{Unit tests (deterministic).}
+\begin{enumerate}
+  \item \emph{Kernel identity:} with $w\equiv 1$, recover the standard Poisson solution for (a) a Gaussian sphere and (b) a Miyamoto–Nagai disk; require relative errors $<10^{-3}$ in $\Phi$ and $<10^{-2}$ in $v(R)$ across resolved radii.
+  \item \emph{Filter linearity:} verify $w\ast (a f + b g)=a(w\ast f)+b(w\ast g)$ to machine precision for random fields $f,g$ and scalars $a,b$.
+  \item \emph{Positivity/monotonicity display:} for a smooth, nonnegative $\rho_b$, check that the inferred $P(R)=\int p(R,z)dz$ has no spurious sign flips and that $w(R)=v^2/v^2_{\mathrm{baryon}}$ is nondecreasing with radius in cases where $\tilde\Sigma_b(k)$ is concentrated at low $k$.
+  \item \emph{Energy check:} compute $\mathcal{E}[\Phi|p]=\frac{1}{8\pi G}\int |\nabla\Phi|^2+\int a^2 p\,\Phi$ and confirm that a single V-cycle of multigrid lowers $\mathcal{E}$, with convergence to the stationary value.
+\end{enumerate}
+
+\paragraph{Convergence tests (grids and disks).}
+\begin{itemize}
+  \item \emph{Grids:} double the linear resolution $N\to 2N$; require $\|\Phi_{2N}-\Phi_{N}\|_2/\|\Phi_{2N}\|_2<1\%$ and likewise for forces on a random particle set.
+  \item \emph{Disks:} refine the logarithmic radial grid by a factor of two; require $|v_{2M}(R)-v_{M}(R)|/v_{2M}(R)<1\%$ over the fitted radial range.
+\end{itemize}
+
+\paragraph{Performance notes.}
+The pre-filter adds one FFT and one inverse FFT per step (cosmology), or one pair of Hankel transforms (galaxies). On GPUs, end-to-end cost is dominated by the FFTs; kernel multiplication is bandwidth-bound and negligible in wall time.
+
+\bigskip
+
+\section{Bench datasets and masks; reproducibility notes}
+
+\paragraph{Bench datasets (galaxies).}
+Use heterogeneous samples spanning dwarfs to $L_\ast$, with photometry, gas maps, distances, and inclinations on a common calibration. For each galaxy record:
+\begin{itemize}
+  \item Photometric band and zero points; map to $\Sigma_\ast$ via a \emph{single} survey-wide $\Upsilon_\ast$.
+  \item Gas surface densities $\Sigma_{\mathrm{HI}}$, $\Sigma_{\mathrm{H_2}}$ (with conversion factors and helium correction).
+  \item Rotation curve data with beam/seeing and inclination corrections, and uncertainties per radius bin.
+\end{itemize}
+\textbf{Surveys, selections, and references (minimal set).}
+\begin{itemize}
+  \item \textbf{Rotation curves (galaxies):} SPARC \cite{lelli2016sparc}. \emph{Selection:} Q=1 galaxies; photometric inclinations ($30^\circ$–$85^\circ$); inner-beam mask $r\ge b_{\mathrm{kpc}}$; outer bins beyond last reliable point removed; bars/warps masked; distances with $\le20\%$ fractional uncertainty. \emph{Calibrations:} Spitzer IRAC $3.6\,\mu$m zeropoints; helium correction $1.36$; fixed CO-to-$\mathrm{H_2}$ factor where available; global $h_z/R_d=0.25$ (clipped) and single $\Upsilon_\ast^{3.6\,\mu\mathrm{m}}=1.0$.
+  \item \textbf{CMB temperature and lensing:} Planck 2018 \cite{Planck2018} (temperature full-sky maps; lensing $\kappa$ reconstruction). \emph{ISW:} multipoles $\ell\in[2,60]$; standard Galactic/point-source masks.
+  \item \textbf{Galaxy lensing/number-density for $E_G$:} a modern wide-field survey (e.g., DES Y3 or KiDS-1000; choice determines $\Gamma$ and $b_g$ inputs). \emph{Tomography:} $\Delta z\!=\!0.1$ bins; $\ell\in[100,1000]$; RSD-derived $\beta=f/b_g$ in the same bins.
+\end{itemize}
+
+\paragraph{Bench datasets (cosmology).}
+Adopt boxes with baryonic tracer catalogs or hydrodynamical fields sufficient to construct $\delta_b$ on grids across redshift bins. For each snapshot record: $(a, H(a))$, box size, particle/cell counts, tracer bias models if used only for display-level comparisons, and the exact grid resolution used for $\delta_b$ deposition.
+
+\paragraph{Fairness masks (galaxies).}
+Masks are applied uniformly across the sample:
+\begin{itemize}
+  \item \emph{Geometry:} exclude $i<30^\circ$ or $i>85^\circ$; mask radii inside the effective beam FWHM and beyond the last reliable bin.
+  \item \emph{Morphology:} flag strong bars/warps; exclude affected radii unless modeled explicitly.
+  \item \emph{Systematics:} exclude galaxies with distance uncertainty exceeding a specified fractional threshold; exclude bins with noncircular motion indicators above survey standards.
+\end{itemize}
+\textbf{Mask thresholds and flags (explicit).}
+\begin{itemize}
+  \item Inclination: keep $30^\circ \le i \le 85^\circ$ (photometric); drop otherwise.
+  \item Inner radii: $r\ge b_{\mathrm{kpc}}$; diagnostic alternate $r\ge 0.2\,R_d$ (reported separately).
+  \item Distance quality: keep galaxies with fractional uncertainty $\le 0.20$.
+  \item Minimum sampling: require $\ge 5$ post-mask radii per galaxy.
+  \item Morphology: mask radii flagged as strong bars/warps; exclude systems dominated by pressure support for the rotation-curve test.
+  \item Catalog quality: SPARC Q=1 only.
+\end{itemize}
+
+\paragraph{Reproducibility: configuration and outputs.}
+Each run writes a human-readable header containing:
+\begin{itemize}
+  \item Constants $(\varphi,\tau_0,E_{\mathrm{coh}},G)$, kernel parameters $(C,\alpha)$, and the \emph{single} global $\Upsilon_\ast$ (galaxies).
+  \item Boundary conditions, grid sizes, padding factors, and assignment scheme (CIC/TSC).
+  \item Random seeds (if any), fairness mask settings, and convergence tolerances.
+\end{itemize}
+Outputs include: (i) the pre-filtered source $p$ (grid or $P(R)$), (ii) the potential $\Phi$ and derived fields ($\mathbf{g}$, $v(R)$), (iii) diagnostic displays ($w(R)$, residuals, energy functional values), and (iv) a checksum of the kernel array $w(k,a)$ used.
+
+\paragraph{Exact reruns.}
+To guarantee bitwise reruns where possible:
+\begin{itemize}
+  \item Fix FFT plan wisdom and thread counts; record them in the header.
+  \item Snap grid sizes and box lengths to integers in machine units; avoid dynamic regridding during a run.
+  \item Store ASCII sidecar files with the $(k,a,w)$ triples sampled on the discrete mesh for the run.
+\end{itemize}
+
+\paragraph{Release bundle.}
+Package: (i) configuration files; (ii) constants file; (iii) fairness masks; (iv) per-galaxy inputs ($I_\ast$, $\Sigma_{\mathrm{gas}}$, distances, inclinations) and per-snapshot cosmology inputs ($\delta_b$ grids); (v) kernel sampler outputs; (vi) a short \texttt{README} documenting the exact command lines and environment. 
+\textbf{Dataset identifiers, checksums, and canonical environment.}
+\begin{itemize}
+  \item \textbf{Identifiers:} Rotation-curve artifacts and configuration are archived at Zenodo DOI \texttt{10.5281/zenodo.16014943}. CMB/lensing inputs reference Planck 2018 public releases \cite{Planck2018}; galaxy samples (for $E_G$) reference the chosen survey’s public data release (e.g., DES Y3 or KiDS-1000).
+  \item \textbf{Checksums:} The release bundle includes a file \texttt{checksums.txt} listing SHA256 digests for all analysis inputs and produced artifacts (kernel samples $w(k,a)$, masks, summaries). These are generated at release time and versioned alongside the DOI deposit.
+  \item \textbf{Canonical environment:} Linux/macOS; Python 3.11.x; NumPy 1.26.x; SciPy 1.11.x; FFTLog or equivalent for Hankel transforms; Matplotlib 3.8.x; optional CuFFT for GPU FFTs. Reproducible builds are provided via a Dockerfile and pinned \texttt{requirements.txt}; exact versions are recorded in each run header and archived with artifacts.
+\end{itemize}
+
+\medskip
+\noindent These practices make it straightforward for external groups to rerun the analysis with the same kernel and constants, test alternative mask choices, and reproduce figures without per-object adjustments or hidden parameters.
+
+\end{document}

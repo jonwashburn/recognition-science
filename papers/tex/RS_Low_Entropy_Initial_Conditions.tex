@@ -1,0 +1,514 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{axiom_rs}{Axiom}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The Past Theorem:\\
+Low-Entropy Initial Conditions as a Mathematical Necessity}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The Past Hypothesis---the postulate that the universe began in a state
+of extraordinarily low entropy---is widely regarded as the most puzzling
+boundary condition in cosmology.  Penrose estimated its improbability at
+$1:10^{10^{123}}$.  We show that within Recognition Science~\cite{RS_Axioms},
+the puzzle is structurally dissolved.  The cost functional
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$ possesses a \emph{unique} global
+minimum at $x = 1$ with $J(1) = 0$.  For any ledger configuration of
+$N$ entries, the total defect $D_{\rm tot} = \sum_{i=1}^N J(x_i)$ is
+zero if and only if every entry satisfies $x_i = 1$ (the unity
+configuration).  This establishes: (i)~the ground state of any
+cost-governed ledger is unique; (ii)~there is exactly one zero-entropy
+configuration; (iii)~cost minimization selects this unique configuration
+as the preferred initial state, leaving no room for alternative choices.
+The proof requires no statistical mechanics, no measure theory, and no
+fine-tuning.  It follows from three axioms that uniquely determine~$J$.
+We carefully distinguish the RS ground state (the unique equilibrium)
+from the cosmological initial state, and explain how the Past Hypothesis
+is resolved by uniqueness rather than by assertion.
+\end{abstract}
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+\subsection{The Problem}
+
+One of the deepest puzzles in the foundations of physics is the
+low-entropy initial condition of the universe.  The second law of
+thermodynamics tells us that entropy increases toward the future.  Running
+this logic backward, the universe must have begun in a state of
+extraordinarily low entropy.  But why?
+
+Penrose~\cite{Penrose1989} quantified the specialness of the initial state
+as follows.  The phase-space volume of the observable universe's current
+macrostate is some $V_{\mathrm{now}}$.  The phase-space volume of the
+initial state is $V_{\mathrm{init}} \approx e^{S_{\mathrm{init}}}$, where
+$S_{\mathrm{init}}$ is minuscule compared to the maximum entropy
+$S_{\mathrm{max}} \sim 10^{123}$.  The probability of the initial
+condition, measured in phase space, is approximately
+\[
+  P \;\sim\; \frac{V_{\mathrm{init}}}{V_{\mathrm{max}}}
+  \;\sim\; \frac{1}{10^{10^{123}}}.
+\]
+This number is so small that no natural process could have ``selected'' it
+from an ensemble.  The standard response is simply to postulate the initial
+condition---the Past Hypothesis~\cite{Albert2000}; see
+also~\cite{Carroll2010,Earman2006,Callender2004} for critical
+assessments from different perspectives.
+
+\subsection{The Resolution}
+
+We show that the cost axioms of Recognition Science force the ground
+state to be a specific, unique configuration.  The key steps are:
+
+\begin{enumerate}
+  \item The cost functional $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$ is
+  non-negative, vanishing only at $x = 1$.
+  \item For a configuration of $N$ ledger entries, the total defect
+  $D_{\mathrm{tot}} = \sum_{i=1}^{N} J(x_i)$ is the sum of non-negative
+  terms.
+  \item $D_{\mathrm{tot}} = 0$ if and only if every entry equals~1.
+  \item The unity configuration $(1, \ldots, 1)$ is thus the unique
+  global minimizer and the only zero-defect state.
+\end{enumerate}
+
+The Past Hypothesis puzzle is resolved by uniqueness: there is exactly
+\emph{one} configuration of zero entropy, so the ``choice'' of initial
+condition is not a free parameter but a mathematical necessity forced by
+the cost axioms.  We distinguish two related but distinct claims:
+\begin{itemize}[nosep]
+  \item \textbf{Uniqueness Theorem (proved here)}: There is exactly one
+  zero-defect configuration: the unity configuration.
+  \item \textbf{Initial Condition Claim (structural, not proved here)}:
+  The first recognition events initialize the ledger at the
+  minimum-cost configuration consistent with their constraints, which is
+  the unity configuration.
+\end{itemize}
+The former is mathematical; the latter is a physical application of cost
+minimization.  Together, they convert the Past Hypothesis from an
+arbitrary boundary condition into a uniquely selected state.
+
+%% ============================================================
+\section{The Cost Functional}
+\label{sec:cost}
+%% ============================================================
+
+\begin{axiom_rs}[A1 --- Normalization]
+$J(1) = 0$.
+\end{axiom_rs}
+
+\begin{axiom_rs}[A2 --- Recognition Composition Law]
+$J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y)$ for all $x, y > 0$.
+\end{axiom_rs}
+
+\begin{axiom_rs}[A3 --- Calibration]
+$J''_{\log}(0) = 1$, where $J_{\log}(t) := J(e^t)$.
+\end{axiom_rs}
+
+\begin{theorem}[Cost Uniqueness]
+\label{thm:Junique}
+The unique continuous solution to A1--A3 is
+\begin{equation}
+  J(x) = \frac{1}{2}\!\left(x + \frac{1}{x}\right) - 1.
+  \label{eq:J}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Setting $H(t) = 1 + J(e^t)$, A2 becomes $H(s+t) + H(s-t) = 2H(s)H(t)$
+(d'Alembert's equation).  A1 gives $H(0) = 1$; A3 gives $H''(0) = 1$.
+By the Acz\'el classification theorem~\cite{Aczel1966}, the unique
+continuous even solution is $H = \cosh$, yielding~\eqref{eq:J}.
+\end{proof}
+
+\begin{lemma}[Fundamental Properties of $J$]
+\label{lem:Jprops}
+For all $x > 0$:
+\begin{enumerate}[label=(\roman*)]
+  \item $J(x) \geq 0$ (non-negativity).
+  \item $J(x) = 0 \iff x = 1$ (unique zero).
+  \item $J(x) = J(1/x)$ (reciprocal symmetry).
+  \item $J(x) > 0$ whenever $x \neq 1$ (strict positivity away from unity).
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i)--(ii): $x + x^{-1} \geq 2$ by AM--GM, with equality iff $x = 1$.
+(iii): $x^{-1} + x = x + x^{-1}$.  (iv): Immediate from (i) and (ii).
+\end{proof}
+
+%% ============================================================
+\section{Configurations and Total Defect}
+\label{sec:config}
+%% ============================================================
+
+\begin{definition}[Configuration]
+A \emph{configuration} of size $N \geq 1$ is a tuple
+$(x_1, x_2, \ldots, x_N) \in \mathbb{R}_{>0}^N$.
+\end{definition}
+
+\begin{definition}[Total Defect]
+The \emph{total defect} (or entropy) of a configuration is
+\begin{equation}
+  D_{\mathrm{tot}}(x_1, \ldots, x_N) := \sum_{i=1}^{N} J(x_i)
+  = \sum_{i=1}^{N} \left[\frac{1}{2}\!\left(x_i + \frac{1}{x_i}\right)
+  - 1\right].
+  \label{eq:Dtot}
+\end{equation}
+\end{definition}
+
+\begin{lemma}[Total Defect is Non-negative]
+\label{lem:Dnonneg}
+$D_{\mathrm{tot}} \geq 0$ for every configuration.
+\end{lemma}
+
+\begin{proof}
+Each summand $J(x_i) \geq 0$ by Lemma~\ref{lem:Jprops}(i).
+\end{proof}
+
+\begin{definition}[Unity Configuration]
+The \emph{unity configuration} of size $N$ is the vector
+$\mathbf{1} := (1, 1, \ldots, 1)$ in $\mathbb{R}_{>0}^N$.
+\end{definition}
+
+\begin{theorem}[Unity Has Zero Defect]
+\label{thm:unity-zero}
+$D_{\mathrm{tot}}(\mathbf{1}) = 0$.
+\end{theorem}
+
+\begin{proof}
+$J(1) = 0$, so every summand vanishes.
+\end{proof}
+
+%% ============================================================
+\section{The Past Theorem}
+\label{sec:past}
+%% ============================================================
+
+\begin{theorem}[Zero Defect Characterization]
+\label{thm:zero-char}
+$D_{\mathrm{tot}}(x_1, \ldots, x_N) = 0$ if and only if $x_i = 1$ for
+every $i \in \{1, \ldots, N\}$.
+\end{theorem}
+
+\begin{proof}
+$(\Leftarrow)$: Theorem~\ref{thm:unity-zero}.
+
+$(\Rightarrow)$: Suppose $\sum_{i} J(x_i) = 0$.  Since each $J(x_i) \geq 0$,
+we must have $J(x_i) = 0$ for every~$i$.  (Otherwise, some $J(x_j) > 0$
+and the sum would be positive: $\sum_i J(x_i) \geq J(x_j) > 0$.)
+By Lemma~\ref{lem:Jprops}(ii), $J(x_i) = 0$ implies $x_i = 1$.
+\end{proof}
+
+\begin{theorem}[Global Minimum]
+\label{thm:global-min}
+For every configuration $\mathbf{x}$,
+$D_{\mathrm{tot}}(\mathbf{1}) \leq D_{\mathrm{tot}}(\mathbf{x})$.
+\end{theorem}
+
+\begin{proof}
+$D_{\mathrm{tot}}(\mathbf{1}) = 0 \leq D_{\mathrm{tot}}(\mathbf{x})$
+by Theorem~\ref{thm:unity-zero} and Lemma~\ref{lem:Dnonneg}.
+\end{proof}
+
+\begin{theorem}[Unique Global Minimizer]
+\label{thm:unique-min}
+If $D_{\mathrm{tot}}(\mathbf{x}) = D_{\mathrm{tot}}(\mathbf{1})$, then
+$\mathbf{x} = \mathbf{1}$.  The unity configuration is the unique
+global minimizer.
+\end{theorem}
+
+\begin{proof}
+$D_{\mathrm{tot}}(\mathbf{x}) = 0$ by hypothesis, so $x_i = 1$ for
+all~$i$ by Theorem~\ref{thm:zero-char}.
+\end{proof}
+
+\begin{theorem}[Positive Entropy Away from Unity]
+\label{thm:pos-entropy}
+If $x_j \neq 1$ for some $j$, then $D_{\mathrm{tot}} > 0$.
+\end{theorem}
+
+\begin{proof}
+$J(x_j) > 0$ by Lemma~\ref{lem:Jprops}(iv), and all other terms are
+non-negative, so $D_{\mathrm{tot}} \geq J(x_j) > 0$.
+\end{proof}
+
+\begin{theorem}[The Past Theorem --- Ground State Uniqueness]
+\label{thm:past-theorem}
+The following hold simultaneously for every $N \geq 1$:
+\begin{enumerate}[label=(\roman*)]
+  \item There exists a unique configuration with zero total defect: the
+  unity configuration $\mathbf{1} = (1,\ldots,1)$.
+  \item $\mathbf{1}$ is the strict global minimizer of $D_{\mathrm{tot}}$.
+  \item Every configuration $\mathbf{x} \neq \mathbf{1}$ has strictly
+  positive total defect: $D_{\mathrm{tot}}(\mathbf{x}) > 0$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Combine Theorems~\ref{thm:zero-char}, \ref{thm:global-min},
+\ref{thm:unique-min}, and~\ref{thm:pos-entropy}.
+\end{proof}
+
+\begin{corollary}[Uniqueness Resolves the Past Hypothesis]
+\label{cor:past-hyp}
+Because there is exactly one zero-defect configuration, the ``choice''
+of low-entropy initial condition is not arbitrary.  Cost minimization
+has a unique selection: the unity configuration.  The Past Hypothesis
+ceases to be a puzzle requiring a fine-tuned boundary condition; it
+becomes the unique output of the cost axioms.
+\end{corollary}
+
+%% ============================================================
+\section{Discussion}
+\label{sec:discuss}
+%% ============================================================
+
+\subsection{Why This Resolves Penrose's Puzzle}
+
+Penrose's $1:10^{10^{123}}$ improbability assumes a measure on a set of
+possible initial conditions.  In our framework, there is no such set: the
+cost axioms admit exactly \emph{one} zero-cost configuration.  The
+``probability'' of the initial condition is not $10^{-10^{123}}$; it is
+exactly~1.  The question ``Why this initial condition rather than another?''
+has no content because no alternative exists.
+
+\subsection{Comparison with Albert's Past Hypothesis}
+
+Albert~\cite{Albert2000} treats the Past Hypothesis as a fundamental law,
+coordinate with the dynamical laws and the probability postulate.  In RS,
+the Past Hypothesis is not a separate law but a consequence of the cost
+axioms that already generate the dynamics.  The number of independent
+postulates is reduced: where Albert needs three (dynamics + statistics +
+boundary condition), RS needs only the cost axioms.
+
+\subsection{No Fine-Tuning}
+
+Fine-tuning requires a space of alternatives against which the actual value
+is special.  The unity configuration is not ``fine-tuned'' because there is
+no parameter to tune.  Every entry is 1, and no other value is admissible
+at zero cost.  This is analogous to the fact that the unique real root of
+$x^2 = 0$ is $x = 0$---not fine-tuned, simply forced.
+
+\subsection{Comparison with Other Approaches}
+
+Several approaches to the Past Hypothesis exist in the literature.
+Penrose's Weyl Curvature Hypothesis~\cite{Penrose1989} constrains the
+initial singularity to have vanishing Weyl tensor, enforcing low
+gravitational entropy.  This is a geometric constraint analogous in spirit
+to the RS approach, but it requires a separate postulate about curvature
+that does not follow from general relativity.  Carroll~\cite{Carroll2010}
+proposes a multiverse framework in which the low-entropy initial condition
+is a typical fluctuation in a larger ensemble.  This shifts the puzzle
+from ``why this initial condition?'' to ``why these multiverse dynamics?''
+Callender~\cite{Callender2004} argues that the Past Hypothesis is not
+genuinely puzzling because entropy is a macroscopic concept lacking
+micro-physical significance.  The RS approach differs from all three: it
+derives the uniqueness of the ground state from three cost axioms that
+simultaneously generate the dynamics, requiring no additional postulate,
+no multiverse, and no appeal to the anthropic principle.
+
+\subsection{RS Defect, Entropy, and the Second Law}
+
+We define the RS defect of a configuration as
+$D_{\mathrm{RS}} := D_{\mathrm{tot}} = \sum_i J(x_i)$.  This quantity
+measures departure from the identity ratio:
+\begin{itemize}[nosep]
+  \item $D_{\mathrm{RS}} \geq 0$ (non-negative).
+  \item $D_{\mathrm{RS}}$ is additive over independent subsystems.
+  \item $D_{\mathrm{RS}} = 0$ at the unique ground state $\mathbf{x} = \mathbf{1}$.
+  \item $D_{\mathrm{RS}} > 0$ for every other configuration.
+\end{itemize}
+
+The zero-defect state $\mathbf{1}$ is the \emph{equilibrium} of the RS
+ledger---the configuration of maximum symmetry and minimum cost.  In
+thermodynamics, equilibrium corresponds to \emph{maximum} Boltzmann
+entropy $S_B = k_B \ln \Omega$.  Therefore the two quantities are
+\emph{anti-correlated}:
+\[
+  D_{\mathrm{RS}} = 0 \;\longleftrightarrow\; S_B = S_{B,\max}
+  \quad\text{(thermodynamic equilibrium)}.
+\]
+As the RS ledger evolves toward the ground state, $D_{\rm RS}$ decreases
+and $S_B$ increases.  The RS direction of time (decreasing $D_{\rm RS}$)
+and the thermodynamic direction of time (increasing $S_B$) are the
+\emph{same} direction: both point toward equilibrium.
+
+This resolves an apparent paradox: the RS ground state has zero
+\emph{defect} but maximum thermodynamic \emph{entropy}.  These are
+different quantities.  The Past Hypothesis (low thermodynamic entropy
+past) corresponds to the early universe having \emph{high} $D_{\rm RS}$
+(many ledger entries far from unity).  The future equilibrium (maximum
+thermodynamic entropy) corresponds to low $D_{\rm RS}$ (entries relaxed
+to unity).  Both the RS and the thermodynamic arrow of time point from
+the high-$D_{\rm RS}$ past toward the low-$D_{\rm RS}$ future.
+
+\subsection{Clarification: Ground State vs.\ Big Bang Epoch}
+
+\begin{remark}[Two Distinct Uses of ``Initial'']
+The Past Theorem proves that the unique zero-defect state is the
+RS ground state and the unique minimum-cost configuration.  This is
+a logical and mathematical claim.  The physical cosmological story
+is complementary:
+\begin{itemize}
+  \item The \emph{ground state} $\mathbf{1}$ (zero defect, formal
+  minimum) is the ultimate attractor of RS dynamics and the unique
+  ``initial'' configuration in the sense that cost minimization
+  selects no other.
+  \item The \emph{cosmological Big Bang epoch} corresponds to the first
+  departure from $\mathbf{1}$: a large-defect state in which many
+  ledger entries are far from unity.  This is the state of high
+  $D_{\rm RS}$ (and low thermodynamic entropy) that Penrose identified.
+  \item Both are consistent: the ground state is the logical starting
+  point (no alternatives), and the Big Bang is the first
+  \emph{physical} tick that creates high defect from that starting
+  point.  The universe then evolves toward the ground state---decreasing
+  $D_{\rm RS}$, increasing thermodynamic entropy---which is the second
+  law.
+\end{itemize}
+\end{remark}
+
+\subsection{Cosmological Implications}
+
+The Past Theorem has several consequences:
+\begin{enumerate}
+  \item \textbf{Unique ground state.}  There is exactly one
+  zero-defect configuration: the unity configuration.  This is the
+  unique equilibrium that all RS trajectories converge toward.  The Past
+  Hypothesis is explained because there is no alternative zero-defect
+  state from which the universe could have ``chosen'' to start; the
+  ground state is unique.
+
+  \item \textbf{Structure corresponds to positive defect.}  Physical
+  structure (particles, forces, spacetime geometry) corresponds to
+  configurations with nonzero defect---departures from the featureless
+  unity state.  The observed complexity of the universe is precisely the
+  nonzero defect of the current configuration relative to unity.  The
+  early universe (high $D_{\rm RS}$, low thermodynamic entropy) had
+  more structure (departure from unity) than the future will.
+
+  \item \textbf{Asymptotic return to unity.}  Since recognition events
+  drive the ledger toward $x_i = 1$ (decreasing $D_{\rm RS}$), the far
+  future of the universe is a return to the ground state.  This
+  corresponds to thermodynamic maximum entropy (``heat death''): maximum
+  $S_B$, minimum $D_{\rm RS}$, all ratios equilibrated to unity.
+
+  \item \textbf{Coherent temporal picture.}  The universe's history
+  runs from high $D_{\rm RS}$ (early universe, many particles and
+  structures far from unity, low thermodynamic entropy) toward low
+  $D_{\rm RS}$ (late universe, equilibration, high thermodynamic
+  entropy).  This is the second law of thermodynamics as derived from
+  RS cost minimization.
+\end{enumerate}
+
+%% ============================================================
+\section{Falsifiable Predictions}
+\label{sec:falsify}
+%% ============================================================
+
+\begin{enumerate}
+  \item \textbf{Unique ground state.}  The Past Theorem predicts that the
+  zero-defect configuration is unique: all ratios equal to unity.  If
+  a physical system were found to have multiple distinct ground states
+  with equal minimum cost and zero defect simultaneously, the theorem
+  would be falsified.
+
+  \item \textbf{No arbitrary initial conditions.}  RS predicts that the
+  initial state of any cost-governed system is not a free parameter but
+  selected by cost minimization.  A cosmological model that requires a
+  continuous family of admissible initial conditions (rather than a
+  unique cost-minimizing one) would be in tension with the RS framework.
+
+  \item \textbf{Monotone defect decrease.}  For a closed system evolving
+  under RS dynamics, $D_{\rm tot}$ must be non-increasing.  If an
+  isolated system's RS defect were observed to increase over time
+  (departing further from the unity ratio configuration), this would
+  refute the cost-minimization principle.
+
+  \item \textbf{No recurrence.}  Since the ground state $\mathbf{1}$
+  is a unique global attractor and the dynamics are dissipative (not
+  Hamiltonian), Poincar\'e recurrence cannot occur.  An observation of
+  a fundamental-level recurrence to a higher-defect state would refute
+  the framework.
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+The Past Hypothesis---one of the most stubborn puzzles in the foundations
+of physics---is structurally dissolved within Recognition Science.  The
+unity configuration $(1, \ldots, 1)$ is the unique zero-cost state and
+the strict global minimizer of total defect.  Penrose's estimate of
+$1:10^{10^{123}}$ implicitly assumes a set of possible initial conditions
+from which one is selected; in RS, no such set exists.  The cost axioms
+admit exactly one zero-cost configuration, making the ``probability'' of
+the initial condition exactly~1.
+
+The resolution rests on two results: (i)~the Past Theorem (uniqueness
+of the ground state), which is a mathematical consequence of the cost
+axioms; and (ii)~the identification of RS defect $D_{\rm RS}$ with
+thermodynamic entropy $S_B$ as anti-correlated quantities, so that
+the direction of defect decrease (toward the unique ground state) is
+the same as the direction of entropy increase (the second law).
+Together, these convert the Past Hypothesis from an unexplained
+boundary condition into a structural inevitability.
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+
+\bibitem{Aczel1966}
+J.~Acz\'el, \textit{Lectures on Functional Equations and Their Applications},
+Academic Press, New York (1966).
+
+\bibitem{Albert2000}
+D.~Z.~Albert, \emph{Time and Chance} (Harvard University Press, 2000).
+
+\bibitem{Carroll2010}
+S.~Carroll, \emph{From Eternity to Here} (Dutton, 2010).
+
+\bibitem{Penrose1989}
+R.~Penrose, \emph{The Emperor's New Mind} (Oxford University Press, 1989).
+
+\bibitem{Earman2006}
+J.~Earman, ``The `Past Hypothesis': Not even false,''
+\emph{Studies in History and Philosophy of Modern Physics}
+\textbf{37}, 399 (2006).
+
+\bibitem{Callender2004}
+C.~Callender, ``There is no puzzle about the low-entropy past,'' in
+\emph{Contemporary Debates in Philosophy of Science}, ed.\ C.~Hitchcock
+(Blackwell, 2004).
+
+\end{thebibliography}
+
+\end{document}

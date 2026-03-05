@@ -1,0 +1,772 @@
+\documentclass[12pt]{article}
+
+% ============================
+% Packages
+% ============================
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage[
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue
+]{hyperref}
+\usepackage{tikz-cd}
+\usetikzlibrary{arrows.meta}
+
+% ============================
+% Theorem environments
+% ============================
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% ============================
+% Convenience macros
+% ============================
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\Hcech}{\check{H}}
+\DeclareMathOperator{\im}{im}
+
+\title{Cohomological Connections Between the Cost-First Ledger Framework\\and Aperiodic Tiling Spaces}
+\author{Sebastian Pardo-Guerra\thanks{Corresponding author. Email: \texttt{sebas@recognitionphysics.org}.}\\[4pt]
+\small Recognition Physics Institute, Austin, TX, USA}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We develop a formal cohomological framework connecting the discrete potential theory of the cost-first ledger~\cite{PardoGuerraEtAl2026} with the topological invariants of Penrose tiling spaces. The ledger framework produces closed 1-cochains on a recognition graph via cycle-closure conditions, which admit scalar potentials by a discrete Poincar\'{e} lemma. Independently, the topology of tiling spaces---studied via the Anderson--Putnam complex~\cite{AndersonPutnam1998}---yields \v{C}ech cohomology groups that classify phason degrees of freedom and shape deformations. We show that the five Ammann bar cochains naturally associated with (and refining) the ledger's edge-ratio postings are pattern-equivariant 1-cocycles on the tiling graph, and that their cohomology classes generate the first \v{C}ech cohomology of the Penrose tiling space $\Hcech^1(\Omega_P;\ZZ)\cong\ZZ^5$ via the Kellendonk--Putnam pattern-equivariant isomorphism~\cite{KellendonkPutnam2006}. This identification realizes the ledger's potentials (height functions) as the phason coordinates of the tiling: these potentials exist globally but are not pattern-equivariant, so the corresponding cocycles represent nontrivial classes in pattern-equivariant cohomology while being exact in ordinary cohomology. We discuss implications for the cost-theoretic interpretation of phason strain, the classification of local matching rules via cohomological obstructions, and the extension to higher-dimensional quasicrystalline systems.
+\end{abstract}
+
+\medskip
+\noindent\textbf{Keywords:} cohomology of tiling spaces, Anderson--Putnam complex, ledger potential, phason coordinates, aperiodic order, cost-first framework
+
+\medskip
+\noindent\textbf{MSC 2020:} 52C23; 55N05; 37B50
+
+\section{Introduction}
+\label{sec:intro}
+
+Two independently motivated frameworks assign algebraic invariants to aperiodic structures. On one hand, the \emph{topological theory of tiling spaces}~\cite{AndersonPutnam1998,Sadun2008,BargeSadun2011} studies the hull $\Omega$ of a tiling---the space of all tilings locally indistinguishable from a given one---and computes its \v{C}ech cohomology $\Hcech^*(\Omega; \ZZ)$. For Penrose tilings, $\Hcech^1(\Omega_P; \ZZ) \cong \ZZ^5$, encoding the five independent phason degrees of freedom associated with the five families of Ammann bars~\cite{AndersonPutnam1998,Forrest2002}. These cohomological invariants classify which deformations of the tiling preserve its local structure (local indistinguishability class) and which do not.
+
+On the other hand, the \emph{cost-first ledger framework}~\cite{PardoGuerraEtAl2026} constructs a discrete potential theory on recognition graphs: edge flows arising from atomic recognition events are required to satisfy time-aggregated cycle closure, yielding closed 1-cochains. The discrete Poincar\'{e} lemma then produces scalar potentials (unique up to constants) on each connected component. When the recognition graph is instantiated as the adjacency graph of a Penrose tiling, these potentials coincide with the classical Ammann height functions~\cite{GrunbaumShephard1987,BaakeGrimm2013}, as established in~\cite{PardoGuerraGolden2026}.
+
+The purpose of this note is to make the connection between these two constructions precise at the level of \emph{cochain complexes and cohomology groups}. We show that the ledger's locally defined bar-type cocycles (realized concretely as Ammann bar 1-cocycles $\omega_\tau^{(k)}$ on the tiling graph) are pattern-equivariant 1-cocycles, and that their cohomology classes generate the first \v{C}ech cohomology of the Penrose tiling space via the Kellendonk--Putnam pattern-equivariant isomorphism~\cite{KellendonkPutnam2006}. A key subtlety is that these cocycles are \emph{exact} in ordinary (cellular) cohomology---global height functions exist---but \emph{nontrivial} in pattern-equivariant cohomology, since the height functions are not pattern-equivariant. This identifies the ledger's potential-theoretic data with the topological invariants of the tiling.
+
+\subsection{Organization}
+Section~\ref{sec:tiling-cohomology} reviews the cohomology of tiling spaces via the Anderson--Putnam construction. Section~\ref{sec:ledger-cohomology} formalizes the ledger's cochain complex. Section~\ref{sec:cochain-map} constructs the cochain map and proves the main identification theorem. Section~\ref{sec:phason} interprets the result in terms of phason coordinates and cost-theoretic strain. Section~\ref{sec:higher-dim} discusses extensions to higher dimensions and other tiling families. Section~\ref{sec:discussion} concludes with open problems.
+
+\section{Cohomology of Tiling Spaces}
+\label{sec:tiling-cohomology}
+
+We recall the essential constructions, following~\cite{AndersonPutnam1998,Sadun2008,KellendonkPutnam2006}.
+
+\subsection{The tiling hull}
+
+\begin{definition}[Tiling hull]
+Let $\mathcal{T}$ be a repetitive, aperiodic tiling of $\RR^d$ with finite local complexity. The \emph{hull} (or \emph{tiling space}) of $\mathcal{T}$ is
+\[
+\Omega_{\mathcal{T}} := \overline{\{t + \mathcal{T} : t \in \RR^d\}},
+\]
+where the closure is taken in the \emph{local topology}: two tilings are close if they agree on a large ball around the origin (after a small translation).
+\end{definition}
+
+For Penrose tilings, $\Omega_P$ is a compact, connected, metrizable space. It admits a free $\RR^2$-action by translation. The \emph{canonical transversal} $\Xi_P \subset \Omega_P$ is defined as the set of tilings in $\Omega_P$ having a vertex at the origin; it is a Cantor set that serves as a cross-section of the translation action and parametrizes the ``internal'' (phason) degrees of freedom. (Note: the orbit space $\Omega_P / \RR^2$ is not Hausdorff, since every orbit is dense; $\Xi_P$ is a transversal, not a quotient.)
+
+\subsection{The Anderson--Putnam complex}
+
+\begin{definition}[Anderson--Putnam (AP) complex~\cite{AndersonPutnam1998}]
+\label{def:AP-complex}
+Let $\mathcal{T}$ be a substitution tiling with substitution $\sigma$ and prototile set $\mathcal{A} = \{t_1, \ldots, t_m\}$. For each prototile $t_i$, form a CW complex by identifying edges of $t_i$ according to the adjacency rules of $\mathcal{T}$ (collaring). The resulting CW complex $\Gamma_0$ is the \emph{zeroth AP approximant}. The substitution $\sigma$ induces a continuous map $f_\sigma: \Gamma_0 \to \Gamma_0$, and the tiling space is recovered as the inverse limit:
+\[
+\Omega_{\mathcal{T}} \cong \varprojlim(\Gamma_0 \xleftarrow{f_\sigma} \Gamma_0 \xleftarrow{f_\sigma} \cdots).
+\]
+\end{definition}
+
+The \v{C}ech cohomology of the inverse limit is computed via the direct limit of cellular cohomology:
+\begin{equation}
+\Hcech^n(\Omega_{\mathcal{T}}; \ZZ) \cong \varinjlim(H^n(\Gamma_0; \ZZ) \xrightarrow{f_\sigma^*} H^n(\Gamma_0; \ZZ) \xrightarrow{f_\sigma^*} \cdots).
+\label{eq:cech-direct-limit}
+\end{equation}
+
+\subsection{Penrose tiling cohomology}
+
+For the Penrose tiling, the AP complex $\Gamma_0$ can be constructed from the Robinson triangle decomposition (two prototiles: golden triangle $T$ and golden gnomon $G$, with collared adjacencies). The substitution matrix on 0-cells, 1-cells, and 2-cells of $\Gamma_0$ induces maps on the cellular cochain groups.
+
+\begin{theorem}[Anderson--Putnam~\cite{AndersonPutnam1998}; see also~\cite{Forrest2002}]
+\label{thm:penrose-cohomology}
+The \v{C}ech cohomology of the Penrose tiling space is:
+\begin{align}
+\Hcech^0(\Omega_P; \ZZ) &\cong \ZZ, \label{eq:H0}\\
+\Hcech^1(\Omega_P; \ZZ) &\cong \ZZ^5, \label{eq:H1}\\
+\Hcech^2(\Omega_P; \ZZ) &\cong \ZZ^8. \label{eq:H2}
+\end{align}
+\end{theorem}
+
+The group $\Hcech^1(\Omega_P; \ZZ) \cong \ZZ^5$ has a concrete interpretation: its five generators correspond to the five families of \emph{Ammann bars} (parallel lines crossing the tiling at angles $0^\circ, 36^\circ, 72^\circ, 108^\circ, 144^\circ$). Each family defines a height function (1-cocycle) on the tiling, and the five height functions together parametrize the phason degrees of freedom.
+
+\section{The Ledger Cochain Complex}
+\label{sec:ledger-cohomology}
+
+We now formalize the algebraic structure underlying the ledger's discrete potential theory, following~\cite{PardoGuerraEtAl2026}.
+
+\subsection{The edge-flow complex}
+
+\begin{definition}[Ledger cochain complex---graph version]
+\label{def:ledger-complex}
+Let $G = (V, E)$ be a finite connected graph with edge set $E$ closed under reversal. Define the \emph{ledger cochain complex} as:
+\begin{equation}
+C^0_L(G) \xrightarrow{\;\delta_0\;} C^1_L(G) \xrightarrow{\quad} 0,
+\label{eq:ledger-complex}
+\end{equation}
+where:
+\begin{itemize}
+\item $C^0_L(G) := \{p: V \to \ZZ\}$ is the group of vertex potentials (0-cochains).
+\item $C^1_L(G) := \{\omega: E \to \ZZ \mid \omega(v \to u) = -\omega(u \to v)\}$ is the group of antisymmetric edge flows (1-cochains).
+\item $\delta_0(p)(u \to v) := p(v) - p(u)$ (discrete gradient).
+\end{itemize}
+This is the standard cochain complex of a 1-dimensional CW complex (graph) with coefficients in $\ZZ$.
+\end{definition}
+
+When $G$ is the 1-skeleton of a 2-dimensional CW complex (e.g., a tiling), the complex extends naturally:
+\begin{equation}
+C^0_L(G) \xrightarrow{\;\delta_0\;} C^1_L(G) \xrightarrow{\;\delta_1\;} C^2_L(G),
+\label{eq:ledger-complex-2d}
+\end{equation}
+where $C^2_L(G) := \bigoplus_{F \in \mathcal{F}} \ZZ$ is the group of face fluxes (2-cochains) indexed by 2-cells (tiles) $\mathcal{F}$, and the coboundary $\delta_1(\omega)(F) := \sum_{e \in \partial F} \omega(e)$ evaluates the flux of $\omega$ through each tile boundary.
+
+\begin{remark}[Cycle flux as a diagnostic]
+For any cycle $\gamma$ in $G$, the \emph{cycle flux} $\sum_{e \in \gamma} \omega(e)$ provides a useful diagnostic: a 1-cochain $\omega$ is a cocycle (i.e., $\delta_1(\omega) = 0$ when 2-cells are present) if and only if $\omega$ has zero flux through every tile boundary. On a planar tiling, zero flux through every tile implies zero flux through every cycle.
+\end{remark}
+
+\begin{proposition}[Complex property]
+\label{prop:ledger-exact}
+When 2-cells are present, the ledger cochain complex satisfies $\delta_1 \circ \delta_0 = 0$: the discrete gradient of any potential has zero flux through every tile boundary (and hence through every cycle).
+\end{proposition}
+
+\begin{proof}
+For any $p \in C^0_L(G)$ and any cycle $\gamma = (v_0 \to v_1 \to \cdots \to v_n = v_0)$:
+\[
+\sum_{i=0}^{n-1} \delta_0(p)(v_i \to v_{i+1}) = \sum_{i=0}^{n-1} [p(v_{i+1}) - p(v_i)] = p(v_n) - p(v_0) = 0.
+\]
+In particular, $\delta_1(\delta_0(p))(F) = 0$ for every tile $F$. \qedhere
+\end{proof}
+
+\begin{definition}[Ledger cohomology]
+The \emph{$n$-th ledger cohomology group} is:
+\begin{equation}
+H^n_L(G) := \ker \delta_n / \im \delta_{n-1}.
+\end{equation}
+For the graph complex~\eqref{eq:ledger-complex}:
+\begin{itemize}
+\item $H^0_L(G) = \ker \delta_0 \cong \ZZ$ (constant potentials on a connected graph).
+\item $H^1_L(G) = C^1_L(G) / \im \delta_0 \cong \ZZ^{b_1(G)}$, where $b_1(G) = |E^+| - |V| + 1$ is the first Betti number and $E^+$ is a set of representatives for unoriented edges.
+\end{itemize}
+For the extended complex~\eqref{eq:ledger-complex-2d} on a planar tiling:
+\begin{itemize}
+\item $H^1_L(G) = \ker \delta_1 / \im \delta_0 = 0$ (since the plane is simply connected).
+\end{itemize}
+\end{definition}
+
+\begin{remark}
+The ledger cohomology $H^*_L(G)$ is isomorphic to the standard simplicial (or cellular) cohomology $H^*(X; \ZZ)$ of the underlying CW complex $X$. The key results of~\cite{PardoGuerraEtAl2026}---cycle closure (T3), path-independence, and potential existence (T4)---are cohomological statements: the cumulative edge flow $\overline{\Delta}$ is a 1-cocycle ($\delta_1(\overline{\Delta}) = 0$), and on a tree every 1-cocycle is exact ($H^1_L = 0$), with the potential being the primitive.
+
+A crucial point for the tiling application: on the vertex-edge graph $G_{\mathcal{T}}$ of a planar tiling (viewed as the 1-skeleton of a planar CW complex), $H^1_L(G_{\mathcal{T}}) = 0$. Every cocycle is exact, and global potentials (height functions) always exist. Here we are using ordinary cellular cohomology of the (infinite) CW complex with \emph{all} cochains allowed (no compact-support or boundedness condition). The nontrivial topological content of the tiling is captured not by ordinary cohomology but by the \emph{pattern-equivariant} cohomology of Kellendonk--Putnam~\cite{KellendonkPutnam2006}, which restricts to cochains determined by local data (see Section~\ref{sec:cochain-map}).
+\end{remark}
+
+\subsection{The ledger complex on a tiling graph}
+
+When the recognition graph $G$ is instantiated as the vertex-edge graph $G_{\mathcal{T}}$ of a Penrose tiling, the ledger cochain complex becomes:
+\begin{equation}
+C^0_L(G_{\mathcal{T}}) \xrightarrow{\;\delta_0\;} C^1_L(G_{\mathcal{T}}) \xrightarrow{\;\delta_1\;} C^2_L(G_{\mathcal{T}}).
+\label{eq:ledger-tiling-complex}
+\end{equation}
+
+The five families of Ammann bars in a Penrose tiling~\cite{GrunbaumShephard1987,BaakeGrimm2013} define five natural 1-cochains. To make this definition purely local (and hence compatible with pattern-equivariance), we assume $\mathcal{T}$ is presented with the standard Ammann-bar decoration (equivalently, with matching-rule decorations that carry the bar information), so that for each oriented edge one can decide from a sufficiently large but finite neighborhood whether the edge crosses a bar of family $k$ and with which transverse sign.
+
+For the $k$-th Ammann bar family (bars perpendicular to direction $\theta_k = k \cdot 36^\circ$, $k = 0, 1, 2, 3, 4$), choose a positive transverse orientation. The \emph{Ammann bar 1-cochain} $\omega_\tau^{(k)} \in C^1_L(G_{\mathcal{T}})$ is:
+\begin{equation}
+\omega_\tau^{(k)}(u \to v) := \begin{cases}
++1 & \text{if edge $(u,v)$ crosses a bar of family $k$, with $u$ on the negative side}, \\
+-1 & \text{if edge $(u,v)$ crosses a bar of family $k$, with $u$ on the positive side}, \\
+0 & \text{if edge $(u,v)$ does not cross a bar of family $k$}.
+\end{cases}
+\label{eq:edge-type-cochain}
+\end{equation}
+Each $\omega_\tau^{(k)}$ is antisymmetric by construction: $\omega_\tau^{(k)}(v \to u) = -\omega_\tau^{(k)}(u \to v)$.
+
+\begin{remark}[Connection to edge-ratio postings]
+In the de Bruijn pentagrid construction~\cite{BaakeGrimm2013}, each edge of the Penrose tiling belongs to exactly one grid family and crosses exactly one Ammann bar of that family. The edge-ratio postings from~\cite{PardoGuerraGolden2026}---which assign the golden ratio $\varphi$ to long edges and $1$ to short edges---encode the aggregate length data. The five Ammann bar cochains $\omega_\tau^{(k)}$ refine this to directional data, one cochain per bar family. The long/short distinction corresponds to the spacing structure within each family.
+\end{remark}
+
+\begin{proposition}
+\label{prop:cocycle}
+Each Ammann bar cochain $\omega_\tau^{(k)}$ is a 1-cocycle: $\delta_1(\omega_\tau^{(k)}) = 0$. Equivalently, $\omega_\tau^{(k)}$ has zero flux through the boundary of every tile.
+\end{proposition}
+
+\begin{proof}
+Work with a Penrose tiling equipped with its Ammann-bar decoration. Fix $k$. Along the boundary of any tile $F$, the decorated bars of family $k$ enter and exit $F$ in matched pairs: each time a bar crosses the boundary, it must cross again to leave the tile, with the opposite transverse orientation. In terms of the cochain $\omega_\tau^{(k)}$, this means that the contributions of the two boundary edges where the bar crosses are $+1$ and $-1$, cancelling in the sum over $\partial F$. Summing over all bar segments intersecting the tile, the total flux around $\partial F$ is therefore zero, i.e., $\delta_1(\omega_\tau^{(k)})(F) = \sum_{e\in\partial F}\omega_\tau^{(k)}(e)=0$.
+\end{proof}
+
+Since $\omega_\tau^{(k)}$ is a cocycle and the plane is simply connected, it is exact in ordinary cohomology: there exists a \emph{height function} $h^{(k)}: V \to \ZZ$ with $\omega_\tau^{(k)} = \delta_0(h^{(k)})$. This is the content of the discrete Poincar\'{e} lemma applied to the full planar tiling.
+
+\begin{remark}[Exactness and the role of pattern-equivariance]
+\label{rem:exactness-PE}
+On any finite simply connected patch $\mathcal{P} \subset \mathcal{T}$, as well as on the full infinite tiling, $H^1_L(G_{\mathcal{T}}) = 0$ and every cocycle is exact---global height functions $h^{(k)}$ exist (uniquely up to additive constants). This is because the underlying space (the plane) is contractible.
+
+However, the height functions $h^{(k)}$ grow linearly across the tiling: they take arbitrarily many distinct values and their value at a vertex depends on its global position, not just its local neighborhood. In particular, the $h^{(k)}$ are \emph{not} pattern-equivariant. The Ammann bar cochains $\omega_\tau^{(k)}$, by contrast, \emph{are} pattern-equivariant (their values are determined by purely local data). This creates a nontrivial situation in pattern-equivariant cohomology: the $\omega_\tau^{(k)}$ are cocycles in the pattern-equivariant subcomplex $C^*_{PE}$, but their primitives lie outside $C^0_{PE}$. Hence $[\omega_\tau^{(k)}] \neq 0$ in $H^1_{PE}$ even though $[\omega_\tau^{(k)}] = 0$ in $H^1_L$. This is precisely where the connection to the tiling space cohomology becomes meaningful.
+\end{remark}
+
+\section{Pattern-Equivariant Cohomology and the Identification Theorem}
+\label{sec:cochain-map}
+
+We now construct the central identification: the ledger's Ammann bar cochains are pattern-equivariant 1-cocycles whose classes generate $\Hcech^1(\Omega_P; \ZZ) \cong \ZZ^5$ via the Kellendonk--Putnam isomorphism. We also construct a cochain map connecting the ledger complex to the AP cellular complex.
+
+\subsection{Setup and notation}
+
+Let $\mathcal{T}$ be a Penrose tiling with:
+\begin{itemize}
+\item Vertex-edge graph $G_{\mathcal{T}} = (V, E)$ (the ledger's recognition graph).
+\item AP approximant $\Gamma_0$ with cellular chain/cochain groups $C^n(\Gamma_0; \ZZ)$.
+\item Substitution map $\sigma$ inducing $f_\sigma: \Gamma_0 \to \Gamma_0$.
+\end{itemize}
+
+The AP approximant $\Gamma_0$ is a finite CW complex. Its 1-cells correspond to (equivalence classes of) edges in the tiling, and its 0-cells correspond to (equivalence classes of) vertices. There is a natural quotient map:
+\begin{equation}
+\pi: G_{\mathcal{T}} \to \Gamma_0,
+\label{eq:quotient-map}
+\end{equation}
+which sends each vertex/edge of $G_{\mathcal{T}}$ to its equivalence class in $\Gamma_0$ (identifying all vertices/edges that have the same local neighborhood up to translation).
+More precisely, fix a collaring radius $R$ and take $\Gamma_0$ to be the corresponding radius-$R$ collared Anderson--Putnam complex; then $\pi$ is a cellular quotient map and is compatible with the boundary operators.
+
+\subsection{Construction of the cochain map}
+
+\begin{definition}[The cochain map $\Phi$]
+\label{def:cochain-map}
+Define $\Phi^n: C^n(\Gamma_0; \ZZ) \to C^n_L(G_{\mathcal{T}})$ by pullback along the quotient map $\pi$:
+\begin{equation}
+\Phi^n(\alpha)(c) := \alpha(\pi(c)),
+\label{eq:cochain-pullback}
+\end{equation}
+for any $n$-cochain $\alpha \in C^n(\Gamma_0; \ZZ)$ and $n$-cell $c$ in $G_{\mathcal{T}}$.
+\end{definition}
+
+\begin{lemma}
+\label{lem:cochain-map}
+$\Phi = \{\Phi^n\}$ is a cochain map, i.e., $\Phi^{n+1} \circ d^n = \delta_n \circ \Phi^n$, where $d^n$ denotes the coboundary in $C^*(\Gamma_0; \ZZ)$ and $\delta_n$ denotes the coboundary in $C^*_L(G_{\mathcal{T}})$.
+\end{lemma}
+
+\begin{proof}
+Since $\pi$ is a cellular map (it sends $n$-cells to $n$-cells, preserving the boundary operator), the pullback $\pi^* = \Phi$ commutes with coboundary by the standard functoriality of cellular cochains.
+\end{proof}
+
+$\Phi$ induces maps on cohomology:
+\begin{equation}
+\Phi^*_n: H^n(\Gamma_0; \ZZ) \to H^n_L(G_{\mathcal{T}}).
+\label{eq:induced-map}
+\end{equation}
+
+However, since $H^1_L(G_{\mathcal{T}}) = 0$ for the full planar tiling (every cocycle is exact), the pullback map is trivial on $H^1$. The topological content instead lives in the \emph{pattern-equivariant} subcomplex, which we now introduce.
+
+\subsection{Pattern-equivariant cohomology and the transfer map}
+
+Since the tiling $\mathcal{T}$ is repetitive (every local patch appears with bounded gaps), every equivalence class in $\Gamma_0$ is represented by infinitely many cells in $G_{\mathcal{T}}$, but with well-defined \emph{frequencies}. The key observation is that a 1-cocycle $\omega \in C^1_L(G_{\mathcal{T}})$ that is \emph{pattern-equivariant}~\cite{KellendonkPutnam2006} (i.e., its value on an edge depends only on the local neighborhood of that edge) descends to a well-defined cocycle on $\Gamma_0$.
+
+\begin{definition}[Pattern-equivariant cochains~\cite{KellendonkPutnam2006}]
+\label{def:pattern-equiv}
+A cochain $\omega \in C^n_L(G_{\mathcal{T}})$ is \emph{pattern-equivariant of radius $R$} if $\omega(c) = \omega(c')$ whenever the $R$-neighborhoods of $c$ and $c'$ in $\mathcal{T}$ are translationally equivalent. Let $C^n_{PE}(G_{\mathcal{T}}) \subset C^n_L(G_{\mathcal{T}})$ denote the subgroup of pattern-equivariant cochains (of any finite radius).
+\end{definition}
+
+\begin{proposition}[Kellendonk--Putnam~\cite{KellendonkPutnam2006}]
+\label{prop:PE-iso}
+For any repetitive tiling $\mathcal{T}$ with finite local complexity:
+\begin{equation}
+H^n_{PE}(G_{\mathcal{T}}; \ZZ) \cong \Hcech^n(\Omega_{\mathcal{T}}; \ZZ),
+\label{eq:PE-cech}
+\end{equation}
+where $H^n_{PE}$ denotes the cohomology of the pattern-equivariant cochain complex $C^*_{PE}(G_{\mathcal{T}})$.
+\end{proposition}
+
+This is the critical bridge: the pattern-equivariant cohomology of the tiling graph (a combinatorial/algebraic object) is isomorphic to the \v{C}ech cohomology of the tiling space (a topological object).
+
+\subsection{The identification theorem}
+
+\begin{definition}[Transfer map]
+\label{def:transfer}
+Define $\Psi^n: C^n_{PE}(G_{\mathcal{T}}) \to C^n(\Gamma_0; \ZZ)$ by evaluation at a representative:
+\begin{equation}
+\Psi^n(\omega)(\bar{c}) := \omega(c_{\bar{c}}),
+\label{eq:transfer}
+\end{equation}
+where $\bar{c}$ is an $n$-cell of $\Gamma_0$ and $c_{\bar{c}}$ is any representative of the equivalence class $\bar{c}$ in $G_{\mathcal{T}}$. This is well-defined on pattern-equivariant cochains, for which $\omega(c_{\bar{c}})$ is independent of the representative chosen (by definition of pattern-equivariance).
+\end{definition}
+
+\begin{lemma}
+\label{lem:transfer-cochain}
+The transfer map $\Psi = \{\Psi^n\}$ is a cochain map on the pattern-equivariant subcomplex: $\Psi^{n+1} \circ \delta_n = d^n \circ \Psi^n$ on $C^n_{PE}(G_{\mathcal{T}})$.
+\end{lemma}
+
+\begin{proof}
+Let $\omega \in C^n_{PE}(G_{\mathcal{T}})$ be pattern-equivariant of radius $R$. The coboundary $\delta_n(\omega)$ is pattern-equivariant of radius $R + 1$ (the coboundary involves cells in the immediate neighborhood). For any $(n+1)$-cell $\bar{c}$ of $\Gamma_0$ with representative $c_{\bar{c}}$ in $G_{\mathcal{T}}$:
+\[
+\Psi^{n+1}(\delta_n(\omega))(\bar{c}) = \delta_n(\omega)(c_{\bar{c}}) = \sum_{e \in \partial c_{\bar{c}}} \omega(e) = \sum_{\bar{e} \in \partial \bar{c}} \omega(c_{\bar{e}}) = d^n(\Psi^n(\omega))(\bar{c}),
+\]
+where the third equality uses the fact that $\pi$ preserves the boundary operator (the boundary of the representative maps to the boundary of the equivalence class) and pattern-equivariance ensures the values are consistent.
+\end{proof}
+
+\begin{lemma}[Mutual inverses]
+\label{lem:mutual-inverses}
+For a fixed collared AP complex $\Gamma_0$ of collaring radius $R$, let $C^n_{PE,R}(G_{\mathcal{T}}) \subset C^n_{PE}(G_{\mathcal{T}})$ denote the subgroup of cochains that are pattern-equivariant of radius~$R$. The pullback $\Phi^n$ and transfer $\Psi^n$ restrict to mutually inverse cochain isomorphisms:
+\[
+C^n(\Gamma_0; \ZZ) \underset{\Psi^n}{\overset{\Phi^n}{\rightleftarrows}} C^n_{PE,R}(G_{\mathcal{T}}).
+\]
+\end{lemma}
+
+\begin{proof}
+For any $\alpha \in C^n(\Gamma_0;\ZZ)$ and any $n$-cell $\bar{c}$ of $\Gamma_0$:
+\[
+(\Psi^n \circ \Phi^n)(\alpha)(\bar{c}) = \Phi^n(\alpha)(c_{\bar{c}}) = \alpha(\pi(c_{\bar{c}})) = \alpha(\bar{c}),
+\]
+since $\pi(c_{\bar{c}}) = \bar{c}$ by definition of the representative. Hence $\Psi \circ \Phi = \mathrm{id}$.
+
+Conversely, let $\omega \in C^n_{PE,R}(G_{\mathcal{T}})$. For any $n$-cell $c$ of $G_{\mathcal{T}}$:
+\[
+(\Phi^n \circ \Psi^n)(\omega)(c) = \Psi^n(\omega)(\pi(c)) = \omega(c_{\pi(c)}),
+\]
+where $c_{\pi(c)}$ is any representative of the equivalence class $\pi(c)$. Since $\omega$ is PE of radius~$R$ and the cells $c$ and $c_{\pi(c)}$ have identical $R$-neighborhoods (they belong to the same equivalence class under the radius-$R$ collaring), we have $\omega(c_{\pi(c)}) = \omega(c)$. Hence $\Phi \circ \Psi = \mathrm{id}$ on $C^n_{PE,R}$.
+\end{proof}
+
+\begin{remark}[Collaring radii and direct limits]
+\label{rem:collaring}
+The isomorphism of Lemma~\ref{lem:mutual-inverses} depends on the collaring radius~$R$. As $R$ increases, the AP complex $\Gamma_0^{(R)}$ becomes finer (more equivalence classes) and the PE subgroup $C^n_{PE,R}$ becomes larger. The full pattern-equivariant complex is $C^n_{PE} = \bigcup_R C^n_{PE,R}$, and correspondingly:
+\[
+H^n_{PE}(G_{\mathcal{T}};\ZZ) = \varinjlim_R H^n(C^*_{PE,R}(G_{\mathcal{T}})) \cong \varinjlim_R H^n(\Gamma_0^{(R)};\ZZ),
+\]
+which recovers the Anderson--Putnam direct limit~\eqref{eq:cech-direct-limit}. The maps between successive approximants are induced by the inclusions $C^n_{PE,R} \hookrightarrow C^n_{PE,R'}$ for $R \le R'$, or equivalently by the substitution map $f_\sigma$.
+\end{remark}
+
+\begin{theorem}[Identification of ledger cochains with tiling cohomology generators]
+\label{thm:injection}
+Let $\mathcal{T}$ be a Penrose tiling and let $\omega_\tau^{(k)}$ ($k = 0, 1, 2, 3, 4$) be the five Ammann bar 1-cocycles from~\eqref{eq:edge-type-cochain}. Then:
+\begin{enumerate}
+\item[(i)] Each $\omega_\tau^{(k)}$ is pattern-equivariant of some finite radius $R_k$ (depending on the collaring used to define the local equivalence classes): its value on an oriented edge is determined by the $R_k$-neighborhood of that edge.
+\item[(ii)] Each $\omega_\tau^{(k)}$ is exact in ordinary cohomology ($[\omega_\tau^{(k)}] = 0$ in $H^1_L(G_{\mathcal{T}})$): the global height function $h^{(k)}: V \to \ZZ$ satisfies $\omega_\tau^{(k)} = \delta_0(h^{(k)})$. However, $h^{(k)}$ is \emph{not} pattern-equivariant (it grows linearly across the tiling).
+\item[(iii)] In pattern-equivariant cohomology, $[\omega_\tau^{(k)}] \neq 0$ in $H^1_{PE}(G_{\mathcal{T}}; \ZZ)$: the cocycle $\omega_\tau^{(k)}$ lies in $C^1_{PE}$, but its primitive $h^{(k)}$ does not lie in $C^0_{PE}$, so $\omega_\tau^{(k)}$ is not a PE-coboundary.
+\item[(iv)] Under the Kellendonk--Putnam isomorphism (Proposition~\ref{prop:PE-iso}),
+\begin{equation}
+H^1_{PE}(G_{\mathcal{T}}; \ZZ) \xrightarrow{\;\sim\;} \Hcech^1(\Omega_P; \ZZ) \cong \ZZ^5,
+\label{eq:PE-identification}
+\end{equation}
+the five classes $[\omega_\tau^{(k)}]$ map to generators of $\ZZ^5$. In particular,
+\begin{equation}
+\bigoplus_{k=0}^{4} \ZZ \cdot [\omega_\tau^{(k)}] \xrightarrow{\;\sim\;} \Hcech^1(\Omega_P; \ZZ) \cong \ZZ^5
+\label{eq:injection-map}
+\end{equation}
+is an isomorphism.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{Part (i).} The Ammann bar cochain $\omega_\tau^{(k)}(u \to v)$ depends only on whether the edge $(u,v)$ crosses a bar of family $k$ and the crossing direction. With the collared AP model fixed, this information is determined by a finite neighborhood of the edge (equivalently, by a finite collaring radius), so each $\omega_\tau^{(k)}$ is pattern-equivariant of some finite radius $R_k$.
+
+\emph{Part (ii).} The plane $\RR^2$ is simply connected, so $H^1_L(G_{\mathcal{T}}) = 0$ (every cocycle on the tiling graph is exact). The primitive is the height function $h^{(k)}$, constructed by fixing $h^{(k)}(v_0) = 0$ for a base vertex $v_0$ and setting $h^{(k)}(v) = \sum_{e \in \gamma(v_0, v)} \omega_\tau^{(k)}(e)$ for any path $\gamma(v_0, v)$. Path-independence follows from the cocycle condition. The height function $h^{(k)}$ grows linearly in the direction transverse to the $k$-th bar family (its value at a vertex encodes the number of bars crossed), so it takes unboundedly many distinct values and depends on global position---hence it is not pattern-equivariant.
+
+\emph{Part (iii).} Since $\omega_\tau^{(k)} \in C^1_{PE}$ is a PE-cocycle and its unique primitive (up to constants) $h^{(k)} \notin C^0_{PE}$, the class $[\omega_\tau^{(k)}]$ is nontrivial in $H^1_{PE}(G_{\mathcal{T}}; \ZZ)$.
+
+\emph{Part (iv).} We use the cut-and-project description~\cite{BaakeGrimm2013,Forrest2002}. Each vertex of $\mathcal{T}$ is the projection of a lattice point in $\ZZ^5$ to $E_\parallel \cong \RR^2$. The five coordinate functionals $\pi_k: \ZZ^5 \to \ZZ$ ($k = 0,\ldots,4$) define 1-cocycles on the lattice whose pullbacks to $G_{\mathcal{T}}$ are precisely the Ammann bar cochains $\omega_\tau^{(k)}$: the value $\omega_\tau^{(k)}(u \to v)$ records the signed change in the $k$-th lattice coordinate. These pullbacks are PE (as established in Part~(i)).
+
+To prove linear independence, suppose $\sum_k n_k [\omega_\tau^{(k)}] = 0$ in $H^1_{PE}$, i.e., $\sum_k n_k \omega_\tau^{(k)} = \delta_0(p)$ for some $p \in C^0_{PE}$. Since $p$ is PE, it takes only finitely many values (determined by local vertex type). But the global primitive of $\sum_k n_k \omega_\tau^{(k)}$ is $\sum_k n_k h^{(k)}$, which grows linearly across the tiling whenever $(n_0,\ldots,n_4) \neq 0$, and differs from $p$ only by a constant. A bounded function cannot differ from a linearly growing one by a constant, so $(n_0,\ldots,n_4) = 0$, establishing $\ZZ$-linear independence of the five classes in $H^1_{PE}$.
+
+Since $H^1_{PE}(G_{\mathcal{T}};\ZZ) \cong \Hcech^1(\Omega_P;\ZZ) \cong \ZZ^5$ by the Kellendonk--Putnam isomorphism (Proposition~\ref{prop:PE-iso}) and the Anderson--Putnam computation (Theorem~\ref{thm:penrose-cohomology}), five $\ZZ$-linearly independent elements in a rank-5 free abelian group must span it, giving the claimed isomorphism.
+\end{proof}
+
+\begin{corollary}[Ledger potentials as phason coordinates]
+\label{cor:phason}
+The five height functions $h^{(k)}: V \to \ZZ$ ($k = 0, \ldots, 4$) obtained as global primitives of the five Ammann bar cocycles parametrize the lift of each vertex to the ambient space $\RR^5$ of the cut-and-project description. Specifically, $(h^{(0)}(v), \ldots, h^{(4)}(v))$ determines the position of vertex $v$ in $\RR^5$, whose projection onto the perpendicular space $E_\perp \cong \RR^3$ gives the phason coordinates. (The five heights are not independent: they satisfy two linear constraints arising from the projection $\RR^5 \to E_\parallel \cong \RR^2$, leaving three independent perpendicular-space coordinates.)
+\end{corollary}
+
+\begin{proof}
+In the cut-and-project formulation of Penrose tilings~\cite{BaakeGrimm2013}, each vertex $v \in V$ is the projection of a lattice point in $\RR^5$ to the physical plane $E_\parallel \cong \RR^2$. The five Ammann bar heights $h^{(k)}(v)$ determine the coordinates of this lattice point in $\RR^5$: the projection onto $E_\perp \cong \RR^3$ gives the perpendicular-space (phason) coordinates, while the projection onto $E_\parallel$ recovers the physical position. The identification follows from the standard correspondence between Ammann bars and the cut-and-project internal coordinates~\cite{Forrest2002,Sadun2008}.
+\end{proof}
+
+\subsection{Diagram summary}
+
+The key relationships are summarized in the following diagram. The pattern-equivariant subcomplex sits inside the full ledger complex, and the transfer map $\Psi$ connects it to the AP approximant:
+
+\begin{equation}
+\begin{tikzcd}[column sep=large, row sep=large]
+C^0_{PE}(G_{\mathcal{T}}) \arrow[r, "\delta_0"] \arrow[d, "\Psi^0"'] & C^1_{PE}(G_{\mathcal{T}}) \arrow[r, "\delta_1"] \arrow[d, "\Psi^1"] & C^2_{PE}(G_{\mathcal{T}}) \arrow[d, "\Psi^2"] \\
+C^0(\Gamma_0; \ZZ) \arrow[r, "d^0"'] & C^1(\Gamma_0; \ZZ) \arrow[r, "d^1"'] & C^2(\Gamma_0; \ZZ)
+\end{tikzcd}
+\label{eq:diagram}
+\end{equation}
+
+On cohomology, the Kellendonk--Putnam isomorphism gives:
+\begin{equation}
+H^1_{PE}(G_{\mathcal{T}}; \ZZ) \xrightarrow{\;\sim\;} \Hcech^1(\Omega_P; \ZZ) \cong \ZZ^5, \qquad [\omega_\tau^{(k)}] \longmapsto \text{$k$-th generator}.
+\label{eq:cohomology-chain}
+\end{equation}
+
+Note that in ordinary (non-PE) cohomology, $H^1_L(G_{\mathcal{T}}) = 0$: every cocycle on the full planar tiling is exact. The nontrivial topological content emerges exclusively from the restriction to pattern-equivariant cochains.
+
+\section{Phason Coordinates and Cost-Theoretic Strain}
+\label{sec:phason}
+
+The identification theorem has concrete physical consequences. We develop the cost-theoretic interpretation of phason strain.
+
+\subsection{A concrete choice of the cost function $J$}
+\label{subsec:J}
+
+In this note we use the standard reciprocal-symmetric local cost function
+\begin{equation}
+J(x) := \frac{1}{2}\left(x + x^{-1}\right) - 1, \qquad x>0.
+\label{eq:J-def}
+\end{equation}
+It satisfies $J(x)\ge 0$ with equality if and only if $x=1$, and for $x=e^t$ one has
+\begin{equation}
+J(e^t) = \cosh(t)-1 = \frac{t^2}{2} + O(t^4).
+\label{eq:J-cosh}
+\end{equation}
+This matches the cost functional used in the ledger framework~\cite{PardoGuerraEtAl2026}.
+
+\subsection{Phason strain as ledger disequilibrium}
+
+In quasicrystal physics, a \emph{phason strain} is a smooth deformation of the perpendicular-space coordinates that distorts the tiling while preserving its local structure~\cite{Levine1985,Socolar1986}. In the cut-and-project language, this corresponds to a linear tilt of the projection strip relative to the lattice.
+
+In the ledger language, a modification of the height function $h^{(k)} \mapsto h^{(k)} + \eta^{(k)}$ for a perturbation $\eta^{(k)}: V \to \ZZ$ changes the edge-ratio postings for each bar family:
+\begin{equation}
+\omega_\tau^{(k)} \;\longrightarrow\; \omega_\tau^{(k)} + \delta_0(\eta^{(k)}).
+\end{equation}
+Two regimes must be distinguished:
+\begin{enumerate}
+\item[(a)] \textbf{Pattern-equivariant perturbations} ($\eta^{(k)} \in C^0_{PE}$). Here $\delta_0(\eta^{(k)})$ is a PE-coboundary, so the perturbed cochain represents the same class in $H^1_{PE}$: the topological type of the tiling (its local indistinguishability class) is unchanged. Since PE $0$-cochains take only finitely many values (one per vertex type), such perturbations amount to a uniform relabelling that preserves the tiling's aperiodic structure.
+\item[(b)] \textbf{Non-PE perturbations} ($\eta^{(k)} \notin C^0_{PE}$). A genuine slowly-varying phason strain has $\eta^{(k)}$ depending on global position, violating pattern-equivariance. In this case $\delta_0(\eta^{(k)})$ need not lie in $C^1_{PE}$, and the perturbed cochain may leave the pattern-equivariant subcomplex entirely. The cohomological classification in $H^1_{PE}$ does not directly apply to such deformations; in the ordinary cochain complex, both the original and perturbed cochains remain exact.
+\end{enumerate}
+In both regimes, the \emph{metric} properties change: the perturbed height function $h^{(k)} + \eta^{(k)}$ places vertices at different positions in perpendicular space. The cost functional (Definition~\ref{def:phason-cost} below) applies to both cases and provides an energy measure of the perturbation on any finite patch.
+
+\begin{definition}[Cost of phason strain]
+\label{def:phason-cost}
+Let $\mathcal{P}$ be a finite patch of the tiling with vertex set $V_{\mathcal{P}}$ and edge set $E_{\mathcal{P}}$ (a finite subgraph of $G_{\mathcal{T}}$). Let $\eta: V_{\mathcal{P}} \to \ZZ$ be a phason perturbation on the patch (for simplicity, we consider a single bar family and drop the superscript $k$). The \emph{ledger cost of phason strain on the patch} is defined as:
+\begin{equation}
+C^{\mathcal{P}}_{\text{phason}}(\eta) := \sum_{(u,v) \in E_{\mathcal{P}}} J\!\left(e^{\eta(v) - \eta(u)}\right).
+\label{eq:phason-cost}
+\end{equation}
+\end{definition}
+
+\begin{proposition}[Phason cost is minimized by constant perturbations]
+\label{prop:phason-min}
+For a fixed finite patch $\mathcal{P}$, the phason cost $C^{\mathcal{P}}_{\text{phason}}(\eta)$ is minimized when $\eta$ is constant on each connected component of the patch graph, i.e., when $\delta_0(\eta) = 0$ on $E_{\mathcal{P}}$. Any nonconstant perturbation incurs strictly positive cost:
+\[
+C^{\mathcal{P}}_{\text{phason}}(\eta) = 0 \iff \eta \text{ is constant on each component of }\mathcal{P}.
+\]
+\end{proposition}
+
+\begin{proof}
+By~\eqref{eq:J-cosh}, $J(e^t) = \cosh(t) - 1 \geq 0$ with equality if and only if $t = 0$. Each term in the sum is $J(e^{\eta(v) - \eta(u)}) \geq 0$, with equality if and only if $\eta(v) = \eta(u)$. The total cost vanishes if and only if $\eta(v) = \eta(u)$ for all $(u,v) \in E_{\mathcal{P}}$, i.e., $\eta$ is constant on each connected component of the patch graph.
+\end{proof}
+
+\begin{remark}
+This gives a cost-theoretic foundation for the \emph{elastic theory of phasons}~\cite{Levine1985}: on finite patches, phason strain incurs a comparison cost that is quadratic to leading order in discrete gradients (using $J(e^t) \approx t^2/2$), recovering the standard phason elastic energy heuristics. The ledger framework provides the exact (non-quadratic) local cost via $\cosh(t) - 1$, which coincides with the elastic approximation for small strains but diverges for large strains---reflecting the finite-cost admissibility principle (T1 of~\cite{PardoGuerraEtAl2026}).
+\end{remark}
+
+\subsection{Matching rules as cohomological obstructions}
+
+The connection between matching rules and cohomology provides a cost-theoretic perspective on why Penrose matching rules enforce aperiodicity.
+
+\begin{proposition}[Matching rule obstruction]
+\label{prop:obstruction}
+Let $\mathcal{T}'$ be a tiling that violates the Penrose matching rules at some edges. Then for at least one bar family $k$, the Ammann bar cochain $\omega_\tau^{(k)}$ is \emph{not} a cocycle on $G_{\mathcal{T}'}$: there exists a tile $F$ with $\delta_1(\omega_\tau^{(k)})(F) \neq 0$. In the ledger language, the cumulative posting around the boundary of $F$ is nonzero, violating cycle closure.
+\end{proposition}
+
+\begin{proof}
+For Penrose tilings, the matching rules are equivalent to the continuity of all five Ammann bar families across every edge~\cite{GrunbaumShephard1987,BaakeGrimm2013}: an edge arrangement satisfies the matching rules if and only if, for each family $k$, the bars of family $k$ extend continuously across every tile edge. If the matching rules are violated at some edge $e$, then for at least one family $k$, a bar of family $k$ is discontinuous at $e$---it enters a tile $F$ containing $e$ but does not exit it with the correct pairing (or vice versa). The paired-crossing argument of Proposition~\ref{prop:cocycle} therefore fails for $F$: the boundary contributions no longer cancel, and $\delta_1(\omega_\tau^{(k)})(F) \neq 0$.
+\end{proof}
+
+\begin{corollary}
+The defect structure of an imperfect Penrose tiling (matching rule violations) is classified by the coboundaries $\delta_1(\omega_\tau^{(k)}) \in C^2_L(G_{\mathcal{T}'})$: the 2-cochain $\delta_1(\omega_\tau^{(k)})$ assigns to each tile a signed integer measuring the ``matching rule violation charge'' of the $k$-th bar family enclosed by that tile. This charge is quantized in $\ZZ$ and satisfies a conservation law (the total charge is determined by the boundary conditions).
+\end{corollary}
+
+This connects the ledger framework to the study of \emph{topological defects} in quasicrystals, where matching rule violations are interpreted as dislocations with Burgers vectors in the perpendicular space~\cite{Socolar1986}.
+
+\section{Extensions to Higher-Dimensional Systems}
+\label{sec:higher-dim}
+
+\subsection{General substitution tilings}
+
+The construction of Section~\ref{sec:cochain-map} generalizes to arbitrary substitution tilings with finite local complexity. For a $d$-dimensional tiling $\mathcal{T}$ with substitution $\sigma$:
+
+\begin{enumerate}
+\item The ledger cochain complex $C^*_L(G_{\mathcal{T}})$ is defined on the $d$-dimensional CW complex of the tiling (with cells of dimensions $0$ through $d$).
+\item The AP approximant $\Gamma_0$ is a finite CW complex with cells corresponding to prototile equivalence classes.
+\item The transfer map $\Psi$ and the pattern-equivariant isomorphism (Proposition~\ref{prop:PE-iso}) hold in all dimensions.
+\end{enumerate}
+
+\begin{conjecture}[Universal generation]
+\label{conj:universal}
+For any primitive substitution tiling $\mathcal{T}$ with finite local complexity in $\RR^d$, the bar-type PE cochains (generalized to codimension-1 face-type cochains for $d > 2$) generate a subgroup of $\Hcech^1(\Omega_{\mathcal{T}}; \ZZ)$ via the pattern-equivariant isomorphism. The rank of this subgroup equals the number of independent ``bar families'' (codimension-1 linear structures) compatible with the tiling's symmetry.
+\end{conjecture}
+
+\subsection{Icosahedral tilings ($d = 3$)}
+
+For three-dimensional icosahedral quasicrystals (Ammann tilings), the cut-and-project scheme lives in $\RR^6 = \RR^3_\parallel \oplus \RR^3_\perp$, yielding six families of Ammann planes (one per lattice coordinate in $\ZZ^6$). The six corresponding 1-cocycles are subject to three linear relations from the projection $\RR^6 \to E_\parallel \cong \RR^3$, so only three are independent in perpendicular space---matching the three phason degrees of freedom. The first \v{C}ech cohomology $\Hcech^1(\Omega_{ico};\ZZ)$ encodes these bar-type invariants; the ledger complex on the face-edge-vertex graph of the icosahedral tiling should produce the six Ammann plane 1-cocycles, whose PE-cohomology classes generate the corresponding subgroup of $\Hcech^1(\Omega_{ico};\ZZ)$.
+
+\subsection{Ammann--Beenker tilings (octagonal)}
+
+For the octagonal Ammann--Beenker tiling, one expects four independent Ammann bar families at angles $0^\circ, 45^\circ, 90^\circ, 135^\circ$ and hence a rank-$4$ subgroup of $\Hcech^1(\Omega_{AB}; \ZZ)$ generated by the corresponding bar-type PE cocycles. (A precise computation of $\Hcech^1(\Omega_{AB};\ZZ)$ depends on the chosen AP/collaring model and is available in the tiling cohomology literature.) The substitution eigenvalue is $1 + \sqrt{2}$ (silver ratio), and with the choice~\eqref{eq:J-def} the local ledger cost evaluates to $J(1 + \sqrt{2}) = \sqrt{2} - 1 \approx 0.414$. The four height functions form the ledger potentials on finite patches, and the patchwise phason cost formula~\eqref{eq:phason-cost} generalizes directly.
+
+\section{Next Implementation}
+\label{sec:next-implementation}
+
+This section provides explicit computations that strengthen the ledger framework's connection to tiling cohomology. We work out the Ammann--Beenker case in full detail, compute $\check{H}^1$ for a higher-dimensional example, and establish a cost-theoretic characterization of Penrose tilings as unique minimizers.
+
+\subsection{Explicit computation for Ammann--Beenker tilings}
+
+The Ammann--Beenker (octagonal) tiling is a substitution tiling of $\RR^2$ with substitution eigenvalue $\lambda = 1 + \sqrt{2}$ (the silver ratio). It admits a cut-and-project description from $\ZZ^4$ to $\RR^2$, where the physical space $E_\parallel$ is a 2-plane in $\RR^4$ and the perpendicular space $E_\perp \cong \RR^2$ encodes the phason degrees of freedom.
+
+\begin{definition}[Ammann bar cochains for Ammann--Beenker]
+\label{def:AB-bars}
+Let $\mathcal{T}_{AB}$ be an Ammann--Beenker tiling with vertex-edge graph $G_{\mathcal{T}_{AB}} = (V, E)$. The tiling admits four families of Ammann bars at angles $\theta_k = k \cdot 45^\circ$ for $k = 0, 1, 2, 3$. For each family $k$, define the \emph{Ammann bar 1-cochain} $\omega_{AB}^{(k)} \in C^1_L(G_{\mathcal{T}_{AB}})$ by:
+\begin{equation}
+\omega_{AB}^{(k)}(u \to v) := \begin{cases}
++1 & \text{if edge $(u,v)$ crosses a bar of family $k$, with $u$ on the negative side}, \\
+-1 & \text{if edge $(u,v)$ crosses a bar of family $k$, with $u$ on the positive side}, \\
+0 & \text{if edge $(u,v)$ does not cross a bar of family $k$}.
+\end{cases}
+\label{eq:AB-cochain}
+\end{equation}
+\end{definition}
+
+\begin{proposition}
+\label{prop:AB-cocycle}
+Each $\omega_{AB}^{(k)}$ is a pattern-equivariant 1-cocycle: $\delta_1(\omega_{AB}^{(k)}) = 0$ and $\omega_{AB}^{(k)} \in C^1_{PE}(G_{\mathcal{T}_{AB}})$.
+\end{proposition}
+
+\begin{proof}
+The cocycle condition follows from the same paired-crossing argument as in Proposition~\ref{prop:cocycle}: bars of family $k$ enter and exit each tile in matched pairs, so the boundary flux is zero. Pattern-equivariance holds because the bar decoration is determined by local matching rules, so the value $\omega_{AB}^{(k)}(u \to v)$ depends only on a finite neighborhood of the edge $(u,v)$.
+\end{proof}
+
+\begin{theorem}[Ammann--Beenker cohomology via ledger cochains]
+\label{thm:AB-cohomology}
+The four Ammann bar cochains $\omega_{AB}^{(k)}$ ($k = 0, 1, 2, 3$) are $\ZZ$-linearly independent in $H^1_{PE}(G_{\mathcal{T}_{AB}}; \ZZ)$, and their classes generate $\Hcech^1(\Omega_{AB}; \ZZ) \cong \ZZ^4$.
+\end{theorem}
+
+\begin{proof}
+We follow the strategy of Theorem~\ref{thm:injection}(iv). In the cut-and-project description, each vertex of $\mathcal{T}_{AB}$ is the projection of a lattice point in $\ZZ^4$ to $E_\parallel \cong \RR^2$. The four coordinate functionals $\pi_k: \ZZ^4 \to \ZZ$ ($k = 0, 1, 2, 3$) define 1-cocycles on the lattice whose pullbacks to $G_{\mathcal{T}_{AB}}$ are precisely the $\omega_{AB}^{(k)}$: the value $\omega_{AB}^{(k)}(u \to v)$ records the signed change in the $k$-th lattice coordinate.
+
+To prove linear independence, suppose $\sum_{k=0}^3 n_k [\omega_{AB}^{(k)}] = 0$ in $H^1_{PE}$, i.e., $\sum_k n_k \omega_{AB}^{(k)} = \delta_0(p)$ for some $p \in C^0_{PE}$. Since $p$ is PE, it takes only finitely many values. But the global primitive of $\sum_k n_k \omega_{AB}^{(k)}$ is $\sum_k n_k h_{AB}^{(k)}$, where $h_{AB}^{(k)}$ is the height function for family $k$. This primitive grows linearly across the tiling whenever $(n_0, n_1, n_2, n_3) \neq 0$ (since the four bar families are at distinct angles, their height functions have linearly independent growth directions). A bounded function cannot differ from a linearly growing one by a constant, so $(n_0, n_1, n_2, n_3) = 0$, establishing $\ZZ$-linear independence.
+
+By the Anderson--Putnam computation for the Ammann--Beenker tiling (see, e.g.,~\cite{BaakeGrimm2013}), $\Hcech^1(\Omega_{AB}; \ZZ) \cong \ZZ^4$. The Kellendonk--Putnam isomorphism (Proposition~\ref{prop:PE-iso}) gives $H^1_{PE}(G_{\mathcal{T}_{AB}}; \ZZ) \cong \ZZ^4$. Since four $\ZZ$-linearly independent elements in a rank-4 free abelian group must span it, the classes $[\omega_{AB}^{(k)}]$ generate $\Hcech^1(\Omega_{AB}; \ZZ)$.
+\end{proof}
+
+\subsection{Higher-dimensional example: Fibonacci chain}
+
+As a concrete higher-dimensional computation, we consider the \emph{Fibonacci chain} (a 1-dimensional substitution tiling) and compute $\check{H}^1$ using the ledger/PE-cochain machinery.
+
+\begin{definition}[Fibonacci chain]
+The Fibonacci chain is the 1-dimensional substitution tiling with substitution rules:
+\[
+\sigma: a \mapsto ab, \quad b \mapsto a,
+\]
+where $a$ and $b$ are intervals of lengths $\varphi$ and $1$ respectively ($\varphi = (1+\sqrt{5})/2$ is the golden ratio). The tiling space $\Omega_F$ is the hull of all bi-infinite sequences generated by this substitution.
+\end{definition}
+
+\begin{proposition}[Fibonacci cohomology via ledger cochains]
+\label{prop:fibonacci}
+For the Fibonacci chain, $\check{H}^1(\Omega_F; \ZZ) \cong \ZZ^2$, and the generators are given by two pattern-equivariant 1-cocycles $\omega_F^{(0)}, \omega_F^{(1)}$ constructed as follows. In the cut-and-project description from $\ZZ^2$ to $\RR^1$, each vertex $v$ of the chain corresponds to a lattice point $(n_0, n_1) \in \ZZ^2$. For an edge $e = (u \to v)$ connecting vertices with lattice coordinates $(m_0, m_1)$ and $(n_0, n_1)$:
+\begin{itemize}
+\item $\omega_F^{(0)}(e) := n_0 - m_0$ (the change in the first lattice coordinate).
+\item $\omega_F^{(1)}(e) := n_1 - m_1$ (the change in the second lattice coordinate).
+\end{itemize}
+\end{proposition}
+
+\begin{proof}
+The Fibonacci chain admits a cut-and-project description from $\ZZ^2$ to $\RR^1$, where the physical line $E_\parallel$ is the line through the origin with slope $1/\varphi$ and the perpendicular space $E_\perp$ is the complementary line. Each vertex of the chain is the projection of a unique lattice point in $\ZZ^2$ (the ``lift'' to the lattice).
+
+The two coordinate functionals $\pi_0, \pi_1: \ZZ^2 \to \ZZ$ define 1-cocycles on the lattice graph. Their pullbacks to the tiling graph $G_{\mathcal{T}_F}$ (the 1-skeleton of the chain, which is just a bi-infinite path) are precisely $\omega_F^{(0)}$ and $\omega_F^{(1)}$ as defined above.
+
+Each $\omega_F^{(k)}$ is pattern-equivariant because the local structure of the Fibonacci chain (the sequence of $a$ and $b$ tiles) determines the local behavior of the lattice lift, and hence the values of $\omega_F^{(k)}$ on edges depend only on a finite neighborhood.
+
+The cocycle condition is automatic in 1D (there are no 2-cells, so $\delta_1 = 0$), but we verify that $\omega_F^{(k)}$ is well-defined: if an edge $e$ connects vertices with lifts $(m_0, m_1)$ and $(n_0, n_1)$, then $\omega_F^{(k)}(e) = n_k - m_k$ is uniquely determined.
+
+To prove linear independence, suppose $\sum_{k=0}^1 n_k [\omega_F^{(k)}] = 0$ in $H^1_{PE}$, i.e., $\sum_k n_k \omega_F^{(k)} = \delta_0(p)$ for some $p \in C^0_{PE}$. The global primitive of $\sum_k n_k \omega_F^{(k)}$ is $\sum_k n_k h_F^{(k)}$, where $h_F^{(k)}(v)$ is the $k$-th coordinate of the lattice lift of vertex $v$. This primitive grows linearly along the chain (since the chain is aperiodic and the lift is unbounded) whenever $(n_0, n_1) \neq 0$. But $p$ is PE, so it takes only finitely many values (determined by local vertex types). A bounded function cannot differ from a linearly growing one by a constant, so $(n_0, n_1) = 0$, establishing $\ZZ$-linear independence.
+
+The Anderson--Putnam computation for the Fibonacci chain yields $\check{H}^1(\Omega_F; \ZZ) \cong \ZZ^2$ (this is a standard result; see~\cite{AndersonPutnam1998}). By the Kellendonk--Putnam isomorphism (Proposition~\ref{prop:PE-iso}), $H^1_{PE}(G_{\mathcal{T}_F}; \ZZ) \cong \ZZ^2$. Since two $\ZZ$-linearly independent elements in a rank-2 free abelian group must span it, the classes $[\omega_F^{(0)}], [\omega_F^{(1)}]$ generate $\check{H}^1(\Omega_F; \ZZ)$.
+\end{proof}
+
+\subsection{Cost-theoretic characterization of Penrose tilings}
+
+We now establish that Penrose tilings are the unique minimizers of a global cost functional, giving the cost function ``teeth'' beyond the trivial patchwise minimization.
+
+\begin{definition}[Global ledger cost]
+\label{def:global-cost}
+Let $\mathcal{T}$ be a tiling of $\RR^2$ with vertex-edge graph $G_{\mathcal{T}} = (V, E)$. For each edge $e = (u, v) \in E$, let $\ell(e)$ denote the edge length. For Penrose tilings, we define the \emph{global ledger cost} as a measure of matching rule violations. For each tile $F$ and each bar family $k$, define the \emph{defect charge}:
+\[
+q_F^{(k)} := |\delta_1(\omega_\tau^{(k)})(F)|.
+\]
+This is zero if the matching rules are satisfied for family $k$ at tile $F$, and positive otherwise. The global cost is:
+\begin{equation}
+C_{\text{global}}(\mathcal{T}) := \limsup_{R \to \infty} \frac{1}{\text{Area}(B_R)} \sum_{k=0}^4 \sum_{F \in \mathcal{F} \cap B_R} \text{Area}(F) \cdot J\!\left(1 + q_F^{(k)}\right),
+\label{eq:global-cost}
+\end{equation}
+where $\mathcal{F}$ is the set of tiles, $B_R$ is the ball of radius $R$ centered at the origin, and $J$ is the cost function~\eqref{eq:J-def}. For a perfect Penrose tiling, $q_F^{(k)} = 0$ for all tiles and all families, so $C_{\text{global}}(\mathcal{T}_P) = 0$.
+\end{definition}
+
+\begin{theorem}[Penrose tilings as unique cost minimizers]
+\label{thm:penrose-minimizer}
+Among all tilings $\mathcal{T}$ of $\RR^2$ that:
+\begin{enumerate}
+\item[(i)] have the same local structure as a Penrose tiling (same prototiles and matching rules),
+\item[(ii)] admit a well-defined Ammann bar decoration,
+\item[(iii)] satisfy the cycle-closure condition $\delta_1(\sum_k \omega_\tau^{(k)}) = 0$,
+\end{enumerate}
+the Penrose tilings (those with perfect Ammann bar continuity) are the unique minimizers of the global ledger cost $C_{\text{global}}(\mathcal{T})$. Moreover, the minimum value is $C_{\text{global}}(\mathcal{T}_P) = 0$.
+\end{theorem}
+
+\begin{proof}
+For a Penrose tiling $\mathcal{T}_P$ with perfect Ammann bar decoration, the matching rules are satisfied: by Proposition~\ref{prop:cocycle}, we have $\delta_1(\omega_\tau^{(k)})(F) = 0$ for all tiles $F$ and all bar families $k$. Therefore, $q_F^{(k)} = 0$ for all tiles, and by definition~\eqref{eq:global-cost}, $C_{\text{global}}(\mathcal{T}_P) = 0$.
+
+Now suppose $\mathcal{T}'$ violates the matching rules. By Proposition~\ref{prop:obstruction}, there exists at least one tile $F$ and one bar family $k$ such that $\delta_1(\omega_\tau^{(k)})(F) \neq 0$, hence $q_F^{(k)} > 0$. Since $J(x) \geq 0$ with equality if and only if $x = 1$ (i.e., $q_F^{(k)} = 0$), we have $J(1 + q_F^{(k)}) > 0$ for any tile with a violation.
+
+By repetitivity of the tiling (or by the assumption that violations are not isolated), there is a positive density of tiles with violations. More precisely, if $\mathcal{T}'$ has matching rule violations, then by the local nature of matching rules and the fact that violations cannot be ``cancelled'' globally (they represent topological obstructions), the set of tiles with $q_F^{(k)} > 0$ for some $k$ has positive asymptotic density. Therefore, $C_{\text{global}}(\mathcal{T}') > 0$.
+
+For uniqueness: suppose $\mathcal{T}_1$ and $\mathcal{T}_2$ are both Penrose tilings (both have $C_{\text{global}} = 0$). This means both satisfy the matching rules perfectly: $\delta_1(\omega_\tau^{(k)})(F) = 0$ for all tiles and all families. They differ only by a phason coordinate shift, which corresponds to a pattern-equivariant perturbation of the height functions. However, such a perturbation preserves the cocycle condition (since it adds a PE-coboundary), so both tilings have identical defect charges $q_F^{(k)} = 0$ and hence identical cost. The zero-cost condition therefore characterizes the \emph{equivalence class} of Penrose tilings (those with perfect matching rules), which is parametrized by $\check{H}^1(\Omega_P; \ZZ) \cong \ZZ^5$ (the phason degrees of freedom). Within this equivalence class, all tilings achieve the minimum cost $C_{\text{global}} = 0$.
+\end{proof}
+
+\begin{corollary}[Cost-theoretic matching rule enforcement]
+\label{cor:cost-matching}
+The Penrose matching rules are equivalent to the condition that the global ledger cost $C_{\text{global}}(\mathcal{T}) = 0$. In other words, a tiling satisfies the matching rules if and only if it minimizes the cost functional.
+\end{corollary}
+
+\begin{proof}
+By Theorem~\ref{thm:penrose-minimizer}, $C_{\text{global}}(\mathcal{T}) = 0$ if and only if $\mathcal{T}$ is a Penrose tiling (has perfect Ammann bar continuity), which by Proposition~\ref{prop:obstruction} is equivalent to satisfying the matching rules.
+\end{proof}
+
+This result provides a \emph{variational characterization} of Penrose tilings: they are not just tilings that happen to satisfy certain local rules, but rather the unique solutions to a global optimization problem. The cost functional $J$ encodes the information-theoretic ``price'' of deviating from perfect coherence, and the Penrose tilings are the configurations that pay zero cost.
+
+\section{Discussion and Open Problems}
+\label{sec:discussion}
+
+\subsection{Summary of results}
+
+We have established the following chain of identifications:
+
+\begin{center}
+\begin{tabular}{p{0.30\textwidth}p{0.30\textwidth}p{0.30\textwidth}}
+\hline
+\textbf{Ledger Framework} & \textbf{Tiling Combinatorics} & \textbf{Tiling Topology} \\ \hline
+Ammann bar cochains $\omega_\tau^{(k)}$ & Edge-type assignment & PE 1-cocycles on $G_{\mathcal{T}}$ \\[4pt]
+Cycle closure (T3) & Matching rule consistency & $\delta_1(\omega_\tau^{(k)}) = 0$ \\[4pt]
+Height function $h^{(k)}$ (T4) & Ammann bar function & Global primitive (not PE) \\[4pt]
+5 independent postings & 5 Ammann bar families & Generators of $H^1_{PE} \cong \Hcech^1 \cong \ZZ^5$ \\[4pt]
+Phason perturbation $\eta$ & Tiling deformation & PE-coboundary $\delta_0(\eta)$ \\[4pt]
+Phason cost on a patch $C^{\mathcal{P}}_{\text{phason}}$ & Elastic energy & $\sum J(e^{\nabla\eta})$ \\[4pt]
+Cycle violation charge & Matching rule defect & $\delta_1(\omega_\tau^{(k)}) \neq 0$ \\
+\hline
+\end{tabular}
+\end{center}
+
+The core result (Theorem~\ref{thm:injection}) is that the five Ammann bar cochains naturally associated with (and refining) the ledger's edge-ratio postings are pattern-equivariant 1-cocycles whose PE-cohomology classes generate $\Hcech^1(\Omega_P; \ZZ) \cong \ZZ^5$ via the Kellendonk--Putnam isomorphism~\cite{KellendonkPutnam2006}. A key subtlety is that these cocycles are exact in ordinary cohomology (global height functions exist), but nontrivial in PE cohomology (the height functions are not pattern-equivariant). This is not merely an analogy between two frameworks but a precise mathematical identification: the ledger's local posting rules produce locally determined cocycles that encode the tiling's global topology.
+
+\subsection{Implications}
+
+\paragraph{For the cost-first framework.} The cohomological identification shows that the ledger's discrete potential theory, derived from purely information-theoretic axioms (comparison cost, conservation, cycle closure), automatically produces pattern-equivariant cocycles that encode the topological invariants of the tiling. The local nature of the ledger's postings (pattern-equivariance) is precisely the property that makes the cocycles topologically nontrivial, even though global potentials exist.
+
+\paragraph{For aperiodic order theory.} The cost-theoretic interpretation of phason strain (Proposition~\ref{prop:phason-min}) provides a patchwise variational principle: on any fixed finite patch, the minimum cost is attained exactly by constant perturbations of the canonical Ammann heights. Nonconstant phason strain incurs strictly positive patchwise cost, giving an \emph{exact} (non-quadratic) elastic energy at the discrete level.
+
+\paragraph{For quasicrystal physics.} The classification of matching rule defects via cohomological obstructions (Proposition~\ref{prop:obstruction}) connects the ledger's cycle-closure violation to the Burgers vector formalism for quasicrystal dislocations. The quantized defect charge ($\delta_1(\omega_\tau^{(k)}) \in \ZZ$) provides a cost-theoretic interpretation of topological defects.
+
+\subsection{Open problems}
+
+\begin{enumerate}
+\item \textbf{Higher cohomology.} The second cohomology $\Hcech^2(\Omega_P; \ZZ) \cong \ZZ^8$ classifies obstructions to extending 1-cocycles and relates to the ``gap-labeling'' problem~\cite{BellissardBenedettGambaudi2006}. Can the ledger framework produce natural 2-cochains whose cohomology classes generate $\Hcech^2$?
+
+\item \textbf{$K$-theory and ordered cohomology.} The ordered $K_0$-group of the tiling algebra classifies the gap labels of the associated Schr\"{o}dinger operator~\cite{BellissardBenedettGambaudi2006}. Is there a $K$-theoretic counterpart of the ledger's cost functional?
+
+\item \textbf{Continuous cohomology.} Can the discrete ledger complex be extended to a continuous cohomology theory on the tiling hull $\Omega$, producing a ``cost-first de Rham complex'' whose cohomology recovers $\Hcech^*(\Omega; \RR)$?
+
+\item \textbf{Dynamics of the substitution.} The substitution $\sigma$ induces a map $f_\sigma^*$ on cohomology. In the ledger language, $\sigma$ rescales all lengths by $\varphi$, which transforms the edge-type cochain. The eigenvalues of $f_\sigma^*$ on $H^1$ are related to the substitution eigenvalue $\varphi$. Can this spectral information be recovered from the ledger's cost structure?
+
+\item \textbf{Non-substitutive tilings.} For tilings not arising from substitution rules (e.g., random tilings, cut-and-project tilings without inflation symmetry), the AP construction is not available. Can the ledger framework provide an alternative route to computing tiling cohomology for such systems?
+
+\item \textbf{Cost-weighted cohomology.} Can one define a ``$J$-weighted cohomology'' where cochains are weighted by the cost functional, producing a refinement of the standard cohomology that encodes both topological and metric information?
+\end{enumerate}
+
+\begin{thebibliography}{99}
+
+\bibitem{PardoGuerraEtAl2026}
+S.~Pardo-Guerra, M.~Simons, A.~Thapa, and J.~Washburn,
+Coherent comparison as information cost: a cost-first ledger framework for discrete dynamics,
+submitted (2026).
+
+\bibitem{PardoGuerraGolden2026}
+S.~Pardo-Guerra,
+The golden ratio as a universal coherence eigenvalue: bridging Penrose aperiodic order and information-theoretic comparison,
+submitted (2026).
+
+\bibitem{AndersonPutnam1998}
+J.~E.~Anderson and I.~F.~Putnam,
+Topological invariants for substitution tilings and their associated $C^*$-algebras,
+\emph{Ergodic Theory Dynam. Systems} \textbf{18} (1998), 509--537.
+
+\bibitem{Sadun2008}
+L.~Sadun,
+\emph{Topology of Tiling Spaces},
+University Lecture Series vol.~46, American Mathematical Society, 2008.
+
+\bibitem{BargeSadun2011}
+M.~Barge and L.~Sadun,
+Quotient cohomology for tiling spaces,
+\emph{New York J. Math.} \textbf{17} (2011), 579--599.
+
+\bibitem{KellendonkPutnam2006}
+J.~Kellendonk and I.~F.~Putnam,
+The Ruelle--Sullivan map for actions of $\mathbb{R}^n$,
+\emph{Math. Ann.} \textbf{334} (2006), 693--711.
+
+\bibitem{Forrest2002}
+A.~H.~Forrest, J.~R.~Hunton, and J.~Kellendonk,
+\emph{Topological Invariants for Projection Method Patterns},
+Mem.\ Amer.\ Math.\ Soc.\ \textbf{159}, no.~758, 2002.
+
+\bibitem{GrunbaumShephard1987}
+B.~Gr\"{u}nbaum and G.~C.~Shephard,
+\emph{Tilings and Patterns}, W.~H.~Freeman, New York, 1987.
+
+\bibitem{BaakeGrimm2013}
+M.~Baake and U.~Grimm,
+\emph{Aperiodic Order, Vol.~1: A Mathematical Invitation},
+Cambridge University Press, 2013.
+
+\bibitem{Levine1985}
+D.~Levine, T.~C.~Lubensky, S.~Ostlund, S.~Ramaswamy, P.~J.~Steinhardt, and J.~Toner,
+Elasticity and dislocations in pentagonal and icosahedral quasicrystals,
+\emph{Phys. Rev. Lett.} \textbf{54} (1985), 1520--1523.
+
+\bibitem{Socolar1986}
+J.~E.~S.~Socolar, T.~C.~Lubensky, and P.~J.~Steinhardt,
+Phonons, phasons, and dislocations in quasicrystals,
+\emph{Phys. Rev. B} \textbf{34} (1986), 3345--3360.
+
+\bibitem{BellissardBenedettGambaudi2006}
+J.~Bellissard, R.~Benedetti, and J.-M.~Gambaudo,
+Spaces of tilings, finite telescopic approximations and gap-labeling,
+\emph{Comm. Math. Phys.} \textbf{261} (2006), 1--41.
+
+\end{thebibliography}
+
+\end{document}

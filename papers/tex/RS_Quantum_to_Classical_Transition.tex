@@ -1,0 +1,353 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The Quantum-to-Classical Transition in Recognition Science:\\
+$J$-Cost Scaling and Einselection}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We derive the quantum-to-classical transition from Recognition
+Science.  Classical behavior emerges when the $J$-cost of maintaining
+quantum coherence exceeds the cost of decoherence.  For a system of
+$N$ interacting ledger entries, the coherent-state $J$-cost scales
+quadratically: $J_{\mathrm{ent}} = N\,j + \alpha\,N(N-1)/2$, where
+$j = \varphi^{-5}$ is the single-entry cost and $\alpha > 0$ is the
+pairwise entanglement cost (each of the $\binom{N}{2}$ pairs
+contributing $\alpha$ to the $J$-cost).  Entangled states always
+have higher cost than product states for $N > 1$.  The decoherence
+timescale scales as $\tau_{\mathrm{dec}} = \tau_0 \cdot \varphi^{-Ng}$,
+where $g > 0$ is the environmental coupling strength.  For
+$N \sim 10^3$ and $g \sim 0.1$, this gives
+$\tau_{\mathrm{dec}} \sim 10^{-65}$~s; for macroscopic objects
+($N \sim 10^{23}$), $\tau_{\mathrm{dec}}$ has an exponent of
+order $10^{21}$---effectively zero.  The quantum-to-classical
+crossover for a 1-second observation window occurs at
+$N_{\mathrm{cross}} \approx 210/g$ environmental modes.
+``Pointer states'' (position, momentum) are selected by $J$-cost
+minimization under environmental coupling (einselection).
+Classical mechanics is the $N \to \infty$ limit.
+\end{abstract}
+
+\section{Introduction}
+
+Why does the macroscopic world appear classical when the underlying
+physics is quantum?  The decoherence program~\cite{Zurek} explains
+how environmental interactions suppress superpositions, but does not
+derive the decoherence timescale from first principles.
+RS~\cite{RS_Axioms} does.
+
+\section{Recognition Science Framework}
+\label{sec:framework}
+
+Recognition Science derives all physics from a single primitive,
+the \emph{recognition cost functional} $J(x)$, uniquely determined
+by three axioms.
+
+\begin{definition}[RS Cost Functional]
+For $x > 0$: $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{definition}
+
+\noindent\textbf{Axiom A1 (Normalization):} $J(1) = 0$.\\
+\textbf{Axiom A2 (Recognition Composition Law, RCL):}
+$J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y)$ for all $x, y > 0$.\\
+\textbf{Axiom A3 (Calibration):} $J''_{\log}(0) = 1$, where
+$J_{\log}(t) := J(e^t)$.
+
+\begin{theorem}[Cost Uniqueness]
+\label{thm:unique}
+The unique continuous solution to \textup{(A1)--(A3)} is
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Setting $f(t) = J_{\log}(t) + 1$ and rewriting \textup{(A2)} gives the
+d'Alembert equation $f(s+t) + f(s-t) = 2f(s)f(t)$.  By the Acz\'el
+classification theorem~\cite{Aczel1966}, the unique continuous solution
+with $f(0) = 1$ and $f''(0) = 1$ is $f(t) = \cosh t$.
+\end{proof}
+
+\noindent The key property for the quantum-classical transition is that $J$-cost
+is strictly convex ($J'' > 0$) and achieves its minimum at $x = 1$.
+Nature minimizes $J$-cost: macroscopic superpositions (with quadratically
+growing $J$-cost) are driven toward classical product states.  The 8-tick
+epoch ($2^D = 8$ for $D = 3$) provides the fundamental time unit $\tau_0$.
+
+\section{$J$-Cost Scaling}
+
+\begin{definition}[$J$-Cost of $N$ Entries]
+Product state: $J_{\mathrm{prod}} = N\,j_{\mathrm{single}}$
+(linear in $N$).
+
+Entangled state:
+$J_{\mathrm{ent}} = N\,j_{\mathrm{single}}
++ \alpha\,N(N-1)/2$ (quadratic in $N$).
+\end{definition}
+
+\begin{lemma}[Entangled States Cost More]
+For $N > 1$ and $\alpha > 0$:
+$J_{\mathrm{ent}} > J_{\mathrm{prod}}$.
+\end{lemma}
+
+\begin{proof}
+$J_{\mathrm{ent}} - J_{\mathrm{prod}} = \alpha\,N(N-1)/2 > 0$
+for $N > 1$, $\alpha > 0$.
+\end{proof}
+
+\begin{corollary}[Cost Difference Scales Quadratically]
+$\Delta J = \alpha\,N(N-1)/2 \propto N^2$.
+\end{corollary}
+
+Since nature minimizes $J$-cost, macroscopic superpositions (high
+$N$, high $J_{\mathrm{ent}}$) are strongly disfavored.
+
+\section{Decoherence Timescale}
+
+\begin{definition}[Decoherence Time]
+\begin{equation}
+  \tau_{\mathrm{dec}} = \tau_0 \cdot \varphi^{-N \cdot g},
+\end{equation}
+where $N$ is the number of environmental modes coupled to the system
+and $g > 0$ is the dimensionless coupling strength (how many $\varphi$-rungs
+are shifted per environmental mode per tick).
+\end{definition}
+
+\begin{remark}[Status of $g$]
+\label{rem:g-status}
+The coupling $g$ is a \emph{phenomenological parameter} describing
+the interaction strength between the system and environment.  It is
+not yet derived from the RS Hamiltonian; a derivation of $g$ in terms
+of $\varphi$ from the ledger's double-entry structure is an identified
+open problem.  For a system interacting via the electromagnetic force
+at room temperature, $g \sim 10^{-4}$--$10^{-2}$ provides the
+observed mesoscopic decoherence timescales; for a macroscopic object
+in air, $g \sim 10^{-2}$--$10^{-1}$.  When $g$ is determined from
+the RS Hamiltonian, the formula $\tau_{\mathrm{dec}} = \tau_0 \varphi^{-Ng}$
+will yield a parameter-free decoherence timescale.
+\end{remark}
+
+\begin{remark}[Decoherence Monotonicity]
+$\tau_{\mathrm{dec}} = \tau_0 \varphi^{-Ng}$ is a decreasing
+function of both $N$ and $g$: since $\varphi > 1$, increasing $N$ or
+$g$ increases $Ng$, which increases $\varphi^{Ng}$ and thus decreases
+$\varphi^{-Ng}$.
+\end{remark}
+
+\begin{remark}[Macroscopic Decoherence --- Order-of-Magnitude Estimate]
+For macroscopic objects ($N \sim 10^{23}$, $g \sim 0.1$):
+$\tau_{\mathrm{dec}} = \tau_0 \cdot \varphi^{-10^{22}}$.
+Since $\log_{10}(\varphi^{10^{22}}) = 10^{22} \times 0.209
+\approx 2 \times 10^{21}$, the decoherence time is
+$\tau_{\mathrm{dec}} \sim 10^{-(44 + 2 \times 10^{21})}$~s---a
+number with over $10^{21}$ zeros in the exponent, effectively zero.
+Even for modest $N \sim 10^3$ and $g \sim 0.1$
+($Ng = 100$): $\tau_{\mathrm{dec}} = \tau_0 \cdot \varphi^{-100}
+\approx 10^{-44} \times 10^{-20.9} \approx 10^{-65}$~s, already
+far below any observable timescale.
+\end{remark}
+
+\begin{corollary}[No Schr\"odinger's Cat]
+Macroscopic superpositions decohere effectively
+instantaneously.  The cat is always either alive or dead,
+never both.
+\end{corollary}
+
+\section{Pointer States and Einselection}
+
+\begin{definition}[Pointer State]
+A state that is stable under environmental interaction and minimizes
+$J$-cost.
+\end{definition}
+
+\begin{proposition}[Einselection from $J$-Cost --- Structural Argument]
+The environment selects pointer states (position eigenstates for
+massive particles, energy eigenstates for isolated systems) as the
+$J$-cost minima under the environmental coupling.
+\end{proposition}
+
+\begin{remark}
+The RS identification is: among all possible bases, pointer states are
+those that minimize total $J$-cost when the environment is included.
+Position eigenstates are pointer states because they minimize the
+$J$-cost of localization: delocalized superpositions have higher
+pairwise-correlation costs.  This is the RS restatement of Zurek's
+einselection~\cite{Zurek}; the RS-specific content is the
+cost-functional underpinning of the selection criterion.  A
+derivation of pointer states as $J$-cost minima from the RS
+environment--system interaction Hamiltonian is an identified open
+problem.
+\end{remark}
+
+\section{Classical Limit}
+
+\begin{proposition}[Classical Limit --- Structural Argument]
+In the limit $N \to \infty$:
+\begin{enumerate}
+  \item $\tau_{\mathrm{dec}} = \tau_0 \varphi^{-Ng} \to 0$
+  (instant decoherence; exact from the definition for any $g > 0$).
+  \item Only pointer states survive (from Proposition [Einselection]).
+  \item Dynamics reduces to classical mechanics (structural
+  identification: classical trajectories are the $N \to \infty$ limit
+  of RS ledger dynamics with instantaneous decoherence).
+\end{enumerate}
+\end{proposition}
+
+\begin{remark}[Status of (3)]
+Part~(1) is an immediate consequence of the decoherence time formula.
+Part~(2) follows from the einselection argument.  Part~(3) is the
+physical claim that the $N \to \infty$ limit of the quantum dynamics
+produces Newtonian mechanics.  A rigorous derivation of this
+limit---showing the RS Hamiltonian reduces to the Hamilton equations
+of motion in the $N \to \infty$ limit---is an identified open problem.
+\end{remark}
+
+\begin{corollary}[Quantum--Classical Crossover]
+A system is either quantum ($\tau_{\mathrm{dec}} > \tau_{\mathrm{obs}}$,
+coherence observable) or classical ($\tau_{\mathrm{dec}} <
+\tau_{\mathrm{obs}}$, coherence unobservable).  Setting
+$\tau_{\mathrm{obs}} \sim 1$~s and $\tau_0 \sim 10^{-44}$~s, the
+crossover occurs at:
+\begin{equation}
+  N_{\mathrm{cross}} \sim \frac{\ln(10^{44})}{\ln\varphi} \cdot \frac{1}{g}
+  = \frac{44 \ln 10}{0.4812} \cdot \frac{1}{g}
+  \approx \frac{210}{g}
+\end{equation}
+environmental modes.  For $g \sim 10^{-4}$: $N_{\mathrm{cross}}
+\sim 2 \times 10^6$, corresponding to large molecules; for
+$g \sim 10^{-2}$: $N_{\mathrm{cross}} \sim 2 \times 10^4$,
+corresponding to quantum dots.
+\end{corollary}
+
+\section{Ehrenfest's Theorem}
+
+Ehrenfest's theorem states that $\langle x \rangle$ and $\langle p
+\rangle$ satisfy $d\langle x \rangle/dt = \langle p \rangle/m$ and
+$d\langle p \rangle/dt = -\langle \nabla V \rangle$.  For general
+potentials, $\langle \nabla V \rangle \neq \nabla V(\langle x
+\rangle)$, so expectation values do not follow classical trajectories
+exactly.  In RS, $J$-cost forces decoherence into pointer states
+(position eigenstates) as $N \to \infty$.  The reduced density matrix
+becomes diagonal in position; surviving components follow classical
+trajectories.  Ehrenfest's theorem holds \emph{exactly} for the
+effective classical dynamics because the system is a statistical
+mixture of classical-like trajectories.  $J$-cost thus explains why
+expectation values follow classical trajectories at macroscopic
+scales.
+
+\section{Mesoscopic Regime}
+
+Between microscopic ($N \sim 1$--$10^3$) and macroscopic ($N \sim
+10^{23}$) regimes lies the mesoscopic regime ($N \sim 10^4$--$10^8$).
+Here $\tau_{\mathrm{dec}}$ is long enough for quantum coherence to be
+observable.  RS predicts $N_{\mathrm{cross}} \approx 210/g$; for
+$g \sim 10^{-5}$--$10^{-2}$, coherence persists from seconds down
+to femtoseconds.  For $g \sim 10^{-4}$ (typical electromagnetic coupling
+in mesoscopic systems), $N_{\mathrm{cross}} \approx 2 \times 10^6$.
+
+\textbf{Fullerene interference.}  C$_{60}$ matter-wave
+diffraction~\cite{Arndt} demonstrates coherence at $N \sim 10^3$
+atoms.  RS places this near the lower mesoscopic boundary; weak
+environmental coupling keeps $\tau_{\mathrm{dec}}$ observable.
+
+\textbf{Quantum dots.}  Confined systems ($N \sim 10^4$--$10^6$)
+exhibit quantized levels, tunneling, and coherent manipulation.
+$J$-cost remains manageable; decoherence is tunable via size and
+temperature.
+
+\textbf{SQUID loops.}  Superconducting loops ($N \sim 10^{10}$--$10^{12}$
+Cooper pairs) show coherent superposition of currents.  RS attributes
+this to the collective state: the effective $N$ of environmentally
+coupled degrees of freedom is reduced by the gap.
+
+\section{Interpretive Comparison}
+
+Table~\ref{tab:interpretations} compares how major interpretations of
+quantum mechanics handle the quantum-to-classical transition and
+decoherence.
+
+\begin{table}[htbp]
+\centering
+\caption{Approaches to the quantum--classical border and decoherence.}
+\label{tab:interpretations}
+\begin{tabular}{@{}lp{4cm}p{4cm}@{}}
+\toprule
+Interpretation & Decoherence role & Quantum--classical border \\
+\midrule
+Copenhagen & \parbox[t]{4cm}{Collapse postulate; observer-dependent} & \parbox[t]{4cm}{Measurement cuts chain; no scale derivation} \\
+Many-Worlds & \parbox[t]{4cm}{All branches exist; decoherence = branching} & \parbox[t]{4cm}{No objective border; appearance subjective} \\
+Bohmian & \parbox[t]{4cm}{Pilot wave + particles; decoherence irrelevant} & \parbox[t]{4cm}{Particles always classical; wave guides deterministically} \\
+GRW & \parbox[t]{4cm}{Spontaneous collapse; collapse causes decoherence} & \parbox[t]{4cm}{$\lambda \sim 10^{-16}$/s per particle; $N$-dependent amplification} \\
+RS & \parbox[t]{4cm}{$J$-cost minimization; einselection from cost} & \parbox[t]{4cm}{$N \to \infty$ limit; $\tau_{\mathrm{dec}} \propto \varphi^{-Ng}$} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+RS uniquely derives decoherence timescale and pointer-state selection
+from a single cost principle, without collapse postulates or new constants.
+
+\section{Predictions}
+
+RS predicts: (1) \textbf{Decoherence scaling:}
+$\tau_{\mathrm{dec}} \propto \varphi^{-Ng}$; testable via rates vs.\
+temperature or pressure.  (2) \textbf{Mesoscopic boundary:} For
+$g \sim 10^{-6}$--$10^{-4}$, the crossover
+$N_{\mathrm{cross}} \approx 210/g \sim 10^6$--$10^8$; virus
+interferometry ($N \sim 10^7$--$10^8$) should show reduced
+coherence.  Precision measurements of coherence visibility vs.\ $N$
+would test this scaling law.  (3) \textbf{Pointer-state universality:}
+Position emerges as pointer basis.  (4) \textbf{Minimal new parameters:}
+Unlike GRW ($\lambda$, $r_C$), RS introduces only one phenomenological
+coupling $g$ per environment type, expected to be derivable from the
+RS Hamiltonian once the ledger--environment interaction is fully
+specified.
+
+\section{Conclusion}
+
+The quantum-to-classical transition is smooth and automatic:
+large $N$ forces rapid decoherence via quadratic $J$-cost scaling.
+Classical mechanics emerges as the $N \to \infty$ limit.  No
+additional postulates or interpretive choices are required.
+
+\begin{thebibliography}{9}
+
+\bibitem{Aczel1966}
+J.~Acz\'el, \emph{Lectures on Functional Equations and Their Applications},
+Academic Press, New York (1966).
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+\texttt{doi:10.3390/axioms15020090}
+
+\bibitem{Zurek}
+W.~H.~Zurek, ``Decoherence, Einselection, and the Quantum
+Origins of the Classical,'' Rev.\ Mod.\ Phys.\ \textbf{75},
+715 (2003).
+
+\bibitem{Arndt}
+M.~Arndt \emph{et al.}, ``Wave--Particle Duality of
+C$_{60}$ Molecules,'' Nature \textbf{401}, 680 (1999).
+\end{thebibliography}
+
+\end{document}

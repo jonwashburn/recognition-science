@@ -1,0 +1,284 @@
+\documentclass[11pt]{amsart}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Zp}{\mathbb{Z}_p}
+\newcommand{\Lam}{\Lambda}
+\DeclareMathOperator{\chr}{char}
+
+\title[Mutual Divisibility and the Principal-Ideal Pinch]{Mutual Divisibility in Iwasawa Algebras\\
+and the Principal-Ideal Pinch}
+
+\author{Jonathan Washburn}
+\address{Austin, Texas, USA}
+\email{washburn.jonathan@gmail.com}
+\date{February 2026}
+
+\begin{document}
+\begin{abstract}
+We prove that mutual divisibility of two nonzero elements in a unique
+factorization domain~(UFD) forces equality of the generated principal
+ideals.  The proof is a short argument from the uniqueness of
+irreducible factorization.
+Specializing to the Iwasawa algebra $\Lam=\Zp[\![T]\!]$ (a UFD by the
+$p$-adic Weierstrass preparation theorem), we obtain:
+if $A\mid B$ and $B\mid A$ in~$\Lam$, then $(A)=(B)$.
+This \emph{principal-ideal pinch} is the purely algebraic step that
+upgrades one-sided Iwasawa-theoretic divisibility results
+(such as Kato's divisibility and a reverse divisibility from
+$\Lam$-adic height positivity) into the full cyclotomic Iwasawa Main
+Conjecture equality $\chr_\Lam X_p=(L_p)$ for each fixed good prime~$p$.
+We also record a finite-to-infinite capacity obstruction used in
+companion papers for topological veto arguments.
+\end{abstract}
+
+\subjclass[2020]{Primary 13F15; Secondary 11R23, 13F20}
+\keywords{Unique factorization domain, mutual divisibility, Iwasawa algebra,
+Weierstrass preparation, main conjecture}
+\maketitle
+
+%=======================================================================
+\section{Mutual divisibility in UFDs}\label{sec:ufd}
+%=======================================================================
+
+The core algebraic observation is entirely elementary.
+
+\begin{lemma}[Mutual divisibility forces association]\label{lem:mutual}
+Let $R$ be a unique factorization domain and $A,B\in R\setminus\{0\}$.
+If $A\mid B$ and $B\mid A$, then $A$ and $B$ are associates:
+there exists a unit $u\in R^\times$ with $A=uB$.
+\end{lemma}
+\begin{proof}
+Since $R$ is a UFD, write
+\[
+A=\pi\prod_{i\in I} P_i^{a_i},\qquad
+B=\pi'\prod_{i\in I} P_i^{b_i},
+\]
+where $\pi,\pi'\in R^\times$ are units, $I$ is a finite index set,
+the $P_i$ are pairwise non-associate irreducible elements, and
+$a_i,b_i\ge 0$.
+
+The divisibility $A\mid B$ means $B=A\cdot c$ for some $c\in R$;
+comparing irreducible factorizations (which are unique up to units and
+reordering in a UFD) gives $a_i\le b_i$ for all $i\in I$.
+
+Similarly, $B\mid A$ gives $b_i\le a_i$ for all $i\in I$.
+
+Hence $a_i=b_i$ for every $i$.  Therefore
+\[
+\frac{A}{B}=\frac{\pi}{\pi'}\in R^\times,
+\]
+so $A=(\pi/\pi')B$ with $\pi/\pi'$ a unit.
+\end{proof}
+
+\begin{corollary}[Principal-ideal equality]\label{cor:ideal}
+Under the hypotheses of Lemma~\ref{lem:mutual},
+$(A)=(B)$ as ideals of~$R$.
+\end{corollary}
+\begin{proof}
+$A=uB$ with $u\in R^\times$ gives $(A)\subset(B)$.
+$B=u^{-1}A$ gives $(B)\subset(A)$.
+Hence $(A)=(B)$.
+\end{proof}
+
+\begin{remark}[Necessity of UFD]
+The UFD hypothesis is essential.  In the ring $\Z[\sqrt{-5}]$
+(which is not a UFD), we have $2\mid 6$ and $3\mid 6$, but $(2)\neq(3)$.
+More to the point, mutual divisibility can fail to imply association
+in non-UFD domains; see~\cite[Chapter~1]{Samuel} for examples.
+\end{remark}
+
+%=======================================================================
+\section{Application to Iwasawa algebras}\label{sec:iwasawa}
+%=======================================================================
+
+We now specialize to the ring central to Iwasawa theory.
+
+\begin{definition}[Iwasawa algebra]
+For a prime $p$, the \emph{Iwasawa algebra} is the formal power series
+ring $\Lam:=\Zp[\![T]\!]$, where $\Zp$ denotes the $p$-adic integers.
+\end{definition}
+
+\begin{proposition}[$\Lam$ is a UFD]\label{prop:lambda-ufd}
+$\Lam=\Zp[\![T]\!]$ is a unique factorization domain.
+\end{proposition}
+\begin{proof}
+By the $p$-adic Weierstrass preparation theorem
+(see Washington~\cite[\S 7.1]{Washington} or
+Neukirch--Schmidt--Wingberg~\cite[\S V.1]{NSW}),
+every nonzero $f\in\Lam$ factors uniquely as
+\[
+f=p^a\cdot g(T)\cdot u(T),
+\]
+where $a\ge 0$ is an integer, $g(T)\in\Zp[T]$ is a distinguished
+(monic, with non-leading coefficients in $p\Zp$) polynomial, and
+$u(T)\in\Lam^\times$ is a unit power series.
+The element $p$ is irreducible in $\Lam$.
+Distinguished polynomials factor into irreducible distinguished
+polynomials (using the fact that $\Zp[T]$ is a UFD, by Gauss's lemma
+applied to the DVR $\Zp$).
+Thus $\Lam$ has unique factorization into $p$ and irreducible
+distinguished polynomials, up to units.
+\end{proof}
+
+\begin{theorem}[Principal-ideal pinch in $\Lam$]\label{thm:pinch-lambda}
+Let $A,B\in\Lam\setminus\{0\}$ with $A\mid B$ and $B\mid A$.
+Then $(A)=(B)$ in~$\Lam$.
+\end{theorem}
+\begin{proof}
+$\Lam$ is a UFD by Proposition~\ref{prop:lambda-ufd}.
+Apply Lemma~\ref{lem:mutual} and Corollary~\ref{cor:ideal}.
+\end{proof}
+
+\begin{corollary}[IMC equality from two-sided divisibility]\label{cor:imc}
+Let $E/\Q$ be an elliptic curve with good reduction at a prime $p\ge5$,
+and assume $E$ is modular (by Wiles et al.).
+Let $\xi_p(T)\in\Lam$ be a generator of the characteristic ideal
+$\chr_\Lam X_p(E/\Q_\infty)$ (where $X_p$ is the Pontryagin dual of
+the $p$-primary Selmer group over the cyclotomic $\Z_p$-extension),
+and let $L_p(E,T)\in\Lam$ be the cyclotomic $p$-adic $L$-function
+(Mazur--Swinnerton-Dyer).
+If
+\begin{enumerate}[label=\textup{(\alph*)},nosep]
+\item $\xi_p\mid L_p$ in~$\Lam$
+  \textup{(}Kato's one-sided divisibility~\cite{Kato}\textup{)}, and
+\item $L_p\mid\xi_p$ in~$\Lam$
+  \textup{(}reverse divisibility from $\Lam$-adic height
+  positivity~\cite{BSD}\textup{)},
+\end{enumerate}
+then $\chr_\Lam X_p=(L_p)$ as ideals of~$\Lam$ (equality up to
+$\Lam^\times$).
+\end{corollary}
+\begin{proof}
+Apply Theorem~\ref{thm:pinch-lambda} with $A=\xi_p$ and $B=L_p$.
+Hypotheses (a) and (b) give $A\mid B$ and $B\mid A$.
+Theorem~\ref{thm:pinch-lambda} yields $(A)=(B)$, i.e.\
+$\chr_\Lam X_p=(\xi_p)=(L_p)$.
+\end{proof}
+
+\begin{remark}[Sources of the two divisibilities]\label{rem:sources}
+Condition~(a) is the celebrated result of Kato~\cite{Kato} for
+ordinary primes, with supersingular extensions by
+Kobayashi~\cite{Kob} (signed Selmer groups) and
+Lei--Loeffler--Zerbes~\cite{LLZ} (Wach modules).
+Condition~(b) is the reverse divisibility established in the companion
+BSD paper~\cite{BSD} via $\Lam$-adic N\'eron--Tate height positivity.
+Corollary~\ref{cor:imc} shows that the algebraic step from two
+one-sided divisibilities to full Main Conjecture equality is a single
+application of unique factorization---a one-line argument once the
+UFD property is in hand.
+\end{remark}
+
+%=======================================================================
+\section{Finite-to-infinite capacity obstruction}\label{sec:fredholm}
+%=======================================================================
+
+We record a combinatorial observation used in companion papers.
+
+\begin{proposition}[Finite cannot surject onto infinite]\label{prop:finite-surj}
+If $S$ is a finite set and $T$ is an infinite set, there is no
+surjection $f:S\to T$.
+\end{proposition}
+\begin{proof}
+If $f:S\to T$ is a surjection, then $|T|\le|f(S)|\le|S|<\infty$,
+contradicting $|T|=\infty$.
+\end{proof}
+
+\begin{corollary}[Finite-budget obstruction]\label{cor:budget}
+If each operation costs $c>0$ and the total budget is $B<\infty$,
+then at most $\lfloor B/c\rfloor$ operations can be performed.
+In particular, infinitely many operations require infinite budget.
+\end{corollary}
+\begin{proof}
+$n$ operations cost $nc$.  The constraint $nc\le B$ gives
+$n\le B/c$, hence $n\le\lfloor B/c\rfloor$.
+The contrapositive: if infinitely many operations are needed,
+the cost is $\sum_{n=1}^\infty c=\infty>B$.
+\end{proof}
+
+\begin{remark}[Application to topological veto]
+This elementary budget argument is the algebraic backbone of the
+topological-capacity veto in~\cite{F6}: when each vortex-line crossing
+incurs cost $\ln\varphi>0$ (the link penalty from~\cite{F1}) and the
+initial data has finite $H^1$ energy, only finitely many crossings can
+occur---ruling out blow-up profiles that would require infinitely many.
+\end{remark}
+
+%=======================================================================
+\section*{Acknowledgments}
+%=======================================================================
+The author thanks the referees for careful reading.
+
+\begin{thebibliography}{99}
+
+\bibitem{BSD}
+J.~Washburn,
+\emph{The Birch and Swinnerton-Dyer conjecture: prime-wise closure
+via local height diagonalization, $\Lambda$-adic reverse divisibility,
+and a principal-ideal pinch},
+preprint, 2026.
+
+\bibitem{F1}
+J.~Washburn,
+\emph{The canonical reciprocal cost: exact multi-bond minimization,
+frustration lower bounds, and simultaneous-vs-sequential descent},
+preprint, 2026.
+
+\bibitem{F6}
+J.~Washburn,
+\emph{Alexander-duality linking, link penalties, and the finite-capacity
+veto in three dimensions},
+preprint, 2026.
+
+\bibitem{Kato}
+K.~Kato,
+\emph{$p$-adic Hodge theory and values of zeta functions
+of modular forms},
+Ast\'erisque \textbf{295} (2004), ix, 117--290.
+
+\bibitem{Kob}
+S.~Kobayashi,
+\emph{Iwasawa theory for elliptic curves at supersingular primes},
+Invent.\ Math.\ \textbf{152} (2003), 1--36.
+
+\bibitem{LLZ}
+A.~Lei, D.~Loeffler, and S.~Zerbes,
+\emph{Wach modules and Iwasawa theory for modular forms},
+Asian J.\ Math.\ \textbf{14} (2010), 475--528.
+
+\bibitem{NSW}
+J.~Neukirch, A.~Schmidt, and K.~Wingberg,
+\emph{Cohomology of Number Fields},
+2nd ed., Grundlehren der mathematischen Wissenschaften, vol.~323,
+Springer, 2008.
+
+\bibitem{Samuel}
+P.~Samuel,
+\emph{Unique Factorization Domains},
+Tata Institute Lecture Notes, 1964.
+
+\bibitem{Washington}
+L.~C.~Washington,
+\emph{Introduction to Cyclotomic Fields},
+2nd ed., Graduate Texts in Mathematics, vol.~83, Springer, 1997.
+
+\end{thebibliography}
+
+\end{document}

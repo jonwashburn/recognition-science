@@ -1,0 +1,300 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm,booktabs}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The EDGES 21\,cm Anomaly:\\
+Status, Analysis, and RS Perspective}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We analyze the EDGES 21\,cm absorption anomaly within Recognition
+Science (RS).  EDGES (2018) reported a global 21\,cm absorption
+trough at $z \approx 17$ with amplitude $T_{21} \approx
+-500^{+200}_{-500}~\mathrm{mK}$, roughly $2$--$3\times$ deeper than
+the standard $\Lambda$CDM prediction of $T_{21} \approx
+-200~\mathrm{mK}$~\cite{EDGES}.  However, the SARAS-3 experiment
+(2022) reported no detection of a cosmological 21\,cm signal at the
+EDGES amplitude, and determined that the EDGES spectral profile is
+inconsistent with a cosmological origin at $95.3\%$ confidence,
+suggesting an instrumental or foreground systematic in the EDGES
+measurement~\cite{SARAS3}.  The experimental status of the anomaly
+is therefore \emph{ambiguous}: the EDGES excess may not be a real
+cosmological signal.  We present the RS analysis under both scenarios.
+If the signal is real, RS offers an enhanced cooling mechanism via
+the 8-tick recognition cycle.  If it is instrumental, the RS
+prediction is $T_{21} \approx -200~\mathrm{mK}$, consistent with
+standard adiabatic cooling.  No new particles are required under
+either interpretation.
+\end{abstract}
+
+%% ============================================================
+\section{Recognition Science Framework}
+\label{sec:framework}
+%% ============================================================
+
+The RS substrate-cooling interpretation of the EDGES signal rests on
+the unique cost functional determined by the following axioms.
+
+\begin{definition}[RS Cost Functional]
+For $x > 0$: $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{definition}
+
+\noindent\textbf{Axiom A1 (Normalization):} $J(1) = 0$.\\
+\textbf{Axiom A2 (Recognition Composition Law, RCL):}
+$J(xy)+J(x/y)=2J(x)J(y)+2J(x)+2J(y)$ for all $x,y>0$.\\
+\textbf{Axiom A3 (Calibration):} $J''_{\log}(0) = 1$, where
+$J_{\log}(t) := J(e^t)$.
+
+\begin{theorem}[Cost Uniqueness]
+\label{thm:unique}
+The continuous solution to \textup{(A1)--(A3)} is unique:
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Set $H(t) = J_{\log}(t)+1$.  Axiom A2 transforms into the d'Alembert
+equation $H(s+t)+H(s-t)=2H(s)H(t)$.  By the Acz\'el classification
+theorem~\cite{Aczel1966}, the unique continuous solution with $H(0)=1$
+and $H''(0)=1$ is $H(t)=\cosh t$, giving
+$J(x)=\tfrac{1}{2}(x+x^{-1})-1$.
+\end{proof}
+
+\noindent The recognition ledger executes one complete update cycle every
+8 ticks ($2^D = 8$, with $D = 3$ forced by $2^D = 8$).  At each tick,
+the ledger minimizes the total $J$-cost.  In a cooling context, this
+provides a channel for kinetic energy to transfer from the baryon gas
+into substrate coherence.  The coupling efficiency $\epsilon_{\rm sub}$
+is the RS parameter governing this transfer; its first-principles
+derivation is an open problem identified in Section~\ref{sec:analysis}.
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+Recognition Science~\cite{RS_Axioms} (RS) provides a substrate cooling
+mechanism via the 8-tick recognition cycle that may enhance the 21\,cm
+absorption if the EDGES signal is confirmed cosmological.
+
+The 21\,cm hyperfine transition of neutral hydrogen provides a probe
+of the intergalactic medium (IGM) during cosmic dawn ($z \sim 15$--$25$).
+The brightness temperature contrast against the CMB is:
+\begin{equation}
+  T_{21} \propto \left(1 - \frac{T_{\mathrm{CMB}}}{T_{\mathrm{spin}}}\right),
+\end{equation}
+where $T_{\mathrm{spin}}$ is the hydrogen spin temperature.  If the
+gas is colder than the CMB ($T_{\mathrm{spin}} < T_{\mathrm{CMB}}$),
+the signal is in absorption.  Standard adiabatic cooling predicts
+$T_{21} \approx -200~\mathrm{mK}$ at $z \approx 17$.
+
+\subsection{EDGES Result (2018)}
+
+EDGES measured the global 21\,cm signal at $78~\mathrm{MHz}$
+($z \approx 17$) and found $T_{21} = -500^{+200}_{-500}~\mathrm{mK}$,
+roughly $2$--$3\times$ deeper than the standard prediction~\cite{EDGES}.
+If genuine, this would require either the gas to be colder (beyond
+standard adiabatic cooling) or the background radiation to be hotter.
+
+\subsection{SARAS-3 Result (2022)}
+
+The SARAS-3 experiment independently measured the global 21\,cm signal
+using a different antenna design and site.  Reporting in 2022,
+SARAS-3 found~\cite{SARAS3}:
+\begin{itemize}[nosep]
+  \item No detection of a cosmological signal at the EDGES amplitude.
+  \item A Bayesian analysis disfavoring the EDGES spectral profile as
+  a cosmological signal at $95.3\%$ confidence.
+  \item Consistency with the SARAS-3 data being dominated by
+  foreground contamination and/or instrumental effects.
+\end{itemize}
+
+This result has cast significant doubt on whether the EDGES signal
+has a cosmological origin.  The experimental status of the 21\,cm
+anomaly at $z \approx 17$ is currently unresolved.
+
+%% ============================================================
+\section{RS Analysis}
+\label{sec:analysis}
+%% ============================================================
+
+\subsection{Scenario A: EDGES Signal is Real}
+
+If the EDGES absorption trough is confirmed by future experiments, RS
+offers a substrate cooling mechanism.
+
+\begin{theorem}[Standard Adiabatic Cooling Prediction]
+\label{thm:adiabatic}
+In the standard cosmological model, gas temperature evolves as
+$T_{\mathrm{gas}} \propto (1+z)^2$ after thermal decoupling from the
+CMB at $z \sim 150$.  At $z \approx 17$:
+\begin{equation}
+  T_{\mathrm{gas}}^{\mathrm{std}} \approx T_{\mathrm{CMB}}^{z=150}
+  \times \left(\frac{1+17}{1+150}\right)^2 \approx 5.5~\mathrm{K}.
+\end{equation}
+The CMB temperature at $z = 17$ is $T_{\mathrm{CMB}} = 2.725 \times 18
+= 49.1~\mathrm{K}$, giving an absorption depth $T_{21} \approx
+-200~\mathrm{mK}$.
+\end{theorem}
+
+\begin{proposition}[Substrate-Enhanced Cooling]
+\label{prop:cooling}
+In RS, the 8-tick recognition cycle provides an additional energy
+extraction channel: at each tick, the ledger minimizes the total
+$J$-cost, transferring kinetic energy from the gas into substrate
+coherence.  This substrate coupling would produce additional cooling
+beyond adiabatic:
+\begin{equation}
+  T_{\mathrm{gas}}^{\mathrm{RS}} \approx \frac{T_{\mathrm{gas}}^{\mathrm{std}}}
+  {1 + \epsilon_{\mathrm{sub}}},
+\end{equation}
+where $\epsilon_{\mathrm{sub}}$ is the substrate coupling efficiency.
+For $\epsilon_{\mathrm{sub}} \sim 1$--$2$, this gives an additional
+factor of $2$--$3$ cooling, producing $T_{21} \approx -400$ to
+$-600~\mathrm{mK}$.
+\end{proposition}
+
+\begin{remark}
+The coupling efficiency $\epsilon_{\mathrm{sub}}$ is not derived from
+first principles in the present work.  The RS framework predicts that
+substrate cooling exists, but the quantitative rate depends on the
+coupling between the gas and the ledger at $z \sim 17$, which
+requires a detailed calculation.  The factor of $2$--$3$ cooling is
+stated as an order-of-magnitude target, not a parameter-free prediction.
+\end{remark}
+
+\subsection{Scenario B: EDGES Signal is Instrumental}
+
+If SARAS-3 and future experiments confirm that the EDGES excess is
+a systematic artifact, the RS prediction is consistent with the
+standard adiabatic result:
+
+\begin{remark}[RS Default Prediction]
+\label{rem:standard}
+If no enhanced cooling mechanism is activated at $z \sim 17$
+(i.e., $\epsilon_{\mathrm{sub}} \ll 1$ at this epoch), the RS
+prediction reduces to the standard adiabatic result
+$T_{21} \approx -200~\mathrm{mK}$.  The enhanced substrate cooling
+is an optional feature of the RS framework, not a mandatory
+prediction.  If SARAS-3 and future experiments confirm that the
+EDGES excess is an instrumental artifact, this default applies.
+\end{remark}
+
+%% ============================================================
+\section{Experimental Comparison}
+\label{sec:compare}
+%% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Observable} & \textbf{EDGES (2018)} & \textbf{SARAS-3 (2022)} & \textbf{RS}\\
+\midrule
+$T_{21}$ at $z \approx 17$ & $-500^{+200}_{-500}$ mK & Not detected & $-200$ to $-600$ mK\\
+Signal cosmological? & Claimed & Disfavored & Either scenario\\
+No new particles & No DM needed & --- & Confirmed\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%% ============================================================
+\section{Predictions and Falsifiers}
+\label{sec:predict}
+%% ============================================================
+
+\begin{enumerate}
+  \item \textbf{Key experiment: REACH and PRIZM.}  The REACH
+  (Radio Experiment for the Analysis of Cosmic Hydrogen) and PRIZM
+  experiments are designed to independently measure the global 21\,cm
+  signal with different instrument designs.  Their results will be
+  decisive.  If they confirm the EDGES signal at the same amplitude
+  and phase, the anomaly is likely cosmological.  If they find no
+  signal, the SARAS-3 interpretation is correct.
+
+  \item \textbf{Millicharged dark matter exclusion.}  Whether or not
+  the EDGES signal is cosmological, RS predicts no millicharged dark
+  matter particles.  Dedicated searches (SENSEI, MilliQan) will yield
+  null results.
+
+  \item \textbf{$\varphi$-structure in confirmed signal.}  If
+  future experiments confirm a deep 21\,cm trough, the RS substrate
+  cooling mechanism predicts that the absorption profile will show
+  subtle $\varphi$-ladder structure (modulation of the trough shape
+  at frequency ratios $\nu_n/\nu_0 = \varphi^n$), distinguishable
+  from smooth adiabatic profiles.
+
+  \item \textbf{Falsifier for RS enhanced cooling.}  If confirmed
+  experiments establish $T_{21} = -200 \pm 30~\mathrm{mK}$ at
+  $z \approx 17$ (standard prediction), the substrate-enhanced cooling
+  hypothesis is falsified.
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+The EDGES 21\,cm anomaly is experimentally unresolved.  SARAS-3
+(2022) has cast significant doubt on whether the EDGES signal has
+a cosmological origin.  RS accommodates both outcomes: if the signal
+is real, substrate-enhanced cooling via the 8-tick cycle provides a
+qualitative mechanism; if instrumental, the standard adiabatic
+prediction ($T_{21} \approx -200~\mathrm{mK}$) applies.  No new
+particles (millicharged dark matter, primordial magnetic fields) are
+required under either interpretation.  The REACH and PRIZM experiments
+will provide the decisive test.
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{EDGES}
+J.~D.~Bowman et al.,
+``An absorption profile centred at 78 megahertz in the
+sky-averaged spectrum,''
+Nature \textbf{555}, 67 (2018).
+
+\bibitem{SARAS3}
+N.~Rao et al.\ (SARAS-3 Collaboration),
+``Absorption Feature in the Sky-Averaged Radio Spectrum between 55 and
+85\,MHz: Constraints from the SARAS\,3 Radiometer,''
+Nature Astronomy \textbf{6}, 1473 (2022).
+
+\bibitem{Barkana2018}
+R.~Barkana,
+``Possible interaction between baryons and dark-matter particles
+revealed by the first stars,''
+Nature \textbf{555}, 71 (2018).
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+\texttt{doi:10.3390/axioms15020090}
+
+\bibitem{Aczel1966}
+J.~Acz\'el, \emph{Lectures on Functional Equations and Their
+Applications} (Academic Press, 1966).
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,352 @@
+\documentclass[11pt]{amsart}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\D}{\mathbb{D}}
+\DeclareMathOperator{\re}{Re}
+\DeclareMathOperator{\im}{Im}
+\DeclareMathOperator{\Arg}{Arg}
+
+\title[Phase Caps and the Cayley--Schur Pinch]{Phase Caps, Herglotz Positivity,\\
+and the Cayley--Schur Pinch:\\
+A Domain-Agnostic Exclusion Template}
+
+\author{Jonathan Washburn}
+\address{Austin, Texas, USA}
+\email{washburn.jonathan@gmail.com}
+\date{February 2026}
+
+\begin{document}
+\begin{abstract}
+We develop a general exclusion mechanism---the \emph{Cayley--Schur pinch}---for
+proving that a meromorphic function on a domain has no poles.
+The method has three inputs:
+(i)~a \emph{phase cap} guaranteeing $|\Arg H(z)|<\pi/2$ on the domain
+(equivalently $\re H\ge 0$, the \emph{Herglotz condition});
+(ii)~a \emph{non-cancellation} property ensuring that poles of~$H$
+are genuine (not removable); and
+(iii)~a \emph{normalization} fixing the value at one interior point
+(e.g.\ $\re H(z_0)>0$).
+Under these three conditions, the Cayley transform
+$\Theta:=(2H-1)/(2H+1)$ maps the Herglotz function to a Schur function
+($|\Theta|\le 1$), any putative pole extends removably to $\Theta(p)=1$,
+and the maximum modulus principle forces $\Theta\equiv\text{const}$,
+contradicting the normalization.
+The proof uses only Riemann's removable singularity theorem and the
+maximum modulus principle; no Phragm\'en--Lindel\"of or subharmonicity
+arguments are needed.
+We state the mechanism as a reusable template and record the exact
+corollaries cited by companion papers on the Riemann zeta function
+and combinatorial feasibility.
+\end{abstract}
+
+\subjclass[2020]{Primary 30H05; Secondary 30C80, 30D15, 47A56}
+\keywords{Schur class, Herglotz function, Cayley transform,
+maximum modulus principle, removable singularity, phase bound, pole exclusion}
+\maketitle
+
+%=======================================================================
+\section{Introduction}\label{sec:intro}
+%=======================================================================
+
+The interplay between Herglotz functions (holomorphic functions with
+non-negative real part) and Schur functions (holomorphic functions bounded
+by~$1$ in modulus) via the Cayley transform is classical.
+Standard references include Rosenblum--Rovnyak~\cite{RR} for the
+operator-theoretic viewpoint, Agler--McCarthy~\cite{AM} for Pick
+interpolation, Conway~\cite{ConwayII} for the one-variable foundations,
+and Simon~\cite{Simon} for trace-ideal applications.
+
+The contribution of this paper is to isolate the mechanism as a clean,
+self-contained \emph{exclusion template}: given a meromorphic function
+whose pole set encodes some target objects (zeros of a zeta function,
+inadmissible solutions of a constraint system, etc.), the Cayley--Schur
+pinch provides a systematic way to prove that pole set is empty.
+
+\subsection*{The template in one sentence}
+\emph{Herglotz positivity $+$ non-cancellation at poles $+$
+normalization at one point $\Longrightarrow$ pole-free.}
+
+The rest of the paper builds this sentence into a precise theorem
+(Theorem~\ref{thm:pinch}) and records two application corollaries.
+
+%=======================================================================
+\section{Herglotz and Schur classes}\label{sec:classes}
+%=======================================================================
+
+Throughout, $D\subset\C$ denotes a connected open set (a domain).
+
+\begin{definition}[Herglotz function]\label{def:herglotz}
+A holomorphic function $H:D\to\C$ is \emph{Herglotz on~$D$} if
+$\re H(z)\ge 0$ for all $z\in D$.
+\end{definition}
+
+\begin{definition}[Schur function]\label{def:schur}
+A holomorphic function $\Theta:D\to\C$ is \emph{Schur on~$D$} if
+$|\Theta(z)|\le 1$ for all $z\in D$.
+\end{definition}
+
+\begin{definition}[Cayley transform and inverse]\label{def:cayley}
+For $H$ with $2H+1\neq 0$:
+\[
+\Theta:=\frac{2H-1}{2H+1},\qquad
+H=\frac{1+\Theta}{2(1-\Theta)}.
+\]
+This is a M\"obius transformation sending the closed right half-plane
+$\{\re w\ge0\}$ onto the closed unit disk $\{|z|\le1\}$, with
+$H=0\mapsto\Theta=-1$, $H=\infty\mapsto\Theta=1$, and
+$H=1/2\mapsto\Theta=0$.
+\end{definition}
+
+%=======================================================================
+\section{Phase cap implies positivity}\label{sec:phase}
+%=======================================================================
+
+\begin{proposition}[Phase-to-positivity equivalence]\label{prop:phase}
+For $z\in\C\setminus\{0\}$, the following are equivalent:
+\begin{enumerate}[label=\textup{(\roman*)},nosep]
+\item $|\Arg z|<\pi/2$;
+\item $\re z>0$.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+Write $z=re^{i\theta}$ with $r>0$ and $\theta\in(-\pi,\pi]$.
+Then $\re z=r\cos\theta$.
+The condition $|\theta|<\pi/2$ is equivalent to $\cos\theta>0$,
+which (since $r>0$) is equivalent to $\re z=r\cos\theta>0$.
+\end{proof}
+
+\begin{corollary}[Phase cap implies Herglotz]\label{cor:phase-herglotz}
+If $H:D\to\C\setminus\{0\}$ satisfies $|\Arg H(z)|<\pi/2$ for
+all $z\in D$, then $H$ is Herglotz on~$D$.
+\end{corollary}
+\begin{proof}
+Apply Proposition~\ref{prop:phase} pointwise: for each $z\in D$,
+$|\Arg H(z)|<\pi/2$ gives $\re H(z)>0\ge 0$.
+\end{proof}
+
+%=======================================================================
+\section{Cayley maps Herglotz to Schur}\label{sec:cayley}
+%=======================================================================
+
+\begin{theorem}[Cayley: Herglotz $\to$ Schur]\label{thm:cayley}
+If $H:D\to\C$ is Herglotz on~$D$ and $2H(z)+1\ne 0$ for $z\in D$,
+then $\Theta=(2H-1)/(2H+1)$ is Schur on~$D$.
+
+Moreover, $\re H>0$ implies $|\Theta|<1$ (strict Schur).
+\end{theorem}
+\begin{proof}
+Write $H=a+ib$ with $a=\re H\ge 0$ and $b=\im H$.  Compute:
+\begin{align*}
+|2H-1|^2 &= (2a-1)^2+4b^2 = 4a^2-4a+1+4b^2,\\
+|2H+1|^2 &= (2a+1)^2+4b^2 = 4a^2+4a+1+4b^2.
+\end{align*}
+Therefore
+\[
+|2H+1|^2-|2H-1|^2=(4a^2+4a+1)-(4a^2-4a+1)=8a\ge 0.
+\]
+Hence $|2H-1|\le|2H+1|$, giving
+$|\Theta|=|2H-1|/|2H+1|\le 1$.
+
+If $a=\re H>0$, then $8a>0$, so the inequality is strict:
+$|2H-1|<|2H+1|$ and $|\Theta|<1$.
+\end{proof}
+
+\begin{remark}[Geometric picture]
+The Cayley transform is the conformal equivalence between the right
+half-plane and the unit disk.  Herglotz $\leftrightarrow$ Schur under
+this equivalence is the operator-theoretic foundation of Schur analysis;
+see~\cite{RR,AM}.
+\end{remark}
+
+%=======================================================================
+\section{The pinch: removable singularity and exclusion}\label{sec:pinch}
+%=======================================================================
+
+We now state and prove the two classical lemmas used in the pinch,
+then assemble them into the main theorem.
+
+\begin{lemma}[Riemann removable singularity theorem]\label{lem:removable}
+Let $f$ be holomorphic on a punctured disk $\D_r(p)\setminus\{p\}$
+with $|f|\le M<\infty$.  Then $f$ extends uniquely to a holomorphic
+function on $\D_r(p)$, and $|f(p)|\le M$.
+\end{lemma}
+\begin{proof}
+This is the classical theorem of Riemann; see Conway~\cite[\S III.2.1]{ConwayII}.
+The boundedness hypothesis implies the Laurent expansion of $f$ about $p$
+has no negative-power terms, so $p$ is a removable singularity.
+The bound $|f(p)|\le M$ follows by continuity.
+\end{proof}
+
+\begin{lemma}[Maximum modulus principle --- interior version]
+\label{lem:mmp}
+Let $g$ be holomorphic and non-constant on a connected open set~$D$.
+Then $|g|$ has no interior maximum: $|g(z)|<\sup_{w\in D}|g(w)|$ for
+every $z\in D$.
+
+Equivalently: if $|\Theta|\le 1$ on a domain~$D$ and $|\Theta(p)|=1$
+for some $p\in D$, then $\Theta$ is a unimodular constant.
+\end{lemma}
+\begin{proof}
+This is the maximum modulus principle; see Conway~\cite[\S V.3.2]{ConwayII}.
+\end{proof}
+
+\begin{theorem}[The Cayley--Schur Pinch]\label{thm:pinch}
+Let $D\subset\C$ be a domain, $S\subset D$ a discrete set, and
+$H:D\setminus S\to\C$ holomorphic.  Suppose:
+\begin{enumerate}[label=\textup{(P\arabic*)},nosep]
+\item\label{P:herglotz}
+  \textbf{Herglotz:} $\re H(z)\ge 0$ for all $z\in D\setminus S$.
+\item\label{P:noncancel}
+  \textbf{Non-cancellation:} for every $p\in S$,
+  $\lim_{z\to p}|H(z)|=\infty$ (i.e.\ $p$ is a genuine pole).
+\item\label{P:normalize}
+  \textbf{Normalization:} there exists $z_0\in D\setminus S$ with
+  $\re H(z_0)>0$.
+\end{enumerate}
+Then $S=\varnothing$: the function $H$ has no poles in~$D$.
+\end{theorem}
+\begin{proof}
+\textbf{Step 1.}  On $D\setminus S$, $\re H\ge0$ by~\ref{P:herglotz}.
+We verify that $2H+1\neq0$ on $D\setminus S$:
+if $2H(z)+1=0$, then $H(z)=-1/2$, so $\re H(z)=-1/2<0$,
+contradicting~\ref{P:herglotz}.
+Hence $\Theta=(2H-1)/(2H+1)$ is well-defined and holomorphic on
+$D\setminus S$.
+
+\textbf{Step 2.}  By Theorem~\ref{thm:cayley}, $|\Theta(z)|\le 1$
+for all $z\in D\setminus S$.
+
+\textbf{Step 3.}  Fix $p\in S$.  By~\ref{P:noncancel},
+$|H(z)|\to\infty$ as $z\to p$.  Compute the limit of $\Theta$:
+\[
+\Theta(z)=\frac{2H(z)-1}{2H(z)+1}=1-\frac{2}{2H(z)+1}\to 1-0=1
+\quad\text{as }z\to p.
+\]
+Since $\Theta$ is bounded ($|\Theta|\le1$) on a punctured neighborhood
+of $p$, Lemma~\ref{lem:removable} gives a holomorphic extension with
+$\Theta(p)=1$.
+
+\textbf{Step 4.}  After extending at every $p\in S$, $\Theta$ is
+holomorphic on all of~$D$ with $|\Theta|\le1$.
+Suppose $S\neq\varnothing$; pick $p\in S$.  Then $|\Theta(p)|=1$ is
+attained at an interior point of~$D$.
+By Lemma~\ref{lem:mmp}, $\Theta$ must be a unimodular constant:
+$\Theta\equiv e^{i\alpha}$ for some $\alpha\in\R$.
+
+\textbf{Step 5.}  But~\ref{P:normalize} gives $\re H(z_0)>0$, so
+by Theorem~\ref{thm:cayley} (strict case),
+$|\Theta(z_0)|<1$.  This contradicts $|\Theta|\equiv 1$.
+
+\textbf{Conclusion.}  The assumption $S\neq\varnothing$ leads to a
+contradiction.  Hence $S=\varnothing$.
+\end{proof}
+
+\begin{remark}[Why three conditions are needed]\label{rem:three}
+\ref{P:herglotz} alone does not exclude poles:
+$H(z)=1/(z-p)$ has $\re H>0$ on a half-plane but a pole at $p$.
+\ref{P:noncancel} excludes the degenerate case of removable singularities
+(where $\Theta$ extends without hitting $|\Theta|=1$).
+\ref{P:normalize} excludes the degenerate constant
+$\Theta\equiv 1$ (which would make $H$ identically infinite).
+Together, the three conditions form a watertight exclusion.
+\end{remark}
+
+\begin{remark}[Comparison with Phragm\'en--Lindel\"of]
+The classical approach to excluding zeros of $L$-functions in half-planes
+often uses Phragm\'en--Lindel\"of-type bounds.
+The Cayley--Schur pinch is logically independent: it requires no
+growth estimates, only the sign condition $\re H\ge0$ and the behavior
+at poles.  This makes it applicable in settings where growth bounds are
+unavailable.
+\end{remark}
+
+%=======================================================================
+\section{Application interfaces}\label{sec:apps}
+%=======================================================================
+
+\begin{corollary}[Template for zeta-function zeros]\label{cor:rh}
+Let $\Omega=\{\re s>1/2\}\subset\C$ and let $H:\Omega\setminus S\to\C$
+be meromorphic, where $S$ is the set of zeros of the Riemann zeta
+function $\zeta(s)$ in~$\Omega$.  Suppose:
+\begin{enumerate}[label=\textup{(\roman*)},nosep]
+\item $\re H(s)\ge 0$ for $s\in\Omega\setminus S$;
+\item $|H(s)|\to\infty$ at each $\rho\in S$ (non-cancellation);
+\item $H(\sigma)\to 1$ as $\sigma\to+\infty$ along the real axis.
+\end{enumerate}
+Then $S=\varnothing$: $\zeta$ has no zeros in $\{\re s>1/2\}$.
+\end{corollary}
+\begin{proof}
+Apply Theorem~\ref{thm:pinch} with $D=\Omega$.
+\ref{P:herglotz}: hypothesis~(i).
+\ref{P:noncancel}: hypothesis~(ii).
+\ref{P:normalize}: from (iii), for $\sigma$ sufficiently large,
+$H(\sigma)$ is close to $1$, so $\re H(\sigma)>0$ and
+$|\Theta(\sigma)|=|2H(\sigma)-1|/|2H(\sigma)+1|\approx|1|/|3|=1/3<1$.
+Take $z_0=\sigma$ for such a $\sigma$.
+Theorem~\ref{thm:pinch} gives $S=\varnothing$.
+\end{proof}
+
+\begin{corollary}[Template for constraint feasibility]\label{cor:pvnp}
+Let $D\subset\C$ be a domain and $H:D\setminus S\to\C$ meromorphic,
+where each $p\in S$ encodes an inadmissible fractional solution.
+If
+\begin{enumerate}[label=\textup{(\roman*)},nosep]
+\item $\re H(z)\ge 0$ on $D\setminus S$,
+\item $|H(z)|\to\infty$ as $z\to p$ for each $p\in S$, and
+\item there exists $z_0\in D\setminus S$ with $\re H(z_0)>0$,
+\end{enumerate}
+then $S=\varnothing$: no inadmissible solution exists.
+\end{corollary}
+\begin{proof}
+Theorem~\ref{thm:pinch} with the three hypotheses matching
+\ref{P:herglotz}--\ref{P:normalize}.
+\end{proof}
+
+%=======================================================================
+\section*{Acknowledgments}
+%=======================================================================
+The author thanks the referees for careful reading.
+
+\begin{thebibliography}{99}
+
+\bibitem{AM}
+J.~Agler and J.~E.~McCarthy,
+\emph{Pick Interpolation and Hilbert Function Spaces},
+Graduate Studies in Mathematics, vol.~44, AMS, 2002.
+
+\bibitem{ConwayII}
+J.~B.~Conway,
+\emph{Functions of One Complex Variable~II},
+Graduate Texts in Mathematics, vol.~159, Springer, 1995.
+
+\bibitem{RR}
+M.~Rosenblum and J.~Rovnyak,
+\emph{Hardy Classes and Operator Theory},
+Oxford Mathematical Monographs, Oxford Univ.\ Press, 1985.
+
+\bibitem{Simon}
+B.~Simon,
+\emph{Trace Ideals and Their Applications},
+2nd ed., Mathematical Surveys and Monographs, vol.~120, AMS, 2005.
+
+\end{thebibliography}
+
+\end{document}

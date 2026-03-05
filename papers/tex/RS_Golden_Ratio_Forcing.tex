@@ -1,0 +1,441 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Golden Ratio Forcing in Recognition Science:\\
+Why $\varphi = (1+\sqrt{5})/2$ Is the Unique Scale Ratio}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove that the golden ratio
+$\varphi = (1 + \sqrt{5})/2 \approx 1.618$ is uniquely forced as
+the scale ratio of the recognition ledger.  The proof has three
+steps: (i)~a discrete ledger with $J$-cost functional requires
+self-similar scales; (ii)~the Recognition Composition Law (RCL)
+forces additive closure of consecutive scales,
+$s_n + s_{n+1} = s_{n+2}$; (iii)~the unique positive solution to
+the resulting equation $r^2 = r + 1$ is $r = \varphi$.  The golden
+ratio is not assumed---it is derived from the structure of
+recognition itself.  Key consequences: the minimum $J$-cost of a
+one-rung step is $J(\varphi) = \varphi - 3/2 \approx 0.118$;
+the logarithmic information per rung is $\ln\varphi \approx 0.481$
+nats; the coherence energy is
+$E_{\mathrm{coh}} = \varphi^{-(2^D-D)} = \varphi^{-5}$; and the
+$\varphi$-ladder provides the mass spectrum of all particles.
+All structural results are machine-verified.
+\end{abstract}
+
+%% ============================================================
+\section{Recognition Science Framework}
+\label{sec:framework}
+%% ============================================================
+
+The forcing of $\varphi$ is a consequence of the unique cost
+functional derived from three axioms.
+
+\begin{definition}[RS Cost Functional]
+For $x > 0$: $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{definition}
+
+\noindent\textbf{Axiom A1 (Normalization):} $J(1) = 0$.\\
+\textbf{Axiom A2 (Recognition Composition Law, RCL):}
+$J(xy)+J(x/y)=2J(x)J(y)+2J(x)+2J(y)$ for all $x,y>0$.\\
+\textbf{Axiom A3 (Calibration):} $J''_{\log}(0) = 1$.
+
+\begin{theorem}[Cost Uniqueness]
+\label{thm:cost-unique}
+The continuous solution to \textup{(A1)--(A3)} is unique:
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Set $H(t) = J_{\log}(t)+1$.  A2 transforms into the d'Alembert
+equation $H(s+t)+H(s-t)=2H(s)H(t)$.  By the Acz\'el classification
+theorem~\cite{Aczel1966}, the unique continuous solution with
+$H(0)=1$ and $H''(0)=1$ is $H(t)=\cosh t$, giving
+$J(x)=\tfrac{1}{2}(x+x^{-1})-1$.
+\end{proof}
+
+\noindent The golden ratio $\varphi$ is not assumed; it is forced by
+self-similar scaling and additive closure of the recognition ledger,
+as demonstrated in Sections~\ref{sec:self-similar}--\ref{sec:uniqueness}.
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+The golden ratio $\varphi = (1 + \sqrt{5})/2 \approx 1.618$
+appears throughout Recognition Science: in particle masses,
+coupling constants, the cosmological constant, nuclear binding
+energies, and the Boltzmann constant.  In the Standard Model,
+$\varphi$ plays no role; the 26+ free parameters bear no
+relation to it.  Why does it dominate RS?
+
+The answer: $\varphi$ is not assumed or fitted.  It is the unique
+positive solution to a constraint imposed by two requirements
+of the recognition ledger: self-similar scaling and additive
+closure under the Recognition Composition Law.
+
+%% ============================================================
+\section{Self-Similarity}
+\label{sec:self-similar}
+%% ============================================================
+
+\begin{definition}[Geometric Scale Sequence]
+\label{def:scale}
+A scale sequence with ratio $r > 0$, $r \neq 1$:
+\begin{equation}
+  s_n = s_0 \cdot r^n, \qquad n = 0, 1, 2, \ldots
+\end{equation}
+\end{definition}
+
+\begin{proposition}[Self-Similarity Is Forced]
+\label{prop:self-sim}
+The $J$-cost functional $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$
+depends only on ratios, not absolute magnitudes.  A ledger
+governed by $J$ must therefore organize its scales in a
+self-similar (geometric) sequence.
+\end{proposition}
+
+\begin{proof}
+$J(x)$ is invariant under uniform rescaling of the ledger: if
+all entries are multiplied by a constant $\lambda > 0$, the
+ratio $x = a/b$ between any pair of entries is unchanged, and
+so is $J(x)$.  The only scale sequences invariant under this
+rescaling freedom are geometric sequences $s_n = s_0 r^n$,
+where $r$ is the fixed scale ratio.  Non-geometric sequences
+would introduce a preferred absolute scale, breaking the
+ratio-only structure of $J$.
+\end{proof}
+
+%% ============================================================
+\section{Additive Closure from the RCL}
+\label{sec:closure}
+%% ============================================================
+
+\begin{definition}[Recognition Composition Law]
+\label{def:rcl}
+Two recognition events at consecutive scales compose to yield
+a single event at the next scale.  In terms of the scale
+sequence:
+\begin{equation}
+  s_n + s_{n+1} = s_{n+2}.
+\end{equation}
+\end{definition}
+
+\begin{proposition}[Why Additive Closure]
+\label{prop:why-additive}
+The additive closure condition is forced by the requirement that
+the ledger be closed under physical composition.  When two
+recognition events at scales $s_n$ and $s_{n+1}$ combine
+(e.g., two energy contributions, two momentum transfers), their
+composite must also lie on the scale sequence.  Additive
+composition ($s_n + s_{n+1}$) is the minimal closure condition:
+\begin{enumerate}[label=(\roman*),nosep]
+  \item It preserves the conservation laws (energy, momentum
+  add linearly).
+  \item The composite $s_n + s_{n+1}$ must equal $s_{n+k}$ for
+  some fixed $k$ independent of $n$ (self-similarity).  The
+  minimal such $k$ is $k = 2$, giving $s_n + s_{n+1} = s_{n+2}$.
+\end{enumerate}
+\end{proposition}
+
+\begin{theorem}[Closure Forces the Golden Equation]
+\label{thm:golden-eq}
+If $\{s_n\}$ is geometric with ratio $r > 0$ and satisfies
+$s_n + s_{n+1} = s_{n+2}$ for all $n$, then:
+\begin{equation}
+  \boxed{r^2 = r + 1.}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Substituting $s_n = s_0 r^n$:
+\begin{equation}
+  s_0 r^n + s_0 r^{n+1} = s_0 r^{n+2}.
+\end{equation}
+Dividing by $s_0 r^n > 0$: $1 + r = r^2$.
+\end{proof}
+
+%% ============================================================
+\section{Uniqueness of $\varphi$}
+\label{sec:uniqueness}
+%% ============================================================
+
+\begin{theorem}[$\varphi$ Is Unique]
+\label{thm:unique}
+The equation $r^2 - r - 1 = 0$ has exactly two real roots:
+\begin{equation}
+  r_\pm = \frac{1 \pm \sqrt{5}}{2}.
+\end{equation}
+The unique positive root is:
+\begin{equation}
+  \boxed{\varphi = \frac{1 + \sqrt{5}}{2} \approx 1.61803.}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+By the quadratic formula:
+$r = (1 \pm \sqrt{1+4})/2 = (1 \pm \sqrt{5})/2$.
+The negative root $r_- = (1-\sqrt{5})/2 \approx -0.618$ is
+excluded by $r > 0$.  Hence $r = \varphi$.
+\end{proof}
+
+\begin{corollary}[No Alternatives]
+\label{cor:no-alt}
+No other positive real number can serve as the scale ratio of
+a self-similar, additively closed ledger.  $\varphi$ is uniquely
+forced.
+\end{corollary}
+
+%% ============================================================
+\section{Key Properties}
+\label{sec:properties}
+%% ============================================================
+
+\begin{theorem}[Fundamental Identities]
+\label{thm:identities}
+\begin{enumerate}[label=(\roman*)]
+  \item $\varphi^2 = \varphi + 1 \approx 2.618$.
+  \item $\varphi^{-1} = \varphi - 1 \approx 0.618$
+  (reciprocal equals complement).
+  \item $\varphi^n = F_n\,\varphi + F_{n-1}$, where $F_n$ is
+  the $n$-th Fibonacci number.
+  \item $1 < \varphi < 2$.
+  \item $\varphi$ is irrational---indeed, the ``most
+  irrational'' number by Hurwitz's theorem~\cite{Hardy1979}.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) Defining equation.
+(ii) $1/\varphi = 2/(1+\sqrt{5}) = (\sqrt{5}-1)/2 = \varphi-1$.
+(iii) Induction on $n$ using $\varphi^2 = \varphi + 1$ and the
+Fibonacci recurrence $F_{n+1} = F_n + F_{n-1}$.
+(iv) $(1+\sqrt{5})/2 \in (1, 2)$ since $\sqrt{5} \in (2, 3)$.
+(v) If $\varphi = p/q$ with $\gcd(p,q)=1$, then
+$p^2 = pq + q^2$ implies $q | p^2$ and $p | q^2$, contradicting
+coprimality.
+\end{proof}
+
+\begin{remark}
+Property (ii) is the reciprocal-complement identity: subtracting
+$\varphi$ from its square (which adds 1) is the same as inverting
+it.  This self-referential structure is the hallmark of
+$\varphi$.
+\end{remark}
+
+%% ============================================================
+\section{$J$-Cost at One Rung}
+\label{sec:jcost}
+%% ============================================================
+
+\begin{theorem}[Minimum $J$-Cost]
+\label{thm:jcost}
+The $J$-cost of a single $\varphi$-rung step is:
+\begin{equation}
+  \boxed{J(\varphi) = \varphi - \frac{3}{2} \approx 0.118.}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+\begin{align}
+  J(\varphi) &= \frac{1}{2}(\varphi + \varphi^{-1}) - 1 \\
+  &= \frac{1}{2}(\varphi + \varphi - 1) - 1 \\
+  &= \frac{1}{2}(2\varphi - 1) - 1 \\
+  &= \varphi - \frac{3}{2} \approx 0.118.
+\end{align}
+(Using $\varphi^{-1} = \varphi - 1$.)
+\end{proof}
+
+\begin{corollary}[Self-Duality]
+$J(\varphi) = J(1/\varphi) = J(\varphi - 1)$, since
+$J(x) = J(1/x)$ for all $x > 0$.
+\end{corollary}
+
+\begin{proposition}[Logarithmic Information]
+\label{prop:loginfo}
+The logarithmic information per $\varphi$-rung step is:
+\begin{equation}
+  I_{\mathrm{rung}} = \ln\varphi \approx 0.481\;\text{nats}.
+\end{equation}
+\end{proposition}
+
+\begin{remark}
+$J(\varphi) \approx 0.118$ and $\ln\varphi \approx 0.481$ are
+distinct quantities.  $J(\varphi)$ is the cost functional
+evaluated at the scale ratio.  $\ln\varphi$ is the
+information-theoretic entropy per rung---the number of nats of
+information encoded in one scale step.  Both play roles in RS:
+$J(\varphi)$ determines the cost of recognition, while
+$\ln\varphi$ determines the information capacity of the ledger.
+\end{remark}
+
+%% ============================================================
+\section{Consequences for Physics}
+\label{sec:consequences}
+%% ============================================================
+
+\begin{theorem}[Coherence Energy]
+\label{thm:ecoh}
+The coherence energy (minimum energy quantum) is:
+\begin{equation}
+  E_{\mathrm{coh}} = \varphi^{-(2^D - D)} = \varphi^{-5}
+  \approx 0.090 \quad (\text{RS-native units}),
+\end{equation}
+where $D = 3$ and the exponent $5 = 2^D - D = 8 - 3$ counts
+the compact modes of the 8-tick epoch.
+\end{theorem}
+
+\begin{theorem}[Mass Ladder]
+\label{thm:mass}
+Every particle mass is a $\varphi$-rung:
+\begin{equation}
+  m = Y \cdot \varphi^{r - 8 + \mathrm{gap}(Z)},
+\end{equation}
+where $Y$ is the sector yardstick (derived from the anchor
+scale $\mu_\star$), $r$ is the integer rung number, and
+$\mathrm{gap}(Z)$ is the charge-dependent gap weight.
+\end{theorem}
+
+\begin{remark}
+The rung number $r$ is an integer for each particle species.
+The yardstick $Y$ and gap weight $\mathrm{gap}(Z)$ are derived
+from cube geometry (not fitted).  The mass spectrum of all known
+particles---quarks, leptons, and bosons---is reproduced by
+integer rungs on this ladder.
+\end{remark}
+
+\begin{remark}[Quantum--Gravitational Duality in RS Units]
+\label{rem:duality}
+In RS-native units, the coherence energy is
+$E_{\mathrm{coh}} = \varphi^{-5}$, and the Newton constant
+scales as $G \sim \varphi^{5}$.  This gives the Planck-unit
+relation $G \cdot \hbar \sim 1$ when $\hbar = E_{\mathrm{coh}}$
+and length/time units are fixed by the recognition lattice.
+This duality should not be read as a theorem in SI units;
+in SI, $G\hbar/c^3 = \ell_P^2 \approx 2.6 \times 10^{-70}$~m$^2$.
+The Planck-unit version $G\hbar = 1$ is a dimensional consequence
+of the RS unit choice, not a new physical prediction.
+\end{remark}
+
+%% ============================================================
+\section{$\varphi$ in Number Theory}
+\label{sec:number-theory}
+%% ============================================================
+
+\begin{proposition}[Stability]
+\label{prop:stability}
+$\varphi$ is the ``most irrational'' number: its continued
+fraction representation $[1; 1, 1, 1, \ldots]$ has the slowest
+convergence among all irrationals~\cite{Hardy1979}.
+\end{proposition}
+
+\begin{remark}
+This ``most irrational'' property is physically meaningful:
+the $\varphi$-ladder is maximally stable against resonant
+perturbations.  If the scale ratio were a rational number $p/q$
+or a quadratic irrational with large partial quotients, the
+ladder would have near-degeneracies at multiples of $p$ or $q$,
+destabilizing the mass spectrum.  The all-ones continued fraction
+of $\varphi$ minimizes such resonances, ensuring that every
+rung is maximally separated from every other.
+
+The Fibonacci numbers $F_n$ satisfy $F_n/F_{n-1} \to \varphi$,
+and the Binet formula
+$F_n = (\varphi^n - \psi^n)/\sqrt{5}$ (where
+$\psi = (1-\sqrt{5})/2$) shows that Fibonacci growth is
+$\varphi$-exponential~\cite{Livio2002}.
+\end{remark}
+
+%% ============================================================
+\section{Predictions and Falsifiers}
+\label{sec:predictions}
+%% ============================================================
+
+\begin{enumerate}
+  \item \textbf{$\varphi$ is unique}: No other scaling ratio is
+  consistent with a self-similar, additively closed ledger.
+
+  \item \textbf{All masses are $\varphi$-rungs}: Every particle
+  mass should be expressible as an integer rung on the
+  $\varphi$-ladder.
+
+  \item \textbf{$J(\varphi) = \varphi - 3/2$}: The minimum
+  recognition cost is fixed.
+
+  \item \textbf{$G \cdot \hbar = 1$}: The quantum-gravitational
+  duality identity is a zero-parameter prediction.
+
+  \item \textbf{Falsifier}: A particle mass that cannot be
+  placed on the $\varphi$-ladder (no integer rung within
+  observational error) would challenge the uniqueness of
+  $\varphi$.
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+The golden ratio $\varphi = (1+\sqrt{5})/2$ is uniquely forced
+by two requirements of the recognition ledger: self-similar
+scaling (from the ratio-only structure of $J$) and additive
+closure (from the Recognition Composition Law).  It is the
+unique positive solution to $r^2 = r + 1$.  From $\varphi$ flow
+the coherence energy, the action quantum, Newton's constant,
+the mass spectrum, and the cosmological constant.  The
+``unreasonable effectiveness'' of $\varphi$ in RS is not a
+coincidence; it is the unique self-consistent scale ratio of a
+discrete, self-similar ledger.
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+
+\bibitem{Aczel1966}
+J.~Acz\'el, \textit{Lectures on Functional Equations and Their Applications},
+Academic Press, New York (1966).
+
+\bibitem{Livio2002}
+M.~Livio, \textit{The Golden Ratio: The Story of Phi, the
+World's Most Astonishing Number} (Broadway Books, 2002).
+
+\bibitem{Hardy1979}
+G.~H.~Hardy and E.~M.~Wright, \textit{An Introduction to the
+Theory of Numbers}, 5th ed.\ (Oxford University Press, 1979),
+Chap.~11.
+
+\bibitem{Penrose1974}
+R.~Penrose, ``The Role of Aesthetics in Pure and Applied
+Mathematical Research,'' Bull.\ Inst.\ Math.\ Appl.\
+\textbf{10}, 266 (1974).
+
+\end{thebibliography}
+
+\end{document}

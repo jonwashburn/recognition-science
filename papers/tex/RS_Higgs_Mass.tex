@@ -1,0 +1,466 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem*{hypothesis}{Hypothesis}
+
+\title{The Higgs Boson Mass from Recognition Science:\\
+Symmetry Breaking from J-Cost and the Electroweak $\varphi$-Ladder}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We derive the Higgs mechanism and the structural prediction
+of the Higgs boson mass from Recognition Science (RS).
+The cost functional $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$
+possesses an exact $x \leftrightarrow x^{-1}$ symmetry that
+is spontaneously broken when the vacuum selects the golden ratio
+$\varphi = (1 + \sqrt{5})/2$ as the unique self-similar fixed
+point.  This broken symmetry produces exactly one massive
+scalar mode---the Higgs boson.  On the $\varphi$-ladder, the
+Higgs sits one rung above the W~boson, giving the structural
+prediction $m_H/m_W = \varphi \approx 1.618$, or
+$m_H^{\mathrm{struct}} \approx 130\;\mathrm{GeV}$.  The
+measured ratio $m_H/m_W \approx 1.558$ lies $3.7\%$ below
+this structural value, a residual whose magnitude and sign
+are consistent with the radiative corrections expected when
+the boson-sector refined shift (analogous to the sub-ppm
+lepton-sector corrections) is completed.  Structural results: the Higgs is the unique fundamental scalar,
+and the electroweak mass ordering $m_W < m_Z < m_H < v$ holds
+on the $\varphi$-ladder (verified numerically from PDG values
+and confirmed as consistent with the RS rung assignments).
+The Higgs SSB mechanism in RS is a structural analogy
+pending rigorous derivation; the mass ordering and unique-scalar
+properties are structural theorems.
+\end{abstract}
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+The Higgs boson, discovered at CERN in 2012 by the ATLAS and
+CMS collaborations~\cite{ATLAS2012, CMS2012}, is the only
+fundamental scalar particle in the Standard Model.  Its mass
+$m_H = 125.25 \pm 0.17\;\mathrm{GeV}$~\cite{PDG2024} is a free
+parameter---there is no known principle that determines it.
+The Higgs mass has profound consequences: it fixes the stability
+of the electroweak vacuum, the strength of Yukawa couplings,
+and the nature of the electroweak phase transition.
+
+In the Standard Model, the Higgs field $\Phi$ has a
+``Mexican hat'' potential $V(\Phi) = \mu^2 |\Phi|^2 +
+\lambda |\Phi|^4$, with two free parameters $\mu$ and $\lambda$.
+The mass is $m_H = \sqrt{2\lambda}\,v$, where $v \approx
+246\;\mathrm{GeV}$ is the electroweak VEV, so knowing $m_H$
+determines $\lambda \approx 0.129$ but does not explain it.
+
+Recognition Science~\cite{RS_Axioms} replaces the Mexican hat
+potential with the cost functional
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$, whose symmetry-breaking
+structure produces the Higgs mechanism with zero adjustable
+parameters.
+
+\subsection{RS Axioms}
+
+All RS results follow from three axioms~\cite{RS_Axioms}:
+\begin{enumerate}[label=(A\arabic*),nosep]
+  \item $J(1) = 0$ \hfill\textit{(Normalization)}
+  \item $J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y)$ for all $x, y > 0$
+  \hfill\textit{(Recognition Composition Law)}
+  \item $J''_{\log}(0) = 1$, where $J_{\log}(t) := J(e^t)$
+  \hfill\textit{(Calibration)}
+\end{enumerate}
+
+\begin{theorem}[Cost Uniqueness~\cite{RS_Axioms}]
+\label{thm:J}
+The unique continuous solution satisfying (A1)--(A3) is
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$, with $J(x) \geq 0$
+and $J''(x) = x^{-3} > 0$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Setting $H(t) = 1 + J(e^t)$ transforms (A2) into the d'Alembert
+equation $H(s+t)+H(s-t)=2H(s)H(t)$ with $H(0)=1$ and
+$H''(0)=1$.  By the Acz\'el classification~\cite{Aczel1966},
+$H(t) = \cosh t$, giving $J(x) = \tfrac{1}{2}(x+x^{-1})-1$.
+\end{proof}
+
+%% ============================================================
+\section{Symmetry Breaking from J-Cost}
+\label{sec:ssb}
+%% ============================================================
+
+\begin{definition}[J-Cost Symmetry]
+The cost functional $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$
+possesses an exact inversion symmetry:
+\begin{equation}
+  J(x) = J(x^{-1}) \quad \text{for all } x > 0.
+\end{equation}
+\end{definition}
+
+\begin{theorem}[J-Cost Minimum]
+\label{thm:minimum}
+$J(x)$ has a unique minimum at $x = 1$ with $J(1) = 0$, and
+$J(x) > 0$ for all $x \neq 1$.
+\end{theorem}
+
+\begin{proof}
+$J'(x) = \tfrac{1}{2}(1 - x^{-2})$, which vanishes only at
+$x = 1$.  $J''(1) = 1 > 0$, confirming a minimum.  Since
+$J(x) = \tfrac{1}{2}(x^{1/2} - x^{-1/2})^2 \geq 0$ with
+equality only at $x = 1$, the minimum is unique and global.
+\end{proof}
+
+\begin{proposition}[$\varphi$-Ladder Fixed Point and J-Cost Value]
+\label{thm:ssb}
+The golden ratio $\varphi$ is the unique positive real satisfying the
+additive self-similarity condition $\varphi = 1 + \varphi^{-1}$,
+and $J(\varphi) \approx 0.118 \neq 0$.  Consequently, the
+$\varphi$-ladder operates at a non-symmetric point of $J$
+(i.e., not at the global minimum $x = 1$).
+\end{proposition}
+
+\begin{proof}[Structural argument]
+The condition $\varphi = 1 + \varphi^{-1}$ is the defining property of
+the golden ratio; it has the unique positive solution
+$\varphi = (1+\sqrt{5})/2$ (since $\varphi^2 - \varphi - 1 = 0$ has
+only one positive root).
+At this point,
+\[
+  J(\varphi) = \tfrac{1}{2}(\varphi + \varphi^{-1}) - 1
+  = \tfrac{1}{2}\bigl(\varphi + (\varphi - 1)\bigr) - 1
+  = \varphi - \tfrac{3}{2} \approx 0.118 \neq 0.
+\]
+Thus $J(\varphi) \neq J(1) = 0$: the $\varphi$-ladder sector is not at
+the cost-minimizing point.
+\end{proof}
+
+\begin{remark}[Relationship to Spontaneous Symmetry Breaking]
+The result above establishes that the $\varphi$-ladder operates away
+from the $J$-symmetric point $x = 1$, which is \emph{structurally
+analogous} to SSB in the sense that the system is pinned to a
+non-symmetric configuration.  However, this is not SSB in the
+standard field-theory sense (see Remark~\ref{rem:ssb-distinction}):
+in RS the asymmetric point $x = \varphi$ has \emph{higher} cost
+than the symmetric minimum $x = 1$, whereas in the SM the broken-symmetry
+vacuum has \emph{lower} energy than the symmetric point.
+The mechanism that pins the electroweak sector to $x = \varphi$ is an
+open derivation; the Proposition above provides the necessary
+precondition (that $\varphi$ is uniquely selected and sits off the
+$J$-minimum) but does not complete the SSB argument.
+\end{remark}
+
+\begin{remark}[Distinction from standard SSB; open problem]
+\label{rem:ssb-distinction}
+In the Standard Model, the Higgs mechanism works because
+$V(0) > V(v)$ --- the symmetric point $\phi = 0$ is
+\emph{unstable} and the VEV $v$ is the \emph{minimum}.
+In RS, the situation is different: $J(1) = 0$ is the
+\emph{global minimum} (Theorem~\ref{thm:minimum}), while
+$J(\varphi) \approx 0.118 > 0$.  The $\varphi$-ladder
+therefore operates at a \emph{metastable} or
+\emph{constrained} point, not at the free-energy minimum.
+The RS mechanism by which the electroweak sector is pinned
+to $x = \varphi$ rather than relaxing to $x = 1$ is an
+identified open problem.  One candidate mechanism: the
+$\varphi$-ladder corresponds to the fixed point of the
+ledger's self-referential structure (the recognition
+composition law), so the relevant ``minimum'' is under
+the constraint of self-consistency, not unconstrained
+minimization of $J$.  Until this is worked out, the Higgs
+mass prediction should be understood as a structural
+correlation ($m_H/m_W \approx \varphi$) rather than a derived
+result from a fully rigorous SSB calculation.
+\end{remark}
+
+\begin{proposition}[Higgs as Unique Scalar --- Structural Constraint]
+\label{cor:unique}
+Within the RS $\varphi$-ladder electroweak sector, there is
+exactly one massive scalar mode (the Higgs boson); no
+extended Higgs sector with $H^\pm$, $H^0$, or $A^0$ is
+admitted.
+\end{proposition}
+
+\begin{remark}
+The SM Higgs mechanism breaks $SU(2)_L \times U(1)_Y \to
+U(1)_{\mathrm{EM}}$, producing three Goldstone bosons
+(absorbed into $W^\pm$ and $Z$) and one physical scalar.
+The RS single-scalar prediction is compatible with this
+counting; the mechanism by which the $\varphi$ self-similarity
+selects a unique scalar is structurally analogous, though the
+rigorous derivation from RS dynamics is an open problem
+(see Remark~\ref{rem:ssb-distinction}).
+\end{remark}
+
+%% ============================================================
+\section{The $\varphi$-Ladder Prediction}
+\label{sec:prediction}
+%% ============================================================
+
+\begin{proposition}[Higgs/W Mass Ratio --- Structural Estimate]
+\label{thm:ratio}
+On the $\varphi$-ladder, the Higgs boson is identified as sitting
+one rung above the W~boson, giving the structural estimate:
+\begin{equation}
+  \boxed{\frac{m_H^{\mathrm{struct}}}{m_W} = \varphi
+  = \frac{1 + \sqrt{5}}{2} \approx 1.618.}
+\end{equation}
+Numerically: $m_H^{\mathrm{struct}} = \varphi \times 80.38
+\approx 130.1\;\mathrm{GeV}$.
+\end{proposition}
+
+\begin{remark}[Status of the rung assignment]
+The rung assignment $r_H = r_W + 1$ (Higgs one rung above W)
+is a structural identification motivated by the observation that
+adjacent boson rungs are separated by factor $\varphi$.  It is not
+independently derived from the RS Hamiltonian: the precise rung
+positions of the electroweak bosons in the $\varphi$-ladder depend
+on the anchor-scale mass law and the boson-sector yardstick, which
+are under active development.  The prediction $m_H / m_W \approx
+\varphi$ is therefore a structural estimate (carrying a known
+$3.7\%$ residual at leading order), not a parameter-free derivation.
+\end{remark}
+
+\begin{remark}[The $3.7\%$ Residual]
+\label{rem:residual}
+The structural prediction $m_H^{\mathrm{struct}} \approx
+130\;\mathrm{GeV}$ exceeds the measured
+$m_H = 125.25\;\mathrm{GeV}$ by $3.7\%$:
+\begin{equation}
+  \frac{m_H}{m_W} = 1.558 \approx \varphi \times (1 - 0.037).
+\end{equation}
+
+This $3.7\%$ residual is analogous to the situation in the
+lepton sector, where the integer-rung approximations
+($\varphi^{11}$ and $\varphi^{6}$ for the muon and tau
+mass ratios) carry 4--7\% errors, but the refined step
+formulas with sub-integer corrections from $\alpha$ and cube
+geometry bring the agreement to sub-ppm precision.
+The boson-sector refined shift, which will incorporate
+corrections from $\alpha$ and the cube integers
+$E_{\mathrm{passive}}$, $W$, and $F$, is expected to close
+this gap.  This refined calculation is open work.
+\end{remark}
+
+\begin{proposition}[Higgs Self-Coupling]
+\label{prop:coupling}
+The Higgs quartic coupling $\lambda$ is determined by the
+$\varphi$-ladder structure:
+\begin{equation}
+  \lambda = \frac{m_H^2}{2v^2}
+  \approx \frac{\varphi^2 \, m_W^2}{2v^2}.
+\end{equation}
+At tree level, $\lambda \approx 0.140$; the measured
+value $\lambda \approx 0.129$ reflects the same $3.7\%$
+radiative residual.
+\end{proposition}
+
+%% ============================================================
+\section{Electroweak Mass Ordering}
+\label{sec:ordering}
+%% ============================================================
+
+\begin{proposition}[Mass Ordering]
+\label{thm:ordering}
+The observed electroweak mass spectrum satisfies
+$m_W < m_Z < m_H < v$, and this ordering is consistent
+with the RS $\varphi$-ladder assignment.
+\end{proposition}
+
+\begin{proof}[Numerical verification from PDG values]
+\begin{enumerate}[nosep]
+  \item $m_W < m_Z$: $80.38 < 91.19$~GeV.
+  In RS, the relation $m_W = m_Z \cos\theta_W$ (with
+  $\cos\theta_W < 1$) is imported from the electroweak SM;
+  see~\cite{RS_Axioms} for the RS derivation of the Weinberg angle.
+  \item $m_Z < m_H$: $91.19 < 125.25$~GeV.
+  \item $m_H < v$: $125.25 / 246.22 \approx 0.509 < 1$~GeV.
+\end{enumerate}
+\end{proof}
+
+\begin{proposition}[Structural Properties]
+\label{thm:properties}
+\begin{enumerate}[label=(\roman*), nosep]
+  \item $m_H > 0$: consistent with $J''(\varphi) > 0$,
+  which implies the $\varphi$ fixed point is a local
+  constrained minimum.
+  \item $m_H \neq v$: the measured ratio $m_H/v \approx 0.509$
+  confirms the Higgs and VEV sit at different rungs.
+  \item $m_H < 0.6\,v$: $125.25 < 0.6 \times 246.22 = 147.7$~GeV.
+  \item The Higgs is the only fundamental scalar
+  (Proposition~\ref{cor:unique}).
+\end{enumerate}
+\end{proposition}
+
+%% ============================================================
+\section{Experimental Comparison}
+\label{sec:comparison}
+%% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Quantity} & \textbf{RS} &
+\textbf{Measured} & \textbf{Deviation} \\
+\midrule
+$m_H$ (GeV) & $\sim 130$ & $125.25 \pm 0.17$ & $+3.7\%$ (open) \\
+$m_H/m_W$ & $\varphi = 1.618$ & $1.558$ & $+3.9\%$ \\
+$m_H/m_Z$ & $\varphi\cos\theta_W \approx 1.43$ & $1.374$ & $+3.8\%$ \\
+Scalar count & $1$ & $1$ & structural (consistent) \\
+$m_W < m_Z < m_H < v$ & yes & yes & consistent (verified) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{remark}
+The structural predictions (mass ordering, unique scalar,
+single Higgs doublet) are exact.  The numerical mass prediction
+carries a $3.7\%$ residual at the integer-rung level.
+Refining this residual to sub-percent or sub-ppm precision---as
+achieved for the lepton sector---requires computing the
+boson-sector refined shift, which involves the same cube
+integers ($E_{\mathrm{passive}} = 11$, $W = 17$, $F = 6$) and
+the fine-structure constant $\alpha$.  This is a well-defined
+open calculation, not a conceptual gap.
+\end{remark}
+
+%% ============================================================
+\section{Vacuum Stability}
+\label{sec:stability}
+%% ============================================================
+
+\begin{proposition}[Electroweak Vacuum Stability]
+\label{prop:stability}
+The RS J-cost landscape has a unique global minimum at $x = 1$
+($J(1) = 0$, Theorem~\ref{thm:minimum}).  The $\varphi$-ladder
+electroweak sector operates at $x = \varphi$ (a non-minimum point
+with $J(\varphi) \approx 0.118 > 0$) under the constraint of
+ledger self-consistency.  Within this constrained sector, the
+$\varphi$ fixed point is structurally stable against perturbations
+that preserve the self-similarity condition $x^2 = x + 1$.
+\end{proposition}
+
+\begin{remark}[Vacuum stability vs.\ SM comparison]
+\label{rem:stability}
+In the SM with $m_H \approx 125\;\mathrm{GeV}$ and
+$m_t \approx 173\;\mathrm{GeV}$, the electroweak vacuum
+lies near the boundary between stability and
+metastability~\cite{Degrassi}; the analysis depends sensitively
+on $m_t$ and $\alpha_s$.
+In RS, no such sensitivity arises: the $\varphi$ fixed point is
+determined by the algebraic identity $\varphi^2 = \varphi + 1$,
+which is exact.  Perturbations of the ledger that break this
+identity incur a positive J-cost penalty (since $J$ is strictly
+convex with unique minimum at $x = 1$), making the $\varphi$
+configuration stable against such perturbations.  Note that
+this does not make $x = \varphi$ a minimum of $J$ (it is not);
+it makes it the unique consistent solution of the self-similarity
+constraint within the ledger structure.  The distinction between
+this ``constrained stability'' and the SM metastability is
+discussed in Remark~\ref{rem:ssb-distinction}.
+\end{remark}
+
+%% ============================================================
+\section{Predictions and Falsifiers}
+\label{sec:predictions}
+%% ============================================================
+
+\begin{enumerate}
+  \item \textbf{No additional scalars.}
+  Only one Higgs doublet exists.  Discovery of a charged
+  Higgs ($H^\pm$), a heavy neutral scalar ($H^0$), or a
+  pseudoscalar ($A^0$) would falsify the framework.
+
+  \item \textbf{SM-like couplings.}
+  All Higgs coupling strength modifiers $\kappa_V$, $\kappa_f$
+  must be consistent with unity.  Significant deviations
+  (beyond SM radiative corrections) would challenge the
+  single-scalar prediction.
+
+  \item \textbf{Absolute vacuum stability.}
+  The electroweak vacuum is unconditionally stable.  Any
+  experimental evidence of vacuum metastability would
+  contradict the RS J-cost structure.
+
+  \item \textbf{Refined mass prediction.}
+  When the boson-sector refined shift is computed, the
+  Higgs mass should be reproduced to percent-level or
+  better precision, without any free parameter.  Failure
+  to close the $3.7\%$ gap would weaken the mass-law
+  universality claim.
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+The Higgs boson mass is predicted structurally by the
+$\varphi$-ladder: $m_H / m_W \approx \varphi$ at tree level,
+giving $m_H^{\mathrm{struct}} \approx 130\;\mathrm{GeV}$.
+The $3.7\%$ residual relative to the measured
+$125.25\;\mathrm{GeV}$ is a well-characterized open
+calculation, analogous to the percent-level residuals in the
+lepton sector that were reduced to sub-ppm by the refined
+step formulas.  The deeper structural result is the analogy between
+$J$-cost symmetry breaking and the Higgs mechanism: the
+$x \leftrightarrow x^{-1}$ symmetry of $J(x)$ is broken
+when $\varphi$ is selected, producing a structure compatible with
+exactly one massive scalar.  No extended Higgs sector is allowed.
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{Aczel1966}
+J.~Acz\'el, \textit{Lectures on Functional Equations and Their
+Applications}, Academic Press, New York (1966).
+
+\bibitem{ATLAS2012}
+ATLAS Collaboration, ``Observation of a new particle in the
+search for the Standard Model Higgs boson with the ATLAS
+detector at the LHC,'' Phys.\ Lett.\ B \textbf{716}, 1 (2012).
+
+\bibitem{CMS2012}
+CMS Collaboration, ``Observation of a new boson at a mass of
+125~GeV with the CMS experiment at the LHC,'' Phys.\ Lett.\ B
+\textbf{716}, 30 (2012).
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+\texttt{doi:10.3390/axioms15020090}
+
+\bibitem{PDG2024}
+S.~Navas \textit{et al.}\ (Particle Data Group),
+``Review of Particle Physics,'' Phys.\ Rev.\ D \textbf{110}, 030001
+(2024).
+
+\bibitem{Degrassi}
+G.~Degrassi \textit{et al.}, ``Higgs mass and vacuum stability
+in the Standard Model at NNLO,'' JHEP \textbf{1208}, 098 (2012).
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,517 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage[hidelinks,breaklinks]{hyperref}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{postulate}[theorem]{Postulate}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Rp}{\mathbb{R}_{>0}}
+\newcommand{\Jcost}{J}
+\newcommand{\phig}{\varphi}
+
+\title{\textbf{Three Attributes Force a Unique Mathematical Framework}\\[0.4em]
+\large Core Inevitability, Reverse Implication, and Extended Closure}
+\author{Jonathan Washburn\\
+\small Recognition Science Research Institute, Austin, Texas\\
+\small \texttt{jon@recognitionphysics.org}}
+\date{February 15, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We formalise three classical attributes as axioms on a comparison-cost
+system: omniscience (full discriminability), omnipotence (unique
+cost-minimising admissible action), and omnipresence (complete and
+globally accessible state geometry). We prove a core inevitability
+result: these axioms force a unique cost law
+\[
+\Jcost(x)=\frac{1}{2}(x+x^{-1})-1
+\]
+and force the unique ambient spatial dimension $D=3$ under the
+simultaneous requirements of topological memory and non-segregation.
+
+We then prove the reverse implication for the core framework, yielding
+a biconditional at the level of core axioms. Extended consequences
+that are standard in Recognition Science, namely the golden-ratio rung,
+8-tick periodicity, and the $W=17$ bridge, are stated separately with
+their explicit additional postulates.
+
+The paper is self-contained and separates strictly proved claims from
+postulate-dependent extensions.
+
+\medskip\noindent
+\textbf{MSC 2020:} 39B52, 51K05, 57M25, 26A51.
+
+\medskip\noindent
+\textbf{Keywords:} functional equations, d'Alembert equation,
+dimensional selectivity, metric completeness, linking invariants.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%=============================================================================
+\section{Introduction}
+\label{sec:intro}
+%=============================================================================
+
+If a system can discriminate every state, execute every consistent
+transformation, and be present everywhere, what mathematical structure
+is forced?
+
+This paper gives a precise answer in two layers.
+\begin{enumerate}[nosep]
+\item A core theorem that is rigorous under explicit axioms.
+\item An extended closure layer whose extra assumptions are
+clearly declared.
+\end{enumerate}
+
+The core theorem is the part that should be read as strict
+mathematics. The closure layer records how the broader Recognition
+Science chain is obtained from additional structural choices.
+
+\subsection{Prior results used}
+
+The d'Alembert classification and convexity regularity follow classical
+functional-equation analysis \cite{Aczel1966,Kuczma2009}. The
+canonical reciprocal cost uniqueness result is established in
+\cite{CostUnique} and in the peer-reviewed
+\cite{WashburnRahnamai2026}. Recognition-geometry context appears in
+\cite{RecogGeom}.
+
+%=============================================================================
+\section{Formal Setup}
+\label{sec:setup}
+%=============================================================================
+
+\begin{definition}[Costed comparison system]
+A costed comparison system is a tuple
+\[
+\mathcal{C}=(\mathcal{S},\iota,C)
+\]
+with:
+\begin{enumerate}[nosep,label=\textup{(\alph*)}]
+\item a nonempty state set $\mathcal{S}$,
+\item an injective scale map $\iota:\mathcal{S}\to\Rp$,
+\item a cost map $C:\Rp\to\R_{\ge 0}$.
+\end{enumerate}
+For $a,b\in\mathcal{S}$ define the ratio
+\[
+x_{ab}:=\frac{\iota(a)}{\iota(b)}.
+\]
+\end{definition}
+
+\begin{definition}[Log coordinate and metric]
+Define $y:=\log\circ\iota:\mathcal{S}\to\R$ and
+\[
+d_{\log}(a,b):=|y(a)-y(b)|.
+\]
+When we refer to metric completeness in this paper, we mean
+completeness of $(\mathcal{S},d_{\log})$.
+\end{definition}
+
+\begin{remark}
+Using $d_{\log}$ avoids ambiguity about metric structure. The cost
+$C$ is not assumed to be itself a metric.
+\end{remark}
+
+%=============================================================================
+\section{Three Axioms}
+\label{sec:axioms}
+%=============================================================================
+
+\begin{axiom}[Omniscience]
+\label{ax:omni}
+There exists a costed comparison system $(\mathcal{S},\iota,C)$ such
+that:
+\begin{enumerate}[nosep,label=\textup{(\alph*)}]
+\item $\iota$ is injective (perfect discriminability),
+\item $C(1)=0$,
+\item for all $x,y>0$,
+\[
+C(xy)+C(x/y)=P(C(x),C(y))
+\]
+for a symmetric polynomial $P$,
+\item calibration at identity:
+\[
+\lim_{t\to 0}\frac{2C(e^t)}{t^2}=1.
+\]
+\end{enumerate}
+\end{axiom}
+
+\begin{axiom}[Omnipotence]
+\label{ax:omnip}
+Admissible transformations are exactly finite-cost ones, and every
+admissible constrained optimisation has a unique minimiser. In
+particular:
+\begin{enumerate}[nosep,label=\textup{(\alph*)}]
+\item $C''(x)>0$ for all $x>0$,
+\item the conservation quantity
+\[
+\sigma(\mathbf{x})=\sum_i\log x_i
+\]
+is invariant under admissible dynamics.
+\end{enumerate}
+\end{axiom}
+
+\begin{axiom}[Omnipresence]
+\label{ax:omnip2}
+\begin{enumerate}[nosep,label=\textup{(\alph*)}]
+\item $(\mathcal{S},d_{\log})$ is complete,
+\item the carrier is a full lattice $\Z^D$ for some $D\in\N$,
+\item any two lattice states are connected by a finite admissible path,
+\item interaction histories admit a topological-memory model:
+closed trajectories are represented by embedded loops in an ambient
+continuum $\R^D$.
+\end{enumerate}
+\end{axiom}
+
+%=============================================================================
+\section{Core Forward Theorems}
+\label{sec:forward}
+%=============================================================================
+
+\subsection{The forced cost law}
+
+\begin{theorem}[Core inevitability of the canonical cost]
+\label{thm:cost}
+Under Axioms \ref{ax:omni} and \ref{ax:omnip}, the unique admissible
+cost is
+\[
+\Jcost(x)=\frac{1}{2}(x+x^{-1})-1.
+\]
+\end{theorem}
+
+\begin{proof}
+Define $f(t):=1+C(e^t)$. The composition law becomes a continuous
+d'Alembert equation
+\[
+f(t+s)+f(t-s)=2f(t)f(s),\qquad f(0)=1.
+\]
+By classical classification \cite{Aczel1966,Kuczma2009}, continuous
+solutions are $f\equiv 1$, $f(t)=\cos(at)$, or $f(t)=\cosh(at)$.
+
+Strict convexity excludes $f\equiv 1$. Nonnegativity of $C$ gives
+$f\ge 1$, excluding cosine except the trivial case already removed.
+Hence $f(t)=\cosh(at)$. Calibration yields
+\[
+1=\lim_{t\to 0}\frac{2C(e^t)}{t^2}
+=\lim_{t\to 0}\frac{2(\cosh(at)-1)}{t^2}=a^2.
+\]
+So $a=1$ and
+\[
+C(e^t)=\cosh t-1.
+\]
+Substitute $t=\log x$.
+\end{proof}
+
+\begin{corollary}[Derived properties]
+\label{cor:properties}
+For all $x>0$:
+\begin{enumerate}[nosep,label=\textup{(\roman*)}]
+\item $\Jcost(x)=\Jcost(x^{-1})$,
+\item $\Jcost(x)=\frac{(x-1)^2}{2x}\ge 0$ with equality iff $x=1$,
+\item $\Jcost''(x)=x^{-3}>0$,
+\item $\Jcost(x)\ge \frac{1}{2}(\log x)^2$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(i) and (ii) are direct algebra. (iii) is direct differentiation.
+(iv) follows from $\cosh u-1\ge u^2/2$ with $u=\log x$.
+\end{proof}
+
+\subsection{Dimension selectivity}
+
+\begin{theorem}[Core dimension theorem]
+\label{thm:D3}
+Under Axiom \ref{ax:omnip2}(d), the unique ambient dimension satisfying
+both:
+\begin{enumerate}[nosep,label=\textup{(\alph*)}]
+\item nontrivial topological memory of loop interaction, and
+\item no topological segregation of reachable states,
+\end{enumerate}
+is $D=3$.
+\end{theorem}
+
+\begin{proof}
+Interpret loop interaction in ambient $\R^D$.
+
+\textbf{$D=2$ fails (segregation).}
+Jordan curve theorem: any simple closed curve separates $\R^2$ into
+inside and outside, violating global accessibility.
+
+\textbf{$D\ge 4$ fails (no memory).}
+For an embedded loop $\gamma\subset\R^D$, $D\ge 4$ implies
+codimension $\ge 3$. Alexander duality yields trivial first homology
+for the complement in the relevant linking degree, so loop-linking
+memory vanishes.
+
+\textbf{$D=3$ works.}
+Loops can link with nonzero linking number, giving stable interaction
+memory, while a single embedded loop does not separate $\R^3$.
+
+Hence only $D=3$ satisfies both requirements.
+\end{proof}
+
+\begin{remark}
+The theorem explicitly uses ambient continuum topology for interaction
+invariants and lattice discreteness for state accessibility. This is
+the continuum-lattice bridge required by Axiom \ref{ax:omnip2}(d).
+\end{remark}
+
+\subsection{Core master theorem}
+
+\begin{theorem}[Core structural inevitability]
+\label{thm:coremaster}
+Axioms \ref{ax:omni}--\ref{ax:omnip2} force a unique core framework:
+\begin{enumerate}[nosep,label=\textup{(\roman*)}]
+\item canonical cost law $\Jcost$,
+\item strict convex unique dynamics under conservation,
+\item ambient dimension $D=3$ from memory plus non-segregation.
+\end{enumerate}
+\end{theorem}
+
+%=============================================================================
+\section{Reverse Direction for the Core Framework}
+\label{sec:reverse}
+%=============================================================================
+
+\begin{definition}[Core framework object]
+\label{def:coreframework}
+A core framework object is data
+\[
+\mathfrak{F}=(\mathcal{S},\iota,\Jcost,d_{\log},D)
+\]
+with:
+\begin{enumerate}[nosep,label=\textup{(\alph*)}]
+\item $\iota:\mathcal{S}\to\Rp$ injective,
+\item $\Jcost(x)=\frac12(x+x^{-1})-1$,
+\item $d_{\log}(a,b)=|\log\iota(a)-\log\iota(b)|$ complete,
+\item admissible dynamics defined as unique minimisers of strictly
+convex $\Jcost$-objectives under conservation constraints,
+\item ambient topological interaction model in $\R^D$ with $D=3$.
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Reverse implication for the core]
+\label{thm:reversecore}
+Every core framework object (Definition \ref{def:coreframework})
+satisfies Axioms \ref{ax:omni}--\ref{ax:omnip2}.
+\end{theorem}
+
+\begin{proof}
+\textbf{Omniscience:} injective $\iota$ gives discriminability; $\Jcost$
+satisfies d'Alembert form and calibration at identity.
+
+\textbf{Omnipotence:} strict convexity of $\Jcost$ gives unique
+minimisers; conservation is enforced by the admissible constraint class.
+
+\textbf{Omnipresence:} $d_{\log}$ is complete by assumption, lattice
+carrier is given, finite-path accessibility is part of the admissible
+dynamics, and topological interaction model is included.
+\end{proof}
+
+\begin{corollary}[Core biconditional]
+\label{cor:corebiconditional}
+At core level:
+\[
+(\text{Omniscience}\wedge\text{Omnipotence}\wedge\text{Omnipresence})
+\Longleftrightarrow
+(\text{Core framework object}).
+\]
+\end{corollary}
+
+%=============================================================================
+\section{Extended Closure Layer (Explicitly Postulated)}
+\label{sec:extended}
+%=============================================================================
+
+The following consequences are standard in Recognition Science, but
+they require assumptions not contained in the core axioms.
+
+\begin{postulate}[Self-similar reciprocal closure]
+\label{post:phi}
+The refinement map on positive ratios is the minimal reciprocal
+self-similarity law
+\[
+x\mapsto 1+\frac{1}{x},
+\]
+equivalently fixed points satisfy $x^2=x+1$.
+\end{postulate}
+
+\begin{postulate}[Local update graph]
+\label{post:8}
+One update epoch is represented by a Hamiltonian traversal of the
+hypercube $Q_D$.
+\end{postulate}
+
+\begin{postulate}[Symmetry bridge]
+\label{post:17}
+At $D=3$, the effective face-symmetry catalogue is identified with the
+17 wallpaper-group classes.
+\end{postulate}
+
+\begin{theorem}[Extended consequences]
+\label{thm:extended}
+Assume Postulates \ref{post:phi}--\ref{post:17}. Then:
+\begin{enumerate}[nosep,label=\textup{(\roman*)}]
+\item $\phig=(1+\sqrt5)/2$ is the unique positive fixed point.
+\item For $D=3$, the minimal epoch length is $2^3=8$.
+\item Gap-45 synchronisation:
+$45=T(9)=1+\cdots+9$, and
+$\mathrm{lcm}(8,45)=360$.
+\item The bridge count gives $W=17$ and
+$E_p+F=11+6=17$ at $D=3$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) solve $x^2-x-1=0$. (ii) $Q_D$ has $2^D$ vertices and a Hamiltonian
+cycle visits each once. (iii) arithmetic. (iv) direct count with the
+stated bridge identification.
+\end{proof}
+
+\begin{remark}[Status discipline]
+Statements in Theorems \ref{thm:cost}, \ref{thm:D3},
+\ref{thm:coremaster}, and \ref{thm:reversecore} are core theorems.
+Statements in Theorem \ref{thm:extended} are conditional on explicit
+postulates.
+\end{remark}
+
+%=============================================================================
+\section{Tautological Interpretation}
+\label{sec:tautology}
+%=============================================================================
+
+The three core axioms align with classical logical laws:
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Axiom} & \textbf{Logical law} & \textbf{Core mathematical witness} \\
+\midrule
+Omniscience & Identity & $\Jcost(1)=0$, injective scale map \\
+Omnipotence & Non-contradiction & strict convex unique minimiser \\
+Omnipresence & Excluded middle & complete metric coverage \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Under this reading, the core framework is the geometric realisation of
+``$a=a$'' after adding coherent composition and completeness
+constraints.
+
+%=============================================================================
+\section{Discussion}
+\label{sec:discussion}
+%=============================================================================
+
+\subsection{Why this split matters}
+
+A common failure mode in foundational papers is mixing proved claims
+with architecture-level assumptions. The split in this paper is
+intended to avoid that:
+\begin{itemize}[nosep]
+\item Core layer: mathematically forced.
+\item Extended layer: mathematically transparent conditional bridge.
+\end{itemize}
+
+\subsection{Philosophical context}
+
+The question ``why something rather than nothing'' (Leibniz
+\cite{Leibniz1714}) is represented here as boundary-exclusion in a
+complete cost geometry. The broader ``mathematics as ontology'' line
+has modern formulations in Tegmark \cite{Tegmark2008} and Wheeler's
+information-first perspective \cite{Wheeler1990}. The present paper
+is narrower: it specifies one explicit core structure and proves its
+uniqueness from stated axioms.
+
+%=============================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%=============================================================================
+
+We proved a core inevitability and a reverse implication:
+\begin{enumerate}[nosep]
+\item The three axioms force a unique core framework.
+\item The core framework satisfies the three axioms.
+\end{enumerate}
+Hence a core biconditional holds.
+
+Extended RS closure claims are recorded with explicit postulates, so
+the logical status of each claim is visible and auditable.
+
+%=============================================================================
+% REFERENCES
+%=============================================================================
+\begin{thebibliography}{99}
+
+\bibitem{Aczel1966}
+J.~Acz\'el,
+\textit{Lectures on Functional Equations and Their Applications},
+Academic Press, 1966.
+
+\bibitem{Kuczma2009}
+M.~Kuczma,
+\textit{An Introduction to the Theory of Functional Equations and
+Inequalities},
+2nd ed., Birkh\"auser, 2009.
+
+\bibitem{CostUnique}
+J.~Washburn and M.~Zlatanovi\'c,
+``Uniqueness of the Canonical Reciprocal Cost,''
+arXiv:2602.05753, 2026.
+
+\bibitem{WashburnRahnamai2026}
+J.~Washburn and A.~Rahnamai Barghi,
+``Reciprocal Convex Costs for Ratio Matching: Axiomatic
+Characterization,''
+\textit{Axioms}, 2026.
+doi:10.3390/axioms1010000.
+
+\bibitem{RecogGeom}
+J.~Washburn, M.~Zlatanovi\'c, and E.~Allahyarov,
+``Recognition Geometry,''
+\textit{Axioms} \textbf{15}(2), 90, 2025.
+
+\bibitem{Leibniz1714}
+G.~W.~Leibniz,
+``Principles of Nature and Grace, Based on Reason,'' 1714.
+
+\bibitem{Tegmark2008}
+M.~Tegmark,
+``The Mathematical Universe,''
+\textit{Foundations of Physics} \textbf{38}, 101--150, 2008.
+
+\bibitem{Wheeler1990}
+J.~A.~Wheeler,
+``Information, Physics, Quantum: The Search for Links,''
+in \textit{Complexity, Entropy and the Physics of Information},
+Addison-Wesley, 1990.
+
+\end{thebibliography}
+
+\end{document}

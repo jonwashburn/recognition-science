@@ -1,0 +1,871 @@
+\documentclass[aps,prd,amsmath,amssymb,superscriptaddress,nofootinbib,preprint,showpacs]{revtex4-2}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{amsthm}
+% RevTeX defines a non-kernel \label; on LaTeX 2023-06-01+ nameref warns and then
+% replaces it with the LaTeX-kernel definition. Preemptively restore a
+% *compatible* kernel \label only when the new hook infrastructure exists.
+\makeatletter
+\@ifundefined{UseHookWithArguments}{}{%
+  \def\label#1{\@bsphack
+    \begingroup
+    \UseHookWithArguments{label}{1}{#1}%
+    \protected@write\@auxout{}%
+           {\string\newlabel{#1}{{\@currentlabel}{\thepage}%
+            {\@currentlabelname}{\@currentHref}{\@kernel@reserved@label@data}}}%
+    \endgroup
+    \@esphack}%
+}
+\makeatother
+
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,allcolors=blue}
+
+% Simple helpers (keep minimal; narrative-first paper)
+\newcommand{\defterm}[1]{\textbf{#1}}
+\newcommand{\RS}{\textsc{Recognition Science}}
+
+% Math helpers
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Fin}{\mathrm{Fin}}
+\newcommand{\Zmod}[1]{\Z/#1\Z}
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\dd}{\,\mathrm{d}}
+\newcommand{\PsiRS}{\Psi_{\text{RS}}}
+
+% Theorem environments (keep light; narrative-first but precise)
+\newtheorem{definition}{Definition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\begin{document}
+
+\title{Octave Gravity: Why an 8-Step Update Cycle Produces Geometric Gravity}
+
+\author{Jonathan Washburn}
+\affiliation{Recognition Physics Institute, Austin, Texas, USA}
+
+\date{\today}
+
+\begin{abstract}
+We propose that gravity is the macroscopic expression of a loop-closure requirement, and that the smallest complete closure cycle has eight steps---the \emph{Octave}. The Octave carries a 3-bit Gray cycle visiting all $2^3=8$ local states with one-bit adjacency per tick; its shift symmetry induces a DFT-8 spectral basis and discrete-derivative energy with weights $4\sin^2(\pi k/8)$. In the continuum limit, loop closure yields conservation laws and curvature, recovering General Relativity. The discrete claims are machine-verified in Lean~4; the continuum bridge remains an explicit hypothesis.
+\end{abstract}
+
+\pacs{04.20.-q, 02.10.De, 04.60.-m}
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+% ==============================================================================
+\section{Introduction}
+% ==============================================================================
+
+General Relativity describes gravity as spacetime curvature, but does not explain \emph{why} gravity takes a geometric form. This paper proposes that geometric gravity is the macroscopic consequence of enforcing \emph{loop closure}---the requirement that any closed path through a sequence of local updates returns to a consistent state.
+
+The central observation is that the smallest complete closure loop has eight steps---the \emph{Octave}. This minimal structure carries a 3-bit Gray cycle, admits a canonical DFT-8 spectral basis, and in the continuum limit reproduces the conservation and curvature structure of GR. The discrete half of this story is machine-verified in Lean~4; the continuum bridge is an explicit hypothesis under active formalization.
+
+The key conceptual link is:
+\begin{center}
+\emph{discrete closure} \((\partial^2 = 0)\) \quad\(\longrightarrow\)\quad \emph{continuum Bianchi identity} \((\nabla_\mu G^{\mu\nu} = 0)\).
+\end{center}
+This correspondence is what makes loop closure the seed of geometric gravity.
+
+% ==============================================================================
+\section{Thesis}
+% ==============================================================================
+
+If reality updates locally but must remain globally consistent, then the smallest non-contradictory closed update loop matters. An 8-step loop---the \emph{Octave}---is the minimal closure that supports complete coverage of a three-bit neighborhood model, and its closure rules become, in the continuum limit, the conservation laws and curvature that define geometric gravity.
+
+The argument proceeds as follows:
+\begin{enumerate}
+  \item Geometry is the natural language for gravity because gravity enforces global consistency of local updates.
+  \item Given the local-neighborhood model \(\mathrm{Pattern}(3)\) with one-bit adjacency, eight ticks is the minimal period for a complete Gray cycle.
+  \item Discrete closure becomes continuous conservation and curvature in the appropriate limit.
+\end{enumerate}
+
+Phenomenological applications (galaxy rotation curves, cosmological tests) and the detailed GR emergence proof are developed in companion papers.
+
+\subsection{Contributions}
+\begin{enumerate}
+  \item We formalize the Octave as a machine-verified 3-bit Gray cycle on \(\Zmod{8}\) (Theorem~\ref{thm:gray8}).
+  \item We prove the synchronization kernel \(\mathrm{lcm}(2^D,45)=360 \leftrightarrow D=3\), and relate it to the canonical \(2^D\)-tick cover of \(\mathrm{Pattern}(D)\) (Proposition~\ref{prop:dim3}).
+  \item We show that the Octave's shift symmetry canonically induces a DFT-8 spectral basis and discrete Laplacian (Section~\ref{sec:dft8}).
+  \item We trace the bridge from discrete loop closure (\(\partial^2=0\)) to the continuum Bianchi identity (\(\nabla_\mu G^{\mu\nu}=0\)), explaining why geometric gravity is the natural macroscopic limit (Sections~\ref{sec:discrete-closure}--\ref{sec:gr-bridge}).
+  \item We explicitly separate machine-verified claims from hypotheses under formalization (Section~\ref{sec:proof-status}).
+\end{enumerate}
+
+% ==============================================================================
+\section{Definitions}
+% ==============================================================================
+
+\subsection{Tick}
+A \defterm{tick} is one atomic update of the underlying system---a minimal indivisible unit of change. We do not assume continuous time at the deepest level.
+
+\subsection{RS-native units and constants (\texorpdfstring{$\tau_0$}{tau0}, \texorpdfstring{$\phi$}{phi}, and \texorpdfstring{$J_{\mathrm{bit}}$}{Jbit})}
+To avoid hidden parameters, the core Recognition Science (RS) development is expressed in \emph{RS-native units}. In the Lean codebase, the fundamental time quantum is defined as one tick:
+\[
+  \tau_0 \equiv 1\ \text{tick}.
+\]
+
+RS also uses the \defterm{golden ratio} \(\phi\), defined as
+\[
+  \phi \coloneqq \frac{1+\sqrt{5}}{2}.
+\]
+In the Lean codebase this is \texttt{Constants.phi} (see \nolinkurl{IndisputableMonolith/Constants.lean}).
+
+From \(\phi\) one defines the \defterm{elementary ledger bit cost}
+\[
+  J_{\mathrm{bit}} \coloneqq \ln \phi,
+\]
+which appears throughout the RS ``no free parameters'' accounting as the fixed cost per discrete scale step (Lean: \texttt{Constants.J\_bit}).
+
+\subsection{Ledger}
+A \defterm{ledger} is a bookkeeping model of local interactions. Every update has a matching record, so that when you examine any closed loop of interactions, nothing is mysteriously created or destroyed.
+
+The analogy is double-entry accounting: if something is credited somewhere, it is debited somewhere else. The books always balance. A ledger is not literally money---it is a model for how physical updates can be recorded in a way that prevents contradictions from hiding.
+
+\subsection{Closure}
+\defterm{Closure} means: if you follow a closed loop of local updates, the loop adds up to zero net inconsistency. You cannot walk around a loop and return with an accounting mismatch.
+
+Closure is the core stability requirement. It is what prevents ``energy from nowhere'' or ``influence without source.'' If closure fails anywhere, the theory is internally broken.
+
+\subsection{Octave}
+The \defterm{Octave} is a specific claim about closure: that the minimal \emph{complete} closed cycle---the smallest loop that visits a full local neighborhood and returns consistently---has length eight ticks.
+
+This is not yet a statement about gravity. It is a statement about the structure of consistent discrete updating. Gravity enters later, when we ask what this structure looks like at large scales.
+
+\subsection{J-cost (Strain)}
+The \defterm{J-cost} is a nonnegative function that measures ``how far a ratio is from unity.'' In the Lean codebase it is defined for a real ratio \(x\) by
+\[
+  J(x) \coloneqq \frac{x + x^{-1}}{2} - 1,
+\]
+which is symmetric under inversion (\(J(x)=J(x^{-1})\)), satisfies \(J(1)=0\), and is nonnegative for \(x>0\) (AM--GM inequality).
+
+\begin{remark}[Stationarity principle (physics postulate)]
+The physical content of RS is not just the definition of \(J\), but a selection rule: realized configurations are those that minimize (or make stationary) an appropriate \emph{total} strain functional built from local ledger-consistency constraints. In continuum language, this becomes a variational principle (Sections~\ref{sec:discrete-closure}--\ref{sec:gr-bridge}).
+\end{remark}
+
+\subsection{Emergence}
+When we say gravity \defterm{emerges}, we mean:
+\begin{itemize}
+  \item The underlying rules are discrete and local.
+  \item The simplest and most accurate \emph{macroscopic} description is continuous and geometric.
+  \item The geometric field equations are the best ``compressed'' summary of the large-scale behavior of the discrete closure rules.
+\end{itemize}
+
+Emergence does not mean ``approximate'' or ``illusory.'' It means the geometric description is genuinely the right language at large scales---just as fluid dynamics is genuinely the right language for water, even though water is made of molecules.
+
+\subsection{Geometry}
+By \defterm{geometry} we mean a rule that tells you what distances and times mean locally, and therefore what paths are ``straightest'' (least cost, least strain). In General Relativity, this rule is encoded by a metric field $g_{\mu\nu}$. In this framework, the metric is the tensor that captures local variations of the RRF such that total $J$-cost is stationary.
+
+\subsection{Curvature}
+\defterm{Curvature} measures how local rules fail to be globally flat. If you parallel-transport a vector around a closed loop and it comes back rotated, the region enclosed is curved. Curvature is the continuum version of ``the loop did not close trivially.''
+
+% ==============================================================================
+\section{Postulates and mathematical model}
+% ==============================================================================
+
+We separate:
+\begin{itemize}
+  \item \textbf{postulates} (physical assumptions),
+  \item \textbf{discrete theorems} (finite statements that can be proved exactly),
+  \item \textbf{continuum-limit hypotheses} (how the discrete model coarse-grains).
+\end{itemize}
+
+\subsection{Clock and phases}
+\begin{definition}[Tick clock]
+We model a single ``Octave window'' of time as the cyclic group $\Zmod{8}$ (equivalently, \(\Fin 8\)). An element \(t\in\Zmod{8}\) is called a \emph{phase}.
+\end{definition}
+
+\begin{definition}[Shift symmetry]
+The one-tick time-translation on phases is the map \(t\mapsto t+1\) (mod \(8\)). On an 8-tuple \(x=(x_t)_{t\in\Zmod{8}}\), the induced shift operator is
+\[
+  (Sx)_t \coloneqq x_{t+1}.
+\]
+\end{definition}
+
+\subsection{Local state space as binary patterns}
+\begin{definition}[Local pattern space]
+For an integer \(d\ge 1\), define the \(d\)-bit \emph{pattern space}
+\[
+  \mathrm{Pattern}(d) \coloneqq \{0,1\}^d.
+\]
+Concretely, an element \(p\in\mathrm{Pattern}(d)\) is a function \(p:\{0,\dots,d-1\}\to\{0,1\}\).
+\end{definition}
+
+\begin{definition}[One-bit adjacency]
+Two patterns \(p,q\in\mathrm{Pattern}(d)\) are \emph{one-bit adjacent} if they differ in exactly one coordinate:
+\[
+  \mathrm{OneBitDiff}(p,q)\; \Longleftrightarrow\; \exists!\,k\in\{0,\dots,d-1\}\;\text{such that}\; p(k)\ne q(k).
+\]
+This corresponds to a single-bit flip or unit Hamming distance.
+\end{definition}
+
+\begin{definition}[Gray cover and Gray cycle]
+Let \(T\ge 1\). A \emph{Gray cover} of \(\mathrm{Pattern}(d)\) with period \(T\) is a map \(\gamma:\Zmod{T}\to \mathrm{Pattern}(d)\) that is surjective and satisfies one-bit adjacency \(\mathrm{OneBitDiff}(\gamma(t),\gamma(t+1))\) for all \(t\).
+
+A \emph{Gray cycle} is a Gray cover that is also injective (hence bijective, hence visits every pattern exactly once).
+\end{definition}
+
+\subsection{Physical postulates used by this paper}
+\begin{assumption}[Discrete local update]
+At sufficiently fine scale, the system evolves in discrete ticks, and there exists a physically distinguished closure period of eight ticks (an Octave window), so that phase can be modeled by \(\Zmod{8}\).
+\end{assumption}
+
+\begin{assumption}[Local completeness + adjacency]
+Over one Octave window, the system's local ``neighborhood state'' is fully explored: there exists a Gray cycle \(\gamma:\Zmod{8}\to \mathrm{Pattern}(3)\).
+\end{assumption}
+
+\begin{remark}
+The \emph{existence} of such a Gray cycle for \(d=3\) is a pure finite theorem (we give an explicit construction in Section~\ref{sec:octave-gray}).
+The \emph{physical interpretation} of that cycle as ``what a local neighborhood is'' is the postulate.
+\end{remark}
+
+\begin{assumption}[Simplicial Nyquist surjection (explicit hypothesis seam)]
+In the simplicial-ledger bridge layer, a ``recognition loop'' is modeled as a closed cycle of adjacent 3-simplices. We assume (as an explicit hypothesis) that any such loop admits a phase-indexed map into \(\mathrm{Pattern}(3)\) that is surjective; equivalently, any closed recognition loop must have length at least \(8\).
+
+In Lean this is tracked as an explicit hypothesis (not yet a theorem) because the ledger-to-pattern identification and loop adjacency are still scaffolded (\nolinkurl{IndisputableMonolith/Foundation/SimplicialLedger.lean}).
+\end{assumption}
+
+\begin{assumption}[Ledger closure (conservativity)]
+There exists a conservative ledger representation of evolution such that for any contractible closed loop of admissible updates, the net ledger mismatch is zero. (In differential-geometric language: the fundamental bookkeeping constraint is a closure constraint on loops.)
+\end{assumption}
+
+\begin{remark}
+Sections~\ref{sec:discrete-closure}--\ref{sec:gr-bridge} explain how this closure postulate becomes conservation laws and curvature in the continuum limit, and what additional regularity assumptions are needed to make the bridge rigorous.
+\end{remark}
+
+% ==============================================================================
+\section{Why loops matter for gravity}
+% ==============================================================================
+
+Gravity appears to encode global constraints: energy-momentum is conserved everywhere, causal structure is coherent, spacetime has a unified geometry. Yet physics is supposed to be local. How can local rules produce global consistency?
+
+The answer is \emph{loop closure}. If you only check consistency point by point, contradictions can hide---a local rule might seem fine everywhere yet produce a mismatch when you trace a closed path. Loops are where contradictions reveal themselves. So if you want physics that cannot harbor hidden contradictions, you enforce closure on every loop.
+
+Once you commit to loop closure, a structural question arises: what is the \emph{smallest} nontrivial loop that can close? This minimal loop becomes foundational. It determines:
+\begin{itemize}
+  \item how many independent directions a local region can support,
+  \item what symmetries appear when the loop is analyzed as a repeating structure,
+  \item what neighborhoods can exist without contradiction.
+\end{itemize}
+A loop shorter than the minimum cannot visit enough distinct states to cover a neighborhood. Larger loops decompose into combinations of minimal ones. So the minimal loop is fundamental; everything else is composite.
+
+% ==============================================================================
+\section{The Octave theorem: a 3-bit Gray cycle on eight phases}
+\label{sec:octave-gray}
+% ==============================================================================
+
+This section states the Octave claim in the cleanest mathematical form we currently have: an explicit 8-step, one-bit-adjacent cycle that visits all \(2^3\) local binary states exactly once.
+
+\subsection{Why eight is the ``first spatial'' size}
+\begin{proposition}[Counting]\label{prop:pattern-card}
+\(\abs{\mathrm{Pattern}(d)} = 2^d\). In particular, \(\abs{\mathrm{Pattern}(3)}=8\).
+\end{proposition}
+
+\begin{remark}
+This is the precise sense in which ``three independent binary partitions'' corresponds to ``eight local states.'' In the Octave story, those three independent binary partitions are what later become the three independent spatial directions.
+\end{remark}
+
+\subsection{Existence: an explicit Hamiltonian cycle on the 3-cube}
+\begin{theorem}[3-bit Gray cycle of period 8]\label{thm:gray8}
+There exists a map \(\gamma:\Zmod{8}\to \mathrm{Pattern}(3)\) such that:
+\begin{enumerate}
+  \item \(\gamma\) is bijective (every 3-bit pattern occurs exactly once),
+  \item \(\mathrm{OneBitDiff}(\gamma(t),\gamma(t+1))\) for all \(t\in\Zmod{8}\) (one-bit adjacency, including wrap-around).
+\end{enumerate}
+Equivalently, \(\gamma\) is a Hamiltonian cycle on the 3-dimensional hypercube graph \(Q_3\).
+\end{theorem}
+
+\begin{remark}[A concrete witness]
+One explicit choice is the standard binary-reflected Gray code \cite{gray1953} on 3 bits:
+\[
+  0,\,1,\,3,\,2,\,6,\,7,\,5,\,4,
+\]
+where \(\gamma(t)\) is the 3-bit binary expansion of the listed integer at phase \(t\). Consecutive codewords differ in exactly one bit, and the final codeword \(4\) differs from \(0\) in exactly one bit, so the cycle closes.
+
+This witness is machine-verified in Lean as a function \(\Fin 8\to (\Fin 3\to \mathrm{Bool})\) with proofs of bijectivity and one-bit adjacency.
+\end{remark}
+
+\begin{remark}[Lean ``witness layer'' packaging]
+The Lean codebase deliberately separates the \emph{finite theorem} from any physics interpretation. It packages the Gray-cycle witness into a minimal \texttt{OctaveKernel.Layer} instance whose state is just the 8-phase clock:
+\begin{itemize}
+  \item \textbf{Observation}: \texttt{patternAtPhase : Phase → Pattern 3} is defined as the Gray-cycle path.
+  \item \textbf{Layer}: \texttt{PatternCoverLayer} has \texttt{State := Phase} and \texttt{step s := s + 1}.
+\end{itemize}
+This is a conservative artifact that lets later bridge theorems talk about ``an 8-phase clock whose observations cover 3-bit patterns adjacently'' without asserting that the layer is already ``physics'' (see \nolinkurl{IndisputableMonolith/OctaveKernel/Instances/PatternCover.lean}).
+\end{remark}
+
+\subsection{Minimality: you cannot cover 3-bit space in fewer than eight ticks}
+\begin{theorem}[Eight-tick lower bound]\label{thm:eight-min}
+Let \(T\ge 1\). If a map \(\gamma:\Zmod{T}\to \mathrm{Pattern}(3)\) is surjective, then \(T\ge 8\).
+\end{theorem}
+
+\begin{remark}
+This is the simplest ``no free lunch'' fact behind the Octave: if you really want to visit all \(2^3\) local states, you need at least eight visits. The nontrivial content of Theorem~\ref{thm:gray8} is that you can do so while only changing one bit per tick (local adjacency).
+\end{remark}
+
+\subsection{Interpretation: why this is a gravity-relevant statement}
+The Octave is not yet gravity; it is the \emph{minimal stable local clock+neighborhood structure}. Gravity enters when we add the closure postulate and ask: what is the macroscopic language of a system whose evolution must be globally consistent under this minimal local structure?
+
+\subsection{Why three spatial dimensions}
+
+\begin{proposition}[Dimension forcing from \(8\leftrightarrow 45\) synchronization]\label{prop:dim3}
+For \(D\in\mathbb{N}\),
+\[
+  \mathrm{lcm}(2^D,45)=360 \quad \Longleftrightarrow \quad D=3.
+\]
+\end{proposition}
+\noindent This is proved in Lean as \texttt{lcm\_pow2\_45\_eq\_iff} (in \nolinkurl{IndisputableMonolith/RecogSpec/Bands.lean}).
+
+\begin{remark}[Relation to Octave coverage]
+Independently, the discrete pattern space \(\mathrm{Pattern}(D)\) has \(2^D\) elements, and Lean constructs a complete cover of period \(2^D\) (see \texttt{Patterns.cover\_exact\_pow}). Combining this canonical \(2^D\) clock with the synchronization condition \(\mathrm{lcm}(2^D,45)=360\) uniquely selects \(D=3\).
+\end{remark}
+
+\begin{remark}[What is ``gap-45''?]
+In Recognition Science, ``gap'' refers to a mismatch cost when self-similar \(\phi\)-patterns are projected onto a discrete clock. The number \(45\) is a distinguished rung on the \(\phi\)-ladder that enters the synchronization condition \(\mathrm{lcm}(2^D,45)=360\), and is treated as an explicit structural feature of the RS clocking layer.
+\end{remark}
+
+In the next sections we add two additional ingredients:
+\begin{itemize}
+  \item a \textbf{canonical quadratic ``variation energy''} on the 8-tick cycle, and
+  \item a \textbf{closure constraint on loops}, whose continuum limit becomes curvature and conservation laws.
+\end{itemize}
+
+% ==============================================================================
+\section{Octave spectral structure: DFT-8 and the canonical discrete derivative}
+\label{sec:dft8}
+% ==============================================================================
+
+The Octave is not only a counting fact (eight phases) and not only a combinatorial fact (a Gray cycle on the cube). It is also a \emph{spectral} fact: an 8-tick clock has a canonical shift symmetry, and shift symmetry forces a canonical Fourier basis and a canonical notion of ``variation energy'' on the cycle.
+
+\subsection{DFT-8 as the canonical eigenbasis}
+Let \(x:\Zmod{8}\to \C\) be any complex-valued signal on the eight phases. Define the one-tick shift operator \(S\) by \((Sx)_t=x_{t+1}\).
+By standard representation theory, the irreducible unitary representations of the cyclic group \(\Zmod{8}\) are one-dimensional characters, so the eigenbasis of \(S\) is the discrete Fourier basis.
+
+Define \(\omega\coloneqq e^{-2\pi i/8}\). The unitary DFT-8 matrix entries are
+\[
+  B_{t,k} \coloneqq \frac{\omega^{tk}}{\sqrt{8}},\qquad t,k\in\Zmod{8}.
+\]
+Fourier coefficients are \(c_k \coloneqq \sum_{t\in\Zmod{8}} \overline{B_{t,k}}\,x_t\). In this basis, the shift acts diagonally:
+\[
+  S:\; c_k \mapsto \omega^k\,c_k.
+\]
+The \(k=0\) mode is the DC component. Modes \(k\neq 0\) are mean-free (``neutral'') in the sense that \(\sum_{t} B_{t,k}=0\) for \(k\neq 0\).
+
+\begin{remark}[Alignment with the Lean artifact]
+In the Lean formalization, the primitive 8th root is defined as
+\[
+  \omega_8 \coloneqq e^{-i\pi/4},
+\]
+and the DFT entry is defined (in normalized form) by
+\[
+  \mathrm{dft8\_entry}(t,k) \;=\; \frac{\omega_8^{\,t k}}{\sqrt{8}}
+\]
+(see \nolinkurl{IndisputableMonolith/LightLanguage/Basis/DFT8.lean}).
+The diagonalization statement (that the DFT basis diagonalizes the cyclic shift matrix) is proved as
+\begin{center}
+\texttt{dft8\_diagonalizes\_shift}.
+\end{center}
+The stronger statement ``any unitary basis that diagonalizes shift agrees with DFT-8 up to phase and permutation'' is currently tracked as an explicit hypothesis:
+\begin{center}
+\texttt{dft8\_unique\_up\_to\_phase\_hypothesis};
+\end{center}
+we use the standard mathematical fact but keep the proof-status distinction explicit.
+\end{remark}
+
+\subsection{A unique local quadratic energy on the Octave}
+Among quadratic energies on \(x\) that are local and shift-invariant, the simplest choice is the discrete derivative energy built from the one-step difference:
+\[
+  (Dx)_t \coloneqq (Sx)_t - x_t = x_{t+1}-x_t,
+  \qquad
+  E[x]\coloneqq \sum_{t\in\Zmod{8}} \abs{(Dx)_t}^2.
+\]
+In the Fourier basis this energy is diagonal. Since \(D\) has eigenvalues \(\omega^k-1\), we obtain
+\[
+  E[x] = \sum_{k\in\Zmod{8}} \abs{c_k}^2\,\abs{\omega^k-1}^2
+  = 4\sum_{k\in\Zmod{8}} \abs{c_k}^2 \sin^2\!\Bigl(\frac{\pi k}{8}\Bigr).
+\]
+The factor \(4\sin^2(\pi k/8)\) are the eigenvalues of the discrete Laplacian \(D^\ast D\). This is not an ad hoc weight; it is the spectral footprint of the nearest-neighbor, shift-invariant quadratic variation energy on the Octave (unique up to an overall scale).
+
+\begin{remark}[Connection to RS ``gap'' accounting]
+In Recognition Science, the same DFT-8 backbone and the same Laplacian weights appear in the parameter-free ``gap'' bookkeeping on an eight-tick window: forcing a self-similar scaling pattern onto a discrete 8-tick clock generically produces neutral (non-DC) spectral content, and the ``gap'' measures the weighted cost of that neutral content.
+
+The relevant self-similarity premise is the \emph{\(\phi\)-ladder hypothesis} (explicitly marked as a hypothesis in Lean; see \nolinkurl{IndisputableMonolith/RRF/Hypotheses/PhiLadder.lean}).
+
+Concretely, the Lean support documents define the canonical 8-tick \(\phi\)-pattern \(p(t)=\phi^t\) for \(t\in\Fin 8\), compute its DFT-8 coefficients, weight the neutral modes by the canonical Laplacian spectrum, and then apply an explicit normalization/projection step (including the \(64 = 8 \times 8\) ``ticks \(\times\) vertices'' measure choice).
+
+The repository exposes (paths relative to \texttt{IndisputableMonolith/}):
+\begin{itemize}
+  \item \texttt{w8\_dft\_candidate} in \texttt{Constants/GapWeight/Formula.lean},
+  \item \texttt{w8\_projected} in \texttt{Constants/GapWeight/Projection.lean},
+  \item \texttt{w8\_from\_eight\_tick} in \texttt{Constants/GapWeight.lean}.
+\end{itemize}
+
+Numerically, the pipeline constant is
+\[
+  w_8 = \frac{348 + 210\sqrt{2} - (204 + 130\sqrt{2})\phi}{7} \approx 2.4905...
+\]
+(see \nolinkurl{docs/internal_memo_w8_derivation.tex}). Proving the equality between the transparent projected definition and the closed form is tracked as an internal follow-up theorem.
+\end{remark}
+
+% ==============================================================================
+\section{Discrete closure: from loops to conservation}
+\label{sec:discrete-closure}
+% ==============================================================================
+
+We now trace the path from a discrete closure constraint on loops to the conservation laws that any viable continuum limit must satisfy. This is the first half of the Octave-to-gravity bridge.
+
+\subsection{A discrete calculus: boundaries and the identity ``boundary of a boundary is zero''}
+To make ``closure on loops'' precise, we need a language for loops, surfaces, and volumes on a discrete substrate. The standard tool is a cell complex (specifically a 3-simplicial complex of tetrahedra) together with its boundary operator (a discrete exterior calculus viewpoint) \cite{hirani_dec,desbrun_dec}.
+
+Let \(K\) be an oriented cell complex approximating a region of space(-time). Let \(C_k(K)\) denote formal integer combinations of oriented \(k\)-cells (chains). There is a boundary operator
+\[
+  \partial: C_k(K)\to C_{k-1}(K),
+\]
+that sends an oriented cell to its oriented boundary (e.g.\ a triangle to its three directed edges). A fundamental identity of this calculus is \cite{hirani_dec,desbrun_dec}
+\[
+  \partial\circ \partial = 0,
+\]
+often read as ``the boundary of a boundary is empty.'' This identity is the discrete, topology-level ancestor of the continuum identities that later become Bianchi constraints.
+
+\begin{remark}[Plain language]
+If you take the boundary of a patch, you get its edge. If you then take the boundary of that edge, you get nothing: edges do not have edges. This ``nothing'' is exactly what prevents contradictions from hiding when you sum around closed loops.
+\end{remark}
+
+\subsection{Closure implies conservation (discrete divergence-free condition)}
+A conserved flow can be represented discretely as fluxes through faces. For example, in 3D take a 2-cochain \(J\) assigning a signed flux \(J(f)\) to each oriented face \(f\). Conservation in a volume cell \(V\) is the statement
+\[
+  \sum_{f\in \partial V} J(f) = 0,
+\]
+meaning: net flux out of any closed volume is zero. This is the discrete divergence-free condition.
+
+In the continuum limit (when cells become small and sums become integrals), this becomes the familiar divergence law. Writing a continuum current density \(\mathbf{j}\),
+\[
+  \oint_{\partial \Omega} \mathbf{j}\cdot \mathbf{n}\,\dd A = 0
+  \quad \Longrightarrow\quad
+  \nabla\cdot \mathbf{j}=0
+\]
+in regions without sources/sinks.
+
+\subsection{Closure forces compatibility constraints on dynamics}
+The conservation law is not just an observational fact; it is a \emph{compatibility constraint} that any macroscopic field equation must respect. If a continuum field equation claims ``field = source,'' then taking a divergence of both sides must be consistent. In successful physical theories, this is guaranteed by an identity (not by tuning):
+\begin{itemize}
+  \item In electromagnetism, gauge structure implies a differential identity that makes charge conservation automatic.
+  \item In General Relativity, the Bianchi identity implies \(\nabla_\mu G^{\mu\nu}=0\), forcing \(\nabla_\mu T^{\mu\nu}=0\).
+\end{itemize}
+In this framework, those identities are the continuum shadow of the discrete fact \(\partial^2=0\): closure at the discrete level becomes ``divergence of the left-hand side is identically zero'' at the continuum level.
+
+\subsection{Why a variational principle appears}
+Once closure is a hard constraint, the system is not free to evolve arbitrarily. Given sources and boundary conditions, there is typically a family of admissible configurations; the physical configuration is selected by an optimization principle: the system chooses the configuration of \emph{least strain}.
+
+Mathematically, the least-strain statement is naturally expressed by a functional \(J[\text{fields}]\) whose stationary points are the realized configurations:
+\[
+  \delta J = 0.
+\]
+The job of the next section is to identify what this functional must look like in the continuum limit if we also require locality and covariance.
+
+\subsection{Preview: where curvature enters}
+The discrete closure constraint controls \emph{holonomy}: how local frames compare after transport around loops. In the continuum, holonomy is measured by curvature.
+
+In Regge calculus \cite{regge1961}, spacetime is triangulated into 4-simplices, and curvature is concentrated on 2-dimensional ``hinges'' (triangular faces). The curvature at a hinge is measured by the \emph{deficit angle}: the amount by which the dihedral angles of the 4-simplices meeting at that hinge fail to sum to \(2\pi\). The Regge action is
+\[
+  S_{\mathrm{Regge}} = \sum_{\text{hinges } h} A_h \,\epsilon_h,
+\]
+where \(A_h\) is the area of hinge \(h\) and \(\epsilon_h\) is its deficit angle. This converges to the Einstein--Hilbert action in the continuum limit.
+
+The connection to Octave gravity is direct: a loop that does not close in the ledger becomes a hinge with nonzero deficit angle in the geometric description. Curvature is the natural ``storage location'' for loop-bookkeeping mismatch.
+
+% ==============================================================================
+\section{Continuum limit: geometric gravity and Einstein dynamics}
+\label{sec:gr-bridge}
+% ==============================================================================
+
+We now move from discrete closure language to the standard continuum language of gravitational physics \cite{wald,carroll}. The point of this section is not to re-teach GR, but to show exactly \emph{where} GR sits in the Octave story: GR is the cleanest covariant continuum closure of a loop-based consistency constraint.
+
+\subsection{Kinematics: metric, connection, curvature}
+A Lorentzian metric \(g_{\mu\nu}(x)\) assigns local spacetime intervals. The Levi--Civita connection \(\nabla\) (the unique torsion-free connection compatible with \(g\)) tells us how to compare vectors at nearby points.
+
+Curvature measures the failure of transporting around a small loop to return a vector to itself. Formally, for a vector field \(V^\rho\),
+\[
+  [\nabla_\mu,\nabla_\nu]V^\rho = R^{\rho}{}_{\sigma\mu\nu}V^\sigma,
+\]
+where \(R^{\rho}{}_{\sigma\mu\nu}\) is the Riemann curvature tensor. Contracting indices gives the Ricci tensor \(R_{\mu\nu}\) and scalar curvature \(R\).
+
+\subsection{Dynamics: the Einstein--Hilbert action}
+The simplest local, generally covariant action for a metric is the Einstein--Hilbert action (plus a cosmological constant term):
+\[
+  S_{\mathrm{EH}}[g] = \frac{c^3}{16\pi G}\int (R - 2\Lambda)\sqrt{-g}\,\dd^4x.
+\]
+Matter fields contribute an additional action \(S_m[g,\psi]\), and define stress-energy by
+\[
+  T_{\mu\nu} \coloneqq -\frac{2}{\sqrt{-g}}\frac{\delta S_m}{\delta g^{\mu\nu}}.
+\]
+Stationarity \(\delta(S_{\mathrm{EH}}+S_m)=0\) yields the Einstein field equations
+\[
+  G_{\mu\nu} + \Lambda g_{\mu\nu} = \frac{8\pi G}{c^4}T_{\mu\nu},
+  \qquad
+  G_{\mu\nu}\coloneqq R_{\mu\nu}-\tfrac12 g_{\mu\nu}R.
+\]
+
+\subsection{Why conservation is automatic (Bianchi identity)}
+The differential-geometric analogue of \(\partial^2=0\) is the Bianchi identity, which implies
+\[
+  \nabla_\mu G^{\mu\nu} = 0.
+\]
+Therefore any matter source coupled consistently to gravity must satisfy
+\[
+  \nabla_\mu T^{\mu\nu}=0.
+\]
+In the Octave story, this is not an afterthought: it is the continuum form of ledger closure. The metric field equations must be built so that a divergence identity is automatic, not tuned.
+
+\subsection{Why GR is (nearly) unique as a local covariant closure}
+There is a standard uniqueness theorem behind the slogan ``if you want a local covariant theory of a metric with second-order field equations, you essentially get GR.'' In four spacetime dimensions, the Lovelock theorem \cite{lovelock1971} states that the most general symmetric, divergence-free rank-2 tensor built from \(g_{\mu\nu}\) and up to its second derivatives is a linear combination of \(G_{\mu\nu}\) and \(g_{\mu\nu}\) (the cosmological constant term).
+
+\begin{remark}[What this means here]
+If the macroscopic limit of a ledger-closure theory is:
+\begin{itemize}
+  \item local (no explicit long-range kernels in the fundamental covariant law),
+  \item generally covariant (no preferred coordinates),
+  \item metric-based (gravity is encoded in \(g_{\mu\nu}\)),
+  \item second-order (to avoid extra propagating ghost degrees of freedom),
+\end{itemize}
+then the closure/compatibility requirement forces the GR form. The remaining task is to show that the RS ledger strain functional really produces \(S_{\mathrm{EH}}\) (or an equivalent local covariant action) in its continuum limit.
+\end{remark}
+
+\subsection{Where RS sits: ``least strain'' as ``stationary action''}
+At the narrative level, the Octave story says:
+\begin{align}
+\text{discrete closure + least strain}
+&\Longrightarrow \text{covariant continuum action}, \nonumber\\
+&\Longrightarrow \text{automatic divergence identity}.
+\end{align}
+At the mathematical level, the bridge is formalized using a \defterm{Recognition Reality Field} (RRF), a scalar field \(\Psi:\R^{3+1}\to\R\) representing the coarse-grained recognition potential. The current Lean bridge defines a \textbf{field cost density}:
+\[
+  \mathcal{J}_{\text{RRF}}(\Psi, g) = \frac{1}{2} g^{\mu\nu} \partial_\mu \Psi \partial_\nu \Psi.
+\]
+
+\begin{assumption}[Field-Cost/Curvature Bridge]\label{hyp:field-cost}
+When \(\Psi\) encodes the emergent metric degrees of freedom, varying \(\mathcal{J}_{\text{RRF}}\) with respect to \(g^{\mu\nu}\) produces the same Euler--Lagrange response as varying the Ricci scalar:
+\[
+  \frac{\delta}{\delta g^{\mu\nu}(x)}\Bigl(\mathcal{J}_{\text{RRF}}(\Psi,g)\Bigr)
+  \;=\;
+  \frac{\delta}{\delta g^{\mu\nu}(x)}\bigl(R(g)\bigr).
+\]
+\end{assumption}
+\noindent\textbf{Status}: Recorded in Lean as \texttt{field\_cost\_equals\_curvature}, currently with proof debt (\texttt{sorry}). Completing this proof is the central open problem for GR emergence.
+
+% ==============================================================================
+\section{What gravity is, in this picture}
+% ==============================================================================
+
+We can now say plainly what gravity is.
+
+\subsection{Gravity is the consistency field}
+Gravity is the field that enforces consistent global bookkeeping of local updates. It is not primarily a force. It is the rule that determines which configurations of motion and influence can exist without contradiction.
+
+When you feel gravity pulling you toward the Earth, what you are experiencing is this: configurations in which you hover motionless require more bookkeeping strain than configurations in which you fall. The geometry is telling you which paths are least strained.
+
+\subsection{Matter sources gravity because matter creates demands}
+Matter is where updates happen---where changes are being attempted. Updates create demands on the ledger: ``something changed here; the books must still balance.''
+
+The geometry is the system's solution that satisfies closure while accommodating those demands. In the GR continuum language, those demands are summarized by a stress-energy tensor \(T_{\mu\nu}\): a local accounting object that encodes energy density, momentum flux, and pressure/stress.
+The statement ``matter sources gravity'' is the statement that the curvature of the metric is constrained by \(T_{\mu\nu}\) through the Einstein field equations (Section~\ref{sec:gr-bridge}).
+
+\subsection{Free fall is the path of least strain}
+If geometry encodes consistency and the system chooses least strain, then test bodies move along paths that are easiest to keep consistent.
+
+That is why free fall appears as the ``straightest path'' in curved geometry. It is not that curved spacetime exerts a force. It is that curved spacetime \emph{is} the consistency solution, and free-fall paths are the paths along which consistency is maintained with least effort.
+
+In GR this is encoded by the geodesic equation. Writing a worldline \(x^\mu(\tau)\) with tangent \(u^\mu=\dd x^\mu/\dd\tau\),
+\[
+  u^\mu \nabla_\mu u^\nu = 0,
+\]
+or in coordinates,
+\[
+  \frac{\dd^2 x^\mu}{\dd \tau^2} + \Gamma^\mu_{\alpha\beta}\frac{\dd x^\alpha}{\dd\tau}\frac{\dd x^\beta}{\dd\tau}=0,
+\]
+where \(\Gamma^\mu_{\alpha\beta}\) are the Christoffel symbols of the Levi--Civita connection.
+
+\subsection{Weak-field limit (what reduces to Newton's law)}
+Any candidate continuum limit of Octave gravity must reproduce the weak-field, slow-motion regime tested in the solar system. In GR this appears as the Newtonian limit of the metric:
+\[
+  g_{00} \approx -\Bigl(1+\frac{2\Phi}{c^2}\Bigr),
+\]
+where \(\Phi\) is the Newtonian gravitational potential. In this limit, the Einstein field equations reduce to Poisson's equation
+\[
+  \nabla^2 \Phi = 4\pi G\rho,
+\]
+for nonrelativistic mass density \(\rho\).
+This is the regime in which ``gravity looks like a force.'' In the geometric view, the ``force'' is an approximation to geodesic motion in a weakly curved metric.
+
+\subsection{Why gravity cannot be shielded}
+Gravity couples to everything because the ledger tracks everything. You cannot opt out of consistency enforcement. Any update, anywhere, creates demands that the geometry must accommodate. There is no configuration of matter that erases its own ledger entries.
+
+This is why gravity is universal: it is not a force carried by a special particle that some things might not interact with. It is the consistency requirement itself, and nothing escapes the requirement to be consistent.
+
+% ==============================================================================
+\section{Finite-information closure: Information-Limited Gravity (ILG) as an effective display}
+\label{sec:ilg}
+% ==============================================================================
+
+Up to this point, we have described the \emph{ideal} closure limit: exact ledger closure, exact continuum limit, and a local covariant macroscopic law (GR).
+Recognition Science also contains a second, empirically motivated layer: what happens when closure is \emph{information-limited}. In that regime the macroscopic law can remain geometric, but the \emph{effective sourcing} of gravity by observed matter is modified because the system is not permitted to condition on (or ``recognize'') arbitrary fine-grained information.
+
+\subsection{The basic idea}
+In plain terms: if the gravitational inference process cannot fully resolve a source at all scales, it must use a coarse-grained source. Coarse-graining does not merely ``blur'' the field; it can rescale the effective source strength in a scale-dependent way.
+In RS this effect is organized by the Octave clock: the same eight-tick structure that forces DFT-8 spectral rigidity also supplies a canonical way to talk about ``what information is available'' per update cycle.
+
+\subsection{Cosmology (quasi-static limit): a source-side kernel}
+In the Newtonian/quasi-static regime of cosmological perturbations, gravity is often summarized by a Poisson-type constraint relating the potential \(\Phi\) to the matter density perturbation. Information-Limited Gravity modifies this \emph{on the source side} by a dimensionless kernel \(w\) that depends on scale and time.
+
+In Fourier space one writes schematically
+\[
+  -k^2 \Phi(k,a) \;=\; 4\pi G\,a^2\, w(k,a)\,\delta\rho_b(k,a),
+\]
+where \(\delta\rho_b\) is the baryonic matter perturbation (the ``observed'' source). The ILG proposal fixes \(w\) to a simple scale/time form
+\[
+  w(k,a) = 1 + C\Bigl(\max(\varepsilon, \frac{a}{k\tau_0})\Bigr)^{\alpha},
+\]
+where \(\varepsilon\) is a small positive regulator (in the Lean formalization \(\varepsilon=0.01\)) used as a guard against division-by-zero edge cases; physically one considers \(k>0\) and drops the regulator.
+
+In the RS-canonical parameterization formalized in Lean, the exponent and amplitude are fixed by \(\phi\):
+\[
+  \alpha = \frac{1 - 1/\phi}{2},\qquad C = \phi^{-3/2},
+\]
+and \(\tau_0\) is the fundamental tick (RS-native time quantum).
+The detailed motivation, parameter policy, and linear-regime predictions are developed in the dedicated ILG cosmology paper(s); the corresponding Lean formalization lives in \nolinkurl{IndisputableMonolith/ILG/Kernel.lean} and \nolinkurl{IndisputableMonolith/ILG/PoissonKernel.lean}.
+
+\subsection{Galaxies (phenomenological display): a time-lag kernel}
+At galaxy scales, one convenient ``display'' of information-limited sourcing is a causal-response/time-lag kernel that rescales the baryonic contribution to rotation curves.
+A representative form used in the repository's ILG weak-field display is
+\[
+  w_t(T_{\mathrm{dyn}},\tau_0)=1 + C_{\mathrm{lag}}\Bigl(\max(\varepsilon_t, T_{\mathrm{dyn}}/\tau_0)\Bigr)^{\alpha},
+\]
+where \(\varepsilon_t\) is a small positive floor (in the current Lean formalization it is set to \(0.01\); see \nolinkurl{IndisputableMonolith/Relativity/ILG/WeakField.lean}).
+leading to a multiplicative prediction for squared circular speed \(v^2\):
+\[
+  v^2_{\mathrm{model}}(r) = w_t\bigl(T_{\mathrm{dyn}}(r),\tau_0\bigr)\,v^2_b(r),
+\]
+where \(v_b\) is the baryonic contribution and \(T_{\mathrm{dyn}}(r)\) is a local dynamical time. This is an \emph{effective} description; its job is to make the information-limited modification measurable in data analysis. A full covariant embedding is a separate paper-level task.
+
+\begin{remark}[Why include ILG here at all?]
+Because it answers the reader's natural next question: ``Fine, GR is the local covariant closure---so where do the dark-matter-like and dark-energy-like effects come from in your theory?'' In this program the answer is: they are \emph{not} new substances; they are effective consequences of information-limited sourcing on top of the GR baseline.
+\end{remark}
+
+% ==============================================================================
+\section{Predictions and falsification}
+% ==============================================================================
+
+Before discussing predictions, readers may wish to consult Section~\ref{sec:proof-status} for a detailed accounting of what is machine-verified versus hypothesized.
+
+A good theory makes predictions that could be wrong. What does Octave gravity predict?
+
+\subsection{Structural predictions}
+\begin{itemize}
+  \item \textbf{Rigidity of form:} The theory strongly constrains what macroscopic field equations are allowed. Not any geometric theory will do---only theories compatible with the Octave closure structure.
+  \item \textbf{Dimensional structure:} The same 8-step structure that forces 3D geometry should constrain other sectors (symmetry groups, particle content). This is tested by checking whether the broader Recognition Science program correctly predicts Standard Model structure from the same Octave.
+  \item \textbf{Auditability:} The derivation is intended to be machine-checkable. If formal verification reveals a gap, the theory must either close the gap or retract the claim.
+\end{itemize}
+
+\subsection{Where the theory touches data (GR baseline + ILG departures)}
+Octave gravity makes contact with observation in two layers:
+\begin{itemize}
+  \item \textbf{GR baseline (ideal closure):} recover the standard successes of GR: gravitational redshift, light bending, time delay, perihelion precession, strong equivalence principle tests, and gravitational waves propagating at speed \(c\) (to observational accuracy).
+  \item \textbf{ILG departures (finite-information closure):} introduce scale/time-dependent effective sourcing encoded by kernels like \(w(k,a)\) (Section~\ref{sec:ilg}). This produces distinctive signatures in galaxies (rotation curves, lensing) and in cosmology (growth, lensing, ISW).
+\end{itemize}
+
+\subsection{Hard falsifiers (examples)}
+Beyond the structural falsifiers, the information-limited layer has sharp empirical failure modes. Examples (to be quantified in the dedicated ILG papers):
+\begin{itemize}
+  \item \textbf{Wrong-sign ISW prediction:} if the kernel predicts a suppression (or sign change) of a large-scale late-time effect and the opposite is robustly measured, the kernel form is ruled out.
+  \item \textbf{No \(k\)-dependence where required:} if the model predicts a scale-dependent growth/lensing relation and data show scale-independence over the predicted regime, the kernel is ruled out.
+  \item \textbf{GW-sector inconsistency:} any covariant completion that changes GW propagation in conflict with multimessenger constraints is ruled out.
+\end{itemize}
+
+\subsection{What would falsify this story}
+\begin{itemize}
+  \item \textbf{Alternative minimal cycle:} Showing that a cycle length other than eight can support the same closure and completeness requirements would weaken or falsify the Octave uniqueness claim.
+  \item \textbf{Broken bridge:} Showing that loop closure does not force the required compatibility identities would break the bridge from discrete rules to geometric field equations.
+  \item \textbf{Wrong continuum limit:} Showing that the continuum limit of the discrete structure does not produce GR-like dynamics would falsify the emergence claim.
+\end{itemize}
+
+These are not vague worries. They are specific checks that the theory must survive.
+
+% ==============================================================================
+\section{Related work}
+% ==============================================================================
+
+\subsection{Other discrete gravity approaches}
+Several programs derive gravity from discrete or combinatorial structures. \emph{Regge calculus} \cite{regge1961} discretizes GR on simplicial manifolds; our use of deficit angles and discrete exterior calculus is directly inspired by this tradition. \emph{Causal dynamical triangulations} \cite{ambjorn2001cdt} and \emph{spin foam models} \cite{perez2013spinfoam} also build spacetime from discrete building blocks, though with different dynamical rules. \emph{Causal set theory} posits a fundamental partial order \cite{bombelli1987causalset}. What distinguishes the Octave approach is the emphasis on the \emph{minimal closure period} (8 ticks) arising from complete coverage of a 3-bit local neighborhood, together with the induced spectral weights of the discrete Laplacian.
+
+\subsection{Companion papers in this program}
+\begin{itemize}
+  \item \textbf{Foundations paper}: Machine-verified proofs of the structural claims (Octave minimality, closure-to-conservation bridge).
+  \item \textbf{GR emergence paper}: Explicit derivation of the Einstein field equations from the discrete structure.
+  \item \textbf{Phenomenology papers}: Galaxy rotation curves, cosmological tests, and comparison with data.
+\end{itemize}
+
+% ==============================================================================
+\section{Proof status: what is proven, what is not}
+\label{sec:proof-status}
+% ==============================================================================
+
+Honesty requires separating what is established from what is conjectured.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{lll}
+\hline
+\textbf{Claim} & \textbf{Status} & \textbf{Reference} \\
+\hline
+8-phase clock (\(\Fin 8\)) & Proven & Octave/Theorem.lean \\
+Gray cycle existence & Proven & Patterns/GrayCycle.lean \\
+Gray cycle minimality (8 ticks) & Proven & Patterns.eight\_tick\_min \\
+DFT-8 diagonalizes shift & Proven & LightLanguage/Basis/DFT8.lean \\
+D=3 uniqueness (gap-45 sync) & Proven & RecogSpec/Bands.lean \\
+Field cost = curvature & \texttt{sorry} (Hyp.~\ref{hyp:field-cost}) & RecognitionField.lean \\
+Continuum limit & Not formalized & --- \\
+\hline
+\end{tabular}
+\caption{Summary of proof status for key claims.}
+\label{tab:proofstatus}
+\end{table}
+
+\subsection{Machine-verified discrete facts (Lean)}
+{\small\raggedright
+\begin{description}
+  \item[8-phase clock closure] \(\Fin 8\) arithmetic and ``add 8 gives identity'' facts.\\
+    \texttt{Octave/Theorem.lean}: \texttt{phase\_add8}, \texttt{phase\_add1\_iter8}.
+
+  \item[3-bit pattern coverage and Gray adjacency] Complete coverage of \(\mathrm{Pattern}(3)\) at period~8, plus a concrete Gray-cycle witness with one-bit steps.\\
+    \texttt{Patterns.lean}: \texttt{card\_pattern}, \texttt{eight\_tick\_min}.\\
+    \texttt{Patterns/GrayCycle.lean}: \texttt{grayCycle3}, \texttt{grayCover\_eight\_tick\_min}.\\
+    \texttt{Octave/Theorem.lean}: \texttt{patternAtPhase} and one-bit step facts.
+
+  \item[Octave witness-layer packaging] (No physics claim.)\\
+    \texttt{OctaveKernel/Instances/PatternCover.lean}: \texttt{PatternCoverLayer}.
+
+  \item[DFT-8 backbone] Shift diagonalization and neutral modes.\\
+    \texttt{LightLanguage/Basis/DFT8.lean}: \texttt{dft8\_diagonalizes\_shift}, \texttt{dft8\_mode\_neutral}.\\
+    \texttt{Constants/GapWeight/Projection.lean}: \texttt{diffEnergy8\_mode}.
+
+  \item[Gap weight \(w_8\)] Parameter-free constant and transparent projection operator.\\
+    \texttt{Constants/GapWeight.lean}: \texttt{w8\_from\_eight\_tick}, \texttt{w8\_pos}.\\
+    \texttt{Constants/GapWeight/Formula.lean}: \texttt{w8\_dft\_candidate}.\\
+    \texttt{Constants/GapWeight/Projection.lean}: \texttt{w8\_projected}, \texttt{projectionScale\_eq}.
+
+  \item[ILG kernel definitions] Effective, finite-information display.\\
+    \texttt{ILG/Kernel.lean}: \texttt{kernel}, \texttt{rsKernelParams}.\\
+    \texttt{ILG/PoissonKernel.lean}: modified Poisson operator.\\
+    \texttt{Relativity/ILG/WeakField.lean}, \texttt{KernelForm.lean}: time-kernel \(w_t\).
+\end{description}
+\medskip
+\noindent\textit{All paths are relative to} \texttt{IndisputableMonolith/}.
+}
+
+\subsection{Formalized but still incomplete / proof debt remains}
+{\small\raggedright
+\begin{description}
+  \item[Ledger-to-manifold bridge] A simplicial-ledger topology layer exists but includes explicit hypotheses/scaffolds.\\
+    Scaffold: \texttt{Foundation/SimplicialLedger.lean} (hypothesis \texttt{H\_SimplicialNyquistSurjection}).
+
+  \item[GR variational bridge] The repository contains an audited GR-emergence manuscript and a Lean roadmap; several key lemmas (functional derivatives, Palatini identities, boundary-term handling) remain to be completed.\\
+    See \texttt{docs/GRAVITATIONAL\_EMERGENCE\_PAPER.tex} and \texttt{docs/GR\_EMERGENCE\_PLAN.md}.
+
+  \item[Field Cost Isomorphism] The theorem identifying RRF field-cost variation with Ricci scalar variation is currently a named lemma with a \texttt{sorry}.\\
+    \texttt{Relativity/Dynamics/RecognitionField.lean}: \texttt{field\_cost\_equals\_curvature}.
+
+  \item[Covariant completion of ILG] A full covariant embedding of the effective source-side kernel (consistent with GW constraints) is a planned, not-yet-finished deliverable.
+\end{description}
+}
+
+\subsection{Explicit hypotheses (not yet formalized)}
+\begin{itemize}
+  \item The existence and uniqueness of the continuum limit (regularity assumptions, interchange of limits, and the precise sense in which discrete sums converge to continuum integrals).
+  \item The identification of the RS ledger strain functional with a local covariant continuum action equivalent (up to boundary terms) to \(S_{\mathrm{EH}}+S_m\).
+  \item The regime map between ideal closure (GR) and finite-information closure (ILG): where the effective kernels apply, and what the covariant completion must look like.
+\end{itemize}
+
+% ==============================================================================
+\section{Conclusion}
+% ==============================================================================
+
+Gravity, in this framework, is the macroscopic face of a deeper requirement: local updates must compose without contradiction.
+
+The Octave---the minimal 8-step closed cycle---is the smallest complete loop that covers a 3D neighborhood consistently. It sets the dimensional structure of space, and its closure rules become conservation laws and curvature in the continuum limit.
+
+Curvature is the ledger's record of loop nontriviality. Matter is the source of ledger demands. Free fall is the path of least strain. We do not assume geometry; we argue that geometry is the natural macroscopic description when closure is enforced.
+
+Gravity is consistency, and consistency closes on loops.
+
+\begin{thebibliography}{99}
+\bibitem{wald}
+R.~M.~Wald,
+\emph{General Relativity},
+University of Chicago Press (1984).
+
+\bibitem{carroll}
+S.~M.~Carroll,
+\emph{Spacetime and Geometry: An Introduction to General Relativity},
+Addison-Wesley (2004).
+
+\bibitem{lovelock1971}
+D.~Lovelock,
+``The Einstein tensor and its generalizations,''
+\emph{Journal of Mathematical Physics} \textbf{12}, 498 (1971).
+
+\bibitem{hirani_dec}
+A.~N.~Hirani,
+``Discrete Exterior Calculus,''
+Ph.D. thesis, California Institute of Technology (2003).
+
+\bibitem{desbrun_dec}
+M.~Desbrun, E.~Kanso, and Y.~Tong,
+``Discrete Differential Forms for Computational Modeling,''
+in \emph{Discrete Differential Geometry}, Oberwolfach Seminars, vol.~38,
+Birkh\"auser (2008).
+
+\bibitem{regge1961}
+T.~Regge,
+``General Relativity Without Coordinates,''
+\emph{Il Nuovo Cimento} \textbf{19}, 558--571 (1961).
+
+\bibitem{gray1953}
+F.~Gray,
+``Pulse Code Communication,''
+U.S. Patent 2,632,058 (1953).
+
+\bibitem{ambjorn2001cdt}
+J.~Ambj\o rn, J.~Jurkiewicz, and R.~Loll,
+``Dynamically triangulating Lorentzian quantum gravity,''
+\emph{Nuclear Physics B} \textbf{610}, 347--382 (2001).
+
+\bibitem{perez2013spinfoam}
+A.~Perez,
+``The Spin-Foam Approach to Quantum Gravity,''
+\emph{Living Reviews in Relativity} \textbf{16}, 3 (2013).
+
+\bibitem{bombelli1987causalset}
+L.~Bombelli, J.~Lee, D.~Meyer, and R.~D.~Sorkin,
+``Space-time as a causal set,''
+\emph{Physical Review Letters} \textbf{59}, 521--524 (1987).
+\end{thebibliography}
+
+\end{document}

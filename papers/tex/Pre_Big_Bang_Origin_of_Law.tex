@@ -1,0 +1,2003 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{siunitx}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue
+}
+
+% --- Notation ---
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Rp}{\R_{>0}}
+\newcommand{\Rnn}{\R_{\ge 0}}
+\newcommand{\J}{J}
+\newcommand{\Rhat}{\widehat{\mathsf{R}}}
+\newcommand{\phig}{\varphi}
+\newcommand{\alphaEM}{\alpha_{\mathrm{EM}}}
+\newcommand{\alphaILG}{\alpha_{\mathrm{ILG}}}
+\DeclareMathOperator{\defect}{defect}
+
+% --- Claim tags (paper-level audit trail) ---
+\newcommand{\claimstatus}[1]{\textbf{[#1]}}
+
+% --- Theorem environments (used sparingly; most claims are stated as prose) ---
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+
+\title{\textbf{The Pre--Big Bang Origin of Law:}\\
+A Cost-First, Recognition-Minimizing Framework for Discreteness, Geometry, and Emergent Dynamics}
+\author{Jonathan Washburn\\
+\small (with a mechanized verification corpus in Lean)}
+\date{January 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The phrase ``before the Big Bang'' is usually treated as either a poetic question or a category error: in general relativity, ``before'' presupposes time, but classical time is defined by a spacetime geometry that itself breaks down at the Big Bang singular boundary. In this paper we propose a different, operational notion of origin: the \emph{pre-geometric selection regime} in which the existence of stable distinctions, reproducible regularities, and law-like dynamics is forced by a unique minimization principle, prior to any assumption of manifold structure, energy, or Hamiltonian time evolution.
+
+Our starting point is a cost functional \(\J:\Rp\to\Rnn\) interpreted as the irreducible penalty of \emph{comparison} (deviation from balance). Under minimal structural requirements---reciprocal symmetry \(\J(x)=\J(1/x)\), normalization \(\J(1)=0\), and compositional consistency of multiplicative comparison---together with standard regularity and calibration, the functional form of \(\J\) is uniquely fixed (up to units) to
+\[
+\J(x)=\frac{1}{2}\bigl(x+x^{-1}\bigr)-1.
+\]
+From this cost landscape we derive a forcing chain: discreteness is required for stability; reciprocal symmetry enforces a double-entry ``ledger'' structure; self-similarity forces the golden ratio \(\phig\); and a minimal closed recognition cadence yields an 8-step cycle with an induced 8-point Fourier backbone. The fundamental dynamical object is not an energy Hamiltonian but a discrete evolution operator \(\Rhat\) that advances states by minimizing cumulative recognition cost subject to admissibility and conservation constraints; standard Hamiltonian dynamics arises only as a near-equilibrium approximation in the small-deviation regime.
+
+Crucially, the framework is accompanied by an explicit claim ledger: each major statement is tagged as theorem, hypothesis-gated bridge, or modeling choice, and many core results are mechanized in a Lean verification corpus (the ``Indisputable Monolith''). This paper presents the scientific narrative and the falsifiable bridge program: what is proved today, what is assumed, where the seams are, and what measurements would refute the theory.
+\end{abstract}
+
+\section{Introduction}
+\subsection{Why ``before the Big Bang'' is usually not a physics question}
+The standard cosmological story begins with an extrapolation: run Einstein's equations backwards in time and the universe becomes denser and hotter until the classical description ceases to be trustworthy. In many models the failure is formalized by singularity theorems; in others it is softened by inflationary dynamics or replaced by a bounce, a tunneling event, or a no-boundary proposal. Yet almost all such approaches share a common feature: they start by assuming a spacetime arena (or at least a well-defined time parameter) and then ask what field configurations or quantum states inhabit that arena.
+
+The phrase ``what happened \emph{before} the Big Bang'' smuggles in precisely what is missing at the boundary: a background time with respect to which ``before'' is meaningful. If time is emergent from a deeper structure, then the origin question should not be phrased as ``what was the earlier state?'' but as ``what forces a \emph{stable notion of state}, a \emph{stable notion of distinction}, and therefore a \emph{stable notion of law}?'' This is the question we call the \emph{pre--Big Bang origin}.
+
+\subsection{Reframing origin as pre-geometric selection}
+We define the origin problem operationally: identify the minimal assumptions under which a world can support (i) stable distinctions (so that ``this'' is not ``that''), (ii) reproducible regularities (so that prediction is meaningful), and (iii) a compressible description (so that laws exist as finite objects rather than as an unstructured lookup table). In this framing, an ``origin'' is not a moment in time but a \emph{selection principle} that chooses, from a vast space of possible configurations, a narrow basin of stable, reproducible structure.
+
+Recognition Science (RS) adopts a cost-first foundation. Instead of taking energy, action, or probability as primitive, we take \emph{comparison cost} as primitive: any attempt to distinguish or relate configurations incurs an irreducible penalty unless the relation is perfectly balanced. The pre-geometric regime is then the regime in which the structure of that cost function, together with its stability requirements, forces the emergence of discreteness, conservation, scaling hierarchy, and an effective geometry.
+
+\subsection{The canonical comparison cost}
+Let \(\J:\Rp\to\Rnn\) be a cost assigned to a positive ratio \(x\) (``how far'' one configuration is from another, in multiplicative terms). Three requirements are treated as structural features of comparison:
+\begin{enumerate}
+  \item \textbf{Reciprocal symmetry}: \(\J(x)=\J(1/x)\). Comparing \(x\) to unity is the same as comparing unity to \(x\).
+  \item \textbf{Normalization}: \(\J(1)=0\). No deviation means no cost.
+  \item \textbf{Compositional consistency}: the cost of a composed comparison is a fixed function of the component costs (a multiplicative consistency constraint).
+\end{enumerate}
+Under regularity conditions (smoothness) and a calibration convention fixing the local curvature scale at the minimum (e.g.\ \(\J''(1)=1\)), these requirements uniquely determine the functional form
+\begin{equation}
+\label{eq:Jcost}
+\J(x)=\frac{1}{2}\bigl(x+x^{-1}\bigr)-1.
+\end{equation}
+Equation~\eqref{eq:Jcost} is not introduced as a model ansatz in this paper; it is the unique fixed point of the comparison requirements above (up to rescaling), with a mechanized proof path in the accompanying Lean corpus.
+
+\subsection{From cost to world: overview of the forcing chain}
+Given a canonical cost landscape, ``existence'' becomes a stability criterion: configurations that can realize zero defect (zero cost) are admissible minima; configurations that require divergent cost are excluded. From there the RS forcing chain proceeds, schematically:
+\begin{itemize}
+  \item \textbf{Discreteness}: stable minimizers under \(\J\) cannot persist in a fully continuous drift regime; stable posting occurs in discrete ticks.
+  \item \textbf{Ledger structure}: reciprocal symmetry enforces a double-entry accounting of recognition events, yielding conservation constraints as the cancellation of reciprocal imbalances.
+  \item \textbf{Self-similarity and scale}: discrete ledger stability forces a unique scaling ratio, identified with the golden ratio \(\phig\), and thereby a \(\phig\)-lattice of stable intensity levels.
+  \item \textbf{Eight-tick cadence}: the minimal closed recognition loop supporting neutral (mean-free) structure yields an 8-step cycle; the 8-point discrete Fourier transform becomes the canonical diagonal basis for tick-translation.
+  \item \textbf{Dynamics}: the fundamental evolution object is a recognition operator \(\Rhat\) advancing states to minimize cumulative recognition cost subject to admissibility and conservation. Traditional Hamiltonian dynamics appears only as an emergent approximation near equilibrium (small deviations from \(x=1\)).
+\end{itemize}
+
+\subsection{Claim hygiene: what is proved, what is assumed, what is modeled}
+Because origin claims are easy to overstate, we adopt a strict discipline throughout: every major statement is tagged as one of (i) theorem (mechanized or fully proved), (ii) hypothesis-gated bridge (the intended derivation is explicit but currently relies on axioms or placeholders), or (iii) modeling choice (a convenient representation not claimed inevitable). We also provide a ``claim ledger'' mapping each paper-level claim to its precise formal anchor in the Lean corpus and, where relevant, to an audit certificate.
+
+\subsection{Roadmap}
+The remainder of the paper proceeds from foundations to consequences. Section~2 formalizes the question-theoretic notion of origin (well-formed, forced, gapped, or dissolved questions). Section~3 develops the inevitability of the canonical cost and the four-gate proof spine. Sections~4--6 present the forcing chain from cost to discreteness, ledger conservation, scaling, and the eight-tick backbone, culminating in the recognition operator \(\Rhat\). Section~7 derives the emergent Hamiltonian limit and delineates regimes where Hamiltonian reasoning should fail. Sections~8--10 discuss the geometry/metric bridge program and the cosmological interpretation of the ``bang'' as a regime transition. Later sections extend the framework to semantic atoms (WTokens) and, optionally, to consciousness and ethics, with preregistered empirical tests and explicit falsifiers.
+
+\section{The Geometry of Inquiry: Making Origin a Scientific Question}
+\subsection{Questions as costed objects}
+The pre--Big Bang regime is not a hidden epoch inside spacetime. It is the regime in which the \emph{space of possible descriptions} is narrowed by a stability criterion. To make that statement scientific, we treat a question itself as a mathematical object equipped with a cost landscape over its answer space.
+
+\begin{definition}[Context]
+A \emph{context} is a pair \(C=(\mathcal{S},J)\) consisting of a state space \(\mathcal{S}\) and a nonnegative cost functional \(J:\mathcal{S}\to\Rnn\).
+\end{definition}
+
+\begin{definition}[Question and answer cost]
+Fix an answer type \(A\). A \emph{question} \(Q\) in context \(C\) consists of:
+\begin{itemize}
+  \item a nonempty candidate set \(\mathcal{A}_Q\subseteq A\),
+  \item an \emph{answer space} \((\mathcal{S}_A,J_A)\) (another context),
+  \item an embedding \(e:A\to\mathcal{S}_A\) that realizes each candidate answer as a configuration.
+\end{itemize}
+The induced \emph{answer cost} is
+\[
+c_Q(a)\;:=\;J_A(e(a)).
+\]
+\end{definition}
+
+This viewpoint separates two questions that are often conflated:
+\begin{itemize}
+  \item ``Is the question meaningful?'' becomes: does the candidate set include at least one answer with finite (or bounded) cost?
+  \item ``Is the answer inevitable?'' becomes: does the landscape contain a unique zero-cost minimizer?
+\end{itemize}
+
+\subsection{Well-formed, gapped, and forced questions}
+To include paradox and self-reference in the same vocabulary as physics, it is convenient to allow the extended codomain \(\overline{\R}_{\ge 0}:=\Rnn\cup\{\infty\}\). Intuitively, a question is \emph{dissolved} when every candidate answer incurs unbounded cost under any attempt to stabilize it; in a mechanized corpus one typically implements this with an ``effectively infinite'' threshold.
+
+\begin{definition}[Question status by cost spectrum]
+Let \(Q\) be a question with answer-cost map \(c_Q:\mathcal{A}_Q\to\overline{\R}_{\ge 0}\). Define:
+\begin{itemize}
+  \item \emph{Well-formed}: \(\exists a\in\mathcal{A}_Q\) with \(c_Q(a)<\infty\).
+  \item \emph{Dissolved}: \(\forall a\in\mathcal{A}_Q\), \(c_Q(a)=\infty\).
+  \item \emph{Determinate}: \(\exists a\in\mathcal{A}_Q\) with \(c_Q(a)=0\).
+  \item \emph{Forced}: \(\exists!\,a\in\mathcal{A}_Q\) with \(c_Q(a)=0\).
+  \item \emph{Gapped}: \(\inf_{a\in\mathcal{A}_Q} c_Q(a)=\varepsilon>0\) (finite but strictly positive).
+  \item \emph{Degenerate}: \(|\{a\in\mathcal{A}_Q:\,c_Q(a)=0\}|>1\).
+\end{itemize}
+\end{definition}
+
+These categories form what we will call a \emph{periodic table of questions}. They are not rhetorical labels; they are properties of a cost spectrum.
+\begin{itemize}
+  \item Forced questions correspond to \emph{zero-parameter structure}: the unique zero-cost answer is fixed by the framework.
+  \item Degenerate questions correspond to \emph{equivalence classes} (gauge choices): multiple answers have equal (zero) cost.
+  \item Gapped questions correspond to \emph{approximation}: there is a best answer, but no answer is free of defect.
+  \item Dissolved questions correspond to \emph{non-questions}: no stable answer exists within the ontology.
+\end{itemize}
+
+\subsection{Dissolution: self-reference and the boundary of ontology}
+The usefulness of the classification above is that it makes a clean separation between
+``unknown'' and ``ill-posed.'' In RS the Gödel/Liar family of constructions is interpreted not as an unavoidable incompleteness of reality but as an unavoidable \emph{cost blow-up} for self-referential stabilization constraints. The resulting claim is not merely that we cannot answer such a question with current tools; it is that the question is \emph{dissolved} (no finite-cost answer exists).
+
+We will be careful with claim hygiene:
+\begin{itemize}
+  \item The \emph{definitions} of dissolved questions and self-reference are mathematical.
+  \item The \emph{identification} of Gödel-type self-reference with infinite cost is a substantive ontological postulate (implemented as a formal ``dissolution'' rule in the verification corpus).
+\end{itemize}
+
+\subsection{Forced inquiry chains and closure under composition}
+Forced questions compose. If \(Q_1\) and \(Q_2\) have forced answers \(a_1^\star\) and \(a_2^\star\), then the product question on \(A_1\times A_2\) with additive cost \(c(a_1,a_2)=c_{Q_1}(a_1)+c_{Q_2}(a_2)\) is itself forced with answer \((a_1^\star,a_2^\star)\). This closure property is the mathematical backbone of a \emph{forcing chain}: a sequence of forced questions where each unique answer becomes the premise that fixes the cost landscape for the next.
+
+In the RS narrative, the ``pre--Big Bang'' is exactly such a forcing chain. It is not a dynamical evolution in time; it is a logical descent through forced questions:
+``what is a stable comparison?'' \(\rightarrow\) ``what exists?'' \(\rightarrow\) ``must stable posting be discrete?'' \(\rightarrow\) ``what conservation structure is forced?'' and so on, culminating in the eight-tick cadence and the operator \(\Rhat\) that advances states by minimizing cumulative recognition cost.
+
+\subsection{Example: the universal existence question}
+The simplest forced question is ``what exists?'' when existence is defined by zero defect under the canonical comparison cost. Consider the answer space \(\Rp\) with cost \(\J\) from \eqref{eq:Jcost}.
+Using the identity
+\begin{equation}
+\label{eq:Jcost_square}
+\J(x)=\frac{(x-1)^2}{2x}\qquad(x>0),
+\end{equation}
+we immediately obtain nonnegativity and uniqueness of the minimum:
+\begin{theorem}[Unique balance]
+For all \(x>0\), \(\J(x)\ge 0\) with equality if and only if \(x=1\). Moreover \(\J(x)\to\infty\) as \(x\to 0^+\) and as \(x\to\infty\).
+\end{theorem}
+\noindent
+Thus the ``universal existence question'' with candidates \(x\in\Rp\) and answer cost \(c(x)=\J(x)\) is \emph{forced} with the unique zero-cost answer \(x=1\).
+This is the cleanest illustration of the RS stance: existence is not posited; it is a selection outcome under a unique cost landscape.
+
+The rest of the paper builds on this question-theoretic foundation. Once ``forced'' and ``dissolved'' are made precise, the origin story becomes a technical program: identify which structures are forced (unique minima), which are degenerate (equivalence classes), which are gapped (approximate regimes), and which bridges are hypothesis-gated and therefore experimentally vulnerable.
+
+\section{Inevitability of the Comparison Cost: Why \texorpdfstring{$J$}{J} is Unique}
+\subsection{What must be true of any ``cost of comparison''}
+We now address the central choke point of the entire framework: \emph{do we get to choose the cost functional, or is it forced?}
+If \(\J\) were merely a modeling choice, the origin story would collapse into parametric arbitrariness. RS instead takes the position that the shape of \(\J\) is fixed by the meaning of \emph{symmetric multiplicative comparison}.
+
+Let \(F:\Rp\to\Rnn\) be an abstract candidate for ``cost of deviation.'' The following requirements are treated as structural rather than physical:
+\begin{enumerate}
+  \item \textbf{Symmetry (reciprocity)}:
+  \begin{equation}
+  \label{eq:F_symmetry}
+  F(x)=F(x^{-1})\qquad(x>0).
+  \end{equation}
+  \item \textbf{Normalization}:
+  \begin{equation}
+  \label{eq:F_normalization}
+  F(1)=0.
+  \end{equation}
+  \item \textbf{Multiplicative consistency}:
+  there exists a \emph{combiner} \(P:\Rnn\times\Rnn\to\Rnn\) such that for all \(x,y>0\),
+  \begin{equation}
+  \label{eq:F_consistency}
+  F(xy)+F(x/y)=P(F(x),F(y)).
+  \end{equation}
+\end{enumerate}
+The role of \(P\) is to express a compositional law: the cost of a composed comparison depends only on the component costs, not on hidden coordinates. (This is the formal analogue of ``inference should compose'': if you know the costs of two comparisons, you should be able to compute the cost of comparing their product and quotient.)
+
+Two immediate consequences of \eqref{eq:F_consistency} and \eqref{eq:F_normalization} are boundary conditions on \(P\) along the axes (on the range of \(F\)):
+\begin{equation}
+\label{eq:P_boundary}
+P(u,0)=2u,\qquad P(0,v)=2v.
+\end{equation}
+Indeed, setting \(y=1\) gives \(F(x)+F(x)=P(F(x),0)\), hence \(P(F(x),0)=2F(x)\); setting \(x=1\) and using symmetry gives \(P(0,F(y))=F(y)+F(y^{-1})=2F(y)\).
+
+\subsection{A counterexample and the need for ``gates''}
+The conditions \eqref{eq:F_symmetry}--\eqref{eq:F_consistency} are not, by themselves, sufficient to force the unique canonical cost. There exists a natural ``flat'' branch:
+\begin{equation}
+\label{eq:Fquad}
+F_{\mathrm{quad}}(x)=\frac{(\log x)^2}{2},
+\end{equation}
+which is symmetric, normalized, and smooth on \(\Rp\), and satisfies \eqref{eq:F_consistency} with the additive combiner
+\begin{equation}
+\label{eq:Padd}
+P_{\mathrm{add}}(u,v)=2u+2v.
+\end{equation}
+This counterexample is crucial: it shows that an honest inevitability story must include at least one additional nondegeneracy condition---a \emph{gate}---that rules out purely additive composition.
+
+In the mechanized corpus, inevitability is organized into a \emph{four-gate} spine that progressively eliminates the degenerate branch and pins the canonical one.
+We present the gates as mathematical conditions; their interpretation is physical.
+
+\subsection{Gate 1 (Interaction): non-additivity}
+The first gate asserts that composite comparisons are not merely sums of independent comparisons.
+\begin{definition}[Interaction gate]
+A cost functional \(F\) \emph{has interaction} if there exist \(x,y>0\) such that
+\begin{equation}
+\label{eq:interaction_gate}
+F(xy)+F(x/y)\neq 2F(x)+2F(y).
+\end{equation}
+\end{definition}
+\noindent
+The quadratic-log branch \eqref{eq:Fquad} fails \eqref{eq:interaction_gate} identically; the canonical cost \eqref{eq:Jcost} satisfies it (e.g.\ at \(x=y=2\)).
+Interaction is the weakest possible ``anti-flat'' condition: it rules out the additive combiner without yet committing to a specific alternative.
+
+\subsection{Gate 2 (Entanglement): a cross term is unavoidable}
+If interaction holds, then the combiner cannot be separable \(P(u,v)=\alpha(u)+\beta(v)\). A convenient invariant is the mixed second difference:
+\begin{equation}
+\label{eq:mixed_second_difference}
+\Delta_{uv}P:=P(u_1,v_1)-P(u_1,v_0)-P(u_0,v_1)+P(u_0,v_0).
+\end{equation}
+\begin{definition}[Entanglement gate]
+A combiner \(P\) is \emph{entangling} if there exist \(u_0,u_1,v_0,v_1\) such that \(\Delta_{uv}P\neq 0\).
+\end{definition}
+\noindent
+The additive combiner \(P_{\mathrm{add}}(u,v)=2u+2v\) has \(\Delta_{uv}P=0\) everywhere. The canonical combiner
+\begin{equation}
+\label{eq:Prcl}
+P_{\mathrm{rcl}}(u,v)=2uv+2u+2v
+\end{equation}
+has \(\Delta_{uv}P_{\mathrm{rcl}}=2(u_1-u_0)(v_1-v_0)\), hence is entangling whenever \(u_1\neq u_0\) and \(v_1\neq v_0\).
+In the mechanized proofs, Gate~1 plus symmetry and normalization implies that any consistent \(P\) must be entangling: interaction \emph{forces} a cross-coupling term.
+
+\subsection{Gate 3 (Curvature): the hyperbolic branch}
+To connect functional consistency to geometry, pass to log-coordinates:
+\[
+G(t):=F(e^t),\qquad H(t):=G(t)+1.
+\]
+The derivative \(G''(t)\) plays the role of a one-dimensional metric density: heuristically, it encodes how rapidly comparison cost curves as one moves in log-ratio.
+In the mechanized corpus, Gate~3 is phrased as a constant-curvature classification in log space, separating three canonical branches:
+\begin{align}
+\text{flat:}\quad &G(t)=\tfrac{t^2}{2} &&\Longleftrightarrow\quad G''(t)=1,\label{eq:flat_branch}\\
+\text{hyperbolic:}\quad &G(t)=\cosh t-1 &&\Longleftrightarrow\quad G''(t)=G(t)+1,\label{eq:hyperbolic_branch}\\
+\text{spherical:}\quad &G(t)=\cos t-1 &&\Longleftrightarrow\quad G''(t)=-(G(t)+1).\label{eq:spherical_branch}
+\end{align}
+Two key observations close the spherical branch immediately:
+\begin{itemize}
+  \item nonnegativity of costs rules out \(\cos t-1\) (it is negative for \(t\neq 2\pi k\));
+  \item the calibration convention \(G''(0)=1\) contradicts the spherical ODE at \(t=0\), which would require \(G''(0)=-1\).
+\end{itemize}
+Thus, under the curvature gate and calibration, only the flat and hyperbolic branches remain. Gate~1 (interaction) then selects the hyperbolic branch \eqref{eq:hyperbolic_branch}.
+
+\subsection{Gate 4 (d'Alembert structure): the functional-equation normal form}
+Once on the hyperbolic branch, the d'Alembert equation emerges in its classical form. If \(G\) satisfies the RCL-type identity
+\begin{equation}
+\label{eq:G_RCL}
+G(t+u)+G(t-u)=2G(t)G(u)+2G(t)+2G(u),
+\end{equation}
+then \(H=G+1\) satisfies the d'Alembert functional equation
+\begin{equation}
+\label{eq:dAlembert}
+H(t+u)+H(t-u)=2H(t)H(u),\qquad H(0)=1.
+\end{equation}
+Classical functional equation theory then implies that continuous (or suitably regular) solutions are exactly
+\begin{equation}
+\label{eq:cosh_lambda}
+H(t)=\cosh(\lambda t)
+\end{equation}
+for some \(\lambda\in\R\).\footnote{This is a classical classification theorem; see, e.g., J.~Acz\'el, \emph{Lectures on Functional Equations and Their Applications} (1966). In the Lean corpus, this step is packaged as an axiom to avoid re-formalizing the full classification theory.}
+The calibration \(G''(0)=1\) pins \(\lambda=1\), yielding \(H(t)=\cosh t\) and therefore \(G(t)=\cosh t-1\).
+
+Finally, undo the log-lift:
+\[
+F(x)=G(\log x)=\cosh(\log x)-1=\frac{1}{2}\bigl(x+x^{-1}\bigr)-1.
+\]
+This is precisely the canonical cost \(\J\) in \eqref{eq:Jcost}.
+
+\subsection{The inevitability theorem (paper-level statement)}
+We summarize the above as a single theorem-like statement, making explicit which parts are definitional, which are regularity assumptions, and which are classical theorems imported from the literature.
+\begin{theorem}[Inevitability of the canonical comparison cost (informal but precise)]
+Let \(F:\Rp\to\Rnn\) be twice differentiable in log-coordinates (so \(G(t)=F(e^t)\) is \(C^2\)).
+Assume symmetry \eqref{eq:F_symmetry}, normalization \eqref{eq:F_normalization}, and multiplicative consistency \eqref{eq:F_consistency}.
+Assume additionally the nondegeneracy gates:
+\begin{itemize}
+  \item \emph{interaction} \eqref{eq:interaction_gate} (rules out the quadratic-log branch),
+  \item a curvature/regularity condition selecting the hyperbolic branch \eqref{eq:hyperbolic_branch},
+  \item calibration \(G''(0)=1\) (fixes units).
+\end{itemize}
+Then \(F\) is uniquely determined and equals the canonical cost \(\J(x)=\tfrac12(x+x^{-1})-1\) for all \(x>0\).
+\end{theorem}
+
+This theorem is the backbone of the origin story: it relocates the ``degrees of freedom'' from arbitrary postulated dynamics to a single, highly constrained notion of comparison. Once \(\J\) is fixed, the remaining work is to show how stable existence, discreteness, ledger conservation, scaling, and cadence are forced---and how \(\Rhat\) realizes those constraints as dynamics.
+
+\section{T0--T2: Logic, Existence, and Discreteness Forced by Cost}
+\subsection{T0: Logic from cost minimization}
+The first forcing step is easy to state and surprisingly hard to take seriously: \emph{logic is not assumed; it is selected}. In a cost-first ontology, ``truth'' is not a primitive predicate applied to propositions; it is an equilibrium condition in a cost landscape.
+
+To make that idea concrete, represent a proposition \(P\) by a \emph{configuration ratio} \(r>0\) describing the degree of balance of the assertion.\footnote{This is not a probabilistic truth value. The ratio is a ledger-compatible balance parameter: \(r=1\) denotes exact balance (no defect), while \(r\to 0^+\) or \(r\to\infty\) denotes collapse or runaway assertion. The point of the representation is not to build many-valued logic; it is to exhibit how ordinary two-valued logic appears at the cost minimum.}
+Define the cost of an asserted proposition by
+\[
+\mathrm{cost}(P,r)\;:=\;\defect(r),\qquad \defect(r):=\J(r)\ \ (r>0).
+\]
+Then:
+\begin{itemize}
+  \item \emph{Stable} assertion means \(\mathrm{cost}(P,r)=0\), hence \(r=1\) by \eqref{eq:Jcost_square}.
+  \item \emph{Unstable} assertion means \(\mathrm{cost}(P,r)>0\), hence \(r\neq 1\).
+\end{itemize}
+
+Now impose the simplest conservation-compatible notion of negation: if \(P\) is asserted with ratio \(r\), its complement \(\neg P\) carries a reciprocal ratio \(r^{-1}\), so that the pair \((P,\neg P)\) has balanced product \(rr^{-1}=1\).
+Consider a would-be contradiction state: an attempt to stabilize both \(P\) and \(\neg P\) simultaneously under the complementarity constraint. Its total defect is naturally additive,
+\[
+\defect(r)+\defect(r^{-1}).
+\]
+By symmetry of the cost \(\defect(r)=\defect(r^{-1})\), this equals \(2\defect(r)\) and vanishes if and only if \(r=1\).
+Thus the only way for a contradiction to have zero defect is to require both assertions to sit exactly at the balance point.
+But ``\(P\) and \(\neg P\) both true'' is classically inconsistent.
+
+\begin{theorem}[Cost excludes stable contradictions]
+Under reciprocal complementarity of negation, any configuration attempting to stabilize both \(P\) and \(\neg P\) must pay positive defect, unless it collapses to the singular configuration \(r=r^{-1}=1\), which corresponds to the classical impossibility \(P\wedge\neg P\).
+Therefore, stable (zero-defect) configurations are necessarily logically consistent.
+\end{theorem}
+
+This is the content of T0: \emph{consistency is cheap, contradiction is expensive.}
+It is not yet a full semantics for language; it is the minimum claim needed for physics: the stable states of a cost-first world cannot encode contradictions, because contradictions cannot stabilize at zero defect.
+
+\subsection{T1: The Law of Existence and the Meta-Principle}
+With the canonical comparison cost fixed, define the defect functional on \(\Rp\) by \(\defect(x):=\J(x)\).
+We take the \emph{Law of Existence} as a definitional bridge between ontology and optimization:
+\begin{definition}[Law of Existence]
+An entity (or ratio-state) \(x\in\Rp\) \emph{exists} if and only if \(\defect(x)=0\).
+\end{definition}
+By \eqref{eq:Jcost_square}, \(\defect(x)=0\iff x=1\). In this stripped-down setting, unity is the unique zero-defect existent.
+
+The second ingredient is the \emph{Meta-Principle}: the pre-geometric regime cannot realize an actually infinite cost.\footnote{This is not a ban on the mathematical symbol \(\infty\). It is a stability requirement: a configuration whose defect diverges cannot be selected as a realized state.}
+But the canonical cost makes a sharp statement about ``nothingness'':
+\[
+\defect(x)=\frac{1}{2}\bigl(x+x^{-1}\bigr)-1\ \ \Longrightarrow\ \ \defect(x)\ge \frac{1}{2x}-1,
+\]
+so \(\defect(x)\to+\infty\) as \(x\to 0^+\). Equivalently:
+\begin{equation}
+\label{eq:nothing_cannot_exist}
+\forall C\in\R,\ \exists \varepsilon>0\ \text{s.t.}\ (0<x<\varepsilon)\ \Longrightarrow\ \defect(x)>C.
+\end{equation}
+Equation~\eqref{eq:nothing_cannot_exist} is the sharp, operational meaning of ``nothing cannot exist'' in a cost ontology: approaching the null configuration incurs unbounded defect, so the Meta-Principle excludes it.
+
+Combining T0 and T1 yields a compact origin statement:
+\begin{itemize}
+  \item contradictions cannot stabilize (they are not free),
+  \item nothingness cannot stabilize (it is infinitely expensive),
+  \item therefore the stable region of the ontology is the basin around unity.
+\end{itemize}
+In the mechanized corpus this is summarized as an ``economic inevitability'': \(x=1\) is the unique global minimizer of \(\defect\) over \(\Rp\).
+
+\subsection{T2: Discreteness forcing (why stable existence needs ticks)}
+The deepest consequence of the cost landscape is that \emph{continuous configuration space cannot support stable existence.}
+Even though unity is the unique global minimizer of \(\defect\), it is not \emph{isolated} in a continuous space: there are always nearby points with arbitrarily small defect.
+Indeed, by \eqref{eq:Jcost_square}, for \(x=1+\delta\) with \(\delta>0\),
+\[
+\defect(1+\delta)=\frac{\delta^2}{2(1+\delta)}<\frac{\delta^2}{2}.
+\]
+Hence for every \(\eta>0\), choosing \(\delta=\min\{1,\sqrt{2\eta}\}\) yields \(\defect(1+\delta)<\eta\) and \(|(1+\delta)-1|=\delta\) as small as desired.
+This is a no-lock-in lemma: zero defect at \(x=1\) does not produce a rigid atom of existence in a continuous space.
+
+To talk about \emph{stable existence}, one needs more than ``global minimizer''; one needs \emph{finite separation}. One convenient formalization is:
+\begin{quote}
+Stable existence means defect is zero \emph{and} all alternative configurations are bounded away by a positive gap (in distance or cost).
+\end{quote}
+In a continuous space, that gap cannot exist: for every neighborhood of \(1\) there exist distinct points inside it.
+In a discrete configuration space, by contrast, a minimum gap can exist. This motivates the RS definition of a discrete ``tick'': the smallest admissible update step between distinct configurations carries a finite, nonzero minimum cost.
+
+There is also a geometric way to see the same fact. In log-coordinates \(t=\log x\), the canonical cost becomes
+\[
+\defect(e^t)=\cosh t - 1,
+\]
+a strictly convex bowl with curvature \(1\) at the minimum:
+\[
+\frac{d^2}{dt^2}\bigl(\cosh t-1\bigr)\Big|_{t=0}=\cosh(0)=1.
+\]
+This curvature is the stiffness of the basin: it is what turns infinitesimal drift into a quadratic defect penalty.
+But without discretization, the quadratic bowl still allows arbitrarily small motions at arbitrarily small cost, hence no stable posting.
+
+\begin{theorem}[Discreteness forcing (informal statement)]
+If the ontology requires stable existence (zero defect \emph{and} finite separation from alternatives), then the configuration space must be discrete.
+Equivalently: continuous configuration spaces do not admit isolated zero-defect states under \(\J\).
+\end{theorem}
+
+This completes the first three levels of the forcing chain. Once stable posting is discrete, the reciprocal symmetry \(\J(x)=\J(1/x)\) does more than make the cost even: it forces the bookkeeping structure that tracks reciprocal imbalances. That is the ledger, and it is the subject of the next section.
+
+\section{T3: Ledger Forcing from \texorpdfstring{$J$}{J}-Symmetry}
+\subsection{Reciprocity is not a feature: it is the cost functional}
+At this point we have fixed the comparison cost \(\J\), established a stability criterion (\(\defect=0\)), and argued that stable posting requires discrete ticks.
+We now show that the \emph{reciprocal symmetry} of \(\J\) has an immediate structural consequence: any consistent accounting of recognition must be \emph{double-entry}.
+
+The symmetry is the algebraic identity
+\begin{equation}
+\label{eq:J_symmetry}
+\J(x)=\J(x^{-1})\qquad(x\neq 0),
+\end{equation}
+equivalently, for ratios \(a/b\),
+\[
+\J(a/b)=\J(b/a)\qquad(a\neq 0,\ b\neq 0).
+\]
+This is not an optional aesthetic constraint. In RS it is the statement that the strain of comparing \(a\) to \(b\) is the same as comparing \(b\) to \(a\): the cost does not privilege an orientation.
+
+\subsection{Recognition events and their reciprocals}
+To connect \eqref{eq:J_symmetry} to conservation, the Lean corpus introduces the minimal \emph{event} that can carry comparison information: a recognition event with a positive ratio.
+\begin{definition}[Recognition event]
+A \emph{recognition event} is a tuple \(e=(s,t,r)\) where \(s,t\in\mathbb{N}\) are source/target labels and \(r\in\Rp\) is a ratio attached to the event.
+\end{definition}
+\noindent
+The \emph{reciprocal} event is obtained by swapping endpoints and inverting the ratio:
+\[
+e^{-1}:=(t,s,r^{-1}).
+\]
+Define the event cost by
+\[
+\mathrm{cost}(e):=\J(r).
+\]
+Then \eqref{eq:J_symmetry} implies a strict reciprocity theorem:
+\begin{equation}
+\label{eq:event_reciprocity}
+\mathrm{cost}(e)=\mathrm{cost}(e^{-1}).
+\end{equation}
+
+This is the key point: if a realized world is assembled from discrete recognition events, and if events are selected by cost, then an event and its reciprocal are \emph{cost-indistinguishable}. Any admissibility criterion that depends only on cost cannot consistently admit one without also admitting the other.
+
+\subsection{Double-entry ledgers as the minimal invariant}
+The Lean formalization takes the previous paragraph seriously and bakes it into the definition of a ledger.
+\begin{definition}[Balanced list / double-entry condition]
+Let \(\mathcal{E}\) be the type of recognition events. A list \(L\in\mathrm{List}(\mathcal{E})\) is \emph{balanced} if every event appears with the same multiplicity as its reciprocal:
+\begin{equation}
+\label{eq:balanced_list}
+\forall e\in\mathcal{E},\ \mathrm{count}_L(e)=\mathrm{count}_L(e^{-1}).
+\end{equation}
+\end{definition}
+\noindent
+A \emph{ledger} is then a list of events equipped with the invariant \eqref{eq:balanced_list}.
+In ordinary language: reality keeps books. Every posting has an equal and opposite posting.
+
+This is T3 in its most literal form. It is not ``conservation is nice''; it is ``conservation is the definitional shadow of reciprocal symmetry under composition.''
+
+\subsection{Conservation as cancellation of log-flows}
+To extract a conserved quantity from a ledger, the corpus uses the logarithm of ratios. The reason is simple: multiplicative comparisons become additive in log-coordinates.
+For \(r>0\),
+\begin{equation}
+\label{eq:log_reciprocal_cancel}
+\log r+\log(r^{-1})=0.
+\end{equation}
+Thus every reciprocal pair \((e,e^{-1})\) cancels at the level of log-flow.
+
+One can package this cancellation in many equivalent ways. A direct, agent-local form is the net log-flow at a node \(a\in\mathbb{N}\):
+\[
+\mathrm{net}(L,a)\;:=\;\sum_{e\in L\ \text{incident to}\ a}\log(r_e),
+\]
+where an event contributes \(\log(r_e)\) if \(a\) is either its source or target.\footnote{The Lean definition uses a fold over the event list with a local predicate ``incident to agent''.}
+Using \eqref{eq:balanced_list} and \eqref{eq:log_reciprocal_cancel}, one proves:
+\begin{theorem}[Conservation from balance]
+\label{thm:conservation_from_balance}
+If a ledger \(L\) is balanced, then \(\mathrm{net}(L,a)=0\) for every agent \(a\).
+\end{theorem}
+\noindent
+The mechanized proof proceeds by rewriting the fold as a list sum, converting the list into a multiset \(M\), using the equality \(M=M.\mathrm{map}(\cdot^{-1})\) implied by \eqref{eq:balanced_list}, and observing that the per-event contribution function satisfies \(f(e^{-1})=-f(e)\). Hence the total sum equals its own negative and must be zero.
+
+\subsection{Why this is the origin of conservation laws}
+At first glance Theorem~\ref{thm:conservation_from_balance} seems like a bookkeeping curiosity.
+In fact it is the earliest point in the forcing chain where something recognizably ``physical'' appears: a quantity computed from event histories that is invariant under closed evolution.
+
+To make contact with later sections, recall the abstract recognition framework in which one has a state space \(U\), a recognition relation \(R\subseteq U\times U\), and chains (paths) of recognitions. A ledger assigns to each state \(u\in U\) a debit and a credit, and the \emph{flux} of a chain is the difference of ledger potential between its endpoints. Balance (\(\mathrm{debit}=\mathrm{credit}\)) implies identically zero flux, and the stronger ``conserves'' predicate asserts zero flux on loops. This is a discrete precursor of continuity constraints and Noether-like invariants, but its source is not an action symmetry in spacetime; it is the reciprocal symmetry of comparison itself.
+
+The next step (T4) is to show that once you have discrete posting and a ledger, you are forced to introduce a notion of \emph{recognition} as the mechanism by which observables are extracted from ledger states. That is where the dynamics begins to acquire semantics.
+
+\section{T4: Recognition Forcing (Why Observables Require Recognizers)}
+\subsection{From bookkeeping to measurement}
+T0--T3 establish a pre-geometric substrate: stable configurations are cost minima, posting is discrete, and reciprocal symmetry forces double-entry ledgers with conserved log-flows.
+But a ledger alone is not yet a \emph{world} in the scientific sense. Science requires \emph{observables}: functions of state that can, at least in principle, be read out and compared.
+The claim of T4 is that the moment you demand nontrivial observables, you are forced into recognition structure.
+
+In the Lean corpus this is formalized as a necessity theorem: any framework that can derive a non-constant observable must contain a recognition event. The proof is elementary, but the point is conceptual: \emph{measurement is comparison}, and comparison without external reference is self-recognition.
+
+\subsection{Observables and nontriviality}
+\begin{definition}[Observable]
+Given a state space \(S\), an \emph{observable} is a map \(\mathsf{obs}:S\to\R\).
+\end{definition}
+\noindent
+An observable is \emph{nontrivial} if it takes at least two different values:
+\begin{equation}
+\label{eq:observable_nontrivial}
+\exists s_1,s_2\in S\ \text{such that}\ \mathsf{obs}(s_1)\neq \mathsf{obs}(s_2).
+\end{equation}
+Without \eqref{eq:observable_nontrivial}, the framework cannot even express the difference between two states empirically; every ``measurement'' returns the same number.
+
+\subsection{Distinction forces comparison}
+If \(\mathsf{obs}(s_1)\neq \mathsf{obs}(s_2)\), then any would-be measurement protocol must be able to \emph{distinguish} \(s_1\) from \(s_2\).
+At the level of primitive data structures, distinction is realized by a comparison predicate (or Boolean function) \(\mathsf{cmp}:S\times S\to\{\mathsf{true},\mathsf{false}\}\) that is at least reflexive and symmetric.
+
+In the mechanized proof, such a comparison is constructed directly from the observable itself:
+\[
+\mathsf{cmp}(x,y):=\mathbf{1}\{\mathsf{obs}(x)=\mathsf{obs}(y)\}.
+\]
+This is not meant as a final model of measurement; it is a minimal witness that \emph{if} the observable is definable, then so is a comparison operation, and hence the theory must contain the ability to compare states.
+
+\subsection{Internal comparison is recognition in a zero-parameter regime}
+Comparison becomes philosophically sharp only when the framework has no external reference frame.
+In RS, the ``pre--Big Bang'' regime is a \emph{zero-parameter} selection regime: there is no background coordinate system, no external rod, no privileged clock.
+Therefore comparison must be \emph{internal}: the act of comparing two states can depend only on the states themselves.
+
+The formalization packages this as an ``internal comparison'' structure and then identifies it with recognition. The identification used is deliberately minimal:
+\begin{definition}[Recognition event (minimal pairing model)]
+For types \(A,B\), a \emph{recognition event} is a pair \((a,b)\in A\times B\), interpreted as ``\(a\) recognizes \(b\).'' Formally, it is an inhabitant of a structure \(\mathrm{Recognize}(A,B)\) containing fields \(\mathrm{recognizer}:A\) and \(\mathrm{recognized}:B\).
+\end{definition}
+\noindent
+This is the weakest notion of recognition that still allows the forcing argument to go through. It asserts that if a comparison act exists, then there exists a witness of a recognizer/recognized pairing.
+
+\begin{theorem}[Observable extraction requires recognition]
+\label{thm:observables_require_recognition}
+Let \(S\) be a state space and \(\mathsf{obs}:S\to\R\) an observable satisfying \eqref{eq:observable_nontrivial}.
+Then there exist types \(\mathsf{Recognizer}\) and \(\mathsf{Recognized}\) such that \(\mathrm{Recognize}(\mathsf{Recognizer},\mathsf{Recognized})\) is nonempty.
+\end{theorem}
+\noindent
+The proof is constructive: \eqref{eq:observable_nontrivial} implies \(S\) is nonempty; pick \(s\in S\); then \((s,s)\) is a recognition event in the pairing model.
+
+Theorem~\ref{thm:observables_require_recognition} is intentionally modest. It does not yet tell you \emph{which} recognizers exist, how they evolve, or how many degrees of freedom they possess. It asserts only the unavoidable logical point: a nontrivial observable forces the existence of at least one recognition event.
+
+\subsection{Recognition as the unique form of extraction}
+The necessity theorem above can be strengthened in a natural direction: any observable \emph{extraction mechanism} induces a canonical recognition relation.
+If an extractor \(E:S\to\R\) is non-constant, define
+\[
+s_1\sim_E s_2\quad\Longleftrightarrow\quad E(s_1)=E(s_2).
+\]
+This relation is reflexive and symmetric by construction, and it encodes exactly the identifications imposed by the measurement.
+In other words, \emph{every measurement induces an equivalence relation}, and that equivalence relation is the primitive content of recognition: states are recognized as ``the same'' when they are observationally indistinguishable under the extractor.
+
+\subsection{Cost selects recognition events}
+T4 has a second, independent face: recognition is not only necessary for observables; it is also the \emph{native} structure of the cost landscape itself.
+In the ledger model of T3, a recognition event carries a ratio \(r>0\), and its cost is \(\J(r)\).
+The cost logic is exact:
+\[
+r=1\ \Longleftrightarrow\ \J(r)=0,\qquad r\neq 1\ \Longrightarrow\ \J(r)>0.
+\]
+Thus the unique global minimizer of the recognition cost is a \emph{self-recognition} posting (\(r=1\)); all nontrivial recognitions incur positive cost.
+This is how the forcing chain links ontology to semantics: existence is a zero-defect equilibrium, and the only zero-defect comparison is perfect recognition.
+
+\subsection{Stability collapses to recognition-like structure}
+Finally, the corpus observes a general meta-fact: any structure equipped with a bounded-below cost function admits a canonical recognition-like collapse by identifying states of equal cost.
+Formally, given a carrier \(X\) and cost \(c:X\to\R\), define a relation \(x\approx y\) iff \(c(x)=c(y)\). This relation is reflexive and symmetric, hence recognition-like.
+The point is not that the world literally identifies equal-cost states; the point is that the moment you build a stability criterion from cost, you have already introduced an equivalence structure of ``same-as'' that is a recognizer’s primitive.
+
+\subsection{What T4 buys us}
+After T4, the forcing chain has crossed an important threshold. Before, we had cost geometry, discrete posting, and conservation; now we have a minimal semantics:
+\begin{itemize}
+  \item observables force comparison,
+  \item internal comparison is recognition,
+  \item recognition events are the native atoms of ledger dynamics,
+  \item cost selects self-recognition as the unique free posting.
+\end{itemize}
+With recognition in hand, we can now ask a sharper question than ``what exists?'': \emph{what cadence of recognition is stable under repeated posting?}
+That question leads to the scale structure (T6), the eight-tick backbone (T7), and ultimately to the recognition operator \(\Rhat\) as the fundamental dynamical object.
+
+\section{T6: Forced Scale (Why \texorpdfstring{$\varphi$}{phi} is Inevitable)}
+\subsection{Self-similarity as a closure condition}
+Once recognition exists, the next unavoidable question is: \emph{what does it mean for recognition to be self-consistent under repetition?}
+Any nontrivial recognizer must be able to compare not only states, but \emph{patterns of comparison} across iterations. That demand introduces a scale question: when a pattern repeats, at what relative scale does it repeat?
+
+In RS this is framed as \emph{self-similarity} of the discrete recognition ledger. Self-similarity is not assumed as an aesthetic; it is a closure condition: if the theory is parameter-free, then ``zooming in'' on the ledger should not introduce new free scales. Therefore, if there is a preferred scale ratio at all, it must be forced by internal consistency.
+
+\subsection{The minimal self-similarity witness}
+The Lean necessity layer packages the weakest self-similarity data needed for the forcing pipeline into the following structure (in words):
+\begin{quote}
+There exists a \emph{preferred scale} \(\lambda>1\) and three positive ``levels'' \(L_0,L_1,L_2\) such that
+\[
+L_1=\lambda L_0,\qquad L_2=\lambda L_1,\qquad\text{and}\qquad L_2=L_1+L_0.
+\]
+\end{quote}
+The first two equations state that adjacent levels are related by a constant multiplicative scale \(\lambda\). The third states that the next level is also obtained by additive composition of the previous two.
+
+That last clause is the key. It is the algebraic shadow of ledger composition: if two independent recognition postings can be jointly posted, then a composite level exists whose magnitude is (in the simplest positive model) the sum of constituents.
+Requiring the \emph{same} \(L_2\) to be obtainable both by scaling and by composition is exactly the ``self-similar closure'' that eliminates arbitrary scale ratios.
+
+\subsection{The golden equation is forced}
+From the three constraints above, we derive the golden-ratio polynomial in one line. Substitute the multiplicative relations into the recurrence:
+\[
+\lambda^2 L_0 \;=\; L_2 \;=\; L_1+L_0 \;=\; (\lambda+1)L_0.
+\]
+Since \(L_0>0\), divide by \(L_0\) to obtain
+\begin{equation}
+\label{eq:golden_polynomial}
+\lambda^2=\lambda+1.
+\end{equation}
+
+Equation~\eqref{eq:golden_polynomial} is not a numerical coincidence; it is the unique compatibility condition between
+(i) a constant multiplicative scale and (ii) a positive additive closure rule on adjacent levels.
+It is therefore the precise sense in which ``self-similarity forces \(\varphi\)''.
+
+\subsection{Uniqueness of the positive solution}
+The quadratic \(\lambda^2-\lambda-1=0\) has the two classical roots
+\[
+\lambda=\frac{1\pm\sqrt{5}}{2}.
+\]
+Exactly one is positive, hence physically admissible as a scale ratio:
+\begin{equation}
+\label{eq:phi_def}
+\phig \;:=\; \frac{1+\sqrt{5}}{2}\;>\;1.
+\end{equation}
+Thus any self-similarity witness with \(\lambda>0\) satisfying \eqref{eq:golden_polynomial} must have \(\lambda=\phig\).
+
+\begin{theorem}[Scale forcing]
+\label{thm:phi_forced}
+Let \(\lambda>0\). If \(\lambda^2=\lambda+1\), then \(\lambda=\phig\).
+Equivalently, \(\phig\) is the unique positive fixed point of the ``add-one then multiply'' self-similarity constraint.
+\end{theorem}
+\noindent
+In the Lean development, this uniqueness step is implemented via a dedicated lemma characterizing \(\phig\) as the unique positive root of \(\lambda^2=\lambda+1\), and the preceding derivation of \eqref{eq:golden_polynomial} is carried out by multiplying through by \(L_0\neq 0\) and canceling.
+
+\subsection{The \texorpdfstring{$\varphi$}{phi}-ladder}
+Once the preferred scale is fixed, it generates an entire scale hierarchy. Iterating \(L_{n+1}=\phig L_n\) yields
+\[
+L_n = \phig^n L_0,\qquad n\in\mathbb{Z},
+\]
+so the natural scale lattice is a \(\phig\)-lattice (powers of \(\phig\)).
+This is the first appearance of quantized scale structure in the forcing chain: once discreteness (T2) and ledger conservation (T3) hold, self-similarity eliminates continuous scale freedom and replaces it with a rigid geometric ladder.
+
+\subsection{Why forced scale matters for dynamics}
+The forcing chain is not merely accumulating curiosities; each step constrains the eventual dynamics.
+With \(\phig\) fixed, there is now a canonical ``step'' in log-scale: \(\log \phig\). This becomes the natural increment for any discrete recognition evolution that is simultaneously multiplicative (ratios compose) and additive (ledger composition).
+
+The remaining missing ingredient is cadence: a discrete evolution needs not only a scale ratio but a minimal closed cycle that supports recognition without drift. The Lean corpus shows that the minimal such cadence is an 8-tick loop, and that the 8-point discrete Fourier transform diagonalizes the tick-shift operator. That is T7, and it is the subject of the next section.
+
+\section{T7: Forced Cadence (Eight Ticks) and the DFT-8 Backbone}
+\subsection{Patterns, degrees of freedom, and the meaning of ``coverage''}
+Cadence is a counting question disguised as dynamics. If a recognizer has \(D\) independent binary degrees of freedom (the minimal ``distinguishability axes'' required to resolve its internal patterns), then there are
+\[
+2^D
+\]
+distinct binary patterns available. In the Lean formalization this is the type
+\[
+\mathrm{Pattern}(D)\;:=\;\{0,1\}^D \;\cong\; (\mathrm{Fin}\ D \to \mathrm{Bool}),
+\]
+with cardinality \(2^D\).
+
+To say that a discrete \(T\)-tick cycle is \emph{complete} is to say that, over one period, it visits every pattern at least once.
+\begin{definition}[Complete cover]
+A \emph{complete cover} of \(D\)-bit patterns with period \(T\) is a map
+\[
+p:\{0,1,\dots,T-1\}\to \mathrm{Pattern}(D)
+\]
+that is surjective.
+\end{definition}
+\noindent
+This is the correct pre-physical analogue of ``no aliasing'': if the cycle does not cover the pattern space, then some patterns are observationally inaccessible and the recognizer is incomplete.
+
+\subsection{Nyquist-style obstruction: \texorpdfstring{$T<2^D$}{T < 2 to the D} cannot cover}
+The key theorem is a pigeonhole bound. If \(p:\mathrm{Fin}\,T\to\mathrm{Pattern}(D)\) is surjective, then necessarily
+\begin{equation}
+\label{eq:nyquist_lower_bound}
+2^D \le T.
+\end{equation}
+Equivalently, if \(T<2^D\), then no such surjection exists. In the corpus this is stated as a Nyquist-style obstruction: below the threshold \(2^D\), any attempted cover must miss some pattern (aliasing is unavoidable).
+
+\begin{theorem}[Coverage lower bound / Nyquist obstruction]
+\label{thm:nyquist_obstruction}
+If \(T<2^D\), then there is no surjection \(p:\mathrm{Fin}\,T\to\mathrm{Pattern}(D)\).
+\end{theorem}
+\noindent
+The proof is purely cardinal: surjectivity implies an injection from \(\mathrm{Pattern}(D)\) into \(\mathrm{Fin}\,T\), hence \(|\mathrm{Pattern}(D)|\le T\), i.e.\ \(2^D\le T\).
+
+\subsection{Sharpness: the threshold \texorpdfstring{$T=2^D$}{T = 2 to the D} is achievable}
+The bound \eqref{eq:nyquist_lower_bound} is tight. There exists a complete cover with exactly \(T=2^D\) ticks, obtained by choosing any bijection between \(\mathrm{Fin}(2^D)\) and \(\mathrm{Pattern}(D)\).
+\begin{theorem}[Exact cover at the threshold]
+\label{thm:threshold_cover}
+For every \(D\), there exists a complete cover \(p:\mathrm{Fin}(2^D)\to\mathrm{Pattern}(D)\) that is bijective.
+\end{theorem}
+\noindent
+Thus \(2^D\) is not merely a lower bound; it is the unique minimal period length (up to relabeling of ticks) that permits complete coverage.
+
+\subsection{Eight ticks for three degrees of freedom}
+Specialize to \(D=3\). Then \(2^D=8\), so:
+\begin{itemize}
+  \item \emph{Existence}: there exists a complete 8-tick cover of 3-bit patterns.
+  \item \emph{Minimality}: any complete cover of 3-bit patterns has length at least 8.
+\end{itemize}
+This is the precise statement of the ``eight-tick'' inevitability: eight is the smallest period that can be complete for a 3-bit recognizer. (In the forcing chain, a later step argues that the stable recognition substrate is effectively three-dimensional; given that, T7 locks the cadence to eight.)
+
+\subsection{Why the DFT-8 basis is canonical}
+Once the period is fixed at 8, the natural symmetry of ``time translation by one tick'' is the cyclic shift operator \(S\) acting on 8-tuples. Represent a tick-indexed complex amplitude as a vector
+\[
+v:\mathrm{Fin}\,8\to \mathbb{C},
+\]
+and define
+\[
+(Sv)(t):=v(t+1 \bmod 8).
+\]
+The spectral decomposition of \(S\) is what selects the Discrete Fourier Transform basis.
+
+Let \(\omega:=e^{-2\pi i/8}=e^{-i\pi/4}\) be the primitive 8th root of unity, and define the DFT-8 matrix \(B\in\mathbb{C}^{8\times 8}\) by
+\begin{equation}
+\label{eq:dft8_entry}
+B_{t,k}=\frac{\omega^{tk}}{\sqrt{8}},\qquad t,k\in\{0,\dots,7\}.
+\end{equation}
+Then:
+\begin{theorem}[DFT-8 is unitary]
+\label{thm:dft8_unitary}
+The DFT-8 matrix is unitary: \(B^\ast B=I\).
+\end{theorem}
+\begin{theorem}[DFT-8 diagonalizes cyclic shift]
+\label{thm:dft8_diagonalizes_shift}
+The DFT-8 basis diagonalizes the shift operator:
+\[
+B^\ast S B = \mathrm{diag}(1,\omega,\omega^2,\dots,\omega^7).
+\]
+Equivalently, the \(k\)-th DFT mode is an eigenvector of shift with eigenvalue \(\omega^k\).
+\end{theorem}
+
+Because the eigenvalues \(\omega^k\) are distinct, the shift eigenbasis is unique up to phase choices and reordering. This is the mathematical sense in which DFT-8 is \emph{canonical}: it is not a convenient coordinate system imposed from outside, but the intrinsic harmonic decomposition of the unique minimal 8-tick translation symmetry.
+
+\subsection{DC vs.\ neutral modes (mean-free structure)}
+One further split is forced and will matter later for meaning tokens. The \(k=0\) DFT mode is constant:
+\[
+e_0(t)=\frac{1}{\sqrt{8}}\qquad(\text{DC / mean mode}),
+\]
+while every nonzero mode is \emph{neutral} (mean-free):
+\begin{equation}
+\label{eq:neutral_modes}
+\sum_{t=0}^{7} e_k(t)=0,\qquad k\neq 0.
+\end{equation}
+Intuitively, the neutral subspace is the space of pure oscillations with no net offset; it is the natural habitat for ``structure'' that does not change the global mean.
+In the RS pipeline this neutrality constraint will later become a conservation-like condition for semantic tokens and a design rule for stable recognition dynamics.
+
+\subsection{What T7 buys us}
+T6 fixed the only admissible scale ratio (\(\phig\)). T7 now fixes the only admissible minimal cadence (8 ticks, given \(D=3\)) and provides the unique spectral basis compatible with tick translation (DFT-8).
+With \(\phig\) and DFT-8 in hand, the theory has the two ingredients needed to write down a \emph{dynamical operator} on an 8-tick state: a discrete time-translation symmetry and a forced scale ladder.
+The next step is to assemble these into the fundamental evolution object of RS: the recognition operator \(\Rhat\).
+
+\section{The Recognition Operator \texorpdfstring{$\Rhat$}{R-hat}: Fundamental Discrete Dynamics}
+\subsection{State as ledger configuration}
+The forcing chain so far fixed the \emph{selection criterion} (minimize \(\J\)), the \emph{bookkeeping substrate} (double-entry ledgers), the \emph{scale} (\(\phig\)), and the \emph{cadence} (8 ticks with DFT-8 spectral structure). What remains is dynamics: a rule that advances the ledger state.
+
+In the mechanized Foundation layer, the dynamical arena is a \emph{ledger state} that carries:
+\begin{itemize}
+  \item complex recognition channels (indexed by cascade level),
+  \item a finite set of active bonds \(E\) (edges with nontrivial flux),
+  \item positive bond multipliers \(x_e>0\) for \(e\in E\),
+  \item conserved integer pattern content (``\(Z\)-patterns''),
+  \item a global phase \(\Theta\),
+  \item and an integer time coordinate measured in ticks.
+\end{itemize}
+The details of this data structure are not the essence; what matters is that the state contains \emph{ratios} (bond multipliers) to which \(\J\) applies, and that time is \emph{discrete}.
+
+\subsection{Recognition cost and admissibility}
+Given a state \(s\) with active bond set \(E(s)\) and multipliers \(x_e(s)\), the recognition cost is the ledger sum:
+\begin{equation}
+\label{eq:recognition_cost_state}
+\mathcal{C}(s)\;:=\;\sum_{e\in E(s)} \J(x_e(s)).
+\end{equation}
+This is the discrete analogue of an action density: it measures instantaneous recognition strain.
+
+Dynamics is not allowed to violate reciprocity bookkeeping. The Foundation layer encodes this via an \emph{admissibility} constraint defined by a net log-skew:
+\begin{equation}
+\label{eq:net_skew}
+\sigma(s)\;:=\;\sum_{e\in E(s)} \log x_e(s),
+\end{equation}
+and declares a state admissible when
+\begin{equation}
+\label{eq:admissible_sigma0}
+\sigma(s)=0.
+\end{equation}
+Condition \eqref{eq:admissible_sigma0} is the global statement that multiplicative imbalances cancel: it is the direct ledger analogue of ``net conservation'' for log-flows. Importantly, it permits nontrivial cycles: individual \(x_e\) may deviate from 1 so long as their logs sum to zero.
+
+\subsection{Definition of \texorpdfstring{$\Rhat$}{R-hat}}
+With \(\mathcal{C}\) and admissibility in place, the recognition operator is introduced as the fundamental evolution object.
+
+\begin{definition}[Recognition Operator]
+A \emph{recognition operator} \(\Rhat\) is an eight-tick evolution map \(s\mapsto \Rhat(s)\) equipped with the following properties:
+\begin{itemize}
+  \item \textbf{Eight-tick advance}: time increases by exactly 8 ticks each step.
+  \item \textbf{Cost monotonicity}: on admissible states, recognition cost does not increase:
+  \[
+  \sigma(s)=0\ \Longrightarrow\ \mathcal{C}(\Rhat(s))\le \mathcal{C}(s).
+  \]
+  \item \textbf{Conservation of admissibility}: admissible states map to admissible states:
+  \[
+  \sigma(s)=0\ \Longrightarrow\ \sigma(\Rhat(s))=0.
+  \]
+  \item \textbf{Phase coupling}: the global phase advances by some increment \(\Delta\Theta\) each step:
+  \[
+  \Theta(\Rhat(s))=\Theta(s)+\Delta\Theta.
+  \]
+\end{itemize}
+\end{definition}
+\noindent
+This is deliberately not yet a closed-form formula. The role of the mechanized definition is to state the invariants and monotonicity principles that characterize recognition-driven evolution, while postponing modeling commitments about the detailed micro-update.
+
+The fundamental dynamical law is then simply:
+\begin{equation}
+\label{eq:recognition_dynamics_law}
+s(t+8)=\Rhat(s(t)).
+\end{equation}
+Equation~\eqref{eq:recognition_dynamics_law} is the discrete replacement for a continuous-time differential equation at the Foundation level. The 8-tick cadence is not imposed; it is inherited from T7.
+
+\subsection{Iteration and octave-time}
+Let \(\Rhat^{[n]}\) denote \(n\)-fold composition of \(\Rhat\). Then
+\[
+s(t+8n)=\Rhat^{[n]}(s(t)).
+\]
+This identifies ``octave-time'' as the natural clock variable: a unit step is one full 8-tick cycle. Spectrally, this is exactly the regime where the DFT-8 diagonalization of tick-shift becomes the canonical harmonic analysis tool.
+
+\subsection{Built-in measurement threshold (bridge, not yet a derivation)}
+The Foundation layer also introduces a recognition-cost threshold for ``definite pointer'' behavior. One defines a collapse threshold (normalized to 1 in RS-native units) and declares a state to have a definite pointer when \(\mathcal{C}(s)\ge 1\).
+An additional axiom package then asserts that when \(\mathcal{C}(s)\ge 1\), the next step \(\Rhat(s)\) lies in a definite-pointer regime.
+
+For this paper we treat this as a \emph{bridge postulate}: it is a concrete and falsifiable claim about when cost-driven evolution produces classical definiteness, but it is not forced by the purely mathematical components of the forcing chain.
+
+\subsection{Preview: why Hamiltonians appear (and when they fail)}
+Although \(\Rhat\) is defined by cost, not energy, energy-based reasoning can emerge as a near-equilibrium approximation. The key analytic fact is the exact closed form
+\[
+\J(1+\varepsilon)=\frac{\varepsilon^2}{2(1+\varepsilon)}
+\]
+and hence, for small \(|\varepsilon|\),
+\[
+\J(1+\varepsilon)\approx \frac{1}{2}\varepsilon^2.
+\]
+This quadratic regime is where conventional Hamiltonian/Lagrangian physics is an efficient effective description: most laboratory systems operate near balanced posting (\(x_e\approx 1\)), so recognition cost behaves like a quadratic energy. The point of the RS program is precisely to delineate the boundary: far from equilibrium (large skew, high compression, high-defect semantics), Hamiltonian intuition should systematically break.
+
+The next sections make \(\Rhat\) less abstract by exhibiting concrete realization layers (octave kernels / voxel fields) and by proving the Hamiltonian emergence statements in the small-deviation regime.
+
+\section{Hamiltonian Emergence: The Quadratic Regime of \texorpdfstring{$\Rhat$}{R-hat}}
+\subsection{Deviation from balance as the expansion parameter}
+Hamiltonian physics is extraordinarily successful, so a cost-first theory must answer a sharp question:
+\emph{why does energy minimization work so well if it is not fundamental?}
+The answer in RS is that most of the regimes we probe are near the unique balance point \(x=1\), where \(\J\) becomes approximately quadratic. The small parameter is \emph{deviation from reciprocity balance}.
+
+In the mechanized Foundation layer, a ledger state \(s\) carries bond multipliers \(x_e(s)>0\) for active bonds \(e\in E(s)\). Define the per-bond log imbalance \(\log x_e(s)\) and the average absolute imbalance
+\begin{equation}
+\label{eq:deviation_parameter}
+\varepsilon(s)\;:=\;
+\begin{cases}
+0, & |E(s)|=0,\\[4pt]
+\dfrac{1}{|E(s)|}\sum_{e\in E(s)} \bigl|\log x_e(s)\bigr|, & |E(s)|>0.
+\end{cases}
+\end{equation}
+The \emph{small-deviation regime} is then \(|\varepsilon(s)|\ll 1\). In the Lean file this is implemented with a concrete cutoff, e.g.\ \(\varepsilon_{\max}<0.1\), to make estimates explicit.
+
+\subsection{Exact closed form and Taylor control}
+The canonical cost has an exact closed form near unity:
+\begin{equation}
+\label{eq:J_closed_form}
+\J(1+\epsilon)=\frac{\epsilon^2}{2(1+\epsilon)}\qquad(1+\epsilon>0).
+\end{equation}
+In particular, for small \(|\epsilon|\) one obtains a quadratic approximation with controlled error. The mechanized proof establishes a clean bound:
+\begin{theorem}[Quadratic approximation with cubic error]
+\label{thm:quadratic_approximation}
+If \(|\epsilon|<\tfrac12\), then
+\[
+\Bigl|\J(1+\epsilon)-\frac12\,\epsilon^2\Bigr| < |\epsilon|^3.
+\]
+\end{theorem}
+\noindent
+This theorem is the analytic engine behind Hamiltonian emergence: near equilibrium, minimizing \(\J\) is (to leading order) minimizing a quadratic functional.
+
+\subsection{Effective Hamiltonian as a near-equilibrium surrogate}
+In the \(|\epsilon|\ll 1\) regime, one may package the quadratic leading term as an \emph{effective energy}. Concretely, one defines an effective Hamiltonian functional on states by
+\begin{equation}
+\label{eq:Heff_def}
+H_{\mathrm{eff}}(s)\;:=\;\mathcal{C}(s),
+\end{equation}
+where \(\mathcal{C}(s)\) is the recognition cost \eqref{eq:recognition_cost_state}.
+This looks tautological, and at the Foundation level it is: the emergent Hamiltonian is just the cost functional, because cost is what the world actually minimizes. The nontrivial content is that, under small deviation, \(\mathcal{C}\) behaves like a quadratic energy and inherits the familiar geometry of least-action dynamics.
+
+More precisely, if \(x_e(s)=1+\delta_e\) with \(|\delta_e|\ll 1\), then by Theorem~\ref{thm:quadratic_approximation}
+\[
+\mathcal{C}(s)=\sum_{e\in E(s)}\J(1+\delta_e)\;\approx\;\frac12\sum_{e\in E(s)}\delta_e^2,
+\]
+so the recognition strain acts like a sum of squared deviations. This is exactly the functional form from which harmonic Hamiltonians and Gaussian equilibrium measures emerge.
+
+\subsection{Hamiltonian monotonicity as a corollary of cost minimization}
+The recognition operator \(\Rhat\) was defined to be cost-nonincreasing on admissible states. In the small-deviation regime, this reads as an energy principle:
+\[
+\sigma(s)=0\ \Longrightarrow\ H_{\mathrm{eff}}(\Rhat(s))\le H_{\mathrm{eff}}(s).
+\]
+Thus the familiar intuition ``systems relax by decreasing energy'' is recovered as a derived statement, but only within the admissible manifold (ledger conservation) and only because energy is acting as a proxy for cost.
+
+\subsection{Why Hamiltonians fail away from equilibrium}
+The same derivation also explains the boundary of Hamiltonian reasoning. The quadratic approximation is a local statement near unity; outside it, the full \(\J\) landscape is not quadratic and not symmetric in the same way as a standard kinetic-plus-potential ansatz.
+Moreover, the admissibility constraint \(\sigma(s)=0\) is global and multiplicative: it couples degrees of freedom through log-balance, allowing nontrivial cycles that are invisible to purely additive energy pictures.
+
+Therefore RS predicts systematic breakdowns of Hamiltonian intuition in regimes where:
+\begin{itemize}
+  \item bond multipliers are far from unity (large imbalance),
+  \item the dynamics is dominated by discrete posting and combinatorial constraints (tick effects),
+  \item recognition/semantic constraints impose non-quadratic costs,
+  \item the admissibility manifold has nontrivial topology (cycles with net zero log-skew).
+\end{itemize}
+These are precisely the regimes where RS claims new explanatory leverage: measurement thresholds, semantic atom structure, and pre-geometric cosmological selection are all far-from-equilibrium phenomena.
+
+\subsection{Bridge toward continuum wave dynamics (scaffold)}
+Finally, the corpus sketches a continuum-facing bridge: define a complex ``wave function'' proxy from the global phase \(\Theta\) and the cost amplitude, and interpret the discrete difference quotient over one octave as a time derivative. In the limit of small tick duration and small deviation, one recovers a Schrödinger-like form with \(H_{\mathrm{eff}}\) playing the role of the Hamiltonian. In this paper we treat this as a scaffolded bridge: its mathematical ingredients are explicit, but the physical identification requires an external calibration layer and careful error analysis.
+
+\section{OctaveKernel and Voxel Fields: A Concrete Realization Layer}
+\subsection{Why we need a realization layer}
+Up to this point, the paper has been primarily about \emph{inevitabilities}: the shape of the cost, the necessity of discreteness, ledger structure, forced scale, forced cadence, and the abstract existence of a recognition operator \(\Rhat\) that advances states by reducing recognition cost on an admissible manifold.
+
+To turn that into a computationally testable theory, we need at least one explicit realization of the 8-tick substrate---a model that takes the forced cadence seriously and specifies what an 8-tick ``state'' contains and how it updates each tick.
+The OctaveKernel provides such a realization layer. Claim hygiene is essential:
+\begin{itemize}
+  \item The \emph{forcing chain} and the definition of \(\Rhat\) live at Foundation level.
+  \item The OctaveKernel is a \emph{model layer}: it proposes a concrete representational substrate (voxels) that is designed to respect the forced cadence and DFT-8 backbone.
+  \item Where the model introduces physical identifications (biological substrate, SI timescales), those are explicitly hypothesis-gated and belong to an external calibration layer.
+\end{itemize}
+
+\subsection{Photon and voxel: an 8-slot chord}
+The OctaveKernel defines a \emph{photon} as a minimal recognition quantum carrying amplitude and phase offset:
+\[
+p = (A,\theta),\qquad A\ge 0,\quad \theta\in\R,
+\]
+with complex display map
+\[
+\mathrm{toComplex}(p)=A\,e^{i\theta}.
+\]
+
+A \emph{meaningful voxel} is then an 8-slot chord: it holds one photon at each phase \(k\in\{0,\dots,7\}\). Equivalently, it is a function
+\[
+v:\mathrm{Phase}\to \mathrm{Photon},\qquad \mathrm{Phase}:=\mathrm{Fin}\,8.
+\]
+This is the simplest possible object that makes eight-tick co-presence literal.
+
+\subsection{DFT-8 as the meaning extractor}
+Given a voxel \(v\), define its complex time-domain signal \(x:\mathrm{Fin}\,8\to\mathbb{C}\) by \(x(k)=\mathrm{toComplex}(v(k))\).
+The voxel’s \emph{frequency spectrum} is then the 8-point discrete Fourier transform
+\[
+X = \mathcal{F}_8[x].
+\]
+In the Lean implementation used by the voxel pipeline, the DFT is unnormalized:
+\[
+X(k)=\sum_{n=0}^{7} x(n)\,\omega^{nk},
+\]
+which differs from the unitary convention of Section~T7 only by a fixed scale factor. The important fact is invariant: DFT-8 is the canonical decomposition into tick-translation harmonics.
+
+The voxel then exposes mode amplitudes by
+\[
+A_k(v):=|X(k)|.
+\]
+
+\subsection{Neutrality: ledger closure as a DC constraint}
+The simplest ledger-closure condition for an 8-slot complex signal is \emph{zero DC component}. The OctaveKernel defines:
+\begin{quote}
+A voxel is neutral iff its DC mode vanishes: \(X(0)=0\).
+\end{quote}
+Because \(\omega^{n\cdot 0}=1\), the DC mode is just the time-sum. The mechanized equivalence is:
+\begin{equation}
+\label{eq:voxel_neutral_sum}
+X(0)=0\quad\Longleftrightarrow\quad \sum_{n=0}^{7} x(n)=0.
+\end{equation}
+Equation~\eqref{eq:voxel_neutral_sum} is the voxel-level analogue of ledger balance: total inflow/outflow cancels at the level of complex amplitudes.
+
+\subsection{Tick update: shift register dynamics}
+The OctaveKernel also provides an explicit per-tick update rule.
+A voxel can be stepped by injecting a new token at phase 0, shifting existing tokens forward by one phase, and ejecting the token at phase 7.
+Writing \(v_t(k)\) for the photon at phase \(k\) at tick \(t\), the update is:
+\[
+v_{t+1}(0) = \mathrm{entering}_t,\qquad v_{t+1}(k)=v_t(k-1)\ (k=1,\dots,7).
+\]
+
+This is not yet \(\Rhat\). Rather, it is a concrete realization of the forced cadence: a single tick is a shift on an 8-slot register plus boundary injection/ejection. One octave evolution is eight iterations of this step.
+
+\subsection{Voxel fields and octave evolution}
+A \emph{voxel field} is a collection of voxels indexed by positions \(p\in\mathrm{Pos}\). Formally:
+\[
+\mathrm{Field}:\mathrm{Pos}\to \mathrm{MeaningfulVoxel}.
+\]
+Given an incoming photon function \(\mathrm{entering}:\mathrm{Pos}\to\mathrm{Photon}\), the field update steps every voxel in parallel by inserting \(\mathrm{entering}(p)\) at phase 0 and shifting the remaining phases.
+
+Iterating the step map defines \(\mathrm{evolveOctave}\), the 8-tick evolution of the entire field. This is the model-level candidate for implementing the eight-tick advance demanded by \(\Rhat\).
+
+\subsection{Energy and neutrality accounting (proved)}
+The voxel field formalization includes two core accounting theorems that make the model computationally tractable.
+
+First, define voxel energy as the sum of squared photon amplitudes, and field energy as the sum over positions:
+\[
+E_{\mathrm{voxel}}(v)=\sum_{k=0}^{7} A(v(k))^2,\qquad
+E_{\mathrm{field}}(\mathrm{Field})=\sum_{p\in\mathrm{Pos}} E_{\mathrm{voxel}}(\mathrm{Field}(p)).
+\]
+Then the mechanized energy-balance theorem states that one tick update is conservative up to boundary flux:
+\begin{equation}
+\label{eq:field_energy_balance}
+E_{\mathrm{field}}(\mathrm{stepField}(\mathrm{Field},\mathrm{entering}))=
+E_{\mathrm{field}}(\mathrm{Field}) + E_{\mathrm{in}}(\mathrm{entering}) - E_{\mathrm{out}}(\mathrm{Field}),
+\end{equation}
+where \(E_{\mathrm{in}}\) is the sum of incoming photon amplitude-squares and \(E_{\mathrm{out}}\) is the sum of amplitude-squares of the photons exiting at phase 7.
+
+Second, neutrality lifts from voxels to fields. If every voxel is neutral (DC mode vanishes), then the field spectrum’s DC component vanishes as well (spectral neutrality). This is the model-level statement that neutral local postings imply a neutral aggregate signal.
+
+\subsection{How this relates to \texorpdfstring{$\Rhat$}{R-hat}}
+The OctaveKernel does not replace \(\Rhat\); it \emph{instantiates} it.
+In a voxel-field realization, the abstract ingredients of \(\Rhat\) acquire concrete form:
+\begin{itemize}
+  \item \textbf{Eight-tick advance}: one octave update is \(\mathrm{evolveOctave}\).
+  \item \textbf{Admissibility}: neutrality and/or log-skew constraints become explicit spectral or flux constraints on voxels/fields.
+  \item \textbf{Cost}: recognition cost can be modeled as a functional of voxel spectra and/or amplitude ratios across phases; the simplest choice is a sum of \(\J\)-penalties on selected ratios.
+  \item \textbf{Minimization}: the rule that generates \(\mathrm{entering}_t\) from the current field is chosen to make cost nonincreasing on admissible states.
+\end{itemize}
+Only the first two bullets are fully pinned down at the model definition level; the last two are where different realizations live, and therefore where falsifiable modeling choices enter.
+
+The payoff is immediate: once a realization is fixed, the theory becomes simulable. The 8-tick / DFT-8 structure is not a stylistic flourish; it is the computational backbone that makes ``recognition dynamics'' something you can actually run, measure, and compare to data.
+
+\section{Periodic Table of Meaning: Canonical WTokens as Semantic Atoms}
+\label{sec:meaning_periodic_table}
+
+\subsection{From eight-tick physics to semantic atoms}
+The OctaveKernel makes the eight-tick substrate computationally concrete: at each tick, a voxel carries an 8-slot complex ``chord,'' and the DFT-8 is the canonical extractor of its harmonic content.
+The next question is structural rather than interpretive:
+\emph{given an 8-tick neutral substrate, what are the irreducible, stable, distinguishable building blocks of ``aboutness''?}
+
+Recognition Science answers by introducing a finite set of \emph{semantic atoms} called \emph{WTokens} (``Water Tokens''). Claim hygiene matters here:
+\begin{itemize}
+  \item \textbf{Structural claim (proved)}: under the DFT-8/neutrality/reciprocity constraints already established, there is a canonical finite token identity type with \(\mathrm{card}=20\).
+  \item \textbf{Operational claim (proved)}: each token has a measurable \emph{signature} consisting of its mode family, \(\varphi\)-level, and \(\tau\)-variant, and this signature is injective.
+  \item \textbf{Semantic completeness claim (not yet forced)}: the assertion that these 20 atoms generate \emph{all meaning} is explicitly hypothesis-gated in the mechanized corpus.
+\end{itemize}
+
+\subsection{Canonical identity and the ``no-hand-enumeration'' construction}
+The repository freezes token identity in a single canonical type \texttt{WTokenId} with 20 constructors \(W0,\dots,W19\). This is not a poetic naming trick: it is a \emph{canonical identity layer} used to make ``which token?'' unambiguous across model layers.
+
+\begin{theorem}[Canonical token cardinality]
+\claimstatus{THEOREM}
+\label{thm:wtoken_card_20}
+The canonical token identity type has exactly twenty elements:
+\[
+\mathrm{Fintype.card}(\texttt{WTokenId}) = 20.
+\]
+\end{theorem}
+\noindent
+In Lean this is proved by computation (\texttt{native\_decide}) and re-exported as a top-level theorem used by the meaning-specification layer.
+
+Importantly, the tokens are not merely \emph{listed}; they are also \emph{constructed from rules}. The module \texttt{LightLanguage/CanonicalWTokens.lean} generates all legal triples
+\[
+(\text{mode family},\ \varphi\text{-level},\ \tau\text{-offset})
+\]
+and proves that the resulting finite set is the entire universe of token IDs (equivalently, that it has cardinality 20 and no duplicates).
+This ``constructed, not enumerated'' discipline is what makes the Periodic Table of Meaning auditable: if the rules change, the set changes mechanically, and theorems about its size fail loudly.
+
+\subsection{The structural parameters: mode family, \texorpdfstring{$\varphi$}{phi}-level, and \texorpdfstring{$\tau$}{tau}-variant}
+Each token carries three structural parameters:
+\begin{itemize}
+  \item \textbf{Mode family} \(m\): one of four DFT-8 conjugacy families
+  \[
+  \{1,7\},\quad \{2,6\},\quad \{3,5\},\quad \{4\}.
+  \]
+  This partition is forced by DFT conjugacy on the neutral subspace: modes \(k\) and \(8-k\) pair, and the Nyquist mode \(k=4\) is uniquely self-conjugate among neutral modes.
+  \item \textbf{\(\varphi\)-level} \(\ell\in\{0,1,2,3\}\): a discrete amplitude rung on the golden ladder, interpreted as scaling by \(\varphi^\ell\) (cf.\ T6).
+  \item \textbf{\(\tau\)-variant} \(\tau\in\{\tau_0,\tau_2\}\): a phase-offset variant that is \emph{only legal} for the self-conjugate mode family \(m=\{4\}\). For the other families, the corpus enforces \(\tau=\tau_0\).
+\end{itemize}
+
+This parameterization is itself formalized as a structure of invariants (``token parameters'') and proved equivalent to the canonical specification type \texttt{WTokenSpec}. The crucial operational object is the \emph{meaning signature}:
+\[
+\mathrm{signatureOf}(w) := (\mathrm{modeFamily}(w),\ \mathrm{phiLevel}(w),\ \mathrm{tauVariant}(w)).
+\]
+
+\begin{theorem}[Signatures are injective]
+\claimstatus{THEOREM}
+\label{thm:wtoken_signature_injective}
+Distinct token IDs have distinct meaning signatures; i.e.\ \(\mathrm{signatureOf}\) is injective.
+\end{theorem}
+\noindent
+This is the minimal ``operational meaning'' statement: regardless of any English gloss, two different semantic atoms are observationally distinguishable by a structural triple.
+
+\subsection{Why the number is twenty}
+Given the structural constraints above, the cardinality \(20\) is a \emph{counting consequence}:
+\[
+3 \times 4 \times 1\;+\;1 \times 4 \times 2\;=\;20.
+\]
+Here:
+\begin{itemize}
+  \item \(3\) counts the non-self-conjugate mode families \(\{1,7\},\{2,6\},\{3,5\}\),
+  \item \(4\) counts the allowed \(\varphi\)-levels \(\ell\in\{0,1,2,3\}\),
+  \item the factor \(1\) enforces \(\tau=\tau_0\) off the Nyquist family,
+  \item the final \(2\) is the \(\tau\)-doubling allowed only for mode \(4\) (real vs.\ quadrature variants).
+\end{itemize}
+
+\subsection{The only ``gap'' worth staring at: why four \texorpdfstring{$\varphi$}{phi}-levels?}
+Our forcing chain already fixed \(\varphi\) itself (T6), but not the number of discrete amplitude rungs used in token construction.
+The corpus explicitly isolates this as the only nontrivial remaining structural question and proposes a topology bridge:
+\begin{quote}
+\emph{If the ledger’s fundamental unit in physical dimension \(D\) is a \(D\)-simplex, then there are exactly \(D+1\) simplicial grades (0-simplex, 1-simplex, \dots, \(D\)-simplex), and these grades determine the discrete level count.}
+\end{quote}
+In particular, once \(D=3\) is in hand (T8), the simplex-grade count is \(3+1=4\). In the mechanized development this bridge is currently represented as an explicit hypothesis (a named mapping from ``meaning levels'' to simplicial grades), together with a proved conditional theorem showing that \emph{if} the mapping holds, then the token count is inevitably 20.
+We will return to this point when we formalize T8 and the simplicial ledger in detail.
+
+\subsection{What this section does \emph{not} claim}
+Finally, we emphasize two non-claims to keep the narrative scientific rather than mystical:
+\begin{itemize}
+  \item The English glosses (``Origin,'' ``Harmony,'' etc.) are \textbf{UI labels}, not part of the formal meaning signature.
+  \item The striking bijection between the 20 WTokens and the 20 amino acids is treated as \textbf{data/hypothesis}: the corpus can prove the existence of bijections between 20-element sets, but the claim that biology \emph{must} realize this particular mapping is empirical.
+\end{itemize}
+The point of RS is not to smuggle semantics in by prose; it is to force as much structure as possible by cost, cadence, and invariance, and to quarantine the remainder as testable modeling hypotheses.
+
+\section{T8: Dimension Forcing and the Simplicial Ledger}
+\label{sec:t8_dimension_simplicial}
+
+\subsection{Dimension as a counted degree of freedom (not a background assumption)}
+In standard physics, spatial dimension is part of the stage: one posits a manifold \(\mathbb{R}^D\) and then writes laws on it.
+In RS, the direction is inverted. The number \(D\) is treated as a \emph{counted degree of freedom} required for a closed recognition loop to cover its state space.
+
+At the combinatorial core is the pattern space \(\{0,1\}^D\): the set of all \(D\)-bit configurations (``hypercube vertices'').
+The mechanized object is a \emph{complete cover}: a pass map \(\mathrm{pass}:\{0,\dots,T-1\}\to\{0,1\}^D\) that is surjective.
+The Nyquist-style obstruction proved earlier (Section~T7) says that any such surjection must satisfy
+\[
+T\ \ge\ 2^D,
+\]
+and sharpness is achieved at equality for the hypercube.
+Thus, in RS counting, \emph{a \(D\)-dimensional ledger naturally comes with a period \(2^D\)}: the number of distinct binary ``addresses'' a closed loop must be able to hit at least once.
+
+\subsection{The 8\texorpdfstring{$\leftrightarrow$}{<->}45 hinge: a second clock built from closure and \texorpdfstring{$\varphi$}{phi}}
+Dimension forcing in the Lean corpus is tied to a second timing structure called the \emph{45-gap}.
+The point is not numerology; it is synchronization: if recognition dynamics has two independent coarse clocks, their least common multiple becomes a rigid global period.
+
+The repository derives the gap arithmetically from:
+\begin{itemize}
+  \item the eight-tick octave (\(8\)), and
+  \item a minimal Fibonacci factor (\(5\)), linked to the \(\varphi\)-driven closure structure.
+\end{itemize}
+Concretely, it defines a ``closure factor'' \(9:=8+1\) (one full octave plus return) and sets
+\[
+45 := 9\times 5.
+\]
+
+\begin{theorem}[Gap-45 derivation]
+\claimstatus{THEOREM}
+\label{thm:gap45_derivation}
+The gap parameter defined by \((8+1)\times 5\) equals \(45\), and the synchronization period satisfies
+\[
+\mathrm{lcm}(8,45)=360.
+\]
+\end{theorem}
+\noindent
+In Lean this is proved by computation and packaged in a certificate chain used by the dimension forcing module.
+
+\subsection{Arithmetic rigidity: \texorpdfstring{$\mathrm{lcm}(2^D,45)=360$}{lcm(2-to-the-D,45)=360} forces \texorpdfstring{$D=3$}{D=3}}
+Now comes the crucial rigidity lemma. Because \(45=3^2\cdot 5\) has no factor of \(2\), one has \(\gcd(2^D,45)=1\) for all \(D\). Therefore
+\[
+\mathrm{lcm}(2^D,45)=2^D\cdot 45.
+\]
+Setting this equal to \(360\) forces \(2^D=8\), hence \(D=3\).
+
+\begin{theorem}[LCM dimension rigidity]
+\claimstatus{THEOREM}
+\label{thm:lcm_pow2_45_dim3}
+For all natural \(D\),
+\[
+\mathrm{lcm}(2^D,45)=360\quad\Longleftrightarrow\quad D=3.
+\]
+\end{theorem}
+\noindent
+This is the arithmetic kernel of the dimension-forcing argument. What it does \emph{not} provide by itself is physics; rather, it says:
+\emph{if a physical recognition system must synchronize a \(2^D\)-addressing cover with a 45-gap clock at period 360, then \(D\) is uniquely pinned.}
+
+\subsection{Topological conservation as an independent intuition (currently scaffolded)}
+There is a second, conceptually orthogonal argument for \(D=3\): stable ledger conservation is topological, and topological linking of closed curves is only robust in three dimensions.
+Informally:
+\begin{itemize}
+  \item in \(D=2\), closed curves separate the plane and linking is trivial;
+  \item in \(D=3\), knots and links are genuine invariants (Hopf link, linking number);
+  \item in sufficiently high dimension, codimension is large enough that generic un-linking is possible.
+\end{itemize}
+The Lean file \texttt{Foundation/DimensionForcing.lean} records this as an explicit \emph{linking axiom} (a placeholder for a future Mathlib topology formalization). In this paper we treat it as \claimstatus{SCAFFOLD}: a mathematically standard fact, but not yet fully mechanized in the RS corpus.
+
+\subsection{Why simplices: from coordinate-fixed voxels to coordinate-free ledgers}
+If \(D\) is forced to be 3, then the simplest coordinate-free ``atom of volume'' is not a cube but a \(3\)-simplex (a tetrahedron).
+This motivates a \emph{simplicial ledger} model layer: a ledger is a collection of tetrahedra glued along faces, together with a recognition potential attached to each simplex.
+
+In the current Lean development this is expressed as:
+\begin{itemize}
+  \item a \texttt{Simplex3} (tetrahedron) type with positive volume,
+  \item a \texttt{SimplicialLedger} as a nonempty set of simplices (covering property scaffolded),
+  \item a \texttt{SimplicialSheaf} assigning a potential \(\Psi\) to each simplex.
+\end{itemize}
+Given a simplex \(s\) and potential value \(\Psi(s)\), the model-level local cost is defined by
+\[
+J_{\mathrm{local}}(s):=\J(\Psi(s))\cdot \mathrm{Vol}(s),
+\]
+and the global cost is the sum over simplices (for finite ledgers).
+
+\subsection{Local--global unification (explicit hypothesis gate)}
+The gravitational/metric bridge program later in the paper relies on a principle of \emph{local--global unification}: if the global ledger action is stationary, then each local simplex potential sits at a stationary point of \(\J\).
+In the simplicial module, this is currently expressed as an explicit hypothesis (\texttt{H\_LocalGlobalUnification}) together with a theorem that \emph{uses} it.
+We therefore tag the local--global implication as \claimstatus{HYPOTHESIS} at present, while keeping the formal plumbing explicit so that the hypothesis is easy to attack or falsify in later hardening.
+
+\subsection{Simplicial grades and the \texorpdfstring{$\varphi$}{phi}-level bridge}
+Finally we return to the question flagged in Section~\ref{sec:meaning_periodic_table}: why exactly \emph{four} \(\varphi\)-levels?
+Once \(D=3\) is fixed, a \(D\)-simplex has sub-simplices of dimensions \(k=0,1,\dots,D\), hence exactly \(D+1\) simplicial grades. For \(D=3\), this is \(4\).
+The corpus proves the grade count as a pure counting theorem and then introduces a named bridge hypothesis identifying ``meaning levels'' with these grades.
+
+In other words:
+\[
+D=3\ \Longrightarrow\ \#\{\text{simplicial grades}\}=4\ \stackrel{\text{bridge}}{\Longrightarrow}\ \#\{\varphi\text{-levels}\}=4.
+\]
+This is the precise status of the ``4'' in the Periodic Table of Meaning today: the \emph{counting} is proved; the \emph{identification} is an explicit hypothesis awaiting either derivation from earlier RS primitives or empirical falsification.
+
+\section{Emergent Geometry and Gravity: Recognition Sheaves, RRF, and ILG}
+\label{sec:emergent_geometry_gravity}
+
+\subsection{What this section is (and is not)}
+Up to T8, the paper has been primarily \emph{forcing-chain} material: unique cost \(\J\), forced discreteness, forced ledger conservation, forced \(\varphi\), forced 8-tick cadence, a fundamental discrete dynamics \(\Rhat\), and a forced spatial dimension \(D=3\).
+
+Geometry and gravity are different. They are not forced by the algebra of comparison alone; they are the result of a \emph{continuum bridge} in which the discrete ledger is coarse-grained into a manifold-like description and \(\J\)-strain is reinterpreted as curvature.
+The Lean corpus is candid about this status: parts of the bridge are definitional or mechanized; key physics identifications are currently axiom- or hypothesis-gated.
+
+Accordingly, we separate:
+\begin{itemize}
+  \item \textbf{\claimstatus{DEFINITION}}: the continuum objects (fields, actions, and predicates) we use to talk about geometry.
+  \item \textbf{\claimstatus{THEOREM}}: statements proved in Lean without new axioms.
+  \item \textbf{\claimstatus{HYPOTHESIS}/\claimstatus{AXIOM}}: the bridge assumptions linking \(\J\)-strain to curvature and action-stationarity to Einstein dynamics.
+  \item \textbf{\claimstatus{CERTIFICATE}}: bundled, machine-checkable summaries of derived quantitative consequences (e.g.\ ILG kernel coercivity facts).
+\end{itemize}
+
+\subsection{Recognition potential as a sheaf on a manifold}
+\claimstatus{DEFINITION}
+Let \(M\) be a topological space intended to represent the coarse-grained spacetime arena. A \emph{recognition potential field} is represented as a (continuous, positive) function
+\[
+\Psi : M \to \R,\qquad \Psi(x)>0,
+\]
+packaged in Lean as a \emph{recognition sheaf} object.
+Local sections are simply restrictions of \(\Psi\) to an open set \(U\subseteq M\).
+
+The key structural fact used by the bridge is the stationarity of the canonical cost at its minimum:
+\begin{theorem}[Stationarity of \texorpdfstring{$\J$}{J} at balance]
+\claimstatus{THEOREM}
+\label{thm:J_stationary_at_one_relativity}
+\(\J'(1)=0\).
+\end{theorem}
+\noindent
+This is the calculus expression of the cost-first equilibrium: the unit ratio is a stationary point. In the recognition-sheaf layer this yields a trivial but useful identity: for any local section \(f\) (i.e.\ a restriction), the ratio \(f(x)/\Psi(x)\) is identically \(1\), hence \(J(f(x)/\Psi(x))=0\).
+
+\subsection{Metric as a response field}
+\claimstatus{DEFINITION}
+To speak about curvature one needs a metric tensor. The Lean corpus defines a metric tensor object and provides a concrete ``metric from recognition field'' map of the form
+\[
+g_{\mu\nu}(x) \;=\; \eta_{\mu\nu} \;+\; k\,\psi(x)\,\delta_{\mu\nu},
+\]
+with \(\eta\) the Minkowski tensor and \(k\) a coupling constant.
+We treat this explicit formula as a \claimstatus{MODEL}: it is a convenient and testable representation of how a scalar recognition field perturbs a baseline metric, not (yet) a forced consequence of the RS axioms.
+
+\subsection{RRF and a continuum cost density}
+\claimstatus{DEFINITION}
+On the relativistic bridge track, the recognition potential is also expressed as a scalar field on coordinate charts:
+\[
+\psi:\R^4\to\R,
+\]
+called the \emph{Recognition Reality Field} (RRF).
+In the small-deviation regime (Section~Hamiltonian Emergence), \(\J\) behaves quadratically; the bridge therefore takes the simplest continuum analogue of quadratic recognition strain: a gradient-squared density coupled through the inverse metric,
+\[
+\mathcal{L}_{\mathrm{field}}(x)\;:=\;\frac12\, g^{\mu\nu}(x)\,(\partial_\mu\psi)(x)\,(\partial_\nu\psi)(x).
+\]
+This is not asserted to be the only possibility; it is the minimal kinetic-like density compatible with the quadratic approximation and coordinate covariance.
+
+\subsection{Action stationarity and Einstein dynamics (bridge spine)}
+The relativistic bridge introduces an RS action density
+\[
+\mathcal{L}_{\mathrm{RS}}(x)\;:=\;\bigl(R(x)-2\Lambda + \mathcal{L}_m(x)\bigr)\,\sqrt{|\det g(x)|},
+\]
+and defines the \emph{RS action} as the integral of this density. In Lean, this appears as a pointwise action functional
+\[
+S_{\mathrm{RS}}[g](x) \;=\; (R(g;x)-2\Lambda+L_m(x))\sqrt{|\det g(x)|}.
+\]
+
+The bridge to general relativity has two major components:
+\begin{itemize}
+  \item \textbf{\claimstatus{AXIOM} (Hilbert variation)}: stationarity of the Einstein--Hilbert-type action yields the Einstein field equations (EFE) in the standard way (Palatini identity, total-divergence boundary terms, and volume-element variation).
+  \item \textbf{\claimstatus{AXIOM} (Meta-Principle $\Rightarrow$ stationarity)}: the RS Meta-Principle (global recognition strain minimization) implies stationarity of the RS action in the continuum limit.
+\end{itemize}
+
+With these bridge axioms in place, the corpus proves the expected conditional result:
+\begin{theorem}[Meta-Principle $\Rightarrow$ EFE (conditional)]
+\claimstatus{THEOREM (axiom-dependent)}
+\label{thm:mp_implies_efe_conditional}
+Assuming the bridge axioms above, if there exists an RRF configuration whose metric is compatible with the metric-emergence predicate, then the corresponding metric satisfies an Einstein-type field equation
+\[
+G_{\mu\nu}+\Lambda g_{\mu\nu} = \kappa\,T_{\mu\nu},
+\]
+for an appropriate coupling \(\kappa\) and stress-energy tensor \(T_{\mu\nu}\) defined by matter-action variation.
+\end{theorem}
+\noindent
+The value of this theorem is not that it re-proves GR from scratch; the value is \emph{auditability}: the exact points where the RS program touches GR are isolated into named axioms/hypotheses, rather than hidden in prose.
+
+\subsection{ILG: a falsifiable gravity modification kernel (certified facts)}
+The relativistic bridge above is not the only gravitational track in the corpus. A parallel, explicitly falsifiable model track is \emph{ILG} (variously glossed as ``Informational'' or ``Infra-Luminous'' Light Gravity), which modifies effective gravitational response by a kernel factor \(w\ge 1\) that grows with dynamical time relative to the fundamental tick \(\tau_0\).
+
+At its simplest, the ILG time-kernel is defined (in one extracted layer) by
+\[
+w_t(T_{\mathrm{dyn}};\tau_0)\;=\;1 + C_{\mathrm{lag}}\Bigl(\Bigl(\max(\varepsilon_t,T_{\mathrm{dyn}}/\tau_0)\Bigr)^{\alphaILG}-1\Bigr),
+\]
+with nonnegative parameters \(C_{\mathrm{lag}},\alphaILG\) and a small regularization \(\varepsilon_t\).
+The mechanized ILG development contains fully proved structural facts and certificates, including:
+\begin{itemize}
+  \item \textbf{\claimstatus{THEOREM}}: \(w_t(\tau_0;\tau_0)=1\) (reference normalization) under \(\tau_0\neq 0\).
+  \item \textbf{\claimstatus{THEOREM}}: scale invariance \(w_t(cT;c\tau_0)=w_t(T;\tau_0)\) for \(c>0\).
+  \item \textbf{\claimstatus{THEOREM}}: nonnegativity \(w_t\ge 0\) and, under mild conditions, \(w_t\ge 1\).
+  \item \textbf{\claimstatus{CERTIFICATE}}: coercivity/positivity package, including a proved constant \(c_{\min}=49/162\) and a proved inequality \(\mathrm{kernel}\ge 1\) (ILG enhances rather than suppresses).
+\end{itemize}
+
+The empirical question---whether ILG’s kernel correctly predicts galaxy rotation curves, lensing, or cosmological tensions---is addressed by separate preregistered suites and observational bridge modules. In this paper, we treat those as downstream tests: the purpose of the present section is to show the precise mathematical spine (definitions, proved invariants, and explicit bridge axioms) by which ``recognition strain'' becomes ``geometry and gravity.''
+
+\section{Cosmological Consequences and Falsifiers}
+\label{sec:cosmological_consequences}
+
+\subsection{What cosmology can honestly claim at this stage}
+Cosmology is where origin stories either earn their keep or collapse into poetry.
+The Lean corpus therefore adopts a strict policy: cosmological claims must be expressed as (i) explicit formulas, (ii) stated assumptions (if any), and (iii) numeric bounds or inequalities that can be machine-checked.
+
+In particular, many of the statements below are not ``deep theorems'' in the analysis sense; they are \emph{certified consequences} of earlier RS-forced structure (\(\varphi\), the eight-tick cadence, and ledger counting) together with a small number of bridge-model definitions that fix how those structures are interpreted in cosmological observables.
+
+\subsection{Hubble tension: two RS mechanisms in the corpus}
+The observed ``Hubble tension'' is the discrepancy between early-time (CMB-inferred) and late-time (local-distance) estimates of the Hubble constant \(H_0\).
+The corpus contains two distinct mechanisms, and we present both with clear status:
+
+\paragraph{(A) ILG lag rescaling.}
+\claimstatus{MODEL} Define an ILG-corrected Hubble parameter by a multiplicative lag factor
+\begin{equation}
+\label{eq:Hubble_ILG}
+H_{\mathrm{late}} \;:=\; H_{\mathrm{early}}\,(1+c_{\mathrm{lag}}),
+\end{equation}
+where the recognition lag constant is taken from the RS coherence lock,
+\[
+c_{\mathrm{lag}} = \varphi^{-5}.
+\]
+
+\begin{theorem}[Hubble lag match (numerical bound)]
+\claimstatus{THEOREM}
+\label{thm:hubble_lag_match}
+With \(H_{\mathrm{early}}=67.4\) and \(H_{\mathrm{late,obs}}=73.5\),
+\[
+\bigl|H_{\mathrm{early}}(1+\varphi^{-5}) - H_{\mathrm{late,obs}}\bigr| < 0.5.
+\]
+\end{theorem}
+\noindent
+This theorem is machine-checked from explicit bounds on \(\varphi^{-5}\) (derived using \(\varphi^2=\varphi+1\)).
+
+\paragraph{(B) Dual-metric ledger ratio.}
+\claimstatus{MODEL} A second mechanism derives a purely rational ratio from ledger topology:
+\begin{equation}
+\label{eq:Hubble_ratio_13_12}
+\frac{H_{\mathrm{late}}}{H_{\mathrm{early}}} \;=\; \frac{13}{12}.
+\end{equation}
+The interpretation is that a ``dynamic ledger'' counts \(12\) spatial edges plus \(1\) time-like contribution, versus a ``static ledger'' counting \(12\) spatial edges only.
+
+\begin{theorem}[Topological Hubble ratio match]
+\claimstatus{THEOREM}
+\label{thm:hubble_ratio_match}
+Let \(H_{\mathrm{early}}=67.4\) and \(H_{\mathrm{late,obs}}=73.04\), and define \(H_{\mathrm{late,pred}}:=H_{\mathrm{early}}\cdot (13/12)\). Then
+\[
+\frac{|H_{\mathrm{late,pred}}-H_{\mathrm{late,obs}}|}{H_{\mathrm{late,obs}}} < 5\times 10^{-4}.
+\]
+\end{theorem}
+\noindent
+This is a strict, machine-checked inequality; the only numerical input is the observational pair \((67.4,73.04)\). The ratio \(13/12\) is derived from an integer ledger count, not fitted.
+
+\subsection{Dark energy: a ledger-derived fraction with an \texorpdfstring{$\alphaEM/\pi$}{alphaEM/pi} correction}
+The corpus also proposes a parameter-free expression for the dark energy density fraction \(\Omega_\Lambda\) as a rational base fraction corrected by a derived dimensionless constant:
+\begin{equation}
+\label{eq:OmegaLambda_pred}
+\Omega_{\Lambda,\mathrm{pred}} \;=\; \frac{11}{16}\;-\;\frac{\alphaEM}{\pi}.
+\end{equation}
+Here:
+\begin{itemize}
+  \item \(11/16\) is interpreted as a passive-geometry fraction (``11 passive edges'' over \(2\times 8\) cube vertices),
+  \item \(\alphaEM\) is a derived RS constant from the constants track (not a fitted cosmology parameter).
+\end{itemize}
+
+\begin{theorem}[Dark energy match (within \(1\sigma\))]
+\claimstatus{THEOREM}
+\label{thm:dark_energy_match}
+With \(\Omega_{\Lambda,\mathrm{obs}}=0.6847\) and \(\sigma=0.0073\),
+\[
+|\Omega_{\Lambda,\mathrm{pred}}-\Omega_{\Lambda,\mathrm{obs}}| < \sigma.
+\]
+\end{theorem}
+\noindent
+The proof uses explicit bounds on \(\alphaEM/\pi\) (numerically \(0.0023<\alphaEM/\pi<0.0024\)) and therefore converts the match into a verified interval containment.
+
+\subsection{\texorpdfstring{$\sigma_8$}{sigma8} suppression: strain scale from \texorpdfstring{$J(\varphi)$}{J(phi)} and a calibrated placeholder}
+The \(\sigma_8\) tension is the late-time suppression of small-scale structure growth inferred from weak lensing relative to Planck CMB extrapolations.
+The corpus introduces a simple mechanism: define a maximal single-cycle strain scale by
+\begin{equation}
+\label{eq:Qmax}
+Q_{\max} := J(\varphi),
+\end{equation}
+and postulate a growth suppression factor of the form
+\begin{equation}
+\label{eq:suppression_factor}
+f_{\mathrm{sup}}(Q) := 1 - \frac{Q}{Q_{\max}}.
+\end{equation}
+
+The genuinely structural part is the scale of \(J(\varphi)\):
+\begin{theorem}[Strain scale bound]
+\claimstatus{THEOREM}
+\label{thm:J_phi_bounds}
+The canonical cost at the golden ratio satisfies
+\[
+0.11 < J(\varphi) < 0.12.
+\]
+\end{theorem}
+
+The observational part is recorded as a verified numeric fact about reported survey values:
+\begin{theorem}[Observed \texorpdfstring{$\sigma_8$}{sigma8} ratio bounds]
+\claimstatus{THEOREM}
+\label{thm:sigma8_ratio_bounds}
+\[
+0.93 < \frac{\sigma_{8,\mathrm{WL}}}{\sigma_{8,\mathrm{CMB}}} < 0.95.
+\]
+\end{theorem}
+
+\paragraph{Calibration disclaimer (important).}
+At present, the Lean module \texttt{Sigma8Suppression.lean} introduces a calibrated effective strain
+\[
+Q_{\mathrm{eff}} := 1 - \frac{\sigma_{8,\mathrm{WL}}}{\sigma_{8,\mathrm{CMB}}},
+\]
+and defines a ``predicted ratio'' in terms of this \(Q_{\mathrm{eff}}\), making the match exact by construction. The file explicitly labels this as a tautology in the calibrated model.
+In paper terms, we treat this as \claimstatus{SCAFFOLD}: a placeholder demonstrating that the RS strain framework can represent the suppression, while the real work is to derive \(Q_{\mathrm{eff}}\) from first principles of \(\Rhat\)-driven cosmological coarse-graining.
+
+\subsection{Immediate falsifiers}
+The point of writing these cosmology claims in a claim-ledger style is that falsifiers become explicit:
+\begin{itemize}
+  \item \textbf{Hubble ratio falsifier}: if future consensus values of \(H_{\mathrm{late}}/H_{\mathrm{early}}\) move stably away from both \(1+\varphi^{-5}\) and \(13/12\) beyond stated uncertainty, the corresponding model bridge is falsified.
+  \item \textbf{Dark energy falsifier}: if \(\Omega_{\Lambda}\) is measured stably outside the interval implied by \eqref{eq:OmegaLambda_pred} with the derived \(\alphaEM\), the derivation fails.
+  \item \textbf{Strain-scale falsifier}: if RS-native \(\varphi\) is rejected (or if the canonical cost is not \(\J\)), then \(J(\varphi)\) and the associated suppression scale are wrong at the root.
+\end{itemize}
+This is the standard we aim for: not ``a story that could be true,'' but a story with sharp, inspectable failure modes.
+
+\section{Galaxy-Scale Phenomenology: Rotation Curves, RAR, and BTFR}
+\label{sec:galaxy_scale}
+
+\subsection{The ILG fixed-point equation for circular orbits}
+\claimstatus{MODEL}
+At galaxy scales, the empirical anomaly is simple to state: beyond the luminous disk, many galaxies exhibit approximately flat rotation curves rather than the Keplerian falloff expected from baryons alone.
+
+The ILG/recognition-lag track encodes this by modifying the circular-orbit balance condition with a time-kernel factor.
+Let \(M_{\mathrm{enc}}(r)\) be an enclosed baryonic mass profile and \(G\) the gravitational constant.
+In Newtonian circular motion one has
+\[
+v(r)^2 = \frac{G\,M_{\mathrm{enc}}(r)}{r}.
+\]
+In the ILG rotation formulation in the Lean corpus, the circular velocity \(v\) instead satisfies a \emph{fixed-point equation} because the kernel depends on the dynamical time \(T_{\mathrm{dyn}}\approx 2\pi r/v\):
+\begin{equation}
+\label{eq:ilg_rotation_fixed_point}
+v(r)^2 \;=\; w_t\!\Bigl(\frac{2\pi r}{v(r)};\tau_0\Bigr)\cdot \frac{G\,M_{\mathrm{enc}}(r)}{r}.
+\end{equation}
+Equation~\eqref{eq:ilg_rotation_fixed_point} is the minimal mathematical statement of ``gravity depends on recognition lag'': the kernel depends on the orbit time, so velocity must be solved self-consistently.
+
+\subsection{Existence of a positive solution (proved)}
+\begin{theorem}[Existence of an ILG rotation-velocity solution]
+\claimstatus{THEOREM}
+\label{thm:ilg_vrot_solution_exists}
+Fix \(\tau_0>0\) and a parameter pack \(P\) satisfying the ILG positivity constraints (nonnegative exponent and nonnegative lag). Then for any radius \(r>0\) with \(M_{\mathrm{enc}}(r)>0\), there exists a velocity \(v>0\) satisfying the ILG fixed-point equation \eqref{eq:ilg_rotation_fixed_point}.
+\end{theorem}
+\noindent
+The mechanized proof constructs the scalar function
+\[
+f(v)=v^2 - w_t(2\pi r/v;\tau_0)\cdot \frac{G\,M_{\mathrm{enc}}(r)}{r}
+\]
+and applies the intermediate value theorem on a bracket \([v_{\mathrm{small}},v_{\mathrm{large}}]\subset (0,\infty)\), using the fact that the kernel is well-defined and bounded below by \(1\) on the relevant domain.
+This theorem does \emph{not} yet claim uniqueness or asymptotic flatness; it establishes that the model’s rotation law is mathematically well-posed.
+
+\subsection{Flatness as an asymptotic regime (bridge status)}
+The physical claim of interest is that \(v(r)\) tends to an approximately constant value at large radii.
+In RS/ILG language, this corresponds to a regime where the kernel’s growth in dynamical time cancels the explicit \(1/r\) decay of the Newtonian factor.
+
+In the current corpus, some ``flatness'' statements exist only in \claimstatus{SCAFFOLD} form (placeholders for limiting arguments); the paper therefore treats asymptotic flatness as a testable model prediction rather than a fully mechanized theorem at this time.
+
+\subsection{RAR: a power law from a power-law weight (proved algebra)}
+\claimstatus{MODEL} A common way to express galaxy phenomenology is in acceleration space.
+Define the baryonic acceleration \(a_{\mathrm{bar}}\) and observed acceleration \(a_{\mathrm{obs}}\) at a given radius (for circular orbits) by
+\[
+a_{\mathrm{obs}}=\frac{v^2}{r},\qquad a_{\mathrm{bar}}=\frac{G\,M_{\mathrm{enc}}(r)}{r^2}.
+\]
+The RAR model layer in the Lean corpus introduces an acceleration-space weight of the form
+\[
+w(a_{\mathrm{bar}})=\Bigl(\frac{a_0}{a_{\mathrm{bar}}}\Bigr)^{\alpha/2},
+\qquad a_{\mathrm{obs}}=w(a_{\mathrm{bar}})\,a_{\mathrm{bar}},
+\]
+where \(a_0>0\) is a characteristic acceleration scale and \(\alpha\) is an exponent parameter.
+
+\begin{theorem}[RAR power-law form]
+\claimstatus{THEOREM}
+\label{thm:rar_power_law}
+For \(a_0>0\) and \(a_{\mathrm{bar}}>0\),
+\[
+a_{\mathrm{obs}} \;=\; a_0^{\alpha/2}\,a_{\mathrm{bar}}^{1-\alpha/2}.
+\]
+\end{theorem}
+\noindent
+This is a purely algebraic theorem (it is the identity \((a_0/a)^{\alpha/2}\,a=a_0^{\alpha/2}\,a^{1-\alpha/2}\)), but it matters because it isolates what the physics must deliver: a weight of this form immediately implies a log--log RAR slope \(1-\alpha/2\).
+
+\subsection{Universality and what would falsify it}
+\claimstatus{MODEL} The empirical RAR is striking partly because it is \emph{universal} across galaxies.
+In the model above, universality arises if \((a_0,\alpha)\) are global constants shared by all systems.
+The Lean corpus proves the corresponding cancellation identity:
+ratios of \(a_{\mathrm{obs}}\) across galaxies reduce to ratios of \(a_{\mathrm{bar}}\) raised to the universal exponent.
+
+The most direct falsifier is therefore parameter drift: if explaining different galaxies requires galaxy-dependent \(\alpha\) or \(a_0\) beyond stated systematics, the universality premise fails.
+The rotation-curve track packages a concrete falsifier for global-fit failure (e.g.\ a \(\chi^2/\mathrm{dof}\) threshold on SPARC-style datasets); the point is not the specific number but the existence of a \emph{pre-registered failure criterion}.
+
+\subsection{BTFR: current mechanization is a ``form lemma'' (not yet structural)}
+The BTFR relates baryonic mass \(M_b\) to an asymptotic flat rotation speed \(v_f\) by a near power law \(M_b\propto v_f^\beta\) with small scatter.
+In the current Lean development, the BTFR module provides a mechanically checkable \emph{power-law form wrapper}: under a stated RAR-style relation, it can package the algebra into an equation of the form
+\[
+M_b = C\,v_f^{\beta},
+\]
+but it does \emph{not yet} prove that \(C\) is independent of \(M_b\) or that the slope \(\beta\) is uniquely forced by RS locks.
+Accordingly, we treat BTFR emergence as \claimstatus{SCAFFOLD} at present: the algebraic pathway is explicit, but the structural universality theorem is still being hardened.
+
+\section{Derived Constants and Zero Adjustable Parameters}
+\label{sec:derived_constants}
+
+\subsection{What ``parameter-free'' means in the corpus}
+The Lean corpus distinguishes two senses of ``parameter-free'':
+\begin{itemize}
+  \item \textbf{Core RS (native units):} the framework is formulated in a ledger-native measurement system in which the fundamental tick \(\tau_0\) and voxel \(\ell_0\) are \emph{base units}. In this gauge, \(c=\ell_0/\tau_0=1\) by definition and the forcing chain fixes dimensionless structure (e.g.\ \(\varphi\), the eight-tick cadence, and derived ratios) without fitting.
+  \item \textbf{External calibration (SI/CODATA):} mapping \((\tau_0,\ell_0)\) to seconds/meters is a bridge layer that lives outside the certified core. It can be audited and falsified, but it is not part of the axiomatic base.
+\end{itemize}
+
+In this precise sense, the corpus certifies a \emph{policy claim}:
+\begin{theorem}[Zero adjustable parameters (proof-layer metric)]
+\claimstatus{CERT(definitional)}
+\label{thm:zero_knobs}
+The proof-layer ``knobs count'' is \(0\).
+\end{theorem}
+\noindent
+This is intentionally mundane as mathematics: it asserts that no free knobs appear in the core derivation chain. Its value is epistemic: it turns ``we didn’t fit anything'' into an inspectable invariant of the mechanized surface.
+
+\subsection{The EM fine-structure constant \texorpdfstring{$\alphaEM$}{alphaEM} from cube geometry, gap weight, and curvature}
+\claimstatus{THEOREM}
+The corpus defines the electromagnetic fine-structure constant by assembling three derived contributions into an inverse constant \(\alphaEM^{-1}\):
+\begin{equation}
+\label{eq:alphaInv_assembly}
+\alphaEM^{-1} \;:=\; \alpha_{\mathrm{seed}} - \bigl(f_{\mathrm{gap}}+\delta_\kappa\bigr),
+\qquad
+\alphaEM := \frac{1}{\alphaEM^{-1}}.
+\end{equation}
+Each term is fixed by RS structure:
+\begin{itemize}
+  \item \textbf{Geometric seed:} \(\alpha_{\mathrm{seed}} = 4\pi\cdot 11\).
+  \item \textbf{Gap term:} \(f_{\mathrm{gap}} = w_8\,\ln\varphi\), where the eight-tick projection weight \(w_8\) is given in closed form by
+  \begin{equation}
+  \label{eq:w8_closed_form}
+  w_8 \;=\; \frac{348 + 210\sqrt{2} - (204 + 130\sqrt{2})\,\varphi}{7},
+  \end{equation}
+  and is proved positive in the corpus.
+  \item \textbf{Curvature correction:} \(\delta_\kappa = -\dfrac{103}{102\,\pi^5}\) (note \(\delta_\kappa<0\), so \eqref{eq:alphaInv_assembly} subtracts a negative term).
+\end{itemize}
+
+\paragraph{Certified numeric interval.}
+The certificate layer proves a tight interval for the derived inverse constant:
+\begin{equation}
+\label{eq:alphaInv_bounds}
+137.030 \;<\; \alphaEM^{-1} \;<\; 137.039.
+\end{equation}
+No empirical inputs enter this interval proof beyond standard analytic bounds (\(\pi>3\), \(\varphi^2=\varphi+1\), and certified bounds for \(\ln\varphi\)); the numeric evaluation/match-to-CODATA layer is quarantined from the certified surface.
+
+\subsection{Where the integers 11, 102, and 103 come from (and what is assumed)}
+The derivation is explicit about provenance:
+\begin{itemize}
+  \item \textbf{Eleven} is a cube combinatorics invariant in \(D=3\): a cube has \(12\) edges and a single ``active'' edge per atomic tick, leaving \(12-1=11\) passive edges dressing the interaction.
+  \item \textbf{One-hundred-two and one-hundred-three} arise from face counting and crystallographic classification:
+  \[
+  102 = 6\times 17,\qquad 103 = 102 + 1.
+  \]
+  Here \(6\) is the number of cube faces in \(D=3\). The factor \(17\) is the classical count of wallpaper groups; the corpus records this as a crystallographic constant rather than re-proving the century-old classification inside Lean.
+\end{itemize}
+
+\subsection{Why the curvature correction carries \texorpdfstring{$\pi^5$}{pi5}}
+\claimstatus{THEOREM}
+The appearance of \(\pi^5\) is certified by a configuration-space counting argument.
+The curvature correction integrates over an effective configuration space with dimension
+\begin{equation}
+\label{eq:config_space_dim}
+5 \;=\; 3\;+\;1\;+\;1,
+\end{equation}
+decomposed as \(3\) spatial dimensions (forced elsewhere in the corpus), \(1\) temporal dimension (the eight-tick phase), and \(1\) balance/conservation dimension (the ledger constraint).
+Each contributes one angular \(\pi\)-factor, yielding a total measure factor \(\pi^5\).
+The corpus proves that \(\pi^3\), \(\pi^4\), and \(\pi^6\) are incompatible (missing dimensions or adding spurious ones), so \(\pi^5\) is uniquely singled out by the ledger’s configuration-space structure.
+
+\subsection{RS-native units and the derived dimensioned constants \texorpdfstring{$\hbar$}{hbar} and \texorpdfstring{$G$}{G}}
+\claimstatus{THEOREM}
+In RS-native units, the base choices are \(\tau_0=1\) (one tick), \(\ell_0=1\) (one voxel), and \(c=1\).
+The coherence energy is locked to the \(\varphi\)-ladder by
+\[
+E_{\mathrm{coh}}=\varphi^{-5},
+\]
+and the action quantum is defined by the RS identity
+\begin{equation}
+\label{eq:hbar_rs}
+\hbar \;=\; E_{\mathrm{coh}}\;\tau_0 \;=\; \varphi^{-5}\tau_0.
+\end{equation}
+The gravitational constant is then defined (in the core, RS-native layer) by
+\begin{equation}
+\label{eq:G_rs}
+G \;=\; \frac{\lambda_{\mathrm{rec}}^{2}\,c^{3}}{\pi\,\hbar},
+\end{equation}
+with \(\lambda_{\mathrm{rec}}\) the fundamental recognition wavelength.
+As with all dimensioned quantities, \eqref{eq:hbar_rs}--\eqref{eq:G_rs} become numerical SI predictions only after external calibration specifies the physical size of a tick/voxel; the core content is the \emph{parameter-locked algebraic form}.
+
+\subsection{\texorpdfstring{$\lambda_{\mathrm{rec}}$}{lambda-rec} as a curvature extremum (certificate form)}
+\claimstatus{THEOREM}
+The constants track defines a normalized curvature functional \(K(\lambda)\) and certifies that there exists a \emph{unique} positive \(\lambda\) such that \(K(\lambda)=0\).
+In the current formalization, this uniqueness statement is encoded as a Tier-2 certificate:
+\[
+\exists!\,\lambda>0 \;\;\text{such that}\;\; K(\lambda)=0.
+\]
+Paper-level interpretation: \(\lambda_{\mathrm{rec}}\) is selected by an extremality/stationarity condition in the curvature functional, and the certificate ensures the selection is mathematically well-posed (unique in the positive domain) given the RS-native constant definitions.
+
+\subsection{Audit trail: the Tier-2 bundle}
+The above claims are bundled in a single certificate module that asserts, in one conjunction, the verified status of:
+\begin{itemize}
+  \item the EM alpha certificate (C10),
+  \item the zero-knobs policy certificate (C11),
+  \item the ILG exponent grounding certificate,
+  \item the RS-native forms for \(\hbar\), \(G\), and the uniqueness of \(\lambda_{\mathrm{rec}}\),
+  \item and the RS-native identity \(c=1\).
+\end{itemize}
+This matters because it lets the reader audit the entire ``constants story'' as a compositional unit rather than as scattered claims: the certificate is a machine-checkable checklist of what the corpus believes it has truly nailed down.
+
+\section{Particle Masses and Flavor: The Phi-Ladder Mass Law}
+\label{sec:particle_masses}
+
+\subsection{Mass as a rung: what the mass program is trying to explain}
+In the RS view, a ``particle'' is a stable, reproducible recognition pattern. ``Mass'' is then the most primitive scalar summary of how costly it is to sustain that pattern against decohering perturbations: the deeper the pattern sits in the recognition hierarchy, the more it resists being moved, and the more inertial it behaves.
+
+Operationally, the Lean corpus does not begin by assuming a Standard Model Lagrangian and then fitting Yukawa couplings. It begins by assuming the \(\varphi\)-ladder and the eight-tick cadence already forced in earlier sections, and it asks for the minimal \emph{discrete} data needed to place each stable species on that ladder.
+The result is a sharply structured ansatz:
+\begin{quote}
+\emph{A species is identified by (i) a sector yardstick, (ii) an integer rung, and (iii) a charge-indexed residue shift.}
+\end{quote}
+The core Lean surface formalizes this as a \emph{model layer} (definitions plus internal invariants), and then makes the experimental bridge explicit as either (a) a hypothesis interface, or (b) an external certificate interface.
+
+\subsection{The master mass law (model layer; mechanized)}
+\claimstatus{MODEL}
+The canonical mass law is stated in the corpus in two equivalent normal forms. We present the version closest to the \(\varphi\)-ladder intuition:
+\begin{equation}
+\label{eq:mass_law_master}
+m(s,r,Z)\;=\;A_s\;\varphi^{\,r-8+\mathcal{F}(Z)}.
+\end{equation}
+Here:
+\begin{itemize}
+  \item \(s\) is a \emph{sector} (lepton, up-type quark, down-type quark, electroweak),
+  \item \(r\in\mathbb{Z}\) is a \emph{rung integer} (species and generation label),
+  \item \(Z\in\mathbb{Z}\) is a \emph{charge-indexed integer} (defined below),
+  \item \(\mathcal{F}(Z)\) is the \emph{gap/display} function:
+  \begin{equation}
+  \label{eq:gap_FZ}
+  \mathcal{F}(Z)\;:=\;\frac{\ln\!\bigl(1+Z/\varphi\bigr)}{\ln\varphi}.
+  \end{equation}
+\end{itemize}
+
+The sector yardstick \(A_s\) is itself structured:
+\begin{equation}
+\label{eq:yardstick_As}
+A_s \;:=\;2^{B_s}\,E_{\mathrm{coh}}\,\varphi^{r_{0,s}},
+\end{equation}
+where \(E_{\mathrm{coh}}=\varphi^{-5}\) is the coherence quantum and \((B_s,r_{0,s})\) are sector-global gauge offsets.
+
+\subsection{No magic numbers: sector gauges derived from cube geometry (proved)}
+\claimstatus{THEOREM}
+The mass program has a sharp ``no magic numbers'' target: the sector gauges \((B_s,r_{0,s})\) should be derived from the same cube geometry that already generated the integers \(11\), \(102\), and \(103\) in the \(\alphaEM\) derivation.
+In the mass track, the derived inputs are:
+\begin{itemize}
+  \item \(E_{\mathrm{total}}=12\) cube edges in \(D=3\),
+  \item \(E_{\mathrm{passive}}=E_{\mathrm{total}}-1=11\) passive edges per tick,
+  \item \(W=17\) wallpaper groups (recorded as a crystallographic constant).
+\end{itemize}
+From these, the sector gauges are defined and then \emph{proved} to evaluate to the advertised integers:
+\[
+\begin{array}{c|cc}
+\text{sector }s & B_s & r_{0,s}\\\hline
+\text{Lepton} & -(2E_{\mathrm{passive}})=-22 & 4W-6=62\\
+\text{UpQuark} & -1 & 2W+1=35\\
+\text{DownQuark} & 2E_{\mathrm{total}}-1=23 & E_{\mathrm{total}}-W=-5\\
+\text{Electroweak} & 1 & 3W+4=55\\
+\end{array}
+\]
+This is a genuine strengthening over ``phenomenological fits'': in the certified mass model layer, these constants are not tuned against mass data; they are derived from cube combinatorics plus the crystallographic constant \(W=17\).
+
+\subsection{Rungs and the charge-index \texorpdfstring{$Z$}{Z} (model layer; explicit formulas)}
+\claimstatus{MODEL}
+The rung integers \(r\) used in \eqref{eq:mass_law_master} are assigned by family and generation.
+In the anchor encoding, three-generation torsion is encoded by the sequence \(\tau(0)=0\), \(\tau(1)=11\), \(\tau(2)=17\), yielding (for example) charged leptons
+\[
+r_e=2,\qquad r_\mu=2+11=13,\qquad r_\tau=2+17=19,
+\]
+and similarly for quarks.
+
+The charge-indexed integer \(Z\) is defined by first scaling electric charge by \(6\): let \(\tilde q := 6Q\in\mathbb{Z}\).
+Then the sector-dependent map used in the bridge layer is
+\[
+Z \;=\;\tilde q^2+\tilde q^4 \quad (\text{leptons}),\qquad
+Z \;=\;4+\tilde q^2+\tilde q^4 \quad (\text{quarks}),\qquad
+Z=0 \quad (\text{neutrinos}).
+\]
+This produces the canonical three charge bands used throughout the corpus:
+\[
+Z_{\mathrm{down}}=24,\qquad Z_{\mathrm{up}}=276,\qquad Z_{\mathrm{lepton}}=1332.
+\]
+
+\subsection{Internal invariants (proved): \texorpdfstring{$\varphi$}{phi}-scaling and neutral-gap normalization}
+Two structural invariants are proved directly from the definitions:
+\begin{theorem}[\(\varphi\)-scaling per rung and neutral normalization]
+\claimstatus{THEOREM}
+\label{thm:masslaw_invariants}
+For every sector \(s\), rung \(r\), and charge index \(Z\),
+\[
+m(s,r+1,Z)=\varphi\,m(s,r,Z),
+\qquad
+\mathcal{F}(0)=0.
+\]
+\end{theorem}
+\noindent
+These facts do not by themselves guarantee experimental agreement, but they are critical for auditability: they encode the intended ``one rung = one factor of \(\varphi\)'' semantics and fix the neutral baseline.
+
+\subsection{The bridge to experiment: single-anchor RG transport (explicit seam)}
+The Lean corpus is unusually explicit about where physics enters.
+To compare \eqref{eq:mass_law_master} to PDG masses, one must relate a \emph{structural mass at an anchor scale} to a \emph{pole mass} through renormalization-group (RG) transport.
+The framework formalizes the transport residue (at least abstractly) as
+\begin{equation}
+\label{eq:rg_residue}
+f_i(\mu_\star)\;:=\;\frac{1}{\ln\varphi}\int_{\ln\mu_\star}^{\ln m_i}\gamma_i(e^t)\,dt,
+\end{equation}
+where \(\gamma_i\) is the mass anomalous dimension for species \(i\) in the Standard Model.
+
+\claimstatus{SCAFFOLD}
+The mass corpus does \emph{not} implement the full SM RG kernels in Lean. Instead it offers two auditable bridge interfaces:
+\begin{itemize}
+  \item \textbf{Hypothesis interface}: assume a ``display identity at the anchor'': \(f_i(\mu_\star)\approx \mathcal{F}(Z_i)\) (with a stated tolerance, typically \(10^{-6}\)).
+  \item \textbf{Certificate interface}: replace the equality by an external table of certified residue intervals at \(\mu_\star\); Lean then derives per-species inequality bounds and equal-\(Z\) degeneracy consequences without assuming a global equality axiom.
+\end{itemize}
+This separation is not cosmetic. It is how the project keeps ``model'' and ``measurement'' from smuggling into each other: the RS-native mass law is stable even if the RG transport policy changes, because the seam is explicit.
+
+\subsection{Neutrinos: a hard-falsifiable, mechanized prediction bundle}
+The neutrino sector is where the corpus currently goes furthest toward an end-to-end, machine-checked comparison.
+The certified package includes:
+\begin{itemize}
+  \item parameter-free fractional-rung placements (quarter resolution) on the \(\varphi\)-ladder,
+  \item explicit interval bounds for \(m_1,m_2,m_3\) (reported in eV via a stated reporting seam),
+  \item mass-squared splittings bounded inside NuFIT intervals,
+  \item mixing-angle and Jarlskog predictions with stated tolerances.
+\end{itemize}
+
+\begin{theorem}[Neutrino sector certificate: absolute scale and splittings]
+\claimstatus{CERTIFICATE}
+\label{thm:neutrino_sector_certificate}
+The corpus proves the following bounds (normal ordering), with all inequalities machine-checked:
+\[
+0.04987 < m_3 < 0.04993,\qquad
+0.00924 < m_2 < 0.00928,\qquad
+0.00352 < m_1 < 0.00355,
+\]
+and the implied splittings satisfy
+\[
+7.21\times 10^{-5} < \Delta m^2_{21} < 7.62\times 10^{-5}\quad (\text{within NuFIT }1\sigma),
+\]
+\[
+2.455\times 10^{-3} < \Delta m^2_{31} < 2.567\times 10^{-3}\quad (\text{within NuFIT }2\sigma).
+\]
+\end{theorem}
+\noindent
+\textbf{Important reporting seam.} In the current Lean development, these eV-valued bounds reuse a charged-lepton structural mass scale as a display baseline (effectively treating an RS-native structural mass as a MeV-scale quantity and then converting MeV\(\to\)eV). The corpus flags this explicitly. Interpreted strictly, the theorem is best read as: \emph{given the declared charged-lepton scale seam, the neutrino sector is fixed and falsifiable without further tuning}.
+
+\subsection{Quarks: ``hypothesis lane'' and reconciliation status}
+The corpus also contains a quark-mass module built around a quarter-integer ladder hypothesis.
+\claimstatus{SCAFFOLD}
+That lane is explicitly labeled non-core: it uses PDG target masses and therefore does not yet satisfy the ``parameter-free core'' policy until a full reconciliation is proven.
+In paper terms, the quark lane is a research program, not a finished theorem: it is an existence proof that a coarse geometric ladder can land near the heavy-quark masses, with the light-quark discrepancies attributed to QCD nonperturbativity not yet encoded in the Lean bridge.
+
+\subsection{Immediate falsifiers}
+Writing the mass story in a claim-ledger style makes falsifiers crisp:
+\begin{itemize}
+  \item \textbf{Anchor-display falsifier}: if high-order RG transport (under a declared policy) produces residues that cannot be certified near \(\mathcal{F}(Z)\) at a common \(\mu_\star\), the single-anchor hypothesis fails.
+  \item \textbf{Family-ratio falsifier}: for equal-\(Z\) species, the anchor ratios must reduce to pure \(\varphi\)-powers determined by rung differences; persistent violations beyond certified uncertainty falsify the rung assignment.
+  \item \textbf{Neutrino falsifier}: if the neutrino masses/splittings settle outside the certified intervals of Theorem~\ref{thm:neutrino_sector_certificate}, the neutrino ladder placement is wrong.
+  \item \textbf{Quark-lane falsifier}: if a fully audited reconciliation cannot be produced without introducing hidden knobs, the quarter-ladder program must be demoted or abandoned.
+\end{itemize}
+These are the right failure modes for an origin theory: not vague ``it could be consistent,'' but sharp points where the story breaks.
+
+\section{Universal Light Qualia: When Meaning Becomes Experience}
+\label{sec:ulq}
+
+\subsection{The ULQ claim: qualia are forced by the same constraints as physics}
+Universal Light Qualia (ULQ) is the phenomenal layer paired to Universal Light Language (ULL).
+ULL formalizes what an eight-tick pattern \emph{means}; ULQ formalizes what that same pattern \emph{feels like} when recognition becomes definite.
+
+\claimstatus{MODEL}
+The corpus frames this as a dissolution of the traditional ``hard problem'': there is no extra metaphysical ingredient added to physics.
+Instead, the same RS-native primitives (DFT-8 structure, \(\varphi\)-quantized amplitude, ledger skew \(\sigma\), and \(\tau\)-phase) are reinterpreted as coordinates of an \emph{experiential} state space.
+The key additional ingredient is not a new field but a \emph{threshold}: qualia are potential below a recognition-cost threshold and actualized at/above it.
+
+\subsection{QualiaSpace: mode, intensity, valence, and temporal quality (definitions)}
+\claimstatus{MODEL}
+The ULQ core defines a 4-component space \(\mathcal{Q}\) of possible experience-characters:
+\[
+\mathcal{Q} \;\cong\; (\text{non-DC DFT mode})\times(\text{\(\varphi\)-level})\times(\text{hedonic valence})\times(\text{\(\tau\)-phase}).
+\]
+Concretely:
+\begin{itemize}
+  \item \textbf{Qualia mode}: a DFT index \(k\in\{1,\dots,7\}\) (DC excluded by neutrality).
+  \item \textbf{Intensity level}: a discrete \(\varphi\)-ladder level \(n\in\{0,1,2,3\}\) interpreted as intensity \(\varphi^n\).
+  \item \textbf{Hedonic valence}: a bounded real in \([-1,1]\), derived from ledger skew dynamics (a \(\sigma\)-based saturation map).
+  \item \textbf{Temporal quality}: a phase \(\tau\in\mathbb{Z}/8\mathbb{Z}\) (position in the eight-tick window).
+\end{itemize}
+
+\subsection{QTokens: WTokens with an experiential fiber (definitions + coherence constraint)}
+\claimstatus{MODEL}
+The ULQ atom is a \emph{QToken}: a WToken equipped with an experiential point in QualiaSpace plus a ``definiteness'' flag.
+The key coherence constraint is that the qualia mode is not arbitrary: it is deterministically derived from the WToken’s DFT structure by selecting a dominant non-DC mode.
+This explicitly prevents a common confusion: \(\tau\) is \emph{not} treated as ``the DFT mode''; mode is derived from DFT coefficients.
+
+\subsection{Actualization threshold: definite experience occurs at C>=1 (proved)}
+ULQ introduces a universal experience threshold:
+\[
+C_\star := 1.
+\]
+Given a stable boundary \(b\) in a universal field \(\psi\), the corpus defines a predicate \(\textsf{DefiniteExperience}(b,\psi)\) (in the consciousness track) and then proves the ULQ threshold link:
+\begin{theorem}[Experience threshold]
+\claimstatus{THEOREM}
+If \(\textsf{DefiniteExperience}(b,\psi)\) holds, then the boundary’s recognition cost satisfies \(C(b)\ge C_\star\).
+\end{theorem}
+\noindent
+This converts the qualitative slogan ``experience is when recognition becomes definite'' into a hard inequality.
+
+\begin{theorem}[Experience from boundary]
+\claimstatus{THEOREM}
+If \(\textsf{DefiniteExperience}(b,\psi)\) holds, then there exists a corresponding \(\textsf{QualiaExperience}\) record: a QToken plus coherence constraints tying it to the boundary’s dominant non-DC mode and to a deterministic qualia derivation from the boundary-to-WToken map.
+\end{theorem}
+\noindent
+In particular, qualia are not added by hand: the construction is algorithmic (extract an 8-tick pattern, DFT it, choose the dominant non-DC mode, then derive intensity/valence/temporal components).
+
+\subsection{Hedonic grounding: pleasure and pain from the sign of \texorpdfstring{$\sigma$}{sigma} (proved)}
+The hedonic axis is not treated as primitive moral language; it is derived from ledger skew.
+In the ULQ derivation, valence is computed from \(\sigma\) by a bounded sign-preserving map \(v=\sigma/(1+|\sigma|)\).
+This supports a clean grounding theorem:
+\begin{theorem}[Hedonic grounding]
+\claimstatus{THEOREM}
+Under the coherence assumptions that an experience is of a specific WToken and that its valence is derived from that WToken’s \(\sigma\), the sign of \(\sigma\) matches the sign of hedonic valence: \(\sigma>0\) corresponds to ``pleasant'' and \(\sigma<0\) corresponds to ``painful'' (with \(\sigma=0\) neutral).
+\end{theorem}
+
+\subsection{Qualia geometry: a discrete skeleton with continuous valence}
+\claimstatus{MODEL}
+The ULQ geometry track treats QualiaSpace as a mixed discrete/continuous manifold-like object:
+\begin{itemize}
+  \item mode \(\in \mathbb{Z}/8\mathbb{Z}\) (with DC excluded operationally),
+  \item intensity \(\in\{0,1,2,3\}\),
+  \item temporal \(\in \mathbb{Z}/8\mathbb{Z}\),
+  \item valence \(\in[-1,1]\).
+\end{itemize}
+Ignoring the continuous valence coordinate, the discrete ``skeleton'' has \(8\times 4\times 8 = 256\) points.
+This is proved as a simple counting lemma in the ULQ geometry module and is useful for simulation and preregistered test design: it bounds the resolution of the core experiential state space before any continuous refinement.
+
+\subsection{Bridge to ethics (preview)}
+ULQ makes a very strong move: it identifies ``good'' and ``bad'' not with commandments but with hedonic dynamics.
+The ethics track then proposes that virtues are transformations that (i) preserve reciprocity (\(\sigma=0\) as a balance target), (ii) reduce cumulative \(\J\)-cost (suffering), and (iii) respect the eight-tick cadence.
+We treat that as the next section, where the corpus makes ethics falsifiable by writing virtues as \(\sigma\)-preserving generators and stating explicit decomposition/completeness hypotheses.
+
+\section{Ethics: Reciprocity, Consent, and Virtues as \texorpdfstring{$\sigma$}{sigma}-Preserving Moves}
+\label{sec:ethics}
+
+\subsection{Why ethics becomes a physics question once qualia are costed}
+ULQ collapses the traditional separation between ``facts'' and ``values'': if experience is actualized at a cost threshold and valence is a deterministic function of ledger skew, then \emph{suffering} is no longer a poetic category.
+It is a measurable consequence of a conserved quantity (\(\sigma\)) evolving under a cost functional (\(\J\)).
+The ethics layer in the corpus is an attempt to formalize the resulting normative content in the only way consistent with the rest of the paper:
+\begin{quote}
+ethical structure should be expressible as constraints and generators on the same ledger objects that generate physics.
+\end{quote}
+
+\subsection{MoralState: an agent-level projection of the ledger (definitions)}
+\claimstatus{MODEL}
+The formal bridge begins with \emph{moral states} as agent-level projections of ledger states.
+In the Lean development, a \texttt{MoralState} packages:
+\begin{itemize}
+  \item an underlying ledger state \(s\) with admissibility constraint \( \textsf{net\_skew}(s)=0\),
+  \item a real skew variable \(\sigma\) interpreted as \emph{log-space reciprocity imbalance},
+  \item a positive energy budget \(E>0\) interpreted as available recognition capacity.
+\end{itemize}
+The intended physical reading is explicit: \(\sigma>0\) corresponds to net extraction (moral debt), \(\sigma<0\) to net contribution (moral credit), and \(\sigma=0\) to balanced reciprocity.
+
+For multi-agent analysis, the corpus defines a global admissibility predicate on a list of moral states \((s_i,\sigma_i,E_i)\):
+\[
+\textsf{GloballyAdmissible}(\{\sigma_i\}) \;:\Longleftrightarrow\; \sum_i \sigma_i = 0.
+\]
+
+\begin{theorem}[Global admissibility is invariant under skew-preserving maps]
+\claimstatus{THEOREM}
+If a transformation \(f\) preserves each agent's skew exactly (\(\sigma(f(s))=\sigma(s)\)), then it preserves global admissibility:
+\[
+\textsf{GloballyAdmissible}(f(\mathbf{s})) \;\Longleftrightarrow\; \textsf{GloballyAdmissible}(\mathbf{s}).
+\]
+\end{theorem}
+\noindent
+This is a minimal but important point of contact with the rest of RS: any candidate ethical move that purports to preserve reciprocity must, at minimum, be skew-preserving in aggregate.
+
+\subsection{J-convexity forces reciprocity: \texorpdfstring{$\sigma=0$}{sigma=0} as the minimal-cost manifold (proved)}
+The heart of the ethics story is a re-use of the same convexity engine that produced the Law of Existence.
+Because \( \J \) is nonnegative and uniquely minimized at unity, ``imbalanced exchange'' is penalized in a way that makes exact reciprocity not a preference but a geometric attractor.
+
+\claimstatus{THEOREM}
+In \texttt{Ethics/ConservationLaw.lean}, a \emph{smoothing} operation is defined that resets every active bond multiplier to \(1\), and it is proved that smoothing never increases recognition cost and strictly decreases it whenever the absolute reciprocity skew is nonzero.
+This yields a sharp equivalence between reciprocity and minimal cost:
+
+\begin{theorem}[Cycle minimality \(\Longleftrightarrow\) \(\sigma_{\mathrm{abs}}=0\)]
+\claimstatus{THEOREM}
+\label{thm:cycle_minimal_sigma0}
+For any ledger state \(s\),
+\[
+\Big(\forall s'\ \text{admissible},\ \textsf{RecognitionCost}(s)\le \textsf{RecognitionCost}(s')\Big)
+\;\Longleftrightarrow\;
+\textsf{reciprocity\_skew\_abs}(s)=0.
+\]
+\end{theorem}
+\noindent
+Read operationally: among states that satisfy the admissibility constraint, \emph{the unique cost minimizers are exactly those with perfect reciprocity}.
+This is the conservation-law backbone: in RS, ``ought'' begins as ``stay on the \(\sigma=0\) manifold if you want to avoid paying avoidable \(\J\)-cost.''
+
+\subsection{Consent: a local value gradient on the feasible manifold (formal interface)}
+\claimstatus{MODEL}
+To keep ethics from collapsing into a single-agent ``minimize my cost'' rule, the corpus introduces an explicit consent interface.
+Consent is formulated as a \emph{directional derivative} constraint on a value functional \(V_i\) associated to each agent \(i\):
+\[
+\textsf{Consent}(i \leftarrow j;\,\xi)\quad\Longleftrightarrow\quad D_j V_i[\xi]\ \ge\ 0,
+\]
+where \(\xi\) is an infinitesimal action direction owned by agent \(j\).
+
+The relevant formal objects are:
+\begin{itemize}
+  \item a \textbf{feasible direction} \(\xi\) in bond space that preserves reciprocity to first order (a tangent vector to the \(\sigma=0\) manifold),
+  \item a \textbf{direction specification} that also carries finite-support probability tangents (used to differentiate the information term in \(V\)).
+\end{itemize}
+This makes the consent question a differentiable, local statement rather than a moral intuition: you can, in principle, compute or certify whether a proposed action would decrease another agent's value functional at the level of first-order variation.
+
+\claimstatus{SCAFFOLD}
+The consent interface is already mechanized at the level of tangent-data bookkeeping and algebraic closure (scaling/addition lemmas).
+What remains open is the \emph{full} mechanized bridge from the RS-derived value functional (Section~\S\ref{sec:derived_constants} and the ValueFunctional development) to empirically grounded proxy observables for \(V_i\) in real systems.
+
+\subsection{Virtues as micro-moves: intended generators, current mechanization status, and falsifiers}
+\claimstatus{SCAFFOLD}
+The strongest ethics claim in the repository is that there exists a \emph{finite} set of canonical ``virtue moves'' that generate all reciprocity-preserving ethical transformations, in direct analogy with how finite generators describe symmetry actions in physics.
+In the intended story:
+\begin{quote}
+virtues are not commandments; they are the minimal local moves that preserve \(\sigma=0\), respect eight-tick cadence, and (when completed by least-action projection) lower total \(\J\)-cost.
+\end{quote}
+
+Concretely, the virtue track is organized into named move families (Love, Justice, Compassion, Temperance, etc.) and a least-action completion interface \(\Pi_{\mathrm{LA}}\) that is meant to choose, for any local tentative move, the \(\sigma=0\) completion that minimizes \(\J\)-cost.
+At present, the least-action completion is implemented as an identity placeholder satisfying locality and feasibility laws, while several individual virtue modules are still under active mechanization.
+Accordingly, we treat \emph{generator completeness} as a falsifiable hypothesis rather than a finished theorem.
+
+\paragraph{Completeness hypothesis (DREAM-style).}
+\claimstatus{HYPOTHESIS}
+Every \(\sigma\)-preserving transition \(T\) can be expressed as a finite composition of canonical virtue moves:
+\[
+T\ \text{preserves }\sigma \quad\Longrightarrow\quad \exists (v_1,\dots,v_n)\ \text{virtues},\ \ T = v_n\circ\cdots\circ v_1.
+\]
+\textbf{Falsifier:} exhibit a concrete, auditable \(\sigma\)-preserving transition that cannot be decomposed into the canonical moves under the declared completion rules.
+
+\paragraph{Minimality hypothesis.}
+\claimstatus{HYPOTHESIS}
+No generator is redundant: remove one canonical virtue move and there exists a \(\sigma\)-preserving transition no longer representable.
+\textbf{Falsifier:} prove that one generator is composable from the others under the same rules.
+
+\subsection{Immediate falsifiers and what ``ethics is physics'' would mean}
+Even in its current partial mechanization, the ethics layer produces crisp failure modes:
+\begin{itemize}
+  \item \textbf{Conservation falsifier (hard)}: if a proposed ethical move violates global admissibility (\(\sum_i\sigma_i\neq 0\)) under the declared ledger map, it is not in the RS admissible class.
+  \item \textbf{Consent falsifier (local)}: if a proposed action direction \(\xi\) yields \(D_jV_i[\xi]<0\) for some affected agent \(i\) under the declared value functional, it fails the consent constraint by definition.
+  \item \textbf{Generator falsifier (structural)}: if a \(\sigma\)-preserving transformation exists that cannot be decomposed into canonical virtue moves, the generator story is false or incomplete.
+  \item \textbf{Cost falsifier (phenomenological)}: if a purported ``virtue'' systematically raises cumulative \(\J\)-cost (and thus increases suffering in ULQ's hedonic grounding), it fails the RS rationale for calling it a virtue.
+\end{itemize}
+The point of writing ethics this way is not to win a philosophical argument.
+It is to force ethical claims into the same genre as the rest of the paper: invariants, generators, and falsifiers.
+
+\end{document}
+
+
+

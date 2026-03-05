@@ -1,0 +1,914 @@
+% Model-Independent Exclusivity on the Quotient (Front Matter, Title, Abstract)
+\documentclass[11pt]{article}
+
+% Page geometry and typography
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+% Math
+\usepackage{amsmath, amssymb, amsthm, mathtools}
+
+% Hyperlinks and clever references
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=teal,urlcolor=magenta]{hyperref}
+% Allow URLs/paths to break across lines gracefully (optional in minimal TeX installs)
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{}
+% Clever references (optional; provide a minimal fallback if not installed)
+\IfFileExists{cleveref.sty}{%
+  \usepackage[nameinlink,capitalise]{cleveref}%
+}{%
+  \providecommand{\cref}[1]{\ref{##1}}%
+  \providecommand{\Cref}[1]{\ref{##1}}%
+}%
+
+% Convenience macros (kept minimal; expand as needed)
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Rp}{\mathbb{R}_{>0}}
+\newcommand{\Jcost}{J_{\mathrm{cost}}}
+\newcommand{\StateQuotient}{\mathrm{StateQuotient}}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Title metadata
+\title{Model-Independent Exclusivity on the Quotient State Space\\
+\large Recognition Science as an Inevitability Theorem for Zero-Parameter Frameworks}
+\author{Jonathan Washburn\\
+\small Recognition Science Research Institute\\
+\small All core results formally verified}
+\date{January 2026}
+
+% PDF metadata
+\hypersetup{
+  pdftitle={Model-Independent Exclusivity on the Quotient State Space},
+  pdfauthor={Jonathan Washburn},
+  pdfsubject={Recognition Science; model-independent exclusivity; observational quotient; zero-parameter inevitability},
+  pdfkeywords={Recognition Science, model-independent, exclusivity, quotient state space, observational indistinguishability, zero-parameter, inevitability theorem, formal verification},
+  breaklinks=true
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We prove a model-independent exclusivity theorem for Recognition Science (RS) on the \emph{quotient state space}: states are identified when they are observationally indistinguishable (i.e.\ yield the same observable output).
+Working with an abstract ``physics framework'' consisting of a state space, an evolution operator, and an observable extraction map, we assume only structural constraints corresponding to the RS necessity stack: (i) zero adjustable parameters (algorithmic describability), (ii) self-similarity, (iii) the existence of a cost functional satisfying the Recognition Composition Law with normalization and calibration, and (iv) observables extracted from (and uniform under) the cost-minimizing structure.
+From these assumptions we derive, without importing any RS-specific connection data or outcome-matching hypotheses, that the preferred scale is forced to the golden ratio \(\varphi\) and the admissible cost functional is uniquely \(\Jcost(x)=\tfrac12(x+x^{-1})-1\) on \(\Rp\).
+Consequently, all states are observationally equivalent: the quotient state space collapses to a subsingleton (equivalently, \(\StateQuotient(F) \simeq \mathbf{1}\)).
+This reframes RS as an inevitability theorem: any competing zero-parameter framework that derives observables must either introduce free parameters (violating the zero-parameter posture) or agree with RS at the level of observational content on the quotient.
+All core claims are formally verified.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% Sections will be written iteratively in subsequent sessions.
+\section{Introduction}
+\label{sec:introduction}
+Recognition Science (RS) is often presented as a concrete mathematical model of reality: a discrete recognition ledger with a specific cost functional, a preferred self-similar scale \(\varphi\), and a fixed causal scaffold.
+This paper adopts a different strategic framing.
+We treat RS as an \emph{inevitability theorem}: a statement that any admissible \emph{zero-parameter} framework capable of producing observational content is forced into the RS structure, up to an explicitly defined equivalence.
+
+\medskip
+\noindent\textbf{From ``a model'' to ``a forced form.''}
+Most physical theories separate two layers: a structural core (symmetries, dynamics, state spaces) and a numerical layer (free parameters fixed by measurement).
+RS aims at a stronger posture: \emph{no adjustable dimensionless knobs} anywhere in the derivation chain (units are treated as gauge).
+If one takes that posture seriously, the right question is not ``does RS fit the world?'', but rather:
+\emph{what, if anything, is forced by the requirement of zero parameters together with a minimal interface for producing observables?}
+Our answer is an exclusivity theorem of this form.
+
+\medskip
+\noindent\textbf{No alternatives, stated correctly: quotient-level equivalence.}
+Uniqueness claims in physics are only meaningful relative to an observational interface.
+Two distinct internal states may be physically indistinguishable if they induce the same observable output.
+Accordingly, we define an \emph{observational equivalence} relation \(s_1 \sim s_2\) by equality of measured observables, and we pass to the \emph{quotient state space} (states modulo observational indistinguishability).
+The ``no alternatives'' claim is then formulated as a quotient statement:
+under the model-independent assumptions, the quotient state space collapses to a subsingleton.
+Importantly, this does \emph{not} assert that the raw internal state space is a singleton; it asserts that all internal states are observationally identical at the interface under consideration.
+
+\medskip
+\noindent\textbf{Model-independent assumptions (and what we do \emph{not} assume).}
+We work with an abstract ``physics framework'' \(F\) consisting of a state space, an evolution operator, and an observable extraction map.
+The key point is to avoid outcome assumptions that would smuggle RS in by fiat.
+In particular, we do \emph{not} assume any RS-specific connection data, any exact matching of RS numerical outcomes, or any \emph{a priori} collapse of the raw state space.
+Instead we assume only structural constraints corresponding to the RS necessity stack: zero parameters (algorithmic describability), self-similarity, and the existence of a cost functional satisfying the Recognition Composition Law with normalization and calibration, together with an observational interface extracted from (and uniform under) the cost-minimizing structure.
+From these assumptions we \emph{derive} \(\varphi\) and the unique cost functional \(\Jcost\), and we \emph{derive} the quotient collapse.
+All core results are formally verified.
+
+\medskip
+\noindent\textbf{Roadmap.}
+\Cref{sec:quotient} defines the framework interface, observational equivalence, and the quotient state space.
+\Cref{sec:necessity} states the structural assumptions and connects them to the RS necessity mechanisms.
+\Cref{sec:t5} records the cost-uniqueness theorem (T5) forcing \(\Jcost\).
+\Cref{sec:main} proves the model-independent exclusivity theorem on the quotient.
+\Cref{sec:falsifiers} and \cref{sec:scope} clarify scope and present falsifiers (what would refute exclusivity).
+
+\section{Frameworks, Observational Equivalence, and the Quotient}
+\label{sec:quotient}
+We isolate the minimum interface needed to state a model-independent ``no alternatives'' claim and to make the phrase ``on the quotient state space'' precise.
+All definitions in this section are formally verified.
+
+\subsection{Physics frameworks (interface)}
+\label{sec:framework-interface}
+By a \emph{physics framework} we mean an abstract package of:
+\begin{itemize}
+  \item a nonempty state space \(S\),
+  \item an evolution operator \(T : S \to S\),
+  \item an observable space \(O\),
+  \item and a measurement map \(\mu : S \to O\).
+\end{itemize}
+This is deliberately weaker than a dynamical model (no topology, no action functional, no coordinates).
+It is the least structure needed to talk about \emph{observational content} and the possibility of comparing frameworks.
+
+\begin{definition}[Physics Framework]
+\label{def:physics-framework}
+A \emph{physics framework} \(F\) consists of:
+\[
+  F = (S_F,\; T_F,\; O_F,\; \mu_F)
+\]
+where:
+\begin{itemize}
+  \item \(S_F\) is a nonempty set (the state space),
+  \item \(T_F : S_F \to S_F\) is the evolution operator,
+  \item \(O_F\) is the space of observables,
+  \item \(\mu_F : S_F \to O_F\) is the measurement map extracting observables from states.
+\end{itemize}
+\end{definition}
+
+\subsection{Zero-parameter (algorithmic) frameworks}
+\label{sec:zero-parameter}
+The phrase ``zero parameters'' must be operational, not rhetorical.
+In this development, \emph{zero-parameter} means: the framework's state space admits an \emph{algorithmic specification}---a finite description together with an effective enumeration/decoder that covers every state.
+Concretely, this is captured by the existence of:
+\begin{itemize}
+  \item a finite binary description string,
+  \item an enumeration of candidate codes indexed by \(\mathbb{N}\),
+  \item and a decoder from codes to states,
+\end{itemize}
+such that every state is produced by some decoded enumerated code.
+This is the formal content behind the slogan ``no adjustable dimensionless knobs'' at the model layer: the state space is fixed by a finitary, parameter-free description rather than by tuning real-valued constants.
+
+\begin{definition}[Algorithmic Specification]
+\label{def:algorithmic-spec}
+A set \(S\) admits an \emph{algorithmic specification} if there exists:
+\begin{itemize}
+  \item a finite binary description \(d \in \{0,1\}^*\),
+  \item an enumeration function \(g : \mathbb{N} \to \{0,1\}^* \cup \{\bot\}\),
+  \item and a decoder \(\psi : \{0,1\}^* \to S \cup \{\bot\}\),
+\end{itemize}
+such that for every \(s \in S\), there exist \(n \in \mathbb{N}\) and a code \(c \in \{0,1\}^*\) with
+\[
+  g(n) = c \quad\text{and}\quad \psi(c) = s.
+\]
+\end{definition}
+
+\begin{definition}[Zero-Parameter Framework]
+\label{def:zero-param}
+A physics framework \(F\) has \emph{zero parameters} if its state space admits an algorithmic specification.
+We write \(F \in \mathcal{Z}\) to denote this property:
+\[
+  F \in \mathcal{Z} \quad:\Longleftrightarrow\quad S_F \text{ admits an algorithmic specification}.
+\]
+\end{definition}
+
+\subsection{Observational indistinguishability}
+\label{sec:observational-indistinguishability}
+Given a framework \(F\), observational indistinguishability is defined at the interface:
+\[
+s_1 \sim_F s_2 \quad:\Longleftrightarrow\quad \mu_F(s_1)=\mu_F(s_2).
+\]
+This relation is an equivalence relation (reflexive, symmetric, transitive).
+It captures the correct notion of ``sameness'' for a model-independent uniqueness claim: two internal configurations that agree on all reported observables are indistinguishable \emph{as far as the framework's observational interface can tell}.
+
+\begin{definition}[Observational Equivalence]
+\label{def:obs-equiv}
+Given a physics framework \(F\), the \emph{observational equivalence} relation on states is:
+\[
+  s_1 \sim_F s_2 \quad:\Longleftrightarrow\quad \mu_F(s_1) = \mu_F(s_2),
+\]
+where \(\mu_F : S_F \to O_F\) is the measurement map.
+\end{definition}
+
+\begin{theorem}[Observational Equivalence is an Equivalence Relation]
+\label{thm:obs-equiv-equivalence}
+For any physics framework \(F\), the relation \(\sim_F\) is an equivalence relation:
+\begin{itemize}
+  \item \textbf{Reflexive:} \(s \sim_F s\) for all \(s\),
+  \item \textbf{Symmetric:} \(s_1 \sim_F s_2 \Rightarrow s_2 \sim_F s_1\),
+  \item \textbf{Transitive:} \(s_1 \sim_F s_2 \land s_2 \sim_F s_3 \Rightarrow s_1 \sim_F s_3\).
+\end{itemize}
+\end{theorem}
+
+\subsection{The quotient state space}
+\label{sec:state-quotient}
+The \emph{quotient state space} is the set of observational equivalence classes:
+\[
+\StateQuotient(F) \;:=\; S_F/\!\sim_F.
+\]
+It is the mathematically precise object behind the phrase ``states modulo observational indistinguishability.''
+We say the quotient \emph{collapses} when it is a subsingleton:
+\[
+\mathrm{Subsingleton}\bigl(\StateQuotient(F)\bigr),
+\]
+equivalently when \(\StateQuotient(F)\) is (noncanonically) equivalent to the one-point type \(\mathbf{1}\).
+This is the correct uniqueness target in the model-independent setting: the theorem claims that \emph{all observational content is forced}, not that the underlying internal carrier must literally be a singleton.
+
+\begin{definition}[Quotient State Space]
+\label{def:state-quotient}
+Let \(F\) be a physics framework with state space \(S_F\).
+The \emph{quotient state space} is the quotient by observational equivalence:
+\[
+  \StateQuotient(F) \;:=\; S_F / \!\sim_F.
+\]
+\end{definition}
+
+\begin{theorem}[Uniform Observables Imply Quotient Collapse]
+\label{thm:quotient-collapse}
+If the measurement map is uniform across all states,
+\[
+  \forall\, s_1, s_2 \in S_F,\quad \mu_F(s_1) = \mu_F(s_2),
+\]
+then the quotient state space is a subsingleton:
+\[
+  |\StateQuotient(F)| \le 1.
+\]
+\end{theorem}
+\begin{proof}
+Any two equivalence classes \([a], [b] \in \StateQuotient(F)\) have representatives \(a, b\).
+By uniformity, \(\mu_F(a) = \mu_F(b)\), so \(a \sim_F b\), hence \([a] = [b]\).
+\end{proof}
+
+\subsection{Structural vs.\ outcome assumptions}
+\label{sec:structural-vs-outcome}
+To keep the ``no alternatives'' claim non-circular, we distinguish two kinds of assumptions.
+
+\medskip
+\noindent\textbf{Structural assumptions} constrain the \emph{form} of admissible frameworks without specifying RS outcomes.
+In the model-independent pipeline these include:
+(i) zero parameters (algorithmic describability),
+(ii) self-similarity (a preferred scale satisfying a recursion),
+and (iii) the existence of a cost functional satisfying the Recognition Composition Law with normalization and calibration.
+They are ``model-independent'' in the sense that they do not mention RS numerical predictions or RS-specific witness objects.
+
+\medskip
+\noindent\textbf{Outcome assumptions} assert \emph{the conclusion data} as premises.
+Typical examples are: ``the observable outputs equal the RS observables'' (an exact match hypothesis), or ``the state space is already a subsingleton,'' or any RS-specific connection structure that packages an isomorphism witness up front.
+Such assumptions are useful for packaging certificates but are not acceptable premises for a genuine exclusivity theorem.
+
+\begin{example}[Legacy Outcome Assumptions (Deprecated)]
+\label{ex:legacy-outcome}
+The legacy exclusivity interface included:
+\begin{itemize}
+  \item \emph{Exact RS match:} for all states \(s\), the measured observable equals the RS observable bundle,
+  \item \emph{State subsingleton:} the raw state space is assumed to be a subsingleton.
+\end{itemize}
+These are outcome assumptions: they encode the conclusion data (``\(F\) matches RS'') as hypotheses.
+\end{example}
+
+\begin{definition}[Model-Independent Assumptions]
+\label{def:mi-assumptions}
+The \emph{model-independent assumption bundle} for a physics framework \(F\) consists of:
+\begin{enumerate}
+  \item[(A1)] \(F\) is \emph{inhabited}: \(S_F \ne \emptyset\),
+  \item[(A2)] \(F\) has \emph{zero parameters}: \(F \in \mathcal{Z}\),
+  \item[(A3)] \(F\) admits \emph{self-similarity} data with preferred scale \(\sigma\),
+  \item[(A4)] \(F\) has an admissible \emph{cost functional} \(J\) satisfying the T5 hypotheses,
+  \item[(A5)] \(F\)'s observables are extracted via cost structure with uniform output.
+\end{enumerate}
+None of these mention RS numerical outcomes or assume an isomorphism witness.
+\end{definition}
+
+\section{The Necessity Stack and Structural Assumptions}
+\label{sec:necessity}
+We now articulate the \emph{necessity stack} used throughout RS:
+\[
+\text{Recognition} \;\Longrightarrow\; \text{Discrete} \;\Longrightarrow\; \text{Ledger} \;\Longrightarrow\; \varphi.
+\]
+The purpose of the stack in this paper is not to assume RS outcomes, but to justify why a small set of structural constraints is sufficient to force RS structure.
+Each arrow is a \emph{forcing claim}: under an admissibility posture (no free knobs; observables are internally derived), the next structure is not optional.
+
+\subsection{Recognition necessity from observables}
+\label{sec:recognition-necessity}
+The starting point is observational content.
+If a framework claims to \emph{derive observables}---that is, it provides a deterministic measurement map \(\mu : S \to O\) intended to represent measurable output---then the framework must support the possibility of \emph{distinguishing} states (at least at the observational interface).
+In a closed, parameter-free setting, state distinction cannot be delegated to an external oracle; it must be realized internally as a comparison act.
+RS packages this as \emph{recognition}: the capacity for the system to compare (and thereby identify) states/events without importing external reference data.
+
+\begin{definition}[Observable and Distinction]
+\label{def:observable-distinction}
+An \emph{observable} on a state space \(S\) is a function \(o : S \to \R\).
+A framework \emph{can distinguish} states with respect to an observable \(o\) if there exists a distinguishing function \(\delta : S \times S \to \{0,1\}\) such that:
+\[
+  o(s_1) \ne o(s_2) \;\Longrightarrow\; \delta(s_1, s_2) = 1.
+\]
+\end{definition}
+
+\begin{definition}[Comparison Mechanism]
+\label{def:comparison-mechanism}
+A \emph{comparison mechanism} for an observable \(o\) consists of a function \(c : S \times S \to \{0,1\}\) satisfying:
+\begin{itemize}
+  \item \emph{Reflexivity:} \(c(s, s) = 1\) for all \(s\),
+  \item \emph{Symmetry:} \(c(s_1, s_2) = c(s_2, s_1)\),
+  \item \emph{Distinguishes values:} if \(o(s_1) \ne o(s_2)\), then \(c(s_1, s_2) = 0\).
+\end{itemize}
+\end{definition}
+
+\begin{theorem}[Observables Require Recognition]
+\label{thm:obs-require-recognition}
+Any physics framework \(F\) that (i) derives non-trivial observables, (ii) has zero parameters, and (iii) does not rely on external oracles, must internally realize a recognition structure: a reflexive, symmetric comparison mechanism that distinguishes states with different observable values.
+\end{theorem}
+
+\subsection{Zero parameters force discreteness (countable skeleton)}
+\label{sec:discrete-necessity}
+The next step is discreteness.
+At a high level: a genuine zero-parameter framework cannot hide continuous degrees of freedom behind the phrase ``state space'' without thereby reintroducing tunable structure.
+Algorithmic describability forces the accessible state content to be enumerable, hence countable.
+Operationally, the forcing is phrased not as ``the state space is finite'' but as ``the state space admits a discrete/countable skeleton'' sufficient to carry the subsequent ledger arguments.
+This is the correct level of generality for a model-independent theorem: the internal carrier may be richer, but the admissible observational and dynamical content factors through a discrete support.
+
+\begin{definition}[Discrete Event System]
+\label{def:discrete-event-system}
+A \emph{discrete event system} consists of:
+\begin{itemize}
+  \item a countable carrier set \(E\) of events,
+  \item a recognition state structure,
+  \item an evolution relation \(\to\, \subseteq E \times E\),
+  \item a well-foundedness witness on the reverse relation (acyclicity),
+  \item and local finiteness: for each \(e \in E\), the sets \(\{v : v \to e\}\) and \(\{w : e \to w\}\) are finite.
+\end{itemize}
+\end{definition}
+
+\begin{theorem}[Zero Parameters Force Discreteness]
+\label{thm:zero-params-discrete}
+Any physics framework \(F \in \mathcal{Z}\) admits a surjective map from a countable carrier to its state space.
+That is, zero-parameter frameworks have at most countably many distinguishable states.
+\end{theorem}
+
+\subsection{Discrete + conservation forces a ledger (double-entry accounting)}
+\label{sec:ledger-necessity}
+Once one has discrete events, any claim of conservation (``closed loops sum to zero'') requires a bookkeeping structure.
+RS's key observation is that in a discrete system, conservation is naturally represented as a \emph{balanced flow} on the event relation: the inflow equals the outflow at each event.
+Balanced flow is exactly the double-entry condition.
+Thus, discrete evolution together with conservation does not merely \emph{allow} a ledger representation; it effectively \emph{forces} one as the minimal accounting object that makes conservation statements meaningful and transportable.
+
+\begin{definition}[Flow and Conservation Law]
+\label{def:flow-conservation}
+Given a discrete event system \((E, \to)\), a \emph{flow} is a function
+\[
+  f : E \to \R.
+\]
+A \emph{conservation law} holds for flow \(f\) if, at every event \(e\), the total inflow equals the total outflow:
+\[
+  \sum_{v : v \to e} f(v) \;=\; \sum_{w : e \to w} f(w).
+\]
+\end{definition}
+
+\begin{theorem}[Discrete + Conservation Forces Ledger]
+\label{thm:ledger-necessity}
+Given a discrete event system \(E\) with local finiteness and a conserved flow \(f\), there exists a ledger structure---a balanced double-entry accounting on events---such that conservation is equivalent to the ledger balance condition.
+\end{theorem}
+
+\subsection{Self-similarity forces \(\varphi\)}
+\label{sec:phi-necessity}
+The last necessity in the stack is the golden ratio.
+Self-similarity in RS is expressed as a scale recursion with no adjustable slack: the system admits a preferred scale factor \(S>1\) and successive levels satisfy a linear recurrence with fixed coefficients.
+A minimal form of this is the Fibonacci-style relation \(S^2 = S + 1\), whose unique positive root is \(\varphi=(1+\sqrt5)/2\).
+When no parameters are allowed, there is no freedom to choose a different positive root or to perturb the recursion; \(\varphi\) is not selected by fit but by uniqueness.
+
+\begin{definition}[Self-Similarity Structure]
+\label{def:self-similarity}
+A state space admits a \emph{self-similarity structure} if there exist:
+\begin{itemize}
+  \item a preferred scale \(\sigma \in \R\) with \(\sigma > 1\),
+  \item three successive levels \(\ell_0, \ell_1, \ell_2 \in \R\) with \(\ell_0 > 0\),
+  \item such that \(\ell_1 = \sigma \cdot \ell_0\) and \(\ell_2 = \sigma \cdot \ell_1\),
+  \item and the Fibonacci-style recurrence \(\ell_2 = \ell_1 + \ell_0\) holds.
+\end{itemize}
+\end{definition}
+
+\begin{theorem}[Self-Similarity Forces \(\varphi\)]
+\label{thm:phi-forced}
+Let \(S\) be an inhabited state space with a self-similarity structure with preferred scale \(\sigma\).
+Then \(\sigma\) satisfies:
+\[
+  \sigma^2 = \sigma + 1,
+\]
+and therefore \(\sigma = \varphi = (1 + \sqrt{5})/2\).
+\end{theorem}
+\begin{proof}
+From the defining relations:
+\[
+  \ell_2 = \sigma^2 \cdot \ell_0 \quad\text{and}\quad \ell_2 = \ell_1 + \ell_0 = (\sigma + 1) \cdot \ell_0.
+\]
+Since \(\ell_0 > 0\), we obtain \(\sigma^2 = \sigma + 1\).
+The unique positive root is \(\varphi = (1 + \sqrt{5})/2\).
+\end{proof}
+
+\begin{theorem}[Mathematical Necessity of \(\varphi\)]
+\label{thm:phi-necessary}
+If \(\phi > 1\) and \(\phi^2 = \phi + 1\), then \(\phi = (1 + \sqrt{5})/2\).
+\end{theorem}
+
+\subsection{Forcing RS structure without RS-specific data}
+\label{sec:stack-without-rs-data}
+The strategic point of the necessity stack is that it can be stated and applied without mentioning RS outcomes.
+Each step is phrased as a constraint on \emph{admissible form}:
+\begin{itemize}
+  \item Observables require internal distinction, hence recognition.
+  \item Zero parameters force an enumerable/discrete support.
+  \item Discrete conservation forces ledger-style accounting.
+  \item Self-similarity without tunable slack forces \(\varphi\).
+\end{itemize}
+None of these statements says ``\(\alpha^{-1}=137.0\ldots\)'' or assumes that the framework already matches RS numerics.
+Instead, they constrain the architecture so tightly that the remaining degrees of freedom are (at most) gauge.
+In \cref{sec:t5} and \cref{sec:main} we combine this stack with the cost-uniqueness theorem (forcing \(\Jcost\)) and with the observational quotient formalism, yielding the model-independent exclusivity theorem: RS is forced \emph{on the quotient state space} from structural assumptions alone.
+
+\section{Cost Uniqueness and the Forced Cost Functional}
+\label{sec:t5}
+The model-independent exclusivity theorem relies on one rigidity fact: under the admissibility constraints, there is only one possible recognition cost functional.
+This is the point where RS stops looking like a chosen model and starts looking like a forced normal form.
+
+\subsection{T5: uniqueness of the cost functional (\(J=\Jcost\))}
+\label{sec:t5-uniqueness}
+Let \(J:\Rp\to\R\) be a cost functional on positive ratios.
+The RS admissibility posture imposes a small set of structural constraints:
+normalization at the identity, reciprocity symmetry, strict convexity (unique minimizer), a fixed calibration at the minimizer, continuity, and a compositional identity expressing that compound recognition events are consistently costed.
+In the RS presentation this compositional identity is the Recognition Composition Law (RCL), which in its canonical form reads
+\begin{equation}
+  \label{eq:rcl}
+  J(xy) + J(x/y) \;=\; 2J(x)J(y) + 2J(x) + 2J(y),
+  \qquad x,y>0.
+\end{equation}
+The T5 theorem asserts that these hypotheses force the unique solution
+\begin{equation}
+  \label{eq:jcost}
+  \Jcost(x) \;=\; \tfrac12\bigl(x+x^{-1}\bigr)-1,\qquad x>0,
+\end{equation}
+and therefore \(J=\Jcost\) on \(\Rp\).
+In particular, \(\Jcost\) has a unique minimum at \(x=1\), and \(\Jcost(x)=0\) if and only if \(x=1\).
+
+\begin{definition}[Admissible Cost Functional]
+\label{def:admissible-cost}
+A physics framework \(F\) has an \emph{admissible cost functional} if there exists \(J : \R \to \R\) satisfying:
+\begin{enumerate}
+  \item \emph{Reciprocal symmetry:} \(\forall\, x > 0,\; J(x) = J(x^{-1})\),
+  \item \emph{Unit normalization:} \(J(1) = 0\),
+  \item \emph{Strict convexity:} \(J\) is strictly convex on \(\Rp\),
+  \item \emph{Calibration:} \(\frac{d^2}{dt^2}\bigl(J \circ \exp\bigr)\big|_{t=0} = 1\),
+  \item \emph{Continuity:} \(J\) is continuous on \(\Rp\),
+  \item \emph{Composition law (RCL):} \(J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y)\) for all \(x, y > 0\).
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[T5: Cost Uniqueness]
+\label{thm:t5-uniqueness}
+Let \(J : \R \to \R\) satisfy the admissibility conditions (reciprocal symmetry, unit normalization, strict convexity, calibration, continuity, and the RCL composition law).
+Then for all \(x > 0\):
+\[
+  J(x) = \Jcost(x) = \tfrac{1}{2}\bigl(x + x^{-1}\bigr) - 1.
+\]
+\end{theorem}
+
+\noindent\textbf{Technical note (regularity).}
+The d'Alembert uniqueness argument is classical but requires regularity hypotheses (continuity/smoothness bootstraps) to select the cosh solution uniquely.
+These conditions are explicit hypotheses:
+
+\begin{definition}[Standard Regularity]
+\label{def:standard-regularity}
+The \emph{standard regularity bundle} for a cost functional \(J\) consists of:
+\begin{itemize}
+  \item \emph{Smoothness bootstrap:} continuous solutions to the d'Alembert equation are smooth,
+  \item \emph{ODE reduction:} the functional equation reduces to an ODE for smooth solutions,
+  \item \emph{Continuous/differentiable hypotheses:} standard regularity conditions for the ODE,
+  \item \emph{Linear bootstrap:} the ODE solution space is characterized.
+\end{itemize}
+\end{definition}
+
+\subsection{Observable extraction from cost minima}
+\label{sec:obs-extraction}
+To connect cost uniqueness to ``no alternatives,'' we need an operational account of how observables arise.
+The model-independent approach is to avoid outcome assumptions (``the observable equals RS's observable'') and instead posit an \emph{observables-from-cost} interface:
+there exists a state-to-ratio map
+\[
+  r: S_F \to\Rp
+\]
+and observables are determined by this ratio (states with equal ratio have equal observable output).
+Intuitively, \(r(s)\) is the recognition-relevant ratio extracted from a state, and the measurement map \(\mu_F\) is a function of \(r(s)\).
+
+To turn this into a forcing mechanism, we additionally use a \emph{cost-minimum semantics}:
+in a stable zero-parameter framework, states of interest sit at the cost minimum, i.e.\ \(J(r(s))=0\).
+This is the bridge from ``cost exists'' to ``observables are forced.''
+
+\begin{definition}[Observables from Cost]
+\label{def:obs-from-cost}
+A physics framework \(F\) has \emph{observables extracted from cost} if there exists:
+\begin{itemize}
+  \item a state-to-ratio function \(r : S_F \to \Rp\),
+  \item and uniform observables: \(\forall\, s_1, s_2 \in S_F,\; \mu_F(s_1) = \mu_F(s_2)\).
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Measure Determined by Cost]
+\label{def:measure-by-cost}
+A physics framework \(F\) has \emph{measure determined by cost} \(J\) if there exists a ratio extraction \(r : S_F \to \Rp\) such that:
+\[
+  r(s_1) = r(s_2) \;\Longrightarrow\; \mu_F(s_1) = \mu_F(s_2).
+\]
+\end{definition}
+
+\subsection{Uniformity from zero parameters (and why it implies quotient collapse)}
+\label{sec:uniformity}
+Assume \(F\) is zero-parameter, has an admissible cost \(J\), and has observable extraction determined by a ratio map \(r\).
+Assume further that every state lies at the cost minimum: \(J(r(s))=0\) for all \(s\).
+By T5, \(J=\Jcost\), and by the unique-minimum property of \(\Jcost\) we obtain \(r(s)=1\) for all \(s\).
+If \(\mu_F\) is determined by \(r\), it follows that \(\mu_F(s)\) is constant across states: observables are \emph{uniform}.
+
+This is exactly the lever needed for exclusivity on the quotient state space.
+Uniform observables imply that every pair of states is observationally equivalent, hence the quotient state space \(\StateQuotient(F)\) is a subsingleton.
+In other words, once cost uniqueness and cost-minimum semantics are in place, the ``no alternatives'' conclusion becomes a straightforward quotient argument.
+
+\begin{theorem}[Zero Parameters Force Uniform Observables]
+\label{thm:zero-params-uniform}
+Let \(F\) be a physics framework with:
+\begin{itemize}
+  \item \(F \in \mathcal{Z}\) (zero parameters),
+  \item an admissible cost functional \(J\) with standard regularity,
+  \item measure determined by cost (states with equal ratio have equal observable),
+  \item and each state at the cost minimum: \(\forall\, s \in S_F,\; J(r(s)) = 0\).
+\end{itemize}
+Then the measurement map is uniform:
+\[
+  \forall\, s_1, s_2 \in S_F,\quad \mu_F(s_1) = \mu_F(s_2).
+\]
+\end{theorem}
+\begin{proof}[Proof sketch]
+By T5 (\cref{thm:t5-uniqueness}), \(J = \Jcost\).
+Since \(\Jcost(x) = 0\) iff \(x = 1\), the cost-minimum hypothesis forces \(r(s) = 1\) for all \(s\).
+By measure-determined-by-cost, all states have equal observable.
+\end{proof}
+
+\subsection{Connection to the model-independent assumptions}
+\label{sec:mi-connection}
+The foregoing discussion matches the formal structure of the model-independent theorem.
+The model-independent assumption bundle (\cref{def:mi-assumptions}) provides:
+zero-parameter posture (A2),
+self-similarity data (A3, forcing \(\varphi\)),
+an admissible cost functional (A4, the T5 hypothesis bundle),
+and observables extracted from cost (A5, including uniformity).
+The main exclusivity theorem (\cref{thm:main-exclusivity}) then derives \(J=\Jcost\) and the subsingleton property of \(\StateQuotient(F)\).
+
+For an even sharper ``no outcomes assumed'' derivation, a minimal assumption pathway uses only:
+\begin{itemize}
+  \item the core assumptions (inhabited, zero-parameter, self-similarity, admissible cost),
+  \item measure-determined-by-cost semantics (\cref{def:measure-by-cost}),
+  \item and an ``at-minimum'' hypothesis (\(\forall\, s,\; J(r(s)) = 0\)).
+\end{itemize}
+From these, uniformity is \emph{derived} via \cref{thm:zero-params-uniform} rather than postulated.
+This is the formal expression of the slogan \emph{``uniformity from zero parameters''}.
+
+\section{Model-Independent Exclusivity on the Quotient}
+\label{sec:main}
+We now state the core result of the paper: under structural (model-independent) assumptions, RS is forced \emph{on the quotient state space}.
+The theorem has three outputs: the golden scale \(\varphi\), the unique cost \(\Jcost\), and observational collapse of the quotient.
+
+\subsection{Observational equivalence and the quotient (recap)}
+\label{sec:main-quotient-recap}
+Fix a physics framework \(F\) with state space \(S_F\) and measurement map \(\mu_F\).
+Recall from \cref{sec:observational-indistinguishability} and \cref{sec:state-quotient} that observational equivalence is
+\[
+s_1 \sim_F s_2 \quad:\Longleftrightarrow\quad \mu_F(s_1)=\mu_F(s_2),
+\]
+and the quotient state space is \(\StateQuotient(F) := S_F/\!\sim_F\).
+All uniqueness claims in this section are formulated at the quotient level.
+
+\subsection{Quotient collapse from uniform observables}
+\label{sec:quotient-collapse}
+The key lemma is immediate once the quotient viewpoint is adopted.
+
+\medskip
+\noindent\textbf{Lemma (uniform observables imply quotient collapse).}
+If the observable extraction map is uniform,
+\[
+\forall s_1, s_2,\;\mu_F(s_1)=\mu_F(s_2),
+\]
+then all states are observationally equivalent and therefore \(\StateQuotient(F)\) is a subsingleton:
+\[
+\mathrm{Subsingleton}\bigl(\StateQuotient(F)\bigr).
+\]
+Any two equivalence classes have representatives \(a,b\); uniformity gives \(a\sim_F b\), hence the classes are equal.
+(This is \cref{thm:quotient-collapse}, proved earlier.)
+
+\subsection{Main theorem: \(\varphi\) is golden, \(J=\Jcost\), and the quotient is subsingleton}
+\label{sec:main-theorem}
+We can now state the model-independent exclusivity theorem.
+
+\begin{theorem}[Model-Independent Exclusivity on the Quotient]
+\label{thm:main-exclusivity}
+Let \(F\) be a physics framework satisfying the model-independent assumption bundle (\cref{def:mi-assumptions}):
+\begin{enumerate}
+  \item[(A1)] \(F\) is inhabited,
+  \item[(A2)] \(F\) has zero parameters,
+  \item[(A3)] \(F\) has self-similarity data,
+  \item[(A4)] \(F\) has an admissible cost functional \(J\) satisfying the T5 hypotheses,
+  \item[(A5)] \(F\)'s observable interface is extracted from cost structure (yielding uniform observables).
+\end{enumerate}
+Then there exists \(\varphi\in\R\) such that:
+\begin{enumerate}
+  \item \(\varphi\) is forced to the golden ratio: \(\varphi = (1+\sqrt5)/2\),
+  \item \(J\) is forced to the canonical cost: \(\forall\, x > 0,\; J(x)=\Jcost(x)\),
+  \item the quotient state space collapses: \(\mathrm{Subsingleton}\bigl(\StateQuotient(F)\bigr)\).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+The proof proceeds in three steps:
+\begin{enumerate}
+  \item \textbf{\(\varphi\) forcing:}
+  By \cref{thm:phi-forced}, the self-similarity structure forces the fixed-point identity \(\varphi^2=\varphi+1\) with \(\varphi>1\).
+  By \cref{thm:phi-necessary}, the unique positive root is \(\varphi=(1+\sqrt5)/2\).
+
+  \item \textbf{Cost forcing:}
+  By \cref{thm:t5-uniqueness}, any admissible cost functional satisfying the RCL and regularity conditions equals \(\Jcost\) on \(\Rp\).
+
+  \item \textbf{Quotient collapse:}
+  By \cref{thm:quotient-collapse}, uniform observables (from A5) imply \(\mathrm{Subsingleton}(\StateQuotient(F))\).
+\end{enumerate}
+None of these steps assumes RS outcome data; the conclusions are derived from structural form alone.
+\end{proof}
+
+\subsection{Interpretation: ``no alternatives'' as quotient-level equivalence}
+\label{sec:main-interpretation}
+The conclusion \(\mathrm{Subsingleton}(\StateQuotient(F))\) is the mathematically correct reading of ``no alternatives'' in a model-independent setting.
+It says: \emph{at the observational interface}, there is no multiplicity of distinct physical states once admissibility holds.
+Put differently, any candidate framework meeting the structural assumptions cannot disagree with RS in its dimensionless observational content without introducing additional degrees of freedom (parameters) that break the zero-parameter posture.
+The next sections make this equivalence explicit and list falsifiers/counter-models.
+
+\section{Framework Equivalence (Quotient-Level)}
+\label{sec:equiv}
+The exclusivity theorem of \cref{sec:main} has a clean categorical meaning: RS is unique up to the observational quotient.
+This section records the corresponding \emph{equivalence statement} between an arbitrary admissible framework \(F\) and a canonical RS representative.
+
+\subsection{Canonical RS framework}
+\label{sec:canonical-rs}
+We use a canonical RS representative whose internal state space is the one-point type \(\mathbf{1}\).
+Its observable type is a fixed record of \emph{dimensionless} observables (e.g.\ \(\alpha^{-1}\), mass ratios, and other dimensionless quantities), and its measurement map is constant on \(\mathbf{1}\), returning the RS-derived dimensionless observable bundle.
+This is the appropriate representative when the goal is quotient-level equivalence: once the state quotient collapses, any admissible framework is observationally equivalent to a one-state model at the interface level.
+
+\begin{definition}[Canonical RS Framework]
+\label{def:canonical-rs-framework}
+The \emph{canonical RS framework} is:
+\[
+  \mathrm{RS} = \bigl(\,\mathbf{1},\; \mathrm{id},\; \mathcal{O}_{\dim},\; \mu_{\mathrm{RS}},\; \star\,\bigr)
+\]
+where:
+\begin{itemize}
+  \item \(\mathbf{1} = \{\star\}\) is the one-point state space,
+  \item \(\mathrm{id}\) is the identity evolution,
+  \item \(\mathcal{O}_{\dim}\) is the space of dimensionless observables (e.g.\ \(\alpha^{-1}\), mass ratios),
+  \item \(\mu_{\mathrm{RS}} : \mathbf{1} \to \mathcal{O}_{\dim}\) is the constant measurement map returning the RS observable bundle,
+  \item and \(\star\) is the unique state witnessing nonemptiness.
+\end{itemize}
+\end{definition}
+
+\subsection{Equivalence on \(\StateQuotient\) and observable equivalence}
+\label{sec:quotient-equivalence}
+To compare two frameworks, we must at least agree on what counts as an ``observable.''
+Accordingly, the model-independent equivalence theorem takes as an additional (purely structural) input an equivalence between \(F\)'s observable type and the canonical dimensionless observable record.
+Given this observable-type identification, the quotient collapse from \cref{sec:main} yields the promised quotient-level equivalence:
+the observational quotient \(\StateQuotient(F)\) is equivalent to \(\mathbf{1}\), and the observable interfaces match up to the given equivalence.
+
+\begin{theorem}[Quotient-Level Framework Equivalence]
+\label{thm:framework-equiv}
+Let \(F\) be a physics framework satisfying the model-independent assumptions (\cref{def:mi-assumptions}), with standard regularity for the cost functional.
+Assume additionally that there exists an observable-type equivalence:
+\[
+  e : O_F \simeq \mathcal{O}_{\dim}.
+\]
+Then there exists an RS framework \(\mathrm{RS}\) (\cref{def:canonical-rs-framework}) such that:
+\begin{enumerate}
+  \item \(\StateQuotient(F) \simeq \mathbf{1}\) \quad (state quotient equivalence),
+  \item \(O_F \simeq O_{\mathrm{RS}}\) \quad (observable equivalence).
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+By \cref{thm:main-exclusivity}, the quotient \(\StateQuotient(F)\) is a subsingleton.
+Since \(F\) is inhabited, \(\StateQuotient(F)\) is nonempty.
+A nonempty subsingleton is equivalent to \(\mathbf{1}\).
+The observable equivalence is immediate from the hypothesis \(e\).
+\end{proof}
+
+\noindent In particular, \(F\) and RS are equivalent in all dimensionless observational content once states are modded out by observational indistinguishability.
+
+\section{Falsifiers / Counter-Models}
+\label{sec:falsifiers}
+The theorems in \cref{sec:main} and \cref{sec:equiv} are mathematical statements: within their hypotheses they cannot be refuted by a counterexample.
+However, the \emph{strategic claim} ``RS is inevitable'' is only as strong as the correspondence between the hypotheses and the intended physical posture.
+This section lists concrete ways the inevitability framing could fail in substance: either by exhibiting an admissible-looking framework that escapes the hypothesis net, or by showing that a hypothesis is too strong, too narrow, or physically unwarranted.
+
+\subsection{Alternative zero-parameter framework (escape the quotient collapse)}
+\label{sec:falsifier-alt-zero-param}
+\textbf{Falsifier target.}
+Construct a framework that is genuinely parameter-free in the intended sense, derives observables, and yet does \emph{not} collapse on the observational quotient (i.e.\ produces non-uniform observables across states without introducing tunable knobs).
+
+\medskip
+\noindent\textbf{Interpretation.}
+Any such example would show that one of the following is too strong (or mis-specified) as a physical necessity:
+the chosen formalization of ``zero parameters,'' the cost-minimum semantics, or the observables-from-cost interface that drives uniformity.
+
+\subsection{Non-\(\varphi\) self-similarity (escape \(\varphi\) forcing)}
+\label{sec:falsifier-nonphi}
+\textbf{Falsifier target.}
+Provide a parameter-free self-similar scaling law whose preferred scale is not \(\varphi\), while retaining the intended meaning of self-similarity (no tunable slack; no fitted constants).
+
+\medskip
+\noindent\textbf{Interpretation.}
+Formally, RS uses a specific self-similarity witness (a Fibonacci-style recurrence, \cref{def:self-similarity}) that forces \(S^2=S+1\).
+A compelling alternative notion of ``self-similarity'' that is still parameter-free but does not imply this recurrence would indicate that our definition captures only one plausible self-similarity schema, and that \(\varphi\) forcing is contingent on that schema.
+
+\subsection{Continuous zero-parameter physics (escape discreteness)}
+\label{sec:falsifier-continuous}
+\textbf{Falsifier target.}
+Exhibit a theory with no adjustable dimensionless knobs whose natural state space is uncountable/continuous, and argue that its continuity does not constitute hidden parameter freedom.
+
+\medskip
+\noindent\textbf{Interpretation.}
+Our definition of zero parameters (\cref{def:zero-param} and \cref{def:algorithmic-spec}) is intentionally strong: it requires an algorithmic specification of the \emph{state space} itself.
+Many classical ``parameter-free'' field theories have finitely specified \emph{laws} but uncountable state spaces.
+If one insists that such theories should count as zero-parameter, then the RS discreteness forcing does not apply unless the definition of zero parameters is adjusted.
+
+\subsection{Conservation without a ledger (escape ledger necessity)}
+\label{sec:falsifier-no-ledger}
+\textbf{Falsifier target.}
+Produce a discrete conserved dynamics in which conservation can be represented and transported without an object behaving like a double-entry ledger (balanced inflow/outflow accounting), in a way that is still compatible with the intended meaning of conservation.
+
+\medskip
+\noindent\textbf{Interpretation.}
+This would indicate that the ledger necessity step is not a true necessity but a modeling choice: conservation might be representable via different algebraic structures that do not reduce to the ledger object used here.
+
+\subsection{Pathological functional-equation solutions (regularity matters)}
+\label{sec:falsifier-pathological}
+\textbf{Falsifier target.}
+Construct a nonstandard solution to the d'Alembert/cosh functional equation that satisfies the raw identity but violates the regularity hypotheses needed for uniqueness.
+
+\medskip
+\noindent\textbf{Interpretation.}
+This would not refute \cref{thm:t5-uniqueness} (which makes regularity explicit), but it would show that T5 uniqueness depends on regularity and that any physical inevitability claim must justify those regularity hypotheses as part of admissibility.
+
+\subsection{Summary of falsifier logic}
+\label{sec:falsifier-summary}
+In short, the model-independent exclusivity theorem is best read as:
+\emph{given} a specific formalization of ``zero parameters,'' ``self-similarity,'' ``cost admissibility,'' and ``observables from cost,'' RS is forced on the observational quotient.
+A physical refutation must therefore either:
+(i) produce a compelling alternative framework that satisfies the intended posture while escaping one of these formalizations, or
+(ii) argue that one of the formalizations is too restrictive to be treated as necessary.
+
+\section{Relationship to Legacy Exclusivity}
+\label{sec:legacy}
+This paper's central move is to relocate ``no alternatives'' from an outcome-style isomorphism claim to a quotient-level forcing claim derived from structural assumptions.
+To make the improvement precise, we summarize the legacy exclusivity interface and contrast it with the model-independent interface used here.
+
+\subsection{Legacy constraints: exact observable match and state collapse}
+\label{sec:legacy-exact}
+The legacy exclusivity path packages an equivalence-to-RS conclusion by assuming two outcome-level properties:
+
+\begin{example}[Legacy Outcome Constraints (Deprecated)]
+\label{ex:legacy-constraints}
+The legacy interface assumed:
+\begin{itemize}
+  \item \textbf{Exact RS observable match:} after choosing an observable-type equivalence, the measurement \(\mu_F(s)\) is assumed to equal the RS observable bundle for every state \(s\).
+  \item \textbf{Raw state collapse:} the state space \(S_F\) itself is assumed to be a subsingleton.
+\end{itemize}
+\end{example}
+
+\noindent Given these assumptions, an isomorphism to the canonical RS framework is straightforward: a subsingleton state space is equivalent to \(\mathbf{1}\), and the exact observable match discharges measurement compatibility.
+This is a valid packaging pattern for certificates, but it is not a \emph{model-independent} exclusivity theorem: the assumptions already contain the observational content that the conclusion advertises.
+
+\subsection{Earlier circularity: assumed isomorphism}
+\label{sec:legacy-circularity}
+An even earlier legacy interface (now deprecated) bundled an explicit RS realization and a structural isomorphism witness into the assumptions.
+That made ``exclusivity'' logically circular: the isomorphism to RS appeared as input data rather than as a derived consequence.
+
+\begin{example}[Circular Assumption (Deprecated)]
+\label{ex:circular-assumption}
+The deprecated interface included an ``RS connection data'' structure that packaged:
+\begin{itemize}
+  \item an explicit RS instance (the golden ratio, cost functional, ledger),
+  \item and an equivalence witness between the framework and RS.
+\end{itemize}
+Assuming an isomorphism witness as input makes the exclusivity claim tautological.
+\end{example}
+
+\noindent This circularity was removed by refactoring to a constraint bundle that avoids assuming an isomorphism witness outright.
+The current model-independent interface (\cref{def:mi-assumptions}) derives the isomorphism from structural assumptions.
+
+\subsection{Model-independent interface: structural assumptions and quotient conclusions}
+\label{sec:legacy-mi}
+The model-independent interface in this paper differs in two essential ways.
+
+\medskip
+\noindent\textbf{(1) Outcomes are derived from structure.}
+Instead of assuming exact observable match, we assume an admissible cost functional \(J\) satisfying the T5 hypotheses (\cref{def:admissible-cost}) and derive \(J=\Jcost\) (\cref{thm:t5-uniqueness}).
+Instead of assuming raw state collapse, we work with observational equivalence (\cref{def:obs-equiv}) and derive \emph{quotient} collapse from uniformity (\cref{thm:quotient-collapse}).
+Where uniformity is not assumed as an interface axiom, it can be derived from cost-minimum semantics plus cost uniqueness (\cref{thm:zero-params-uniform}).
+
+\medskip
+\noindent\textbf{(2) The conclusion is stated at the correct equivalence level.}
+The model-independent theorem does not claim that the raw internal carrier is \(\mathbf{1}\).
+It claims that \emph{states modulo observational indistinguishability} form \(\mathbf{1}\), i.e.\ \(\StateQuotient(F)\) is a subsingleton (\cref{thm:main-exclusivity}).
+This is the operational content of ``no alternatives'': there is no multiplicity of observationally distinct states compatible with the admissibility posture.
+
+The structural assumption bundle (\cref{def:mi-assumptions}) and the core theorems (\cref{thm:main-exclusivity} and \cref{thm:framework-equiv}) formalize this interface.
+
+\section{Implications and Scope}
+\label{sec:scope}
+This section clarifies what the theorems establish, what remains contingent on empirical or definitional seams, and why quotient-level equivalence is the right physical notion of ``sameness'' for model-independent exclusivity.
+
+\subsection{What is proved (mathematical content)}
+\label{sec:scope-proved}
+Within the stated hypotheses, the following are proved (and formally verified):
+\begin{itemize}
+  \item \textbf{Cost uniqueness (T5):} any admissible cost functional equals \(\Jcost\) on \(\Rp\) (\cref{thm:t5-uniqueness}).
+  \item \textbf{Golden ratio forcing:} the self-similarity witness forces the preferred scale to be \(\varphi=(1+\sqrt5)/2\) (\cref{thm:phi-forced} and \cref{thm:phi-necessary}).
+  \item \textbf{Quotient collapse:} under the model-independent assumption bundle, the quotient state space \(\StateQuotient(F)\) is a subsingleton (\cref{thm:main-exclusivity}).
+  \item \textbf{Quotient-level equivalence:} given an observable-type equivalence, one obtains \(\StateQuotient(F)\simeq \mathbf{1}\) and an induced observable equivalence to a canonical RS representative (\cref{thm:framework-equiv}).
+\end{itemize}
+These are theorems in the strict sense: they are not probabilistic arguments, not numerical fits, and not appeals to external data.
+
+\subsection{What remains empirical or external-anchor}
+\label{sec:scope-empirical}
+The inevitability theorem is conditional: it proves a forcing result \emph{if} the hypotheses are accepted as an admissibility posture for physics.
+Several aspects remain outside the scope of the model-independent proof:
+\begin{itemize}
+  \item \textbf{Physical justification of hypotheses.}
+  The bridge from ``physics'' to the abstract assumptions (zero parameters, observables-from-cost semantics, cost-minimum semantics, and self-similarity) is a matter of physical interpretation and empirical adequacy.
+  A refutation can therefore target the hypothesis-to-physics correspondence rather than the mathematical proof (\cref{sec:falsifiers}).
+
+  \item \textbf{External anchors for SI numerals.}
+  The exclusivity theorem is formulated in terms of dimensionless structure and quotient-level observational content.
+  Any mapping to SI-reported values requires an explicit calibration seam (and may reference CODATA or laboratory anchors).
+  This paper treats that seam as conceptually orthogonal to exclusivity: it is an audit layer, not a premise.
+
+  \item \textbf{Validation against experiment.}
+  Theorems about the forced form of admissible frameworks do not, by themselves, establish that our universe instantiates those assumptions.
+  Empirical confrontation therefore takes the form of auditing whether RS-derived dimensionless predictions (when instantiated in a measurement protocol) fall within empirical bounds.
+\end{itemize}
+The key methodological implication is that ``zero parameters'' is not a slogan: it shifts work from parameter fitting to hypothesis auditing and protocol specification.
+
+\subsection{Why quotient-level equivalence is the correct physical notion}
+\label{sec:scope-quotient}
+Physics is operational: what matters is what can be observed and compared.
+Internal multiplicity that cannot be detected at the observational interface is, in standard practice, treated as gauge or redundancy.
+Well-known examples include:
+gauge potentials related by gauge transformations, coordinate choices on manifolds, and microstate degeneracies that are invisible to a coarse observable algebra.
+
+In this context, quotient-level equivalence is the right target for a model-independent exclusivity theorem:
+\begin{itemize}
+  \item It avoids the false claim that ``there is only one internal state'' and instead asserts the meaningful claim ``there is only one observational state'' under admissibility.
+  \item It is stable under refinements of internal representation: adding unobservable internal structure does not create a new observational theory.
+  \item It aligns with the ``units are gauge'' posture: in RS there is already a quotient by unit conventions, and observational indistinguishability is the analogous quotient on states.
+\end{itemize}
+Thus, ``RS is unique on the quotient'' is not a retreat from uniqueness but a correction to the level at which uniqueness has physical content.
+
+\appendix
+\section{Summary of Formal Content}
+\label{app:formal-summary}
+This paper establishes the following formal results, all machine-verified.
+
+\subsection*{Core Definitions}
+\begin{itemize}
+  \item \textbf{Physics Framework} (\cref{def:physics-framework}): tuple \((S_F, T_F, O_F, \mu_F)\) of states, evolution, observables, and measurement.
+  \item \textbf{Algorithmic Specification} (\cref{def:algorithmic-spec}): finite description \(d\), enumeration \(g\), decoder \(\psi\).
+  \item \textbf{Zero-Parameter Framework} (\cref{def:zero-param}): \(F \in \mathcal{Z}\) iff \(S_F\) admits algorithmic specification.
+  \item \textbf{Observational Equivalence} (\cref{def:obs-equiv}): \(s_1 \sim_F s_2 \Leftrightarrow \mu_F(s_1) = \mu_F(s_2)\).
+  \item \textbf{Quotient State Space} (\cref{def:state-quotient}): \(\StateQuotient(F) := S_F / \!\sim_F\).
+  \item \textbf{Self-Similarity Structure} (\cref{def:self-similarity}): Fibonacci recurrence \(\ell_2 = \ell_1 + \ell_0\) forcing \(\varphi\).
+  \item \textbf{Admissible Cost Functional} (\cref{def:admissible-cost}): T5 hypotheses (RCL, symmetry, convexity, calibration).
+  \item \textbf{Model-Independent Assumptions} (\cref{def:mi-assumptions}): structural bundle (A1--A5).
+  \item \textbf{Canonical RS Framework} (\cref{def:canonical-rs-framework}): \((\mathbf{1}, \mathrm{id}, \mathcal{O}_{\dim}, \mu_{\mathrm{RS}})\).
+\end{itemize}
+
+\subsection*{Core Theorems}
+\begin{itemize}
+  \item \textbf{Observational Equivalence is Equivalence} (\cref{thm:obs-equiv-equivalence}): \(\sim_F\) is reflexive, symmetric, transitive.
+  \item \textbf{Uniform Observables Imply Quotient Collapse} (\cref{thm:quotient-collapse}): \(|\StateQuotient(F)| \le 1\).
+  \item \textbf{Self-Similarity Forces \(\varphi\)} (\cref{thm:phi-forced}): \(\sigma^2 = \sigma + 1\).
+  \item \textbf{Mathematical Necessity of \(\varphi\)} (\cref{thm:phi-necessary}): unique positive root is \((1+\sqrt{5})/2\).
+  \item \textbf{T5: Cost Uniqueness} (\cref{thm:t5-uniqueness}): \(J = \Jcost = \tfrac{1}{2}(x + x^{-1}) - 1\).
+  \item \textbf{Zero Parameters Force Uniform Observables} (\cref{thm:zero-params-uniform}): \(\mu_F\) constant via T5.
+  \item \textbf{Model-Independent Exclusivity} (\cref{thm:main-exclusivity}): \(\varphi = (1+\sqrt{5})/2\), \(J=\Jcost\), \(|\StateQuotient(F)| \le 1\).
+  \item \textbf{Quotient-Level Framework Equivalence} (\cref{thm:framework-equiv}): \(\StateQuotient(F) \simeq \mathbf{1}\).
+\end{itemize}
+
+\end{document}
+

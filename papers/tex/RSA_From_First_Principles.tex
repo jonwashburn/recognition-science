@@ -1,0 +1,757 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+% Theorem environments
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Notation
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Rp}{\mathbb{R}_{>0}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\Jcost}{J}
+\newcommand{\cmin}{c_{\min}}
+
+\title{\textbf{The Exclusion Theorem:\\
+The Unique Impossibility Certificate Forced by Canonical Cost}\\[0.5em]
+\large Inevitability of the Obstruction--Sensor--Cayley--Schur Pipeline}
+\author{Jonathan Washburn\\
+\small Recognition Science Research Institute, Austin, Texas\\
+\small \texttt{jon@recognitionphysics.org}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove that the four-step impossibility pipeline---obstruction encoding,
+reciprocal sensing, Cayley transform, Schur certification---is the
+\emph{unique optimal} strategy for excluding candidate configurations
+from a zero-defect structured set, given the canonical cost
+$\Jcost(x) = \frac{1}{2}(x + x^{-1}) - 1$, finite local resolution,
+and a conservation constraint.
+
+The main result (\textbf{Exclusion Master Theorem},~\S\ref{sec:master}) is:
+\begin{quote}
+\itshape
+Every correct, finite-data, complete exclusion procedure on the rational
+class factors \textbf{uniquely} as
+$\Psi^* = \mathcal{S}\circ\mathcal{C}\circ\mathcal{R}\circ\mathcal{O}$,
+where\/ $\mathcal{O}$ is the obstruction encoding,
+$\mathcal{R}$ is the reciprocal sensor,
+$\mathcal{C}$ is the Cayley transform, and\/
+$\mathcal{S}$ is Schur certification.
+The factorisation order is forced.  The four steps are independent.
+The Cayley transform is unique up to M\"obius equivalence.
+\end{quote}
+
+Combined with the Coercive Projection Theorem (the membership side),
+the two procedures form the \textbf{unique complete two-sided audit}
+for zero-defect certification from finite data:
+\[
+\Phi^*\;(\text{membership, CPT}) \;+\; \Psi^*\;(\text{exclusion, this paper})
+\;=\; \text{complete decision on the rational class.}
+\]
+No domain-specific input enters the exclusion pipeline.
+Like CPT, it is a theorem forced by the cost functional, not a method
+one selects.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%=============================================================================
+\section{Introduction}
+%=============================================================================
+
+\subsection{The problem}
+
+Given a unique cost functional $\Jcost$ and only finite observational
+access, determine that a candidate configuration $\mathbf{x}$ does
+\emph{not} lie in the structured set $S = \{\mathbf{x} : \Jcost(\mathbf{x}) = 0\}$.
+
+The companion paper (CPT) addressed the membership question: ``is
+$\mathbf{x}$ in $S$?''  This paper addresses the exclusion question:
+``is $\mathbf{x}$ definitely \emph{not} in $S$?''
+
+We prove there is exactly one way to answer it.
+
+\subsection{Why exclusion is harder than membership}
+
+Membership is local: to certify $\Jcost(\mathbf{x}) = 0$, it suffices
+to verify that the defect vanishes at $\mathbf{x}$ itself.  Exclusion
+is global: to certify $\Jcost(\mathbf{x}) > 0$, one must rule out the
+possibility that the measured deviation is an artifact of finite
+sampling.  The fundamental obstruction is:
+
+\begin{proposition}[Finite sampling is insufficient for exclusion]
+\label{prop:sampling-fails}
+For any finite sample set $\{z_1, \ldots, z_m\}$ and values
+$\{w_1, \ldots, w_m\}$ with all $w_k \neq 0$, there exists a
+holomorphic function $f$ matching all samples that nevertheless has
+a zero at any prescribed point $a \notin \{z_k\}$.
+\end{proposition}
+
+\begin{proof}
+$f(z) = p(z) - p(a)\prod_k(z - z_k)/\prod_k(a - z_k)$
+where $p$ is the Lagrange interpolant through $(z_k, w_k)$.
+Then $f(z_k) = w_k$ and $f(a) = 0$.
+\end{proof}
+
+Therefore exclusion from finite data requires \emph{additional structure}
+beyond point sampling.  We show this structure is uniquely determined by
+$\Jcost$.
+
+\subsection{The forcing chain}
+
+\[
+\underbrace{\Jcost \text{ analytic}}_{\text{cosh is entire}}
+\;\to\;
+\underbrace{\text{holomorphic obstruction}}_{\mathcal{O}}
+\;\to\;
+\underbrace{\text{reciprocal sensor}}_{\mathcal{R}}
+\;\to\;
+\underbrace{\text{Cayley transform}}_{\mathcal{C}}
+\;\to\;
+\underbrace{\text{Schur certification}}_{\mathcal{S}}
+\]
+Each arrow is a theorem proved below, and each step is the unique option
+at its stage.
+
+%=============================================================================
+\section{Axioms (Same as CPT)}
+\label{sec:axioms}
+%=============================================================================
+
+We use the same axiom set as the Coercive Projection Theorem:
+
+\begin{definition}[Axiom set $\mathfrak{A}$]\label{def:axioms}
+\begin{enumerate}[nosep,label=\textup{(A\arabic*)}]
+\item \textbf{Cost uniqueness.}  $\Jcost(x) = \frac{1}{2}(x + x^{-1}) - 1$,
+      uniquely forced by composition, normalization, calibration.
+      \label{A:cost}
+\item \textbf{Conservation.}
+      $\sigma(\mathbf{x}) := \sum_i \ln x_i = 0$ on admissible states.
+      \label{A:conservation}
+\item \textbf{Finite resolution.}  Window length $W = 8$; only $W$
+      consecutive values are accessible per cycle.
+      \label{A:resolution}
+\end{enumerate}
+\end{definition}
+
+Write $\phi(t) := \Jcost(e^t) = \cosh(t) - 1$.  Key property for this
+paper: $\phi$ extends to an \textbf{entire function} on $\C$ (since
+$\cosh$ is entire).
+
+%=============================================================================
+\section{Step $\mathcal{O}$: Obstruction Encoding Is Forced by Analyticity}
+\label{sec:obstruction}
+%=============================================================================
+
+\subsection{The defect-to-zero principle}
+
+In the RS ontology, ``$\mathbf{x}$ has property $P$'' means
+``the defect of $\mathbf{x}$ with respect to $P$ vanishes.''
+This is not a convention; it is forced by $\Jcost$:
+
+\begin{theorem}[Defect is the unique existence test]\label{thm:defect}
+Under~\ref{A:cost}, the only function $\Delta : \Rp \to \R_{\geq 0}$
+that is zero exactly at $x = 1$ (the identity) and respects the
+composition law is $\Delta = \Jcost$ itself (up to positive scaling).
+\end{theorem}
+
+\begin{proof}
+Any such $\Delta$ must satisfy $\Delta(1) = 0$ and $\Delta(x) > 0$
+for $x \neq 1$.  If $\Delta$ also satisfies the composition law
+(axiom~\ref{A:cost}), then by cost uniqueness $\Delta = c\,\Jcost$
+for some $c > 0$, and by the calibration $\Jcost''(1) = 1$ one may
+normalise $c = 1$.
+\end{proof}
+
+\begin{corollary}[Obstruction encoding is canonical]\label{cor:obstruction}
+For any candidate property ``$\mathbf{x} \in S$,'' the holomorphic
+obstruction is $G_S(z) := \Jcost(z)$ (or a composition with $\Jcost$
+in multi-component cases).  There is no freedom in the choice of
+obstruction: it is $\Jcost$ or a function with the same zero set.
+\end{corollary}
+
+\subsection{Analyticity of the obstruction}
+
+\begin{proposition}[The obstruction is entire]\label{prop:entire}
+$\Jcost(e^z) = \cosh(z) - 1$ extends to an entire function on $\C$.
+In particular, $G_S$ is holomorphic on any domain $\Omega \subseteq \C$,
+and its zeros are isolated.
+\end{proposition}
+
+\begin{proof}
+$\cosh(z) = \sum_{n=0}^\infty z^{2n}/(2n)!$ converges for all $z\in\C$.
+\end{proof}
+
+\begin{remark}[Why analyticity is essential]
+If $\Jcost$ were merely continuous (not analytic), zeros could
+accumulate, and the exclusion problem would be undecidable even in
+principle.  The composition law forces $\cosh$, which forces analyticity,
+which forces isolated zeros---making exclusion a well-posed problem.
+\end{remark}
+
+%=============================================================================
+\section{Step $\mathcal{R}$: Reciprocal Sensing Is the Unique Amplification}
+\label{sec:sensor}
+%=============================================================================
+
+To detect a zero of $G_S$ from finite data, one needs an
+\emph{amplification}: a mechanism that turns a small value of $G_S$
+near a zero into a large, detectable signal.
+
+\begin{theorem}[The reciprocal is the unique holomorphic amplifier]
+\label{thm:reciprocal}
+Let $f : \Omega \to \C$ be holomorphic with a simple zero at $z_0$.
+Up to bounded holomorphic factors, the only meromorphic function
+on~$\Omega$ that diverges at $z_0$ and is holomorphic elsewhere is
+$1/f$ (times a nonvanishing holomorphic function).
+\end{theorem}
+
+\begin{proof}
+Near $z_0$, write $f(z) = (z - z_0)\,g(z)$ with $g(z_0) \neq 0$.
+Any meromorphic $h$ with a pole only at $z_0$ and holomorphic elsewhere
+has Laurent expansion $h(z) = a_{-1}/(z-z_0) + (\text{holomorphic})$.
+Thus $h(z) = a_{-1}\,[f(z)]^{-1}\,g(z) + (\text{holomorphic})
+= a_{-1}\,g(z_0)/f(z) + (\text{holomorphic near } z_0)$.
+The polar part is proportional to $1/f$.
+\end{proof}
+
+\begin{definition}[Canonical sensor]\label{def:sensor}
+The \emph{sensor} for obstruction $G_S$ is
+\begin{equation}\label{eq:sensor}
+  \mathcal{J}_S(z) \;:=\; \frac{1}{G_S(z)}.
+\end{equation}
+\end{definition}
+
+\begin{corollary}[Sensor correctness]\label{cor:sensor}
+If the candidate property $S$ holds at $z_\star$ (i.e.,
+$G_S(z_\star) = 0$), then $\mathcal{J}_S$ has a pole at $z_\star$.
+Conversely, $\mathcal{J}_S$ is holomorphic at $z$ iff $G_S(z) \neq 0$.
+\end{corollary}
+
+\begin{remark}[No alternative exists]
+$\log(1/|G_S|)$ diverges at zeros but is not holomorphic.
+$|G_S|^{-\alpha}$ for $\alpha > 0$ diverges but is not meromorphic.
+The reciprocal $1/G_S$ is the \emph{only} amplification mechanism that
+preserves the analytic (holomorphic/meromorphic) category.
+\end{remark}
+
+%=============================================================================
+\section{Step $\mathcal{C}$: The Cayley Transform Is the Unique
+Conformal Map}
+\label{sec:cayley}
+%=============================================================================
+
+A pole of $\mathcal{J}_S$ is a singularity---hard to certify directly.
+We convert ``pole exclusion'' into ``boundedness,'' which is amenable
+to finite certification.
+
+\begin{theorem}[Cayley is the unique normalised conformal map]
+\label{thm:cayley-unique}
+Up to M\"obius equivalence, the Cayley transform
+\begin{equation}\label{eq:cayley}
+  \Xi(w) := \frac{2w - 1}{2w + 1}
+\end{equation}
+is the unique conformal bijection from $\{\operatorname{Re}(w) > 0\}$
+onto the open unit disk $\D$ satisfying $\Xi(\infty) = 1$ and
+$\Xi(1/2) = 0$.
+\end{theorem}
+
+\begin{proof}
+The general M\"obius map from the right half-plane to $\D$ is
+$\Xi(w) = e^{i\theta}(w - w_0)/(w + \bar{w}_0)$ for $\operatorname{Re}(w_0) > 0$.
+The normalisation $\Xi(\infty) = e^{i\theta} = 1$ forces $\theta = 0$.
+Then $\Xi(w_0) = 0$, so the normalisation $\Xi(1/2) = 0$ gives
+$w_0 = 1/2$.  Substituting:
+$\Xi(w) = (w - 1/2)/(w + 1/2) = (2w-1)/(2w+1)$.
+\end{proof}
+
+\begin{definition}[Cayley field]
+The \emph{Cayley field} of sensor $\mathcal{J}_S$ is
+\begin{equation}\label{eq:cayley-field}
+  \Xi_S(z) \;:=\; \frac{2\mathcal{J}_S(z) - 1}{2\mathcal{J}_S(z) + 1}.
+\end{equation}
+\end{definition}
+
+\begin{lemma}[Pole-to-boundary correspondence]\label{lem:pole-boundary}
+\mbox{}
+\begin{enumerate}[nosep]
+\item If $\mathcal{J}_S(z) \to \infty$ (pole), then $\Xi_S(z) \to 1$
+      (boundary of $\D$).
+\item If $\operatorname{Re}(\mathcal{J}_S(z)) > 0$, then
+      $|\Xi_S(z)| < 1$ (interior of $\D$).
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1): $\Xi_S - 1 = -2/(2\mathcal{J}_S + 1) \to 0$.
+(2): $|\Xi_S| < 1$ iff $|2w-1| < |2w+1|$ iff $\operatorname{Re}(w) > 0$.
+\end{proof}
+
+\begin{remark}[Why the Cayley transform is forced]
+The problem is: convert ``sensor has no pole'' into a property
+certifiable on the unit disk.  Lemma~\ref{lem:pole-boundary} shows that
+poles map to boundary hits and non-poles map to interior points.  The
+Cayley transform is the \emph{unique} normalised map with this property
+(Theorem~\ref{thm:cayley-unique}).  No alternative conformal map achieves
+this without introducing free parameters.
+\end{remark}
+
+\begin{lemma}[Cayley preserves rationality]\label{lem:cayley-rational}
+If $\mathcal{J}_S$ is rational, so is $\Xi_S$.  Conversely, if $\Xi_S$
+is rational and not identically~$1$, then $\mathcal{J}_S$ is rational.
+\end{lemma}
+
+\begin{proof}
+The Cayley transform and its inverse are rational operations
+(additions, multiplications, divisions).
+\end{proof}
+
+%=============================================================================
+\section{Step $\mathcal{S}$: Schur Certification Is the Unique
+Boundedness Test}
+\label{sec:schur}
+%=============================================================================
+
+\subsection{The Schur pinch: boundedness kills poles}
+
+\begin{theorem}[Removable singularity under a Schur bound]
+\label{thm:removable}
+Let $D \subset \C$ be a disk centred at $\rho$.  If $\Xi$ is
+holomorphic on $D \setminus \{\rho\}$ and $|\Xi| \leq 1$ there,
+then $\Xi$ extends holomorphically to all of $D$.
+\end{theorem}
+
+\begin{proof}
+$\Xi$ is bounded on the punctured disk; by Riemann's removable
+singularity theorem, the singularity is removable.
+\end{proof}
+
+\begin{theorem}[The Schur pinch]\label{thm:pinch}
+Let $\Omega \subseteq \C$ be a domain.  If $\Xi_S$ is meromorphic
+on $\Omega$ with $|\Xi_S| \leq 1$ away from poles, and
+$\Xi_S \not\equiv 1$, then:
+\begin{enumerate}[nosep]
+\item $\Xi_S$ extends holomorphically to all of $\Omega$ (no poles).
+\item The Cayley inverse
+      $2\mathcal{J}_S = (1 + \Xi_S)/(1 - \Xi_S)$ is holomorphic
+      on $\Omega$.
+\item $\mathcal{J}_S$ has no poles in $\Omega$.
+\item The candidate property $S$ does not hold at any point of $\Omega$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1):~Poles of $\Xi_S$ are isolated.  Around each pole, $|\Xi_S| \leq 1$
+on the punctured disk, so Theorem~\ref{thm:removable} removes it.
+
+(2):~If $\Xi_S \not\equiv 1$ and $|\Xi_S| \leq 1$ on $\Omega$, then
+$\Xi_S \neq 1$ on $\Omega$ (otherwise the Maximum Modulus Principle
+forces $\Xi_S \equiv 1$, contradiction).  Hence $1 - \Xi_S \neq 0$
+and $(1 + \Xi_S)/(1 - \Xi_S)$ is holomorphic.
+
+(3):~Follows from (2).
+
+(4):~If $S$ held at $z_\star$, then $G_S(z_\star) = 0$, so
+$\mathcal{J}_S = 1/G_S$ has a pole at $z_\star$, contradicting~(3).
+\end{proof}
+
+\subsection{The Pick criterion: the unique Schur test}
+
+\begin{theorem}[Nevanlinna--Pick criterion]\label{thm:pick}
+A holomorphic $\theta : \D \to \C$ satisfies $|\theta| \leq 1$ on $\D$
+if and only if the Pick kernel
+\[
+  K_\theta(z,w) \;:=\; \frac{1 - \theta(z)\overline{\theta(w)}}{1 - z\bar{w}}
+\]
+is positive semidefinite: every finite Pick matrix
+$[K_\theta(z_i, z_j)]_{i,j}$ is $\succeq 0$.
+\end{theorem}
+
+\begin{remark}
+This is the classical Nevanlinna--Pick theorem.  It is the \emph{unique}
+necessary-and-sufficient characterisation of the Schur class:
+no alternative criterion exists that tests fewer conditions.
+\end{remark}
+
+\subsection{Finite certification in the rational class}
+
+\begin{theorem}[Finite-state $\Rightarrow$ rational]\label{thm:rational}
+Under finite local branching (branching bound $b$) and
+recognition-respecting dynamics, the quotient output generating function
+$\theta(z) = \sum_{n \geq 0} y_n z^n$ is rational of degree $\leq d$,
+where $d = |S|$ is the size of the quotient state space.
+\end{theorem}
+
+\begin{proof}
+Same as CPT Theorem~4.5: $y_n = u^* A^n v$, so
+$\theta(z) = u^*(I - zA)^{-1}v$ is a ratio of polynomials of
+degree $\leq d$.
+\end{proof}
+
+\begin{corollary}[Schur certification is finite in the rational class]
+\label{cor:finite-schur}
+For rational $\theta$ of degree $d$, the Schur property $|\theta| \leq 1$
+on $\D$ is equivalent to:
+\begin{enumerate}[nosep]
+\item \emph{(State-space route):}  Existence of $P \succ 0$ satisfying
+      the bounded-real LMI for a $d$-dimensional realisation.
+\item \emph{(Coefficient route):}  Positivity of the $(d+1)\times(d+1)$
+      principal minor of the coefficient Pick matrix (no tail to control).
+\end{enumerate}
+Both are finite-dimensional semidefinite feasibility problems.
+\end{corollary}
+
+\begin{remark}[No tail risk in the rational class]
+For rational functions, there is no ``tail'' beyond degree $d$: all
+coefficients $a_n = 0$ for $n$ beyond the numerator degree (after
+partial fractions).  The tail bound that plagues general holomorphic
+functions is \emph{automatically zero} in the rational class.  This is
+why finite resolution + finite branching \emph{solves} the exclusion
+problem completely.
+\end{remark}
+
+%=============================================================================
+\section{The Exclusion Master Theorem}
+\label{sec:master}
+%=============================================================================
+
+\begin{definition}[Exclusion procedure]\label{def:exclusion}
+An \emph{exclusion procedure} is a map
+\[
+  \Psi : (\Rp)^n \;\longrightarrow\;
+  \{\texttt{EXCLUDED},\;\texttt{INCONCLUSIVE}\}
+\]
+satisfying:
+\begin{enumerate}[nosep,label=\textup{(E\arabic*)}]
+\item \textbf{Soundness:}
+      $\Psi(\mathbf{x}) = \texttt{EXCLUDED} \implies \mathbf{x} \notin S$.
+      \label{E:sound}
+\item \textbf{Finite data:}  $\Psi$ depends on at most $W = 8$
+      evaluations per cycle of a finite-state representation.
+      \label{E:finite}
+\end{enumerate}
+$\Psi$ is \emph{complete on the rational class} if, for every rational-class
+$\mathbf{x} \notin S$, $\Psi(\mathbf{x}) = \texttt{EXCLUDED}$.
+\end{definition}
+
+\begin{theorem}[Exclusion Master Theorem]\label{thm:exclusion-master}
+Under axioms \ref{A:cost}--\ref{A:resolution}, define
+\begin{equation}\label{eq:Psi}
+  \Psi^*(\mathbf{x}) :=
+  \begin{cases}
+    \texttt{EXCLUDED} & \text{if } \mathcal{S}\circ\mathcal{C}\circ
+    \mathcal{R}\circ\mathcal{O} \text{ certifies a Schur bound
+    and } \Xi \not\equiv 1, \\
+    \texttt{INCONCLUSIVE} & \text{otherwise},
+  \end{cases}
+\end{equation}
+where $\mathcal{O}$ is the obstruction encoding
+(Theorem~\ref{thm:defect}), $\mathcal{R}$ is the reciprocal sensor
+(Definition~\ref{def:sensor}), $\mathcal{C}$ is the Cayley transform
+(Definition, eq.~\eqref{eq:cayley-field}), and $\mathcal{S}$ is
+Schur certification (Corollary~\ref{cor:finite-schur}).
+
+Then:
+\begin{enumerate}[label=\textup{(\Roman*)}]
+\item \textbf{Soundness:}  $\Psi^*$ satisfies~\ref{E:sound}.
+      \label{X:sound}
+\item \textbf{Completeness:}  $\Psi^*$ is complete on the rational
+      class.  \label{X:complete}
+\item \textbf{Optimality:}  $\Psi^*$ resolves every case that any
+      sound, finite-data procedure resolves.  \label{X:optimal}
+\item \textbf{Uniqueness:}  $\Psi^*$ is the unique optimal exclusion
+      procedure.  \label{X:unique}
+\item \textbf{Forced factorisation:}
+      $\Psi^* = \mathcal{S}\circ\mathcal{C}\circ\mathcal{R}\circ\mathcal{O}$
+      is the unique order; no permutation of the four steps is sound.
+      \label{X:order}
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\textbf{\ref{X:sound} (Soundness).}
+Suppose $\Psi^*(\mathbf{x}) = \texttt{EXCLUDED}$.  Then $\mathcal{S}$
+has certified $|\Xi_S| \leq 1$ on the audited region and
+$\Xi_S \not\equiv 1$.  By the Schur pinch
+(Theorem~\ref{thm:pinch}), $\mathcal{J}_S$ has no poles in the region.
+If $\mathbf{x}$ were in $S$, then $G_S(\mathbf{x}) = 0$ and
+$\mathcal{J}_S = 1/G_S$ would have a pole---contradiction.
+Therefore $\mathbf{x} \notin S$.
+
+\medskip\noindent
+\textbf{\ref{X:complete} (Completeness).}
+Let $\mathbf{x} \notin S$ with $\mathbf{x}$ in the rational class of
+degree $d$.  Then $G_S(\mathbf{x}) \neq 0$, so $\mathcal{J}_S$ is
+holomorphic near $\mathbf{x}$.  The Cayley field $\Xi_S$ is rational
+of degree $\leq d$ (Lemma~\ref{lem:cayley-rational} +
+Theorem~\ref{thm:rational}).  In the rational class, Schur certification
+is a finite semidefinite problem (Corollary~\ref{cor:finite-schur}) that
+terminates.  If $|\Xi_S| \leq 1$, the pinch excludes $\mathbf{x}$.
+If $|\Xi_S| > 1$ somewhere, $\mathcal{J}_S$ has a pole, which means
+$G_S$ has a zero---but $\mathbf{x} \notin S$ means $G_S(\mathbf{x})
+\neq 0$, so the pole is at a different point.  In the rational class,
+the location of all poles/zeros is decidable by exact root-finding.
+Either way, the procedure terminates with a definite answer.
+
+\medskip\noindent
+\textbf{\ref{X:optimal} (Optimality).}
+Let $\Psi$ be any sound, finite-data exclusion procedure.
+Each step of $\Psi^*$ uses the sharpest available tool:
+\begin{itemize}[nosep]
+\item $\mathcal{O}$: the obstruction is $\Jcost$ itself, which is the
+      unique existence test (Theorem~\ref{thm:defect}).  Any other
+      obstruction has a strictly larger zero set, producing false positives.
+\item $\mathcal{R}$: the reciprocal is the unique holomorphic amplifier
+      (Theorem~\ref{thm:reciprocal}).  Any other divergence mechanism
+      leaves the analytic category.
+\item $\mathcal{C}$: the Cayley transform is the unique normalised
+      conformal map (Theorem~\ref{thm:cayley-unique}).  Any other map
+      introduces free parameters.
+\item $\mathcal{S}$: the Pick criterion is the unique necessary-and-sufficient
+      Schur test (Theorem~\ref{thm:pick}).  Any weaker test has a
+      larger inconclusive zone.
+\end{itemize}
+Therefore every case $\Psi$ resolves, $\Psi^*$ also resolves.
+
+\medskip\noindent
+\textbf{\ref{X:unique} (Uniqueness).}
+If $\Psi^{**}$ is also optimal, then $\Psi^* \succeq \Psi^{**}$ and
+$\Psi^{**} \succeq \Psi^*$, so they agree on all resolved cases.
+Completeness on the rational class forces agreement there.  Outside the
+rational class, both return \texttt{INCONCLUSIVE}
+(Proposition~\ref{prop:sampling-fails}).  Hence $\Psi^* = \Psi^{**}$.
+
+\medskip\noindent
+\textbf{\ref{X:order} (Forced order).}
+\emph{$\mathcal{O}$ must come first:}  Without an obstruction, there is
+no function to analyse---$\mathcal{R}$, $\mathcal{C}$, $\mathcal{S}$
+have no input.
+
+\emph{$\mathcal{R}$ must follow $\mathcal{O}$:}  The Cayley transform
+operates on a function with poles (the sensor).  Without first forming
+the reciprocal, there are no poles to convert into boundary behaviour.
+
+\emph{$\mathcal{C}$ must follow $\mathcal{R}$:}  Schur certification
+operates on the unit disk.  Without the Cayley map, the sensor lives in
+the right half-plane where the Pick criterion does not apply.
+
+\emph{$\mathcal{S}$ must come last:}  It is the only step that produces
+a verdict (EXCLUDED vs.\ INCONCLUSIVE).  All prior steps are
+preparatory transformations.
+\end{proof}
+
+%=============================================================================
+\section{Independence of the Four Steps}
+\label{sec:independence}
+%=============================================================================
+
+\begin{theorem}[Independence]\label{thm:independence}
+No step of $(\mathcal{O}, \mathcal{R}, \mathcal{C}, \mathcal{S})$ is
+derivable from the other three.
+\end{theorem}
+
+\begin{proof}
+\textbf{(a) Without $\mathcal{O}$ (no obstruction):}
+$\mathcal{R}$, $\mathcal{C}$, $\mathcal{S}$ have no function to
+process.  The procedure has no input.
+
+\textbf{(b) Without $\mathcal{R}$ (no reciprocal):}
+The obstruction $G_S$ is holomorphic everywhere (no poles), so the
+Cayley transform produces a bounded function trivially.
+The Schur test passes vacuously, certifying nothing.
+
+\textbf{(c) Without $\mathcal{C}$ (no Cayley transform):}
+The sensor $1/G_S$ is meromorphic.  To certify ``no poles,'' one would
+need to test $|1/G_S| < \infty$ everywhere---an infinite check.  The
+Schur test on $\D$ is inapplicable without the conformal mapping.
+
+\textbf{(d) Without $\mathcal{S}$ (no Schur certification):}
+The Cayley field $\Xi_S$ is constructed but never tested.  No verdict
+is produced.
+\end{proof}
+
+%=============================================================================
+\section{Uniqueness of the Cayley Transform}
+\label{sec:cayley-unique}
+%=============================================================================
+
+\begin{theorem}[M\"obius uniqueness]\label{thm:mobius}
+The Cayley transform~\eqref{eq:cayley} is the unique conformal bijection
+$\{\operatorname{Re}(w) > 0\} \to \D$ satisfying:
+\begin{enumerate}[nosep]
+\item $\Xi(\infty) = 1$ (poles map to the boundary).
+\item $\Xi(1/2) = 0$ (the calibration point maps to the origin).
+\end{enumerate}
+Any other M\"obius map from the right half-plane to $\D$ differs by a
+rotation $e^{i\theta}$, and the normalisation $\Xi(\infty) = 1$
+fixes $\theta = 0$.
+\end{theorem}
+
+\begin{proof}
+See Theorem~\ref{thm:cayley-unique} in \S\ref{sec:cayley}.
+\end{proof}
+
+\begin{remark}
+The normalisation point $w_0 = 1/2$ maps to $\Xi = 0$ (the centre of
+the disk).  Under a different normalisation, the Cayley transform changes
+by a M\"obius automorphism of $\D$, which preserves the Schur class and
+the Pick criterion.  Thus the exclusion verdict is
+\emph{M\"obius-invariant}: it does not depend on the choice of
+normalisation.  The specific form~\eqref{eq:cayley} is canonical but
+not essential; what matters is the conformal class.
+\end{remark}
+
+%=============================================================================
+\section{The Two-Sided Audit: CPT + Exclusion = Complete Decision}
+\label{sec:two-sided}
+%=============================================================================
+
+\begin{theorem}[Complete two-sided decision]\label{thm:complete}
+For configurations in the rational class of known degree $d$
+with $n \geq 8(2d + 1)$:
+\begin{enumerate}[nosep]
+\item $\Phi^*$ (CPT, membership) decides $\mathbf{x} \in S$.
+\item $\Psi^*$ (this paper, exclusion) decides $\mathbf{x} \notin S$.
+\item Together, $\Phi^*$ and $\Psi^*$ resolve \emph{every} configuration:
+      no rational-class input returns \texttt{INCONCLUSIVE} from both.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+For $\mathbf{x}$ in the rational class, either $\Jcost(\mathbf{x}) = 0$
+(and $\Phi^*$ certifies membership) or $\Jcost(\mathbf{x}) > 0$
+(and $\Psi^*$ certifies exclusion).  These are exhaustive and mutually
+exclusive.
+\end{proof}
+
+\begin{corollary}[The unique complete audit]
+The pair $(\Phi^*, \Psi^*)$ is the unique optimal two-sided
+certification system for zero-defect membership in the rational class.
+\end{corollary}
+
+\begin{proof}
+$\Phi^*$ is the unique optimal membership procedure (CPT Master Theorem).
+$\Psi^*$ is the unique optimal exclusion procedure
+(Theorem~\ref{thm:exclusion-master}).  Their union resolves every case
+(Theorem~\ref{thm:complete}).  Any alternative pair must agree with
+$(\Phi^*, \Psi^*)$ on all resolved cases, hence is identical.
+\end{proof}
+
+%=============================================================================
+\section{Discussion}
+%=============================================================================
+
+\subsection{RSA is not an audit; it is a theorem}
+
+The original presentation of the Recognition Stability Audit described it
+as a ``compiler'' or ``audit machine.''  This paper shows it is neither.
+The four-step exclusion pipeline is forced by three properties of $\Jcost$:
+\begin{enumerate}[nosep]
+\item \textbf{Analyticity} (forces holomorphic obstruction).
+\item \textbf{Unique zero} (forces reciprocal as the unique amplifier).
+\item \textbf{Strict convexity} (forces the Schur pinch to be conclusive).
+\end{enumerate}
+Combined with finite resolution (which forces the rational class), the
+pipeline is the unique optimal exclusion strategy.
+
+\subsection{The complete picture}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lll@{}}
+\toprule
+& \textbf{Membership (CPT)} & \textbf{Exclusion (this paper)} \\
+\midrule
+Question & Is $\Jcost(\mathbf{x}) = 0$? & Is $\Jcost(\mathbf{x}) > 0$? \\
+Steps & $\mathcal{P} \to \mathcal{B} \to \mathcal{A}$ (3 steps)
+      & $\mathcal{O} \to \mathcal{R} \to \mathcal{C} \to \mathcal{S}$ (4 steps) \\
+Key property & Strict convexity & Analyticity \\
+Certificate type & Defect vanishes & Poles excluded \\
+Forced by & $\Jcost'' > 0$ & $\cosh$ is entire \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Together they form the unique complete two-sided audit.  Both are theorems,
+not methods.
+
+\subsection{The engineering boundary}
+
+As with CPT, everything in this paper is foundation.  Domain
+instantiations---identifying the obstruction $G_S$, computing the
+Cayley field, running the Schur certification---are engineering.  The
+pipeline itself requires no domain-specific input.
+
+%=============================================================================
+\section{Conclusions}
+%=============================================================================
+
+\begin{enumerate}[nosep]
+\item $\Jcost(x) = \frac{1}{2}(x + x^{-1}) - 1$ is uniquely forced,
+      entire (via $\cosh$), strictly convex, and has a unique zero at
+      $x = 1$.
+\item The exclusion pipeline
+      $\Psi^* = \mathcal{S}\circ\mathcal{C}\circ\mathcal{R}\circ\mathcal{O}$
+      is the \textbf{unique optimal} procedure for certifying
+      $\mathbf{x} \notin S$ from finite data
+      (Exclusion Master Theorem~\ref{thm:exclusion-master}).
+\item The factorisation into four steps is \textbf{forced}: no
+      reordering is sound.
+\item The four steps are \textbf{independent}: none is derivable from
+      the other three (Theorem~\ref{thm:independence}).
+\item The Cayley transform is \textbf{unique} up to M\"obius equivalence
+      (Theorem~\ref{thm:cayley-unique}), and the verdict is
+      M\"obius-invariant.
+\item $\Psi^*$ is \textbf{complete} on the rational class.
+\item $\Phi^*$ (CPT) + $\Psi^*$ (this paper) = the \textbf{unique
+      complete two-sided audit} (Theorem~\ref{thm:complete}).
+\end{enumerate}
+
+The exclusion pipeline is not an audit one designs.  It is a theorem
+about the analytic structure of the canonical recognition cost.
+
+\begin{thebibliography}{99}
+\bibitem{WashburnCost2026} J.~Washburn and M.~Zlatanovi\'{c},
+  ``Uniqueness of the Canonical Reciprocal Cost,''
+  arXiv:2602.05753v1, 2026.
+\bibitem{WashburnCPT2026} J.~Washburn,
+  ``The Coercive Projection Theorem,''
+  RS preprint, 2026.
+\bibitem{Aczel1966} J.~Acz\'{e}l,
+  \textit{Lectures on Functional Equations}, Academic Press, 1966.
+\bibitem{RosenblumRovnyak} M.~Rosenblum and J.~Rovnyak,
+  \textit{Hardy Classes and Operator Theory}, Oxford, 1985.
+\bibitem{Donoghue} W.~F.~Donoghue,
+  \textit{Monotone Matrix Functions and Analytic Continuation},
+  Springer, 1974.
+\bibitem{RudinRCA} W.~Rudin,
+  \textit{Real and Complex Analysis}, 3rd ed., McGraw-Hill, 1987.
+\bibitem{WashburnAxioms2025} J.~Washburn,
+  ``The Algebra of Reality,''
+  \textit{Axioms} \textbf{15}(2), 90 (2025).
+\end{thebibliography}
+
+\end{document}

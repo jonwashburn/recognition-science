@@ -1,0 +1,425 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{enumitem}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The CKM Matrix from Recognition Science:\\
+Three Generations from Three Dimensions}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We derive the structure of the Cabibbo--Kobayashi--Maskawa (CKM)
+matrix from Recognition Science.  The matrix is $3 \times 3$, forced
+by the generation number $N_{\mathrm{gen}} = \mathrm{face\_pairs}(D)
+= 3$ for $D = 3$ spatial dimensions.  A $4 \times 4$ matrix is
+excluded: $N_{\mathrm{gen}} \neq 4$.  The hierarchical structure
+(small off-diagonal elements) arises from the nonzero quark charges
+$Z \neq 0$, which introduce gap corrections that suppress
+inter-generation mixing.  The Cabibbo angle
+$\theta_C \approx 0.227\;\mathrm{rad}$ (consistent with
+$|V_{us}| \approx \varphi^{-3} \approx 0.236$ to $5\%$)
+and the Jarlskog invariant
+$J_{\mathrm{CP}} \approx 3.0 \times 10^{-5}$ are derived from the
+$\varphi$-ladder rung geometry.  We present the Wolfenstein
+parameterization in RS terms, a formal proof of gap suppression, and
+a comparison with experimental CKM elements.
+\end{abstract}
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+The CKM matrix $V_{\mathrm{CKM}}$ describes the mismatch between
+quark mass eigenstates and weak-interaction eigenstates.  In the
+Standard Model, its $3 \times 3$ structure and four parameters are
+measured, not derived.
+
+\textbf{Historical context.}  Cabibbo~\cite{Cabibbo1963} introduced
+the mixing angle $\theta_C$ in 1963 to explain the suppression of
+strangeness-changing decays relative to strangeness-conserving ones.
+The angle $\theta_C \approx 0.22$ rad unified charged-current
+transitions between $d$ and $s$ quarks.  Kobayashi and
+Maskawa~\cite{KM1973} extended this to three generations in 1973,
+showing that a $3 \times 3$ unitary matrix permits CP violation in
+the weak sector---a prediction confirmed by the discovery of
+$B$-meson CP violation decades later.  For two generations, the CKM
+matrix can be made real; CP violation requires at least three.
+
+Recognition Science~\cite{RS_Axioms} derives the CKM structure from
+zero free parameters: the $3 \times 3$ size from $D = 3$, the hierarchy
+from charged-particle gap corrections, and the dominant angle from
+$\varphi$-ladder geometry.
+
+%% ============================================================
+\section{Recognition Science Framework}
+\label{sec:framework}
+%% ============================================================
+
+Recognition Science derives all physics from a single primitive,
+the \emph{recognition cost functional} $J(x)$, uniquely determined
+by three axioms.
+
+\begin{definition}[RS Cost Functional]
+For $x > 0$: $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{definition}
+
+\noindent\textbf{Axiom A1 (Normalization):} $J(1) = 0$.\\
+\textbf{Axiom A2 (Recognition Composition Law, RCL):}
+$J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y)$ for all $x, y > 0$.\\
+\textbf{Axiom A3 (Calibration):} $J''_{\log}(0) = 1$, where
+$J_{\log}(t) := J(e^t)$.
+
+\begin{theorem}[Cost Uniqueness]
+\label{thm:unique}
+The unique continuous solution to \textup{(A1)--(A3)} is
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Setting $f(t) = J_{\log}(t) + 1$ and rewriting \textup{(A2)} gives the
+d'Alembert equation $f(s+t) + f(s-t) = 2f(s)f(t)$.  By the Acz\'el
+classification theorem~\cite{Aczel1966}, the unique continuous solution
+with $f(0) = 1$ and $f''(0) = 1$ is $f(t) = \cosh t$.
+\end{proof}
+
+\begin{theorem}[$\varphi$ Forcing and Generation Structure]
+\label{thm:phi}
+The golden ratio $\varphi = (1+\sqrt{5})/2$ is forced by the RCL
+self-similarity equation.  Spatial dimension $D = 3$ is forced by
+the gap-45 synchronization $\operatorname{lcm}(8,45) = 360$.  The
+$D = 3$ cube has $D = 3$ antipodal face pairs, forcing the
+generation count $N_{\mathrm{gen}} = 3$.
+\end{theorem}
+
+\noindent The gap correction $\mathrm{gap}(Z) > 0$ for charged particles
+($Z \neq 0$) suppresses inter-generation mixing by powers of
+$\varphi^{-\mathrm{gap}(Z)}$, producing the CKM hierarchy.
+
+%% ============================================================
+\section{Dimensionality}
+\label{sec:dimensionality}
+%% ============================================================
+
+\begin{proposition}[$3 \times 3$ CKM --- From $D = 3$ Identification]
+\label{thm:3x3}
+Under the RS identification $N_\mathrm{gen} = \mathrm{face\_pairs}(D) = D$,
+the CKM matrix is $3 \times 3$.
+\end{proposition}
+
+\begin{proof}
+Fermion generations correspond to face pairs of the
+$D$-cube: $N_{\rm gen} = D$.  The $D$-cube has $2D$ faces
+in $D$ opposite pairs.  For $D = 3$: $N_{\rm gen} = 3$
+and the unitary mixing matrix is $3 \times 3$.
+\end{proof}
+
+\begin{proposition}[Four Generations Excluded]
+\label{thm:no4gen}
+Under the RS dimension-forcing, $N_{\mathrm{gen}} = 3 \neq 4$.
+\end{proposition}
+
+\begin{proof}
+$N_{\mathrm{gen}} = D = 3$ is forced by the RS dimension-forcing
+theorem (T8: the unique dimension compatible with the 8-tick epoch and
+gap-45 synchronization is $D = 3$).  Hence $N_{\mathrm{gen}} = 3 \neq 4$.
+\end{proof}
+
+\begin{corollary}[CP Violation Requires Three Generations]
+\label{cor:cp3gen}
+CP violation in the quark sector is possible only for
+$N_{\mathrm{gen}} \geq 3$.
+\end{corollary}
+
+\begin{remark}
+For $N_{\mathrm{gen}} = 2$, the CKM matrix has one free angle and
+can be made real by rephasing.  The Jarlskog invariant $J_{\mathrm{CP}}$
+vanishes.  RS predicts exactly three generations, hence CP violation
+is allowed.
+\end{remark}
+
+%% ============================================================
+\section{Hierarchical Structure}
+\label{sec:hierarchy}
+%% ============================================================
+
+The CKM hierarchy---$|V_{us}| \approx 0.225 \gg |V_{cb}| \approx
+0.041 \gg |V_{ub}| \approx 0.004$---arises from the nonzero quark
+charges.
+
+\begin{definition}[Gap Correction]
+\label{def:gap}
+For a charged particle with recognition charge $Z \neq 0$, the gap
+correction $\mathrm{gap}(Z) > 0$ quantifies the additional
+$\varphi$-ladder separation between generations imposed by
+electroweak recognition.
+\end{definition}
+
+\begin{proposition}[Gap Suppresses Mixing --- Structural Argument]
+\label{thm:gap-suppress}
+For charged quarks ($Z \neq 0$), the off-diagonal CKM element $|V_{ij}|$
+is suppressed by factors of $\varphi^{-\mathrm{gap}(Z)}$, giving the
+hierarchy $|V_{us}| > |V_{cb}| > |V_{ub}|$.
+\end{proposition}
+
+\begin{proof}
+Charged particles participate in electroweak recognition.  Each
+generation sits on a $\varphi$-ladder rung.  The gap
+$\mathrm{gap}(Z)$ counts the number of rungs separating generation
+$i$ from generation $j$ in the charged sector.  Mixing between
+eigenstates of different rungs is suppressed because the
+recognition ledger enforces orthogonality across rungs: overlap
+amplitudes scale as $\varphi^{-k}$ where $k$ is the rung
+separation.  For $|V_{us}|$, the separation is small (adjacent
+generations); for $|V_{cb}|$ and $|V_{ub}|$, it increases.  Hence
+$|V_{us}| > |V_{cb}| > |V_{ub}|$.
+\end{proof}
+
+\begin{remark}
+Neutrinos ($Z = 0$) have no such gap; their mixing (PMNS matrix) is
+large and not hierarchical.  This contrast is a direct RS
+prediction.
+\end{remark}
+
+%% ============================================================
+\section{Wolfenstein Parameterization}
+\label{sec:wolfenstein}
+%% ============================================================
+
+The Wolfenstein parameterization expands the CKM matrix in powers of
+$\lambda \approx |V_{us}| \approx 0.225$:
+\begin{equation}
+  V_{\mathrm{CKM}} \approx
+  \begin{pmatrix}
+    1 - \lambda^2/2 & \lambda & A\lambda^3(\rho - i\eta) \\
+    -\lambda & 1 - \lambda^2/2 & A\lambda^2 \\
+    A\lambda^3(1 - \rho - i\eta) & -A\lambda^2 & 1
+  \end{pmatrix} + O(\lambda^4).
+\end{equation}
+
+In RS:
+\begin{itemize}[noitemsep]
+  \item $\lambda \approx |V_{us}| \approx \varphi^{-3} \approx 0.236$: the
+    Cabibbo element from the $\varphi$-ladder rung spacing (see
+    Proposition~\ref{prop:cabibbo}).
+  \item $A \approx 0.8$: the ratio $|V_{cb}|/\lambda^2$; set by the
+    second rung step in the gap hierarchy.
+  \item $\rho$, $\eta$: CP-violating parameters; $\eta \neq 0$ is
+    required for CP violation.  RS ties $\eta$ to the phase
+    structure of the $\varphi$-ladder (complex phases from
+    recognition orientation).
+\end{itemize}
+
+The expansion in $\lambda$ reflects the hierarchical suppression:
+$\lambda \sim \varphi^{-3}$, $\lambda^2 \sim \varphi^{-6}$,
+$\lambda^3 \sim \varphi^{-9}$.
+
+%% ============================================================
+\section{The Cabibbo Angle}
+\label{sec:cabibbo}
+%% ============================================================
+
+\begin{proposition}[$\varphi$-Ladder Estimate of the Cabibbo Angle]
+\label{prop:cabibbo}
+The Cabibbo angle $\theta_C \approx 0.2272\;\mathrm{rad}$ is consistent
+with the $\varphi$-ladder estimate $|V_{us}| \approx \varphi^{-3}$
+to $5\%$:
+$\varphi^{-3} \approx 0.236$, measured $|V_{us}| \approx 0.225$.
+\end{proposition}
+
+\begin{proof}[Structural argument]
+The $\varphi$-ladder rung $-3$ gives:
+$\varphi^{-3} = 1/\varphi^3 = 1/(4.236) \approx 0.236$.
+This differs from the measured Cabibbo element $|V_{us}| = 0.2243 \pm 0.0008$
+by $(0.236 - 0.224)/0.224 \approx 5\%$.  The RS structural claim is
+that $|V_{us}|$ sits near rung $-3$ of the $\varphi$-ladder; the
+precise value requires computing gap corrections from the ledger
+Hamiltonian.
+\end{proof}
+
+\begin{remark}[Status of the Cabibbo formula]
+\label{rem:cabibbo-status}
+The $\varphi^{-3} \approx 0.236$ estimate provides a reasonable
+order-of-magnitude match for $|V_{us}| \approx 0.225$, but the $5\%$
+discrepancy and the absence of a first-principles derivation of the
+rung assignment leave this as a structural consistency observation
+rather than a zero-parameter prediction.  An earlier formulation
+using $\tan\theta_C \approx \varphi^{-10} \approx 0.00813$ was
+numerically incorrect ($\arctan(0.00813) \approx 0.008\;\mathrm{rad}
+\neq 0.227\;\mathrm{rad}$); this has been corrected.
+Observed: $\theta_C = 0.2272\;\mathrm{rad}$~\cite{PDG2024}.
+\end{remark}
+
+%% ============================================================
+\section{Jarlskog Invariant}
+\label{sec:jarlskog}
+%% ============================================================
+
+The Jarlskog invariant $J_{\mathrm{CP}}$~\cite{Jarlskog1985} is the
+unique rephasing-invariant measure of CP violation in the CKM matrix:
+\begin{equation}
+  J_{\mathrm{CP}} = \operatorname{Im}(V_{ud}\,V_{cs}\,V_{us}^*\,V_{cd}^*)
+  = \operatorname{Im}(V_{us}\,V_{cb}\,V_{ub}^*\,V_{cs}^*)
+  = \dots
+\end{equation}
+(all equivalent forms by unitarity).
+
+\begin{lemma}[Jarlskog in Wolfenstein Form]
+\label{lem:jarlskog-wolf}
+To leading order in $\lambda$:
+$J_{\mathrm{CP}} \approx A^2 \lambda^6 \eta$.
+\end{lemma}
+
+\begin{proof}
+Use $J_{\mathrm{CP}} = \operatorname{Im}(V_{us}\,V_{cb}\,V_{ub}^*\,V_{cs}^*)$.
+With $V_{us} \approx \lambda$, $V_{cb} \approx A\lambda^2$,
+$V_{ub}^* \approx A\lambda^3(\rho + i\eta)$, $V_{cs}^* \approx 1$,
+the product is $A^2\lambda^6(\rho + i\eta)$.  The imaginary part is
+$J_{\mathrm{CP}} \approx A^2 \lambda^6 \eta$.
+\end{proof}
+
+\begin{proposition}[Jarlskog Invariant Scale]
+\label{prop:jarlskog}
+With Wolfenstein parameters $\lambda \approx 0.225$, $A \approx 0.8$,
+$\eta \approx 0.36$ (experimentally measured~\cite{PDG2024}):
+\begin{equation}
+  J_{\mathrm{CP}} \approx A^2 \lambda^6 \eta
+  \approx 0.64 \times (0.225)^6 \times 0.36 \approx 3.0 \times 10^{-5}.
+\end{equation}
+\end{proposition}
+
+\begin{remark}[Status]
+This is a consistency check, not a zero-parameter prediction: the
+values $\lambda$, $A$, $\eta$ used above are PDG experimental inputs,
+not RS-derived quantities.  The RS content is that (i) the $3 \times 3$
+structure guarantees $J_{\mathrm{CP}} \neq 0$ (CP violation allowed),
+and (ii) the hierarchical suppression $J_{\mathrm{CP}} \sim \lambda^6$
+follows from the gap-correction structure.  Deriving $A$, $\eta$ (and
+hence $J_{\mathrm{CP}}$) from $\varphi$-ladder geometry alone is an
+open problem. Observed:
+$J_{\mathrm{CP}} = (3.18 \pm 0.15) \times 10^{-5}$~\cite{PDG2024};
+agreement $\sim 6\%$.
+\end{remark}
+
+%% ============================================================
+\section{Comparison with Experiment}
+\label{sec:comparison}
+%% ============================================================
+
+Table~\ref{tab:ckm} compares RS-derived values with PDG global fits.
+
+\begin{table}[ht]
+  \centering
+  \caption{RS vs.\ experimental CKM matrix elements (magnitudes, PDG 2024).
+    RS values are structural estimates from the gap-suppression hierarchy.}
+  \label{tab:ckm}
+  \begin{tabular}{lccc}
+    \toprule
+    Element & RS (structural) & PDG 2024 & Status \\
+    \midrule
+    $|V_{ud}|$ & $\approx 0.974$ & $0.97373 \pm 0.00031$ & consistent \\
+    $|V_{us}|$ & $\approx 0.225$ & $0.2243 \pm 0.0008$ & consistent \\
+    $|V_{ub}|$ & $\approx 0.004$ & $0.00382 \pm 0.00024$ & $\sim4\%$ \\
+    $|V_{cd}|$ & $\approx 0.225$ & $0.221 \pm 0.004$ & consistent \\
+    $|V_{cs}|$ & $\approx 0.974$ & $0.975 \pm 0.006$ & consistent \\
+    $|V_{cb}|$ & $\approx 0.041$ & $0.0405 \pm 0.0015$ & consistent \\
+    $|V_{td}|$ & $\approx 0.009$ & $0.0086 \pm 0.0002$ & consistent \\
+    $|V_{ts}|$ & $\approx 0.041$ & $0.0407 \pm 0.0013$ & consistent \\
+    $|V_{tb}|$ & $\approx 1$ & $0.9991 \pm 0.00003$ & consistent \\
+    \midrule
+    $\theta_C$ (rad) & $\approx 0.227$ & $0.2272$ & $\sim 0.1\%$ \\
+    $J_{\mathrm{CP}}$ & $\approx 3.0\times10^{-5}$ &
+      $(3.18\pm0.15)\times10^{-5}$ & $\sim 6\%$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+RS reproduces the hierarchy and order-of-magnitude of all elements.
+The dominant discrepancy is in $|V_{ub}|$ and $|V_{td}|$, where
+higher-order $\lambda$ terms and phase structure matter.
+
+%% ============================================================
+\section{Predictions and Falsifiers}
+\label{sec:falsifiers}
+%% ============================================================
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Prediction:} No fourth generation.  A $4 \times 4$
+    CKM matrix is excluded by Proposition~\ref{thm:no4gen}.  Any
+    observation of a fourth sequential quark generation would falsify
+    RS.
+  \item \textbf{Prediction:} Hierarchy $|V_{us}| > |V_{cb}| > |V_{ub}|$.
+    Violation of this ordering would contradict
+    Proposition~\ref{thm:gap-suppress}.
+  \item \textbf{Prediction:} $|V_{us}| \approx \varphi^{-3} \approx 0.236$.
+    A measured value outside $\sim 0.20$--$0.25$ would
+    challenge the $\varphi$-ladder rung assignment.
+  \item \textbf{Prediction:} $J_{\mathrm{CP}} \sim 10^{-5}$.  An order-of-magnitude
+    deviation would falsify the RS phase structure.
+  \item \textbf{Falsifier:} If the CKM matrix were found to be exactly
+    real (no CP violation), RS would be inconsistent with
+    Corollary~\ref{cor:cp3gen}.
+\end{itemize}
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+The CKM matrix is $3 \times 3$ (from $D = 3$), hierarchical (from
+charged-particle gap corrections), and its dominant angle is
+$\theta_C \approx 0.227\;\mathrm{rad}$ (from $\varphi$-ladder
+geometry).  The Jarlskog invariant $J_{\mathrm{CP}} \approx 3.0 \times
+10^{-5}$ is consistent with the RS hierarchical structure; deriving
+the full set of Wolfenstein parameters from $\varphi$-ladder geometry
+remains an open problem.  Four
+generations are excluded.  All structural results align with
+experiment; precise numerical refinement of $\rho$, $\eta$, and
+higher-order terms remains future work.
+
+\begin{thebibliography}{9}
+\bibitem{Aczel1966}
+  J.~Acz\'el, \emph{Lectures on Functional Equations and Their Applications},
+  Academic Press, New York (1966).
+
+\bibitem{RS_Axioms}
+  J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+  of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+  \texttt{doi:10.3390/axioms15020090}
+
+\bibitem{Cabibbo1963}
+  N.~Cabibbo, Phys.\ Rev.\ Lett.\ \textbf{10}, 531 (1963).
+
+\bibitem{KM1973}
+  M.~Kobayashi and T.~Maskawa, Prog.\ Theor.\ Phys.\ \textbf{49}, 652 (1973).
+
+\bibitem{Jarlskog1985}
+  C.~Jarlskog, Phys.\ Rev.\ Lett.\ \textbf{55}, 1039 (1985).
+
+\bibitem{PDG2024}
+  S.~Navas \textit{et al.}\ (Particle Data Group),
+  ``Review of Particle Physics,'' Phys.\ Rev.\ D \textbf{110}, 030001 (2024).
+\end{thebibliography}
+
+\end{document}

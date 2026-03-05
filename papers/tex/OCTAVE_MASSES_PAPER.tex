@@ -1,0 +1,819 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue
+}
+
+% --- Notation (keep lightweight; avoid extra package dependencies) ---
+\newcommand{\phiG}{\varphi}
+\newcommand{\Ecoh}{E_{\mathrm{coh}}}
+\newcommand{\Fin}[1]{\mathrm{Fin}\,#1}
+\newcommand{\Lean}{\textsc{Lean}}
+
+% File-path formatting helper (for code pointers).
+\newcommand{\path}[1]{\texttt{#1}}
+
+\title{\textbf{The Octave System and the Particle Mass Spectrum}\\[0.4em]
+\large An Auditable Route from Eight-Tick Closure to \texorpdfstring{$\phiG$}{phi}-Ladder Mass Rungs}
+
+\author{
+  Jonathan Washburn\\
+  Recognition Science Research Institute\\
+  Austin, Texas, USA\\
+  \texttt{jon@recognitionphysics.org}
+}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The Standard Model accurately predicts particle interactions, yet it does not explain why fermion masses take their observed values: the Yukawa couplings are inserted as free parameters. This paper develops a complementary viewpoint in which masses arise from \emph{discrete structural closure} rather than continuous fitting. The starting point is the \emph{Octave System}: a minimal, cross-domain framework for any discrete dynamics that carries an 8-phase clock (\(\Fin{8}\)) with a one-tick step rule. In the accompanying reference implementation, the ``why 8'' question is anchored by a machine-checked Gray-8 witness (an 8-cycle over 3-bit patterns with one-bit adjacency), together with ledger-to-adjacency bridge statements that formalize ``atomic update'' intuitions.
+
+We then connect this Octave kernel to a concrete particle-mass model in which masses are organized on a \(\phiG\)-ladder with coherence unit \(\Ecoh=\phiG^{-5}\) (model-layer, dimensionless), sector yardsticks, and a charge-indexed geometric residue. The model’s canonical predictor takes the form
+\[
+  m \;=\; A_{\mathrm{sector}}\;\phiG^{\,r+\mathrm{gap}(Z)-8},
+  \qquad A_{\mathrm{sector}} = 2^{B}\,\Ecoh\,\phiG^{r_0},
+\]
+where the explicit \(-8\) offset encodes an octave-closure reference rather than an arbitrary normalization. We emphasize claim hygiene throughout: the Octave kernel content is certified in \Lean{}, while the spectrum model is presented as a falsifiable hypothesis evaluated against external measurements.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:introduction}
+
+\subsection{The problem: accurate dynamics, unexplained masses}
+The Standard Model (SM) provides an extraordinarily successful account of particle interactions. However, it remains structurally incomplete in a specific and familiar way: the values of the fermion masses are not derived from the theory’s internal logic. Instead, they enter through Yukawa couplings that are set by measurement. From the standpoint of explanation, this is a ``why''-gap: the theory tells us how to propagate given masses, but not why those masses (and their ratios across generations and sectors) are what they are.
+
+This paper explores a route to a different kind of explanation. Rather than beginning with a continuous field-theoretic mechanism whose parameters are then fitted, we begin with a discrete closure principle: stable objects correspond to patterns that \emph{close} under a minimal, ledger-compatible update rule. The central question is:
+\begin{quote}
+\emph{If physical stability is a discrete closure constraint, what discrete structure forces the observed mass hierarchy?}
+\end{quote}
+
+\subsection{The Octave System in one paragraph}
+The Octave System is a small set of concepts intended to make cross-domain structural claims both \emph{stateable} and \emph{auditable}. At its core is the observation that many discrete models can be presented as:
+(i) a state space, (ii) an 8-phase clock \(\Fin{8}\), (iii) a one-tick step function, and optionally (iv) an admissibility predicate and a cost/strain functional. In the implementation, this is the \path{OctaveKernel.Layer} interface with the predicate \path{StepAdvances} expressing ``phase advances by one (mod 8)''.
+
+The Octave System then adds a disciplined way to relate such models via \emph{bridges}: structure-preserving maps that keep phases aligned and commute with the step function. The payoff is simple but powerful: once phase-alignment is established, it is automatically preserved under iteration, allowing phase-based invariants to be transported across domains when the relevant bridge hypotheses hold.
+
+\subsection{Why eight ticks? Gray adjacency and ledger atomicity}
+An 8-phase clock is only meaningful if it is not an arbitrary choice of period. The implementation used here singles out an 8-cycle with an additional property: consecutive phases differ by exactly one bit in a 3-bit representation (Gray adjacency). Intuitively, this matches an ``atomic update'' story: each fundamental tick changes only one ledger-parity coordinate. Formally, the repo provides:
+\begin{itemize}
+  \item a concrete Gray-8 witness (an explicit 8-cycle over 3-bit patterns with one-bit adjacency), and
+  \item ledger-to-adjacency bridge statements showing that ``one posting per tick'' implies one-bit parity changes.
+\end{itemize}
+These are the paper’s structural anchors for the Octave cadence.
+
+\subsection{Masses as \texorpdfstring{$\phiG$}{phi}-ladder rungs with an octave reference}
+The mass framework studied here is built around a simple organizing claim: privileged scales (including particle masses, in suitable units) fall on discrete rungs of a \(\phiG\)-ladder. Concretely, the model defines a coherence unit \(\Ecoh=\phiG^{-5}\) and sector yardsticks of the form \(A_{\mathrm{sector}}=2^{B}\Ecoh\,\phiG^{r_0}\), then assigns each species a rung \(r\) and a charge-derived geometric residue \(\mathrm{gap}(Z)\). The resulting predictor is
+\[
+  m \;=\; A_{\mathrm{sector}}\;\phiG^{\,r+\mathrm{gap}(Z)-8}.
+\]
+The presence of the explicit \(-8\) offset is the distinctive point where the Octave System meets the mass model: it encodes a choice of reference aligned to an octave closure boundary (one full 8-tick cycle), rather than an arbitrary ``zero of exponent''.
+
+\subsection{Claim hygiene and scope (what this paper is and is not)}
+This paper separates three kinds of statements:
+\begin{itemize}
+  \item \textbf{Certified structural content (THEOREM/CERT).} These are purely mathematical claims about the Octave kernel, Gray-8 adjacency, and bridge calculus that are checked by \Lean{} in this repository.
+  \item \textbf{Model definitions (MODEL).} These are explicit, parameterized definitions used to compute a mass spectrum (e.g., coherence unit, sector yardsticks, rung tables, and \(\mathrm{gap}(Z)\)).
+  \item \textbf{Empirical hypotheses (HYPOTHESIS).} These are claims that the model captures physical reality (e.g., ``masses land near the ladder’’). Such claims must be paired with clear falsification criteria and are assessed against external measurements (e.g.\ PDG values) which are \emph{not} used as inputs to the structural predictor.
+\end{itemize}
+Accordingly, this paper does not claim that the full physical mass spectrum is ``proved'' in \Lean{}. It claims (i) that the Octave kernel is well-defined and certified at the structural level, and (ii) that the mass-law model is explicit, reproducible, and falsifiable.
+
+\subsection{Contributions}
+The paper makes four concrete contributions.
+\begin{enumerate}
+  \item \textbf{A minimal Octave kernel with a certified Gray-8 anchor.} We present the Octave layer/bridge interface and point to the certified Gray-8 witness and alignment theorems.
+  \item \textbf{A transparent mass predictor tied to octave closure.} We state the mass-law model exactly as implemented, highlighting the octave-reference \(-8\) exponent offset.
+  \item \textbf{An auditable methodology for cross-domain structure.} We make explicit what is definition, what is theorem, and what is empirical hypothesis, and we indicate how falsifiers attach to hypotheses.
+  \item \textbf{A reproducible evaluation harness.} We provide a clear route to reproduce the spectrum comparison from a species list and a single audit script.
+\end{enumerate}
+
+\subsection{Paper organization}
+Section~\ref{sec:octave} defines the Octave System and summarizes the certified Gray-8 and bridge results used in this paper. Section~\ref{sec:masses} presents the particle-mass framework (coherence unit, sector yardsticks, rungs, and the charge-index residue). Section~\ref{sec:why} provides the conceptual account of why the Octave cadence makes the ladder structure more fundamental than a free-parameter fit. Section~\ref{sec:examples} gives worked examples and sanity checks. Section~\ref{sec:tests} lists empirical commitments and falsifiers, and Section~\ref{sec:repro} describes reproducibility in the repository.
+
+% ---------------------------------------------------------------------------
+% The rest of the paper will be written next (from the saved outline).
+% ---------------------------------------------------------------------------
+
+\section{The Octave System (Definitions and Certified Anchors)}
+\label{sec:octave}
+
+This section summarizes the Octave System at the level needed for the mass-spectrum discussion. The emphasis is on (i) minimal definitions, (ii) certified mathematical anchors for ``why 8'', and (iii) a clean bridge from a ledger-style ``atomic update'' constraint to Gray-style one-bit adjacency.
+
+\subsection{The OctaveKernel: layers, phase advancement, and bridges}
+\label{sec:octave:kernel}
+
+\paragraph{Definition (Phase).}
+The Octave kernel fixes a canonical phase type
+\[
+  \mathrm{Phase} := \Fin{8},
+\]
+so phase addition is automatically taken modulo \(8\). In the repository this is defined as \path{IndisputableMonolith/OctaveKernel/Basic.lean} (\path{OctaveKernel.Phase}).
+
+\paragraph{Definition (Layer).}
+An \emph{octave layer} packages the primitives of an 8-phase discrete dynamical system:
+\begin{itemize}
+  \item a state space \(S\),
+  \item a phase map \(\mathrm{phase}:S\to\Fin{8}\),
+  \item a one-step evolution map \(\mathrm{step}:S\to S\),
+  \item and optional bookkeeping: a cost/strain map \(\mathrm{cost}:S\to\mathbb{R}\) and an admissibility predicate \(\mathrm{admissible}:S\to\mathrm{Prop}\).
+\end{itemize}
+This is the structure \path{OctaveKernel.Layer}.
+
+\paragraph{Predicate (StepAdvances).}
+The central clock constraint is:
+\[
+  \forall s\in S,\qquad \mathrm{phase}(\mathrm{step}(s)) \;=\; \mathrm{phase}(s) + 1 \quad\text{in }\Fin{8}.
+\]
+In Lean this is \path{OctaveKernel.Layer.StepAdvances}. When \path{StepAdvances} holds, each application of \path{step} advances the clock by one beat, and eight iterations return to the same phase automatically because arithmetic in \(\Fin{8}\) is mod 8.
+
+\paragraph{Definition (Bridge).}
+To connect layers, the Octave kernel defines a typed \emph{bridge} between two layers \(L_1\) and \(L_2\). A bridge consists of a map of states
+\[
+  f : S_1 \to S_2
+\]
+that (i) preserves phase and (ii) commutes with stepping:
+\[
+  \mathrm{phase}_2(f(s))=\mathrm{phase}_1(s),
+  \qquad
+  f(\mathrm{step}_1(s))=\mathrm{step}_2(f(s)).
+\]
+This is \path{OctaveKernel.Bridge} in \path{IndisputableMonolith/OctaveKernel/Bridges/Basic.lean}, with certified identity and composition laws (\path{Bridge.id}, \path{Bridge.comp}) and theorems that bridges commute with iterated stepping (\path{Bridge.map\_iterate}, \path{Bridge.phase\_iterate}).
+
+\paragraph{Alignment and synchronization (certified).}
+The kernel also provides a phase-only ``hub'' layer and an alignment relation. Two states \(s_1\in S_1\) and \(s_2\in S_2\) are \emph{aligned} if their phases match:
+\[
+  \mathrm{phase}_1(s_1)=\mathrm{phase}_2(s_2).
+\]
+If both layers satisfy \path{StepAdvances}, alignment is preserved by stepping both systems, and therefore by iterating both steps the same number of times. This is certified in \path{IndisputableMonolith/OctaveKernel/Bridges/PhaseHub.lean} via \path{Bridges.aligned\_step} and \path{Bridges.aligned\_iterate}. The conceptual consequence is simple: once two systems are phase-aligned, the Octave clock keeps them aligned under their native dynamics, without requiring any additional domain assumptions.
+
+\subsection{Why eight? The Gray-8 witness (adjacency-aware, machine-checked)}
+\label{sec:octave:gray8}
+
+\paragraph{From ``covering 3-bit contexts'' to a structured 8-cycle.}
+At the purely counting level, a 3-bit context space has \(2^3=8\) states. The repo includes a basic theorem that there exists a length-8 complete cover (a surjection) from \(\Fin{8}\) onto the 3-bit pattern space; this is \path{IndisputableMonolith/Patterns.lean} (\path{Patterns.period\_exactly\_8}). However, a surjection alone does not encode the ``atomic'' idea that each tick changes only one coordinate.
+
+\paragraph{One-bit adjacency (Gray condition).}
+To capture atomicity, we strengthen the structure: two patterns are adjacent if they differ in exactly one bit (Hamming distance 1). The repo formalizes this as \path{Patterns.OneBitDiff} in \path{IndisputableMonolith/Patterns/GrayCycle.lean}.
+
+\paragraph{Gray-8 cycle over 3-bit patterns (THEOREM/CERT).}
+The key certified anchor for ``why 8'' in this paper is an explicit Gray cycle of period 8 over 3-bit patterns. Concretely, there is a function
+\[
+  \mathrm{patternAtPhase} : \Fin{8} \to \{0,1\}^3
+\]
+such that:
+\begin{enumerate}
+  \item \(\mathrm{patternAtPhase}\) is surjective (every 3-bit pattern appears), and
+  \item consecutive phases are one-bit adjacent, including wrap-around: for all \(t\in\Fin{8}\),
+  \[
+    \mathrm{patternAtPhase}(t)\ \text{and}\ \mathrm{patternAtPhase}(t+1)\ \text{differ in exactly one bit.}
+  \]
+\end{enumerate}
+In Lean, the explicit witness is constructed in \path{IndisputableMonolith/Patterns/GrayCycle.lean} (see \path{Patterns.grayCycle3Path}, \path{Patterns.grayCycle3\_surjective}, \path{Patterns.grayCycle3\_oneBit\_step}). A paper-facing bundle re-exports the core facts as \path{IndisputableMonolith/Octave/Theorem.lean}, including \path{patternAtPhase\_surjective} and \path{patternAtPhase\_oneBit\_step}.
+
+\paragraph{Concrete Gray order (for intuition).}
+The canonical Gray-8 cycle used in the repository traverses the 3-bit patterns in the order
+\[
+  000,\ 001,\ 011,\ 010,\ 110,\ 111,\ 101,\ 100,
+\]
+where each step flips exactly one bit (and the final-to-first step flips exactly one bit as well).
+
+\subsection{Ledger atomicity \texorpdfstring{$\Rightarrow$}{=>} Gray adjacency (bridge surface)}
+\label{sec:octave:ledgerbridge}
+
+\paragraph{What is proved, and what is assumed.}
+The Octave kernel itself is domain-agnostic. To connect it to a ledger interpretation, we consider an explicit ledger model in which each tick performs a \emph{single posting}. The ``single posting per tick'' rule is formalized as a predicate called \path{PostingStep}. Treating \path{PostingStep} as the step rule is a \textbf{modeling assumption} about the ledger’s micro-dynamics; given that assumption, the Gray-adjacency consequence below is a \textbf{theorem}.
+
+\paragraph{Theorem (PostingStep implies one-bit parity adjacency).}
+Let \(L\) and \(L'\) be consecutive ledger states. If \path{PostingStep} holds between \(L\) and \(L'\), then the observed parity vector changes in exactly one coordinate:
+\[
+  \text{\path{PostingStep}}(L,L') \;\Rightarrow\;
+  \text{\path{OneBitDiff}}(\mathrm{parity}(L),\mathrm{parity}(L')).
+\]
+This is the exported theorem \path{Octave.LedgerBridge.postingStep\_implies\_grayAdj} in \path{IndisputableMonolith/Octave/LedgerBridge.lean} (wrapping the underlying \path{LedgerPostingAdjacency.postingStep\_oneBitDiff}). The role of this result in the paper is narrow and precise: it formalizes the idea that an atomic ledger tick induces a one-bit adjacency constraint on an appropriate parity observation, which matches the Gray-style adjacency condition used to motivate the canonical 8-cycle.
+
+\paragraph{Summary: what Part~\ref{sec:octave} gives us.}
+At this point we have a clean structural package:
+\begin{itemize}
+  \item an auditable definition of an 8-phase discrete dynamics (Layer + StepAdvances),
+  \item a certified Gray-8 cover of 3-bit contexts (surjective + one-bit adjacency),
+  \item and a conditional bridge from ``one posting per tick'' ledger dynamics to Gray adjacency.
+\end{itemize}
+The remainder of the paper will use this package in exactly one way: as the structural reason that ``rung'' coordinates and \(-8\) octave references are natural rather than arbitrary in the mass-spectrum model.
+
+\section{The Particle Mass Framework (Model Layer)}
+\label{sec:masses}
+
+This section states the particle-mass framework \emph{exactly as implemented} in the repository. The intent here is not to argue for the model’s physical truth (that is an empirical question), but to make the model explicit, reproducible, and auditable.
+
+\subsection{The mass law in the repository (MODEL)}
+\label{sec:masses:masslaw}
+
+\paragraph{Model-layer convention (dimensionless core).}
+The core spectrum model is written in a dimensionless ``RS unit'' layer where the golden ratio \(\phiG\) is the base scale factor and the coherence unit is
+\[
+  \Ecoh := \phiG^{-5}.
+\]
+In Lean this is \path{IndisputableMonolith/Masses/Anchor.lean} (\path{Masses.Anchor.E\_coh}) with \(\phiG\) realized as \path{Constants.phi}. Numerical display in eV/MeV is a \emph{separate bridge choice} (see \path{docs/Mass-From-Light-Memo.tex} for the unit bookkeeping story).
+
+\paragraph{Sector yardstick.}
+Each sector \(s\) (leptons, up-quarks, down-quarks, electroweak) carries two sector-global parameters:
+\begin{itemize}
+  \item an integer ``binary gauge'' \(B_s\) used as a power-of-two prefactor \(2^{B_s}\), and
+  \item an integer offset \(r_{0,s}\) used as a \(\phiG\)-power baseline.
+\end{itemize}
+The sector yardstick is then
+\[
+  A_s \;:=\; 2^{B_s}\,\Ecoh\,\phiG^{r_{0,s}}.
+\]
+In Lean this is \path{Masses.Anchor.yardstick}.
+
+\paragraph{Rung and residue.}
+Each particle species is assigned:
+\begin{itemize}
+  \item an integer rung \(r\in\mathbb{Z}\), and
+  \item a charge-derived real-valued residue \(\mathrm{gap}(Z)\), defined in \S\ref{sec:masses:gap}.
+\end{itemize}
+The canonical predictor in the repo is then:
+\begin{equation}
+  \boxed{
+  m \;=\; A_s\;\phiG^{\,r + \mathrm{gap}(Z) - 8}.
+  }
+  \label{eq:mass-law}
+\end{equation}
+In Lean this is \path{Masses.AnchorPolicy.predict\_mass} in \path{IndisputableMonolith/Masses/AnchorPolicy.lean}. The exponent is a real number because \(\mathrm{gap}(Z)\) is real; in Lean the \(\phiG^{(\cdot)}\) here is the real-power operation (not restricted to integer exponents).
+
+\paragraph{Octave signature: the \(-8\) offset.}
+Equation~\eqref{eq:mass-law} includes an explicit \(-8\) offset in the exponent. Within this paper’s framing, this is the point of contact with the Octave System: the mass display is referenced to an \emph{octave-closure boundary} (one full 8-tick cycle) rather than choosing the ``zero of rung'' arbitrarily.
+We treat this \(-8\) as part of the model definition, and later (Section~\ref{sec:why}) we explain why an octave-closure reference is structurally natural once the Octave kernel is adopted.
+
+\subsection{Sector parameters and rung tables (MODEL)}
+\label{sec:masses:tables}
+
+\paragraph{Sector parameters in the current model.}
+The model uses the following sector-global parameters (\path{Masses.Anchor.B\_pow} and \path{Masses.Anchor.r0} in \path{IndisputableMonolith/Masses/Anchor.lean}):
+\begin{center}
+\begin{tabular}{lcc}
+\hline
+\textbf{Sector} & \(\mathbf{B_s}\) (so prefactor \(2^{B_s}\)) & \(\mathbf{r_{0,s}}\) \\
+\hline
+Lepton & \(-22\) & \(62\) \\
+UpQuark & \(-1\) & \(35\) \\
+DownQuark & \(23\) & \(-5\) \\
+Electroweak & \(1\) & \(55\) \\
+\hline
+\end{tabular}
+\end{center}
+
+\paragraph{Rung tables in the current model.}
+The rung \(r\) is an integer lookup by particle name string (Lean: \path{Masses.Integers.r\_lepton}, \path{r\_up}, \path{r\_down}, \path{r\_boson} in \path{IndisputableMonolith/Masses/Anchor.lean}). For the charged spectrum tracked in \path{data/masses.json}, the current tables are:
+\begin{center}
+\begin{tabular}{lll}
+\hline
+\textbf{Sector} & \textbf{Particle} & \(\mathbf{r}\) \\
+\hline
+Lepton & \(e\) & \(2\) \\
+Lepton & \(\mu\) & \(13\) \\
+Lepton & \(\tau\) & \(19\) \\
+\hline
+UpQuark & \(u\) & \(4\) \\
+UpQuark & \(c\) & \(15\) \\
+UpQuark & \(t\) & \(21\) \\
+\hline
+DownQuark & \(d\) & \(4\) \\
+DownQuark & \(s\) & \(15\) \\
+DownQuark & \(b\) & \(21\) \\
+\hline
+Electroweak & \(W\), \(Z\), \(H\) & \(1\) \\
+\hline
+\end{tabular}
+\end{center}
+As presented here, these are \textbf{model inputs} (explicit table definitions). A separate question—addressed in Section~\ref{sec:why}—is whether these rungs can be reconstructed from deeper structural data (e.g., torsion and word-length constructors) rather than taken as lookup tables.
+
+\subsection{Charge indexing and the gap function \texorpdfstring{$\mathrm{gap}(Z)$}{gap(Z)} (MODEL)}
+\label{sec:masses:gap}
+
+\paragraph{Charge map.}
+The model associates each species name with a rational charge \(Q\) (Lean: \path{Masses.chargeMap} in \path{IndisputableMonolith/Masses/AnchorPolicy.lean}), using the standard assignments
+\[
+Q(e)=Q(\mu)=Q(\tau)=-1,\quad
+Q(u)=Q(c)=Q(t)=\tfrac{2}{3},\quad
+Q(d)=Q(s)=Q(b)=-\tfrac{1}{3},\quad
+Q(W)=Q(Z)=Q(H)=0.
+\]
+
+\paragraph{Integerization and \(Z\)-index.}
+Define \(\widetilde{Q}:=6Q\). For the standard charges above, \(\widetilde{Q}\in\mathbb{Z}\). The model then defines an integer index \(Z\) by sector:
+\[
+Z =
+\begin{cases}
+\widetilde{Q}^{2}+\widetilde{Q}^{4}, & \text{leptons},\\[2pt]
+4+\widetilde{Q}^{2}+\widetilde{Q}^{4}, & \text{quarks},\\[2pt]
+0, & \text{electroweak sector in this model}.
+\end{cases}
+\]
+In Lean this is \path{Masses.ChargeIndex.Z} in \path{IndisputableMonolith/Masses/Anchor.lean}.
+
+\paragraph{Gap function.}
+The geometric residue used in the predictor is the real-valued function
+\begin{equation}
+  \mathrm{gap}(Z) \;:=\; \frac{\ln\!\left(1+\dfrac{Z}{\phiG}\right)}{\ln(\phiG)}.
+  \label{eq:gap}
+\end{equation}
+In Lean this is \path{Masses.AnchorPolicy.gap}. In the electroweak sector (where \(Z=0\) in the current model), \(\mathrm{gap}(Z)=0\), so the prediction reduces to a pure yardstick-and-rung form \(m=A_s\,\phiG^{r-8}\).
+
+\paragraph{Putting it together (one-line implementation summary).}
+The repository’s canonical mass predictor can be summarized as:
+\[
+  \texttt{predict\_mass(sector, name)}
+  \;=\;
+  \texttt{yardstick(sector)}\cdot \phiG^{\,\texttt{rung(sector,name)}+\texttt{gap(sector,name)}-8},
+\]
+implemented in \path{IndisputableMonolith/Masses/AnchorPolicy.lean}. This expression is the starting point for any empirical evaluation, sensitivity analysis, or attempts to replace lookup tables by derived constructors.
+
+\section{Why the Octave Provides a More Fundamental Explanation}
+\label{sec:why}
+
+This section explains, in plain terms, what the Octave System adds to the mass model. The mass law of Section~\ref{sec:masses} is a \emph{definition} in the repository; the question here is why an octave-closure reference and a rung coordinate are natural ingredients, and in what sense that yields a ``more fundamental'' account than free Yukawa parameters.
+
+\subsection{From free Yukawas to forced closures}
+\label{sec:why:closures}
+
+\paragraph{What is being explained.}
+In the Standard Model, fermion masses arise from Yukawa couplings. Those couplings are continuous parameters that are not derived from the gauge structure or spacetime symmetry; they are determined by measurement. In other words, the SM treats the mass spectrum as \emph{input data} constrained only indirectly (e.g., by renormalization consistency).
+
+\paragraph{Octave viewpoint (conceptual).}
+The Octave System encodes a different explanatory template:
+\begin{quote}
+\emph{Stable objects correspond to patterns that remain admissible and recur under a minimal discrete update rule.}
+\end{quote}
+The Octave kernel isolates the discrete part of this statement: an admissible dynamical system with a phase clock in \(\Fin{8}\) and a one-tick step rule. What the kernel certifies is that if dynamics is ``clock-advancing'' (\path{StepAdvances}), then phase-based alignment and phase-based invariants have a clean propagation theory (Section~\ref{sec:octave}).
+
+\paragraph{Why this matters for masses.}
+Mass is a measure of a stable entity’s characteristic energy scale. The Octave template suggests that such scales should be organized by \emph{closure conditions}: values singled out by recurrence or neutrality constraints over a fundamental cycle. Once ``eight ticks'' is the canonical cycle length, it is no longer natural to choose an arbitrary origin for scale coordinates; the natural origins are the phase-closure boundaries.
+
+\subsection{Rungs as a scale coordinate and the role of the \texorpdfstring{$-8$}{-8} reference}
+\label{sec:why:rungs}
+
+\paragraph{Rungs are the discrete content of the model.}
+The mass law of Section~\ref{sec:masses:masslaw} is fundamentally a statement about \emph{scale quantization}:
+\[
+  r \mapsto r+1 \quad \Longleftrightarrow \quad m \mapsto m\cdot \phiG.
+\]
+That is, the rung coordinate \(r\) is the integer part of a log-\(\phiG\) scale coordinate. This is the sense in which the model is ``discrete'': it replaces continuous per-species coupling parameters by discrete rungs and discrete sector parameters.
+
+\paragraph{Why an octave reference is natural.}
+The Octave kernel gives a canonical ``block size'' for recurrence-based definitions: 8 ticks. Any quantity whose definition involves ``phase neutrality at a boundary'' or ``closure after a full cycle'' will naturally be referenced to the end of an 8-tick block. In the mass predictor, this appears explicitly as the \(-8\) offset in the exponent:
+\[
+  m \;=\; A_s\,\phiG^{\,r+\mathrm{gap}(Z)-8}.
+\]
+Operationally, \(-8\) fixes the ``zero'' of the exponent to an octave-closure boundary. Without a canonical closure length, such offsets are arbitrary conventions; with a canonical closure length, they are the natural place to anchor definitions.
+
+\paragraph{Claim hygiene.}
+In the repository, the \(-8\) is part of the model definition (\path{Masses.AnchorPolicy.predict\_mass}). The Octave kernel does not, by itself, \emph{force} the choice \(-8\); rather, it supplies the structural reason why an octave boundary is the privileged reference point once one adopts an eight-tick cadence as the primitive clock.
+
+\subsection{Generation structure: torsion offsets and forced \texorpdfstring{$\phiG$}{phi}-power ratios}
+\label{sec:why:generations}
+
+\paragraph{A compression of the rung tables.}
+The rung tables of Section~\ref{sec:masses:tables} exhibit a striking regularity across charged fermions:
+\begin{itemize}
+  \item within each sector, the generation gaps are \(\Delta r = 11\) (gen2--gen1) and \(\Delta r = 6\) (gen3--gen2), hence \(\Delta r = 17\) (gen3--gen1);
+  \item the same differences appear in leptons (\(13-2=11\), \(19-13=6\)), up quarks (\(15-4=11\), \(21-15=6\)), and down quarks (\(15-4=11\), \(21-15=6\)).
+\end{itemize}
+This suggests that rungs factor as
+\[
+  r(\text{sector},\text{generation}) \;=\; r_{\mathrm{base}}(\text{sector}) + \tau(\text{generation}),
+\]
+with a \emph{sector base rung} and a \emph{generation torsion offset} \(\tau\).
+
+\paragraph{Certified structure: torsion differences determine ratio exponents.}
+The repository packages precisely this idea in \path{IndisputableMonolith/RecogSpec/RSLedger.lean}. There, a canonical torsion function
+\[
+  \tau \in \{0,11,17\}
+\]
+is defined, and one proves that rung differences between generations are exactly the corresponding torsion differences. Consequently, if masses scale as \(\phiG^{r}\) at leading order, then \emph{mass ratios are forced \(\phiG\)-powers}:
+\[
+  \frac{m_{2}}{m_{1}}=\phiG^{11},\qquad
+  \frac{m_{3}}{m_{2}}=\phiG^{6},\qquad
+  \frac{m_{3}}{m_{1}}=\phiG^{17}.
+\]
+This fact is certified as arithmetic and structural propagation of the torsion function:
+\begin{itemize}
+  \item \path{IndisputableMonolith/RecogSpec/RSLedger.lean} (see \path{generationTorsion}, \path{torsionDiff}, and \path{massRatioFromRungs}),
+  \item \path{IndisputableMonolith/Verification/GenerationTorsionCert.lean} (packs the core equalities), and
+  \item \path{IndisputableMonolith/Verification/RSStructuralDerivationCert.lean} (bundles torsion + other structural observables into one certificate).
+\end{itemize}
+
+\paragraph{Where do 11 and 17 come from?}
+At the purely combinatorial level, the repository also certifies that for \(D=3\) (cube geometry) one has:
+\begin{itemize}
+  \item 8 vertices (\(2^3\)),
+  \item 12 edges (\(3\cdot 2^{2}\)),
+  \item 6 faces (\(2D\)),
+  \item and a derived ``passive edge'' count \(11=12-1\),
+  \item together with the crystallographic constant \(17\) (wallpaper groups).
+\end{itemize}
+These facts are packaged in \path{IndisputableMonolith/Verification/CubeGeometryCert.lean}. In this paper we use them only as \emph{structural provenance} for the integers that appear in torsion and residue arithmetic. The mapping from these integers to a unique, unavoidable generation-torsion mechanism is a deeper claim that may require additional derivation work; we therefore treat \(\tau=\{0,11,17\}\) as canonical structural data in the current certificate surface.
+
+\subsection{In what sense is this ``more fundamental''?}
+\label{sec:why:fundamental}
+
+\paragraph{Fewer independent knobs (and different kinds of knobs).}
+Compared to the SM Yukawa layer, the spectrum model replaces per-species continuous parameters with:
+\begin{itemize}
+  \item sector-global integers \(B_s\) and \(r_{0,s}\),
+  \item a small discrete rung structure (which appears to factor into base rung + torsion),
+  \item and a single charge-indexed residue rule \(\mathrm{gap}(Z)\).
+\end{itemize}
+Even when rung assignments are provided as a table (as in the current implementation), the model’s content is qualitatively different: most of the structure is discrete and shared across families, so ``why this mass'' becomes ``why this rung / why this residue'' rather than ``why this floating-point parameter''.
+
+\paragraph{Reusable explanation template.}
+The Octave kernel is not a particle-physics-only gadget: it is a general framework for stating and transporting phase-based invariants across domains (Section~\ref{sec:octave}). In that sense, the mass spectrum is being explained as one instance of a general class:
+\begin{quote}
+\emph{spectra arise from closure constraints on an eight-tick clock, expressed in a preferred log-scale coordinate.}
+\end{quote}
+
+\paragraph{Falsifiability is built in.}
+Because the structural layer (Octave kernel, Gray adjacency, bridge calculus) is separable from the empirical layer (which phenomena actually land on the ladder), the theory can be falsified cleanly:
+\begin{itemize}
+  \item If the eight-tick/Gray adjacency story is wrong, it fails as a structural model of atomic updates (bridge assumptions become empirically false).
+  \item If the \(\phiG\)-ladder hypothesis is wrong, privileged scales will not cluster near rungs under any reasonable tolerance.
+  \item If the residue rule is wrong, a systematic mismatch will appear in the charge-indexed corrections.
+\end{itemize}
+The next section makes these commitments explicit.
+
+\section{Worked Examples and Sanity Checks}
+\label{sec:examples}
+
+This section illustrates how the mass framework behaves in the simplest cases. The goal is not to present a complete global fit, but to show what parts of the framework are (i) purely discrete, (ii) cancellation-stable (i.e., independent of unit conventions), and (iii) transparently checkable against data.
+
+\subsection{Charged leptons: rung differences and near-integer \texorpdfstring{$\log_{\phiG}$}{log\_phi} gaps}
+\label{sec:examples:leptons}
+
+\paragraph{Key simplification: same charge implies the same gap term.}
+In the model of Section~\ref{sec:masses}, all charged leptons share the same charge \(Q=-1\), hence the same integerized \(\widetilde{Q}=6Q=-6\), and therefore the same \(Z\) and the same \(\mathrm{gap}(Z)\). As a result, \(\mathrm{gap}(Z)\) cancels in \emph{within-sector} ratios. For leptons, the mass law therefore predicts the leading-order ratio identity:
+\[
+  \frac{m(\mu)}{m(e)} = \phiG^{\,r_\mu-r_e},\qquad
+  \frac{m(\tau)}{m(\mu)} = \phiG^{\,r_\tau-r_\mu},\qquad
+  \frac{m(\tau)}{m(e)} = \phiG^{\,r_\tau-r_e}.
+\]
+This statement is ``unitless'': it depends only on ratios, so it is insensitive to whether one quotes masses in MeV, GeV, or eV.
+
+\paragraph{What the data says (sanity check).}
+Using PDG-style reference masses (as listed in \path{data/masses.json}), the implied \(\phiG\)-log gaps are:
+\[
+  \Delta_{ij} \;:=\; \log_{\phiG}\!\left(\frac{m_i}{m_j}\right)
+  \;=\;
+  \frac{\ln(m_i/m_j)}{\ln(\phiG)}.
+\]
+Table~\ref{tab:lepton-ratios} shows that these inferred exponents are close to the integer differences encoded by the rung table \(r_e=2\), \(r_\mu=13\), \(r_\tau=19\).
+
+\begin{table}[t]
+\centering
+\begin{tabular}{lrrrrr}
+\hline
+\textbf{Ratio} & \textbf{Observed} & \(\boldsymbol{\log_{\phiG}}\) & \textbf{Nearest int.} & \textbf{Pred.} \(\boldsymbol{\phiG^n}\) & \textbf{Abs.\ rel.\ err.} \\
+\hline
+\(\mu/e\) & 206.7683 & 11.0795 & 11 & 199.0050 & 3.75\% \\
+\(\tau/\mu\) & 16.8170 & 5.8652 & 6 & 17.9443 & 6.70\% \\
+\(\tau/e\) & 3477.2283 & 16.9447 & 17 & 3571.0003 & 2.70\% \\
+\hline
+\end{tabular}
+\caption{Charged-lepton ratios: observed ratios (from \path{data/masses.json}) compared to the nearest integer rung differences and the corresponding \(\phiG\)-power predictions. The inferred \(\log_{\phiG}\) exponents are close to integers (11, 6, 17), motivating the rung-based model as a discrete backbone with additional corrections.}
+\label{tab:lepton-ratios}
+\end{table}
+
+\paragraph{Interpretation (what this example is and is not).}
+Table~\ref{tab:lepton-ratios} supports a modest but important claim: the lepton hierarchy is approximately organized by a discrete \(\phiG\)-ladder coordinate. The fact that \(\log_{\phiG}(m_\mu/m_e)\) is close to \(11\), and \(\log_{\phiG}(m_\tau/m_\mu)\) is close to \(6\), is the empirical signature one would expect if integer rungs are the dominant organizing principle and non-integer corrections enter at a secondary level (e.g., transport/radiative effects). In the present paper we keep the mass framework minimal; the main point is that the \emph{integer rung skeleton} is legible and testable at the level of unitless ratios.
+
+\begin{figure}[t]
+\centering
+\fbox{\begin{minipage}{0.92\linewidth}\vspace{1.15in}\end{minipage}}
+\caption{Planned figure (schematic): charged-lepton rungs on a log-\(\phiG\) axis with octave boundaries indicated at multiples of 8. The purpose is to visualize the ``octave reference'' idea: closure boundaries provide natural anchors for rung coordinates.}
+\label{fig:lepton-rungs}
+\end{figure}
+
+\subsection{Quarks: shared rung pattern, sector yardsticks, and why transport matters}
+\label{sec:examples:quarks}
+
+\paragraph{Shared rung pattern across up/down sectors (MODEL structure).}
+The current model assigns the same generation rung pattern to both up-type and down-type quarks:
+\[
+  (r_u, r_c, r_t) = (4,15,21),\qquad (r_d, r_s, r_b) = (4,15,21),
+\]
+so the generation differences are again \(\Delta r = 11\) and \(\Delta r = 6\). This is visible directly in the lookup tables \path{Masses.Integers.r\_up} and \path{Masses.Integers.r\_down} in \path{IndisputableMonolith/Masses/Anchor.lean}.
+
+\paragraph{Same charge implies same \(\mathrm{gap}(Z)\) within each quark sector.}
+All up-type quarks share charge \(Q=2/3\), hence share the same \(Z\) and \(\mathrm{gap}(Z)\) within the model; likewise all down-type quarks share charge \(Q=-1/3\). Therefore, at a fixed comparison scheme/scale where a common ``mass'' notion is meaningful, the same cancellation logic as for leptons applies: \(\mathrm{gap}(Z)\) cancels in within-sector ratios, and the rung differences govern the leading \(\phiG\)-power.
+
+\paragraph{Why this is not a direct ``PDG ratio test'' for quarks.}
+Unlike charged leptons, PDG quark masses are typically quoted as \emph{running masses} in specific renormalization schemes and at different reference scales. Ratios such as \(m_t/m_c\) constructed from heterogeneous scheme/scale conventions are therefore not meaningful tests of a simple rung ratio rule without a transport step. This motivates the ``single evaluation point + transport'' policy found throughout the broader RS mass discussions: compare predictions at a fixed reference scale, then transport to experimental conventions using standard-model running. In this short paper we keep the worked numeric example focused on leptons (where the ratio test is clean), and we treat quark-sector transport as part of the next layer of development.
+
+\paragraph{Optional deepening (separate hypothesis surface).}
+The repository also contains a more specialized quark-mass module that explores \emph{quarter-rung} placements as a hypothesis (\path{IndisputableMonolith/Physics/QuarkMasses.lean}). This is a distinct modeling choice from the integer-rung tables used in Section~\ref{sec:masses}; a full paper would either (i) unify these viewpoints or (ii) present them as alternative hypotheses with clear comparison protocols.
+
+\subsection{Box: ``mass from light'' in standard relativity vs.\ the \texorpdfstring{$\phiG$}{phi}-ladder model}
+\label{sec:examples:mass-from-light}
+
+\begin{center}
+\fbox{\begin{minipage}{0.95\linewidth}
+\textbf{Clarification (terminology).} In standard special relativity, a single photon is massless, but a \emph{system} of radiation can carry nonzero invariant mass. For any isolated system with total energy \(E\) and total momentum magnitude \(p\),
+\[
+  M^2c^4 = E^2 - (pc)^2.
+\]
+In particular, confined radiation in its rest frame has \(p=0\), so its mass increment is \(\Delta M = E_{\mathrm{rad}}/c^2\).
+
+\medskip
+\textbf{How the present model uses the phrase.} In the spectrum model of Section~\ref{sec:masses}, one quotes masses in energy units (``\(mc^2\) in eV/MeV''), and organizes those values as a coherence-linked quantum \(\Ecoh\) times discrete \(\phiG\)-rungs. In that sense, the mass spectrum is treated as ``made of'' a light-linked energy unit times a discrete ladder coordinate. See \path{docs/Mass-From-Light-Memo.tex} for the extended unit-bridge discussion and ``no-mixing'' cautions between different display conventions.
+\end{minipage}}
+\end{center}
+
+\section{Empirical Commitments and Falsifiers}
+\label{sec:tests}
+
+This section states the empirical commitments implied by the spectrum model, and gives falsifiers in a form that can be preregistered. The key principle is to separate:
+(i) \emph{structural} claims (certified in \Lean{}), from
+(ii) \emph{empirical} claims (about what the world does).
+
+\subsection{The \texorpdfstring{$\phiG$}{phi}-ladder commitment (HYPOTHESIS)}
+\label{sec:tests:philadder}
+
+\paragraph{Hypothesis (privileged scales land near rungs).}
+The \(\phiG\)-ladder hypothesis asserts that a designated class of physical scales (here: particle masses, evaluated in a consistent convention) concentrate near a discrete set of rung coordinates. In the simplest integer-rung version used in this paper, the claim is:
+\begin{quote}
+\emph{For each species \(i\), the effective rung extracted from the data is close to an integer.}
+\end{quote}
+The repository provides a generic interface for this idea in \path{IndisputableMonolith/RRF/Hypotheses/PhiLadder.lean}, including:
+\begin{itemize}
+  \item \path{computeRung(x, base)} \(=\ln(x/base)/\ln(\phiG)\),
+  \item the ``near rung'' predicate \path{nearPhiRung(x, base, tolerance)}, and
+  \item an explicit falsifier record \path{PhiLadderFalsifier}.
+\end{itemize}
+
+\paragraph{How to apply it to the mass law.}
+For a species \(i\) in sector \(s\), the model defines \(A_s\) and \(\mathrm{gap}(Z_i)\) (Section~\ref{sec:masses}). Rearranging the mass law~\eqref{eq:mass-law} gives the \emph{gap-corrected} rung coordinate
+\begin{equation}
+  r_{\mathrm{eff}}(i)
+  \;:=\;
+  \log_{\phiG}\!\left(\frac{m_i}{A_s}\right) + 8 - \mathrm{gap}(Z_i).
+  \label{eq:reff}
+\end{equation}
+In the idealized model, \(r_{\mathrm{eff}}(i)\in\mathbb{Z}\). Empirically, we therefore test whether \(r_{\mathrm{eff}}(i)\) lies within a chosen tolerance \(\delta\) of an integer:
+\[
+  \exists n\in\mathbb{Z} \text{ such that } |r_{\mathrm{eff}}(i)-n|\le \delta.
+\]
+
+\paragraph{Falsifier (single-scale).}
+Fix a dataset, a mass convention (scheme/scale), and a tolerance \(\delta>0\). The \(\phiG\)-ladder hypothesis is falsified if there exists a species \(i\) such that no integer \(n\) satisfies \(|r_{\mathrm{eff}}(i)-n|\le\delta\). In the repo’s terms, one can take \(\mathrm{observed}=m_i/A_s\), \(\mathrm{base}=1\), and test \path{nearPhiRung} after applying the known correction \(8-\mathrm{gap}(Z_i)\).
+
+\paragraph{Falsifier (ratio form; robust to unit conventions).}
+For any two species \(i,j\) in the same sector with the same charge class (hence the same \(Z\) and same \(\mathrm{gap}(Z)\) in the current model), the gap term cancels. The hypothesis predicts:
+\[
+  \log_{\phiG}\!\left(\frac{m_i}{m_j}\right) \approx r_i-r_j \in \mathbb{Z}.
+\]
+Thus a simple unitless falsifier is: there exist same-class species \(i,j\) such that \(\log_{\phiG}(m_i/m_j)\) is not within \(\delta\) of any integer.
+
+\paragraph{Scope note (quarks require a transport convention).}
+For quarks, the above tests must be applied at a consistent renormalization convention/scale. Ratios computed from heterogeneous PDG entries (different schemes/scales) do not constitute a falsifier or a confirmation. In a full version of the framework, this is where a Standard Model transport layer would enter; this short paper keeps transport as an explicit ``next layer'' (Section~\ref{sec:examples:quarks}).
+
+\subsection{Near-term tests (choose 2--4; stated as hypotheses with falsifiers)}
+\label{sec:tests:predictions}
+
+To keep the paper short and reviewer-friendly, we list a small number of concrete tests that do not depend on philosophical framing.
+
+\paragraph{Test A (within-class integer exponents).}
+\textbf{Hypothesis:} for each same-charge class within a sector (e.g., charged leptons), the inferred exponents \(\log_{\phiG}(m_i/m_j)\) cluster near integers (specifically near the rung differences implied by the model’s rung table). \textbf{Falsifier:} for fixed \(\delta\), the maximum deviation from the nearest integer across the class exceeds \(\delta\).
+
+\paragraph{Test B (gap-corrected rung clustering across sectors).}
+\textbf{Hypothesis:} the gap-corrected rungs \(r_{\mathrm{eff}}(i)\) from~\eqref{eq:reff} cluster near integers across the species set, when evaluated at a consistent convention/scale. \textbf{Falsifier:} the set of deviations \(\min_{n\in\mathbb{Z}}|r_{\mathrm{eff}}(i)-n|\) has outliers beyond \(\delta\) that are robust under reasonable measurement uncertainty and convention choices.
+
+\paragraph{Test C (residue rule sanity: monotone dependence on charge index).}
+\textbf{Hypothesis:} the residue term \(\mathrm{gap}(Z)\) provides a stable, monotone correction as \(Z\) increases, and it does not need to be replaced by ad hoc per-species shifts. \textbf{Falsifier:} the observed deviations from integer rungs exhibit systematic dependence incompatible with the single-parameter family \(\mathrm{gap}(Z)\), forcing distinct functions per sector or per particle.
+
+\subsection{No-cheating constraints and evaluation discipline}
+\label{sec:tests:discipline}
+
+To keep comparisons honest, we adopt the following evaluation discipline.
+
+\paragraph{Constraint 1 (no per-species tuning disguised as prediction).}
+One must not compute a per-species exponent correction from the measured mass and then report the corrected mass as a ``prediction.'' For example, the audit harness \path{tools/audit\_masses.py} computes an implied per-species adjustment \(\Delta=\log_{\phiG}(m_{\mathrm{ref}}/m_{\mathrm{struct}})\); this is a \emph{diagnostic} that surfaces the required correction, not a structural prediction.
+
+\paragraph{Constraint 2 (separate geometric residue from transport).}
+The geometric residue \(\mathrm{gap}(Z)\) is a closed form driven by the charge index \(Z\). Any additional corrections associated with scheme/scale transport (e.g., QED/QCD running) must be handled as a separate layer, not folded into \(\mathrm{gap}(Z)\) by definition. (The repository contains additional ``no-go'' style separation results in the broader physics subtree; see e.g.\ \path{IndisputableMonolith/Physics/MassResidueNoGo.lean}.)
+
+\paragraph{Constraint 3 (predeclare the dataset and mass convention).}
+For sectors where masses depend strongly on convention (notably quarks), the dataset and renormalization convention/scale must be declared before evaluating ladder proximity; otherwise the test is underdetermined.
+
+\paragraph{Constraint 4 (report tolerances explicitly).}
+All ``near rung'' statements must report the tolerance \(\delta\) in rung units, and should include sensitivity to plausible measurement uncertainty and convention choice.
+
+\section{Reproducibility}
+\label{sec:repro}
+
+This repository is organized so that (i) the \Lean{}-certified structural kernel (Octave/Gray/bridges) can be checked independently of (ii) the empirical mass comparison harness. This section provides concrete entry points for both.
+
+\subsection{Reproducing the mass audit (Python)}
+\label{sec:repro:python}
+
+\paragraph{Inputs.}
+The species list and reference masses used by the audit are stored in \path{data/masses.json}. The file includes:
+\begin{itemize}
+  \item a list of species entries (name, sector, rung \(r\), reference mass), and
+  \item a tolerance parameter used only to determine a pass/fail return code.
+\end{itemize}
+
+\paragraph{Command.}
+From the repository root, run:
+\begin{verbatim}
+python3 tools/audit_masses.py
+\end{verbatim}
+or equivalently:
+\begin{verbatim}
+python3 scripts/check_masses.py
+\end{verbatim}
+
+\paragraph{Outputs.}
+The harness writes:
+\begin{itemize}
+  \item \path{out/masses/mass\_audit.json} (machine-readable rows), and
+  \item \path{out/masses/mass\_audit.csv} (spreadsheet-friendly rows).
+\end{itemize}
+Each row includes the reference mass, the model’s structural prediction, and a diagnostic implied correction
+\(\Delta=\log_{\phiG}(m_{\mathrm{ref}}/m_{\mathrm{struct}})\). As emphasized in Section~\ref{sec:tests:discipline}, \(\Delta\) is a diagnostic, not a prediction.
+
+\paragraph{Alignment with the Lean model layer.}
+The Python harness mirrors the definitions in \path{IndisputableMonolith/Masses/Anchor.lean} and \path{IndisputableMonolith/Masses/AnchorPolicy.lean} (same \(\phiG\), \(\Ecoh=\phiG^{-5}\), sector parameters, charge map, and gap function). A useful integrity check is to compare the Python output against values computed by evaluating the Lean definitions in a small script (not included in this short paper).
+
+\subsection{Checking the certified structural kernel (Lean)}
+\label{sec:repro:lean}
+
+\paragraph{What is certified (for this paper).}
+The following items are \Lean{}-checkable in this repository and are the structural anchors used by the paper:
+\begin{itemize}
+  \item Octave kernel definitions: \path{IndisputableMonolith/OctaveKernel/Basic.lean}
+  \item Bridge calculus: \path{IndisputableMonolith/OctaveKernel/Bridges/Basic.lean}
+  \item Phase alignment lemmas: \path{IndisputableMonolith/OctaveKernel/Bridges/PhaseHub.lean}
+  \item Explicit Gray-8 witness: \path{IndisputableMonolith/Patterns/GrayCycle.lean}
+  \item Paper-facing Octave theorem bundle: \path{IndisputableMonolith/Octave/Theorem.lean}
+  \item Ledger-to-Gray adjacency bridge surface: \path{IndisputableMonolith/Octave/LedgerBridge.lean}
+  \item Generation torsion packaging: \path{IndisputableMonolith/RecogSpec/RSLedger.lean} and \path{IndisputableMonolith/Verification/GenerationTorsionCert.lean}
+\end{itemize}
+
+\paragraph{Build command.}
+From the repository root:
+\begin{verbatim}
+lake build
+\end{verbatim}
+This checks the current certificate surface as configured by the project build graph.
+
+\subsection{Paper source and audit metadata}
+\label{sec:repro:paper}
+
+\paragraph{Paper source.}
+This manuscript is \path{docs/OCTAVE\_MASSES\_PAPER.tex}.
+
+\paragraph{Audit artifacts (optional).}
+If you cite axiom/sorry counts or other global verification metrics, use the repository’s audit artifacts rather than hard-coded numbers (e.g., \path{artifacts/axiom\_audit.json}, \path{artifacts/sorry\_audit.json}, \path{artifacts/reality\_audit.json}). These files include scope and timestamp metadata.
+
+\section{Limitations and Scope}
+\label{sec:limits}
+
+This paper is intentionally narrow: it isolates the certified Octave kernel and a transparent mass-spectrum model, then explains how the octave viewpoint changes the meaning of ``why masses.'' Several important limitations follow from that design choice.
+
+\subsection{What is certified vs.\ what is modeled}
+\label{sec:limits:cert-vs-model}
+
+\paragraph{Certified (structural) content.}
+The following ingredients are mathematical structure checked in \Lean{} in this repository:
+\begin{itemize}
+  \item the OctaveKernel layer/bridge interface and alignment propagation (Section~\ref{sec:octave}),
+  \item the explicit Gray-8 witness (one-bit adjacency, wrap-around, surjectivity), and
+  \item conditional ledger-to-adjacency bridge statements (e.g., \path{PostingStep} \(\Rightarrow\) one-bit parity change).
+\end{itemize}
+These are not claims about Nature; they are claims about well-defined objects and theorems in a formal system.
+
+\paragraph{Modeled (spectrum) content.}
+The mass law itself (Section~\ref{sec:masses}) is implemented as explicit definitions: a coherence unit \(\Ecoh\), sector yardsticks, rung tables, and a charge-index residue \(\mathrm{gap}(Z)\). The repository does \emph{not} currently prove that these exact sector parameters or rung assignments are the unique consequences of the Octave kernel alone. In particular:
+\begin{itemize}
+  \item the sector parameters \((B_s,r_{0,s})\) are part of the model layer,
+  \item the rung tables \(r(\text{name})\) are currently explicit lookups, and
+  \item the \(-8\) exponent offset is a modeling choice that is motivated (Section~\ref{sec:why:rungs}) by octave-closure reasoning but not derived as a theorem from OctaveKernel.
+\end{itemize}
+
+\paragraph{Structural packaging vs physical identification.}
+The repository contains certificates that package a torsion structure \(\{0,11,17\}\) and show that it forces \(\phiG\)-power ratio exponents (Section~\ref{sec:why:generations}). Treating those torsion classes as \emph{the} physical three generations is an additional interpretive step that ultimately lives on the empirical side of the hygiene boundary.
+
+\subsection{Units and SI anchoring}
+\label{sec:limits:units}
+
+\paragraph{Dimensionless core, displayed units.}
+The spectrum model is stated in a dimensionless layer. Interpreting \(\Ecoh=\phiG^{-5}\) as ``\(0.09017\) eV'' requires a bridge convention that links the model’s dimensionless unit to physical units. The repository contains careful discussion of this bookkeeping (including ``no-mixing'' cautions between different display routes) in \path{docs/Mass-From-Light-Memo.tex}. This short paper does not attempt to settle the metrology question; it restricts itself to (i) unitless ratio tests and (ii) explicit declarations of the chosen display convention when quoting absolute numbers.
+
+\subsection{Open obligations (what remains to be done)}
+\label{sec:limits:open}
+
+\paragraph{From tables to constructors.}
+The most important next step is to replace rung lookup tables by a derived constructor (e.g., ``base rung + torsion'' plus a canonical word/structure encoding), and to prove a uniqueness or near-uniqueness statement for that constructor under clearly stated axioms.
+
+\paragraph{Transport layer for quarks and scheme-dependent masses.}
+For quarks and for any quantity whose quoted ``mass'' depends strongly on renormalization convention/scale, the framework requires a transport layer: predict at a declared reference point, then transport to the experimental convention. This paper isolates the discrete backbone and leaves transport as a separate module of work.
+
+\paragraph{Competing hypotheses within the repository.}
+The repository includes alternative modeling directions (e.g., quarter-rung hypotheses for quarks). A full paper should either unify these into one coherent spectrum story or present them as alternative hypotheses with preregistered comparison protocols.
+
+\paragraph{Sharper falsifiers and broader coverage.}
+The falsifiers stated in Section~\ref{sec:tests} are intentionally conservative. A more mature version of the program would add sharper, quantitative preregistrations (tolerances, datasets, conventions) and extend coverage to additional sectors (e.g., neutrinos and hadrons) only once transport and convention issues are fully specified.
+
+\appendix
+
+\section{Claim-to-certificate map (paper \texorpdfstring{$\to$}{->} Lean surface)}
+\label{app:claims}
+
+This appendix provides a compact ``claim map'' from the paper’s main named ingredients to the repository’s certificate surface. The table is intentionally conservative:
+\begin{itemize}
+  \item \textbf{DEF/THEOREM/CERT} rows point to \Lean{} definitions or theorems.
+  \item \textbf{MODEL} rows point to explicit model definitions (not claims of empirical correctness).
+  \item \textbf{HYPOTHESIS} rows point to the repository interface for falsifiers and preregistrable tests.
+\end{itemize}
+
+\begin{table}[t]
+\small
+\centering
+\begin{tabular}{p{0.27\linewidth}p{0.12\linewidth}p{0.56\linewidth}}
+\hline
+\textbf{Paper item} & \textbf{Type} & \textbf{Lean pointer(s)} \\
+\hline
+8-phase clock \(\mathrm{Phase}=\Fin{8}\) & DEF & \path{IndisputableMonolith/OctaveKernel/Basic.lean} (\path{OctaveKernel.Phase}) \\
+Octave layer interface (state/phase/step/cost/admissible) & DEF & \path{IndisputableMonolith/OctaveKernel/Basic.lean} (\path{OctaveKernel.Layer}) \\
+Phase-advances-by-one predicate & DEF & \path{IndisputableMonolith/OctaveKernel/Basic.lean} (\path{Layer.StepAdvances}) \\
+Bridge definition (phase preservation + step commutation) & DEF & \path{IndisputableMonolith/OctaveKernel/Bridges/Basic.lean} (\path{OctaveKernel.Bridge}) \\
+Bridge calculus (id/comp + iterate lemmas) & THEOREM & \path{IndisputableMonolith/OctaveKernel/Bridges/Basic.lean} (\path{Bridge.id}, \path{Bridge.comp}, \path{Bridge.map\_iterate}, \path{Bridge.phase\_iterate}) \\
+Alignment propagation under iteration & THEOREM & \path{IndisputableMonolith/OctaveKernel/Bridges/PhaseHub.lean} (\path{Bridges.aligned\_iterate}) \\
+Gray-8 one-bit adjacency predicate & DEF & \path{IndisputableMonolith/Patterns/GrayCycle.lean} (\path{Patterns.OneBitDiff}) \\
+Explicit Gray-8 witness (3-bit, period 8) & THEOREM & \path{IndisputableMonolith/Patterns/GrayCycle.lean} (\path{grayCycle3\_surjective}, \path{grayCycle3\_oneBit\_step}) \\
+Paper-facing Octave theorem bundle & CERT & \path{IndisputableMonolith/Octave/Theorem.lean} (\path{patternAtPhase\_surjective}, \path{patternAtPhase\_oneBit\_step}) \\
+Ledger atomicity \(\Rightarrow\) Gray adjacency (given PostingStep) & THEOREM (conditional) & \path{IndisputableMonolith/Octave/LedgerBridge.lean} (\path{postingStep\_implies\_grayAdj}) \\
+\hline
+Coherence unit \(\Ecoh=\phiG^{-5}\) & MODEL & \path{IndisputableMonolith/Masses/Anchor.lean} (\path{Masses.Anchor.E\_coh}) \\
+Sector parameters \(B_s,r_{0,s}\) and yardstick \(A_s\) & MODEL & \path{IndisputableMonolith/Masses/Anchor.lean} (\path{B\_pow}, \path{r0}, \path{yardstick}) \\
+Rung tables \(r\) (by species name) & MODEL & \path{IndisputableMonolith/Masses/Anchor.lean} (\path{Integers.r\_lepton}, \path{r\_up}, \path{r\_down}, \path{r\_boson}) \\
+Charge index \(Z\) from integerized charge & MODEL & \path{IndisputableMonolith/Masses/Anchor.lean} (\path{ChargeIndex.Z}) \\
+Gap function \(\mathrm{gap}(Z)\) & MODEL & \path{IndisputableMonolith/Masses/AnchorPolicy.lean} (\path{gap}) \\
+Mass predictor \(m=A_s\,\phiG^{r+\mathrm{gap}(Z)-8}\) & MODEL & \path{IndisputableMonolith/Masses/AnchorPolicy.lean} (\path{predict\_mass}) \\
+\hline
+Generation torsion \(\{0,11,17\}\) and forced ratio exponents & CERT & \path{IndisputableMonolith/RecogSpec/RSLedger.lean} + \path{IndisputableMonolith/Verification/GenerationTorsionCert.lean} \\
+Cube geometry provenance numbers (8,12,6,11,17,102,103) & CERT & \path{IndisputableMonolith/Verification/CubeGeometryCert.lean} \\
+\hline
+\(\phiG\)-ladder falsifier interface (near-rung, falsifier record) & HYPOTHESIS interface & \path{IndisputableMonolith/RRF/Hypotheses/PhiLadder.lean} (\path{nearPhiRung}, \path{PhiLadderFalsifier}) \\
+\hline
+\end{tabular}
+\caption{Claim map: paper ingredients to Lean definitions/theorems. MODEL rows are explicit definitions, not empirical certifications.}
+\label{tab:claim-map}
+\end{table}
+
+\section{Key equations and code locations}
+\label{app:equations}
+
+This appendix provides a quick ``equation index'' for implementation lookup.
+
+\begin{table}[t]
+\small
+\centering
+\begin{tabular}{p{0.26\linewidth}p{0.68\linewidth}}
+\hline
+\textbf{Equation / object} & \textbf{Repository location} \\
+\hline
+\(\mathrm{Phase}=\Fin{8}\) & \path{IndisputableMonolith/OctaveKernel/Basic.lean} (\path{OctaveKernel.Phase}) \\
+\(\mathrm{StepAdvances}:\ \mathrm{phase}(\mathrm{step}(s))=\mathrm{phase}(s)+1\) & \path{IndisputableMonolith/OctaveKernel/Basic.lean} (\path{Layer.StepAdvances}) \\
+One-bit adjacency \(\mathrm{OneBitDiff}\) & \path{IndisputableMonolith/Patterns/GrayCycle.lean} (\path{Patterns.OneBitDiff}) \\
+Gray-8 witness over 3-bit patterns & \path{IndisputableMonolith/Patterns/GrayCycle.lean} (\path{grayCycle3Path}, \path{grayCycle3\_oneBit\_step}) \\
+Ledger posting \(\Rightarrow\) one-bit parity step & \path{IndisputableMonolith/Octave/LedgerBridge.lean} (\path{postingStep\_implies\_grayAdj}) \\
+\hline
+\(\Ecoh=\phiG^{-5}\) & \path{IndisputableMonolith/Masses/Anchor.lean} (\path{Masses.Anchor.E\_coh}) \\
+\(A_s=2^{B_s}\Ecoh\,\phiG^{r_{0,s}}\) & \path{IndisputableMonolith/Masses/Anchor.lean} (\path{Masses.Anchor.yardstick}) \\
+\(Z(\widetilde{Q})\) charge index & \path{IndisputableMonolith/Masses/Anchor.lean} (\path{Masses.ChargeIndex.Z}) \\
+\(\mathrm{gap}(Z)=\ln(1+Z/\phiG)/\ln(\phiG)\) & \path{IndisputableMonolith/Masses/AnchorPolicy.lean} (\path{Masses.gap}) \\
+\(m=A_s\,\phiG^{r+\mathrm{gap}(Z)-8}\) & \path{IndisputableMonolith/Masses/AnchorPolicy.lean} (\path{Masses.predict\_mass}) \\
+\hline
+Audit dataset & \path{data/masses.json} \\
+Audit harness & \path{tools/audit\_masses.py} (wrapper: \path{scripts/check\_masses.py}) \\
+\hline
+\end{tabular}
+\caption{Equation index: key objects and where they live in the repository.}
+\label{tab:equation-index}
+\end{table}
+
+\end{document}
+
+

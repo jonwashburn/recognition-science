@@ -1,0 +1,803 @@
+\pdfoutput=1
+\documentclass[11pt]{article}
+%
+% ============================================================================
+% D'ALEMBERT INEVITABILITY: POLYNOMIAL CONSISTENCY FORCES THE CANONICAL
+% COMPOSITION LAW ON R_{>0}
+%
+% Target: Aequationes Mathematicae (functional equations / classification)
+% ============================================================================
+%
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+%
+% Theorem environments
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+%
+% Notation
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Rp}{\mathbb{R}_{>0}}
+\newcommand{\Poly}{\R[u,v]}
+\newcommand{\logc}{\operatorname{log}}
+%
+\title{D'Alembert Inevitability:\; Polynomial Consistency Forces the Canonical Composition Law on $\Rp$}
+%
+\author{%
+Jonathan Washburn\thanks{Recognition Physics Institute, Austin, TX, USA.\ \texttt{jon@recognitionphysics.org}}
+\and Milan Zlatanovi\'{c}\thanks{Faculty of Science and Mathematics, University of Ni\v{s}, Serbia.\ \texttt{zlatmilan@yahoo.com}}
+\and Elshad Allahyarov\thanks{Case Western Reserve University, USA.\ \texttt{elshad.allakhyarov@case.edu}}
+}
+%
+\date{}
+%
+\begin{document}
+\maketitle
+%
+\begin{abstract}
+Let $F:\Rp\to\R$ be a real-valued functional on multiplicative ratios.  A common modeling move in functional-equation based theories is to \emph{postulate} a specific composition identity relating $F(xy)+F(x/y)$ to the pair $(F(x),F(y))$.
+Even in ``zero-parameter'' settings, the \emph{choice of composition law} is itself an implicit parameter choice.
+%
+In this paper we prove an \emph{inevitability theorem} for the law.
+Assume only that there exists a \emph{symmetric quadratic polynomial} $P\in\Poly$ such that for all $x,y>0$,
+\[
+  F(xy)+F(x/y)=P\big(F(x),F(y)\big),
+  \qquad P(u,v)=P(v,u),\qquad F(1)=0,
+\]
+and impose a minimal nondegeneracy/regularity hypothesis ensuring that the range of $F$ contains an interval near $0$.
+%
+Our first result shows that symmetry of the law forces \emph{reciprocity} of the functional: $F(z)=F(1/z)$ for all $z>0$.
+%
+Our main classification theorem then proves that the polynomial law is forced to lie in the unique bilinear family
+\[
+  P(u,v)=2u+2v+c\,uv
+  \qquad (c\in\R),
+\]
+so that the original consistency equation reduces, after an affine change of variables, to the classical d'Alembert equation
+$H(t+u)+H(t-u)=2H(t)H(u)$ in logarithmic coordinates.
+As an optional strengthening, a natural curvature calibration at the identity fixes the remaining scalar to the canonical value $c=2$, yielding the exact composition law used in companion work on uniqueness of $F$.
+%
+Selected algebraic steps in the classification are formalized in Lean~4 within the \texttt{IndisputableMonolith} library.
+\end{abstract}
+%
+\medskip\noindent\textbf{2020 Mathematics Subject Classification.} Primary 39B52; Secondary 39B22, 26A09.
+\par\noindent\textbf{Key words and phrases.} functional equations; d'Alembert equation; polynomial composition law; reciprocity; classification.
+%
+% ---------------------------------------------------------------------------
+% Sections will be added one at a time in subsequent sessions.
+% ---------------------------------------------------------------------------
+%
+\section{Introduction}\label{sec:introduction}
+
+\subsection{Motivation: ``equation choice'' is an implicit parameter}\label{subsec:motivation}
+
+Functional equations on the multiplicative group $\Rp$ arise whenever one models a real-valued quantity attached to \emph{ratios} and demands compositional compatibility under multiplication.
+In applications one often interprets $F(x)$ as a \emph{cost}, \emph{discrepancy}, or \emph{penalty} associated to a ratio $x>0$, with $F(1)=0$ reflecting that perfect agreement has no cost.
+One then seeks a composition identity relating the combined comparison $(x,y)\mapsto (xy,x/y)$ to the separate comparisons $x$ and $y$.
+
+The standard move is to \emph{postulate} a specific two-variable identity.
+For instance, the multiplicative d'Alembert (or \emph{cosh-addition}) law
+\begin{equation}\label{eq:intro-rcl}
+  F(xy)+F(x/y)=2F(x)F(y)+2F(x)+2F(y)
+\end{equation}
+is ubiquitous: in logarithmic coordinates it becomes the classical d'Alembert equation
+\[
+  H(t+u)+H(t-u)=2H(t)H(u),
+  \qquad H(t):=1+F(e^t),
+\]
+whose regular solutions are hyperbolic cosine (or cosine) families.
+
+However, even in settings advertised as ``zero-parameter,'' the \emph{functional form} of the composition law is itself a hidden modeling choice.
+Changing \eqref{eq:intro-rcl} to another identity generally changes the theory qualitatively.
+At the simplest extreme, the additive law $F(xy)+F(x/y)=2F(x)+2F(y)$ corresponds in log-coordinates to a quadratic branch $G(t)=F(e^t)$ with constant second derivative (a ``flat'' regime), rather than the hyperbolic regime associated to \eqref{eq:intro-rcl}.
+Thus, \emph{uniqueness of solutions} to a postulated equation does not address the deeper question: why that equation rather than another?
+
+This paper addresses that question in a mathematically clean way.
+We do \emph{not} assume the specific form \eqref{eq:intro-rcl}.
+Instead, we assume only that there exists some symmetric polynomial mechanism combining the values $F(x)$ and $F(y)$, and we show that this forces the d'Alembert/cosh-type structure (up to a single scalar, pinned by a natural calibration).
+In this sense, the composition law is \emph{inevitable} under minimal structural constraints.
+
+\subsection{What is new in this paper}\label{subsec:whats-new}
+
+We work with the following axiom package.
+Let $F:\Rp\to\R$ satisfy $F(1)=0$.
+Assume there exists a polynomial $P\in\R[u,v]$ such that for all $x,y>0$,
+\begin{equation}\label{eq:intro-poly-consistency}
+  F(xy)+F(x/y)=P\!\big(F(x),F(y)\big),
+\end{equation}
+and that $P$ is symmetric: $P(u,v)=P(v,u)$.
+Finally, impose a minimal regularity/nondegeneracy condition ensuring that the image of $F$ contains an interval around $0$ (so that identities holding on $\mathrm{range}(F)$ force global polynomial identities).
+
+Within this framework, the paper makes three contributions.
+
+\medskip\noindent\textbf{(i) Reciprocity is derived from symmetry of the law.}
+Although reciprocity $F(z)=F(1/z)$ is often assumed as a property of ``comparison,'' we show that it follows formally from the symmetry of the combiner $P$ together with \eqref{eq:intro-poly-consistency}.
+This is conceptually useful: \emph{symmetry is imposed on the law, not on the solution.}
+
+\medskip\noindent\textbf{(ii) Polynomial forcing: classification of admissible laws.}
+Our main technical result proves that the only symmetric polynomial law compatible with \eqref{eq:intro-poly-consistency} is the bilinear family
+\begin{equation}\label{eq:intro-bilinear}
+  P(u,v)=2u+2v+c\,uv
+\end{equation}
+for some constant $c\in\R$.
+This is the ``meta'' classification statement: it classifies \emph{equations}, not solutions.
+
+\medskip\noindent\textbf{(iii) Reduction to classical d'Alembert; optional canonical coefficient.}
+Passing to log-coordinates $G(t)=F(e^t)$ and applying the affine change
+$H(t):=1+\tfrac{c}{2}G(t)$ (for $c\neq 0$), \eqref{eq:intro-bilinear} becomes the classical d'Alembert equation for $H$.
+Thus, under standard regularity assumptions, the solution theory reduces to the classical cosine/cosh classification.
+Optionally, a curvature calibration at the identity selects the canonical coefficient $c=2$, matching the specific law \eqref{eq:intro-rcl}.
+
+\medskip
+The present paper is designed to pair with a companion ``uniqueness of $F$'' paper (Paper~1.1 in the project outline): once the law is forced to the canonical d'Alembert form and a normalization is fixed, one may invoke standard uniqueness results (or reprove them directly) to identify the unique regular solution as the canonical reciprocal cost $J(x)=\tfrac12(x+x^{-1})-1$.
+Here we deliberately keep the focus on \emph{inevitability of the law}.
+
+\subsection{Roadmap}\label{subsec:roadmap}
+
+Section~\ref{sec:preliminaries} records the axiom package and the minimal regularity hypothesis used to promote identities from $\mathrm{range}(F)$ to polynomial identities on $\R^2$.
+In Section~\ref{sec:first-forcing-layer} we derive reciprocity and pin down the boundary constraints $P(u,0)=2u$ and $P(0,v)=2v$.
+Section~\ref{sec:polynomial-classification} contains the polynomial classification and proves that $P$ must be of the bilinear form \eqref{eq:intro-bilinear}.
+In Section~\ref{sec:reduction} we pass to log-coordinates and reduce to the classical d'Alembert equation by an affine change of variables.
+Section~\ref{sec:calibration} (optional) shows how a natural curvature normalization fixes the remaining scalar to the canonical value $c=2$.
+We conclude with examples and counterexamples clarifying the necessity of the hypotheses, and include a brief formalization note pointing to the Lean~4 implementation of the coefficient-forcing steps in \texttt{IndisputableMonolith} (module \texttt{Foundation/DAlembert/Inevitability}).
+
+\section{Preliminaries and axiom package}\label{sec:preliminaries}
+
+\subsection{Domain and notation}\label{subsec:domain-notation}
+
+Throughout, $\Rp$ denotes the multiplicative group of positive real numbers.
+We consider a function
+\[
+  F:\Rp\to\R,
+\]
+and we write $F(x)$ for the value of $F$ at a ratio $x>0$.
+It is convenient to pass to logarithmic coordinates:
+for $t\in\R$ set
+\begin{equation}\label{eq:def-G}
+  G(t):=F(e^t).
+\end{equation}
+Then multiplication and division of ratios become addition and subtraction in $\R$:
+for $x=e^t$ and $y=e^u$ one has $xy=e^{t+u}$ and $x/y=e^{t-u}$.
+Accordingly, any multiplicative consistency law for $F$ becomes an additive functional equation for $G$.
+
+\subsection{Polynomial consistency: the core hypothesis}\label{subsec:poly-consistency}
+
+The main structural assumption is that $F$ admits a \emph{polynomial combiner} in the values $F(x)$ and $F(y)$.
+
+\begin{definition}[Polynomial composition law]\label{def:poly-law}
+We say that $F:\Rp\to\R$ admits a \emph{polynomial composition law} if there exists a polynomial
+$P\in\R[u,v]$ such that
+\begin{equation}\label{eq:poly-law}
+  F(xy)+F(x/y)=P\!\big(F(x),F(y)\big)
+  \qquad \text{for all }x,y>0.
+\end{equation}
+We call $P$ a \emph{combiner} for $F$.
+\end{definition}
+
+\begin{definition}[Symmetric law and normalization]\label{def:symm-norm}
+We say the polynomial law \eqref{eq:poly-law} is \emph{symmetric} if
+\begin{equation}\label{eq:P-symmetric}
+  P(u,v)=P(v,u)\qquad \text{for all }u,v\in\R,
+\end{equation}
+and we impose the normalization
+\begin{equation}\label{eq:F-normalized}
+  F(1)=0.
+\end{equation}
+\end{definition}
+
+Passing to log-coordinates, \eqref{eq:poly-law} becomes
+\begin{equation}\label{eq:log-law}
+  G(t+u)+G(t-u)=P\!\big(G(t),G(u)\big),
+  \qquad t,u\in\R,
+\end{equation}
+where $G$ is defined by \eqref{eq:def-G}.
+
+\subsection{Regularity / nontriviality}\label{subsec:regularity}
+
+Two technical issues arise immediately.
+First, \eqref{eq:poly-law} only constrains $P$ \emph{on the range of $F$} (or $G$), since its arguments are of the form $(F(x),F(y))$.
+Second, polynomial identities are rigid: if a polynomial vanishes on an interval then it vanishes identically.
+To leverage this rigidity we require that the range of $F$ contains an interval near $0$.
+
+We isolate a minimal hypothesis that suffices for this purpose and is standard in the theory of functional equations.
+
+\begin{assumption}[Minimal regularity]\label{ass:regularity}
+We assume:
+\begin{itemize}
+  \item $F$ is continuous on $\Rp$,
+  \item $F$ is nontrivial: there exists $y_0>0$ with $F(y_0)\neq 0$.
+\end{itemize}
+\end{assumption}
+
+\begin{lemma}[Range contains an interval]\label{lem:range-interval}
+Assume \eqref{eq:F-normalized} and Assumption~\ref{ass:regularity}.
+Then there exists a nondegenerate closed interval $I\subset\R$ with $0\in I$ such that $I\subset F(\Rp)$.
+\end{lemma}
+
+\begin{proof}
+Let $y_0>0$ with $F(y_0)\neq 0$ and set $k:=F(y_0)$.
+Since $F(1)=0$ and $F$ is continuous on the connected set $\Rp$, the intermediate value theorem implies that $F(\Rp)$ contains every value between $0$ and $k$.
+Thus $[0,k]\subset F(\Rp)$ if $k>0$, and $[k,0]\subset F(\Rp)$ if $k<0$.
+\end{proof}
+
+We will repeatedly use the following elementary rigidity principle.
+
+\begin{lemma}[Polynomial identity from an interval]\label{lem:poly-interval}
+Let $q\in\R[z]$ be a univariate polynomial.
+If $q(z)=0$ for all $z$ in a nondegenerate interval $J\subset\R$, then $q$ is the zero polynomial.
+Equivalently, if two polynomials $q_1,q_2\in\R[z]$ agree on a nondegenerate interval, then $q_1=q_2$ in $\R[z]$.
+\end{lemma}
+
+\begin{proof}
+This is standard: a nonzero polynomial has only finitely many roots, whereas a nondegenerate interval contains infinitely many points.
+\end{proof}
+
+\begin{remark}[Alternative regularity packages]\label{rem:alt-regularity}
+Assumption~\ref{ass:regularity} is not the only convenient way to guarantee Lemma~\ref{lem:range-interval}.
+Any hypothesis implying that $F$ is not locally constant near $1$ and has the intermediate value property suffices; for example, continuity at $1$ plus non-constancy on every neighborhood of $1$, or stronger smoothness hypotheses (e.g.\ existence of a nonzero quadratic term for $G(t)=F(e^t)$ at $t=0$).
+\end{remark}
+
+\section{First forcing layer: reciprocity and boundary constraints}\label{sec:first-forcing-layer}
+
+In this section we extract the first rigid consequences of polynomial consistency.
+The key point is that \emph{symmetry of the law} $P(u,v)=P(v,u)$ forces \emph{reciprocity} of $F$, and together with normalization it forces $P$ to act like doubling on the coordinate axes.
+These constraints are the starting point for the coefficient elimination in the polynomial classification.
+
+\subsection{Reciprocity is derived}\label{subsec:reciprocity-derived}
+
+\begin{lemma}[Swapping quotients]\label{lem:swap-quotients}
+Assume that $F:\Rp\to\R$ satisfies the consistency law \eqref{eq:poly-law} with a symmetric combiner $P$ in the sense of \eqref{eq:P-symmetric}.
+Then for all $x,y>0$ one has
+\begin{equation}\label{eq:swap-quotients}
+  F(x/y)=F(y/x).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Write \eqref{eq:poly-law} for $(x,y)$ and for $(y,x)$:
+\[
+  F(xy)+F(x/y)=P(F(x),F(y)),\qquad
+  F(yx)+F(y/x)=P(F(y),F(x)).
+\]
+Since $xy=yx$ and $P$ is symmetric, the right-hand sides coincide, hence the left-hand sides coincide.
+Cancelling the common term $F(xy)$ yields \eqref{eq:swap-quotients}.
+\end{proof}
+
+\begin{lemma}[Reciprocity]\label{lem:reciprocity}
+Under the hypotheses of Lemma~\ref{lem:swap-quotients}, the functional $F$ is reciprocal-symmetric:
+\begin{equation}\label{eq:reciprocity}
+  F(z)=F(1/z)\qquad \text{for all }z>0.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Apply \eqref{eq:swap-quotients} with $y=1$ to obtain $F(z/1)=F(1/z)$, i.e.\ $F(z)=F(1/z)$.
+\end{proof}
+
+\subsection{Boundary values: $P(u,0)=2u$ and $P(0,v)=2v$}\label{subsec:boundary-values}
+
+\begin{lemma}[Boundary constraint on the range]\label{lem:P-boundary-on-range}
+Assume \eqref{eq:poly-law}, \eqref{eq:P-symmetric}, and \eqref{eq:F-normalized}.
+Then for every $y>0$,
+\begin{equation}\label{eq:P0Fy}
+  P(0,F(y))=2F(y),
+\end{equation}
+and for every $x>0$,
+\begin{equation}\label{eq:PFx0}
+  P(F(x),0)=2F(x).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Set $x=1$ in \eqref{eq:poly-law}. Using $F(1)=0$ and Lemma~\ref{lem:reciprocity} we obtain
+\[
+  F(y)+F(1/y)=P(F(1),F(y))=P(0,F(y))
+  \quad\Longrightarrow\quad
+  2F(y)=P(0,F(y)),
+\]
+which is \eqref{eq:P0Fy}.
+The identity \eqref{eq:PFx0} follows by symmetry of $P$.
+\end{proof}
+
+\begin{lemma}[Doubling on the axes]\label{lem:P-doubling-axes}
+Assume Definition~\ref{def:poly-law}, the symmetry condition \eqref{eq:P-symmetric}, normalization \eqref{eq:F-normalized}, and the regularity Assumption~\ref{ass:regularity}.
+Then the polynomial identity
+\begin{equation}\label{eq:P0v}
+  P(0,v)=2v
+\end{equation}
+holds for all $v\in\R$. By symmetry, also $P(u,0)=2u$ for all $u\in\R$.
+\end{lemma}
+
+\begin{proof}
+Define the univariate polynomial $q(v):=P(0,v)-2v\in\R[v]$.
+By Lemma~\ref{lem:P-boundary-on-range} we have $q(F(y))=0$ for all $y>0$.
+By Lemma~\ref{lem:range-interval}, the range $F(\Rp)$ contains a nondegenerate interval $I$ with $0\in I$, hence $q(v)=0$ for all $v\in I$.
+By Lemma~\ref{lem:poly-interval}, $q$ is the zero polynomial, which is exactly \eqref{eq:P0v}.
+The identity $P(u,0)=2u$ follows from symmetry of $P$.
+\end{proof}
+
+\begin{remark}[Interpretation]\label{rem:doubling-interpretation}
+Lemma~\ref{lem:P-doubling-axes} says that any admissible polynomial law must act as ``doubling'' on the axes.
+In particular, any higher-order terms in $P(0,v)$ or $P(u,0)$ must vanish.
+This will be the first algebraic lever in the classification of $P$.
+\end{remark}
+
+\section{Polynomial classification: only the bilinear family survives}\label{sec:polynomial-classification}
+
+We now classify the admissible polynomial combiners $P$.
+The axis constraints from Section~\ref{sec:first-forcing-layer} already force strong divisibility properties; to finish the classification we adopt a standard and practically motivated restriction: the law is \emph{at most quadratic} in its arguments.
+This is exactly the polynomial class used in the Lean~4 formalization of the coefficient forcing.
+
+\subsection{Quadratic polynomial hypothesis}\label{subsec:quadratic-hypothesis}
+
+\begin{assumption}[Quadratic law]\label{ass:quadratic-law}
+In addition to the hypotheses of Definition~\ref{def:poly-law} and \eqref{eq:P-symmetric}, assume the combiner $P$ has total degree at most $2$, i.e.\ there exist real constants
+$a,b,c,d,e,f\in\R$ such that for all $u,v\in\R$,
+\begin{equation}\label{eq:quadratic-form}
+  P(u,v)=a+bu+cv+d\,uv+e\,u^2+f\,v^2.
+\end{equation}
+\end{assumption}
+
+\begin{remark}[Beyond quadratic]\label{rem:beyond-quadratic}
+Lemma~\ref{lem:P-doubling-axes} already implies that for a \emph{general} polynomial combiner one may factor
+\[
+  P(u,v)=2u+2v+uv\,R(u,v)
+\]
+for some symmetric polynomial $R\in\R[u,v]$.
+Showing that $R$ must be constant (hence recovering the bilinear family) requires additional input beyond the axis constraints; one natural approach is to add a compatibility condition coming from composing \eqref{eq:poly-law} along three factors, or to assume sufficient smoothness of $G(t)=F(e^t)$ near $0$ and compare Taylor data.
+For clarity we present the clean quadratic classification, which already yields the d'Alembert inevitability and matches the current formal development.
+\end{remark}
+
+\subsection{Eliminating coefficients using symmetry and axis constraints}\label{subsec:coefficient-elimination}
+
+\begin{lemma}[Symmetry reduces parameters]\label{lem:symmetry-reduces-params}
+Assume \eqref{eq:P-symmetric} and the quadratic form \eqref{eq:quadratic-form}.
+Then $b=c$ and $e=f$, and $P$ can be rewritten as
+\begin{equation}\label{eq:quadratic-symmetric-form}
+  P(u,v)=a+b(u+v)+d\,uv+e(u^2+v^2).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+The identity $P(u,v)=P(v,u)$ forces equality of coefficients in \eqref{eq:quadratic-form} after swapping $u$ and $v$.
+In particular, comparing the coefficients of $u$ and $v$ gives $b=c$, and comparing the coefficients of $u^2$ and $v^2$ gives $e=f$.
+\end{proof}
+
+\begin{lemma}[Axis constraints kill constant and square terms]\label{lem:axis-kills}
+Assume \eqref{eq:P0v} (equivalently, $P(0,v)=2v$ for all $v$) and the symmetric quadratic form \eqref{eq:quadratic-symmetric-form}.
+Then $a=0$, $b=2$, and $e=0$.
+\end{lemma}
+
+\begin{proof}
+Set $u=0$ in \eqref{eq:quadratic-symmetric-form} to obtain
+\[
+  P(0,v)=a+bv+e\,v^2.
+\]
+By \eqref{eq:P0v}, this must equal $2v$ for all $v\in\R$.
+Comparing coefficients yields $a=0$, $b=2$, and $e=0$.
+\end{proof}
+
+\subsection{Main classification theorem}\label{subsec:main-classification}
+
+\begin{theorem}[Bilinear family is forced]\label{thm:bilinear-forced}
+Assume Definition~\ref{def:poly-law}, symmetry \eqref{eq:P-symmetric}, normalization \eqref{eq:F-normalized}, the regularity Assumption~\ref{ass:regularity}, and the quadratic hypothesis Assumption~\ref{ass:quadratic-law}.
+Then there exists a constant $c\in\R$ such that
+\begin{equation}\label{eq:P-bilinear}
+  P(u,v)=2u+2v+c\,uv
+  \qquad \text{for all }u,v\in\R.
+\end{equation}
+Equivalently, the original consistency law \eqref{eq:poly-law} must take the form
+\begin{equation}\label{eq:F-bilinear-law}
+  F(xy)+F(x/y)=2F(x)+2F(y)+c\,F(x)F(y)
+  \qquad \text{for all }x,y>0.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+By Lemma~\ref{lem:P-doubling-axes}, we have $P(0,v)=2v$ for all $v$.
+By Lemma~\ref{lem:symmetry-reduces-params} we may write $P$ in the symmetric quadratic form \eqref{eq:quadratic-symmetric-form}.
+Applying Lemma~\ref{lem:axis-kills} yields $a=0$, $b=2$, and $e=0$, so
+\[
+  P(u,v)=2(u+v)+d\,uv.
+\]
+Setting $c:=d$ gives \eqref{eq:P-bilinear}.
+Substituting \eqref{eq:P-bilinear} into \eqref{eq:poly-law} yields \eqref{eq:F-bilinear-law}.
+\end{proof}
+
+\begin{remark}[Connection to d'Alembert]\label{rem:connection-dalembert}
+Theorem~\ref{thm:bilinear-forced} is the key ``equation inevitability'' statement.
+In the next section we pass to log-coordinates and apply an affine change of variables to convert \eqref{eq:F-bilinear-law} into the classical d'Alembert equation, completing the reduction to the cosine/cosh families.
+\end{remark}
+
+\section{Reduction to classical d'Alembert}\label{sec:reduction}
+
+In this section we show that the bilinear family \eqref{eq:F-bilinear-law} is, after a simple change of variables, exactly the classical d'Alembert equation.
+This reduces the analytic part of the theory to the well-developed literature on d'Alembert-type functional equations.
+
+\subsection{Log-coordinates}\label{subsec:log-coordinates}
+
+\begin{lemma}[Bilinear law in log-coordinates]\label{lem:log-bilinear}
+Assume \eqref{eq:F-bilinear-law} and define $G$ by \eqref{eq:def-G}.
+Then for all $t,u\in\R$,
+\begin{equation}\label{eq:G-bilinear}
+  G(t+u)+G(t-u)=2G(t)+2G(u)+c\,G(t)G(u).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Let $x=e^t$ and $y=e^u$ in \eqref{eq:F-bilinear-law}.
+Using $xy=e^{t+u}$ and $x/y=e^{t-u}$ and the definition $G(t)=F(e^t)$ gives \eqref{eq:G-bilinear}.
+\end{proof}
+
+\begin{remark}[Evenness]\label{rem:G-even}
+Reciprocity $F(z)=F(1/z)$ (Lemma~\ref{lem:reciprocity}) implies that $G$ is even: $G(-t)=G(t)$ for all $t\in\R$.
+This parity is compatible with \eqref{eq:G-bilinear} and is often assumed a priori in analytic treatments.
+\end{remark}
+
+\subsection{Affine normalization to d'Alembert}\label{subsec:affine-normalization}
+
+\begin{lemma}[Affine reduction]\label{lem:affine-reduction}
+Assume \eqref{eq:G-bilinear} for some constant $c\in\R$.
+\begin{itemize}
+  \item If $c\neq 0$ and we define
+  \begin{equation}\label{eq:def-H}
+    H(t):=1+\frac{c}{2}\,G(t),
+  \end{equation}
+  then $H$ satisfies the classical d'Alembert equation
+  \begin{equation}\label{eq:dalembert}
+    H(t+u)+H(t-u)=2H(t)H(u)\qquad \text{for all }t,u\in\R.
+  \end{equation}
+  \item If $c=0$, then \eqref{eq:G-bilinear} reduces to the quadratic functional equation
+  \begin{equation}\label{eq:quadratic-fe}
+    G(t+u)+G(t-u)=2G(t)+2G(u)\qquad \text{for all }t,u\in\R.
+  \end{equation}
+\end{itemize}
+\end{lemma}
+
+\begin{proof}
+If $c\neq 0$, substitute \eqref{eq:def-H} into the left-hand side of \eqref{eq:dalembert} and expand:
+\[
+  H(t+u)+H(t-u)
+  =2+\frac{c}{2}\big(G(t+u)+G(t-u)\big).
+\]
+Use \eqref{eq:G-bilinear} to rewrite the bracketed term:
+\[
+  2+\frac{c}{2}\big(2G(t)+2G(u)+c\,G(t)G(u)\big)
+  =2+cG(t)+cG(u)+\frac{c^2}{2}G(t)G(u).
+\]
+On the other hand,
+\[
+  2H(t)H(u)
+  =2\Big(1+\frac{c}{2}G(t)\Big)\Big(1+\frac{c}{2}G(u)\Big)
+  =2+cG(t)+cG(u)+\frac{c^2}{2}G(t)G(u),
+\]
+so \eqref{eq:dalembert} holds.
+If $c=0$, \eqref{eq:G-bilinear} is exactly \eqref{eq:quadratic-fe}.
+\end{proof}
+
+\subsection{Interpretation and standard solution families}\label{subsec:interpretation}
+
+Under mild regularity assumptions (e.g.\ continuity, measurability with boundedness on an interval, or local boundedness), the d'Alembert equation \eqref{eq:dalembert} is classically classified: one obtains cosine and hyperbolic cosine families (and degenerate constant solutions), with the parameter determined by initial curvature data.
+In particular, if $F(1)=0$ then $G(0)=0$ and hence $H(0)=1$.
+When combined with evenness (Remark~\ref{rem:G-even}) and mild regularity, the typical branches take the form
+\[
+  H(t)=\cosh(kt)\quad\text{or}\quad H(t)=\cos(kt)
+\]
+for some $k\in\R$.
+The remaining coefficient $c$ in \eqref{eq:F-bilinear-law} is then selected by a normalization/calibration principle; in the canonical case $c=2$ and $H(t)=\cosh(t)$ one recovers $F(x)=\tfrac12(x+x^{-1})-1$.
+
+\section{Canonical coefficient selection $c=2$ (optional)}\label{sec:calibration}
+
+The preceding sections show that polynomial consistency and symmetry force the composition law into the one-parameter family \eqref{eq:F-bilinear-law}.
+The remaining scalar $c$ is not fixed by the purely algebraic argument: it reflects the \emph{choice of scale} for the cost functional.
+In many applications (including the Recognition Science setting that motivates this work) one imposes an additional \emph{calibration} at the identity that selects a canonical scale and hence fixes $c$.
+We record one convenient formulation.
+
+\subsection{Log-curvature at the identity}\label{subsec:log-curvature}
+
+Assume $F(1)=0$ and define $G(t)=F(e^t)$ as in \eqref{eq:def-G}.
+Whenever the following limit exists, we call it the \emph{log-curvature} of $F$ at the identity:
+\begin{equation}\label{eq:def-kappa}
+  \kappa(F):=\lim_{t\to 0}\frac{2G(t)}{t^2}
+  =\lim_{t\to 0}\frac{2F(e^t)}{t^2}.
+\end{equation}
+If $G$ is twice differentiable at $0$, then $\kappa(F)=G''(0)$.
+
+\subsection{Calibration forces $c=2$ after normalization}\label{subsec:calibration-forces-c}
+
+Under the d'Alembert reduction, the solution parameter appearing in the standard family $H(t)=\cosh(kt)$ may be absorbed by a harmless rescaling of the additive coordinate on $\Rp$.
+Concretely, replacing $F(x)$ by $F(x^\alpha)$ (equivalently, replacing $t=\log x$ by $\alpha t$) preserves the bilinear law \eqref{eq:F-bilinear-law} but rescales the parameter $k$ by $\alpha$.
+Thus one may adopt the normalization $k=1$ without changing the structural content of the theory.
+
+\begin{theorem}[Calibration selects the canonical coefficient]\label{thm:calibration-c-eq-two}
+Assume the hypotheses of Theorem~\ref{thm:bilinear-forced}, with $c\neq 0$, and assume moreover that the associated function $H$ defined by \eqref{eq:def-H} is a regular d'Alembert solution of the hyperbolic type
+\[
+  H(t)=\cosh(kt)\qquad (k>0).
+\]
+Fix the additive coordinate on $\Rp$ so that $k=1$, and impose the curvature calibration
+\begin{equation}\label{eq:kappa-calibration}
+  \kappa(F)=1.
+\end{equation}
+Then the coefficient in \eqref{eq:F-bilinear-law} is forced to be the canonical value
+\[
+  c=2.
+\]
+\end{theorem}
+
+\begin{proof}
+Under the stated hypotheses,
+\[
+  G(t)=\frac{2}{c}\big(H(t)-1\big)=\frac{2}{c}\big(\cosh(kt)-1\big).
+\]
+Using $\cosh(kt)-1=\tfrac12k^2t^2+o(t^2)$ as $t\to 0$, we obtain
+\[
+  \kappa(F)=\lim_{t\to 0}\frac{2G(t)}{t^2}
+  =\lim_{t\to 0}\frac{4}{c}\cdot\frac{\cosh(kt)-1}{t^2}
+  =\frac{4}{c}\cdot\frac{k^2}{2}
+  =\frac{2k^2}{c}.
+\]
+After the normalization $k=1$, the calibration $\kappa(F)=1$ yields $1=2/c$, hence $c=2$.
+\end{proof}
+
+\begin{remark}[Resulting canonical law]\label{rem:canonical-law}
+With $c=2$, the bilinear law \eqref{eq:F-bilinear-law} becomes the canonical composition rule
+\[
+  F(xy)+F(x/y)=2F(x)F(y)+2F(x)+2F(y),
+\]
+and the corresponding d'Alembert lift is simply $H(t)=1+G(t)$.
+Under the standard regularity assumptions used to classify d'Alembert solutions, the calibrated hyperbolic branch yields $H(t)=\cosh(t)$ and therefore
+$F(x)=\tfrac12(x+x^{-1})-1$.
+\end{remark}
+
+\section{Companion corollary: unique calibrated cost}\label{sec:unique-cost}
+
+The goal of this paper is the \emph{classification of admissible composition laws}.
+Nevertheless, once the law has been forced to the canonical form and a calibration has fixed its remaining scalar, the associated cost functional is also pinned down under standard regularity assumptions.
+We record this as a companion corollary.
+
+\begin{corollary}[Unique calibrated solution]\label{cor:unique-cost}
+Assume the hypotheses of Theorem~\ref{thm:bilinear-forced} and suppose the regularity assumptions used in the classical classification of the d'Alembert equation \eqref{eq:dalembert} (e.g.\ continuity of $H$, or measurability plus local boundedness).
+Assume further that $c\neq 0$ and that the curvature calibration \eqref{eq:kappa-calibration} holds.
+Then necessarily $c=2$ and
+\begin{equation}\label{eq:unique-cost}
+  F(x)=\frac12\big(x+x^{-1}\big)-1
+  \qquad \text{for all }x>0.
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+By Theorem~\ref{thm:calibration-c-eq-two}, the calibration forces $c=2$ (after the harmless normalization of the additive coordinate on $\Rp$ described in Section~\ref{sec:calibration}).
+With $c=2$ the d'Alembert lift satisfies $H(t)=1+G(t)$.
+By the classical regularity theory for \eqref{eq:dalembert}, the calibrated hyperbolic branch yields $H(t)=\cosh(t)$.
+Thus $G(t)=\cosh(t)-1=\tfrac12(e^t+e^{-t})-1$, and returning to multiplicative coordinates ($x=e^t$) gives \eqref{eq:unique-cost}.
+\end{proof}
+
+\begin{remark}[Relation to formal development]\label{rem:lean-unique}
+In the Lean~4 development accompanying this project, the ``inevitability of the law'' (Sections~\ref{sec:first-forcing-layer}--\ref{sec:polynomial-classification}) is isolated from the analytic classification of d'Alembert solutions.
+This separation mirrors the conceptual split between \emph{uniqueness of the equation} (the present paper) and \emph{uniqueness of the solution} (companion work).
+\end{remark}
+
+\section{Examples, counterexamples, and necessity of hypotheses}\label{sec:examples}
+
+This section collects representative examples illustrating the theory and clarifies which assumptions are used where.
+
+\subsection{The canonical reciprocal cost}\label{subsec:canonical-example}
+
+Define
+\begin{equation}\label{eq:def-J}
+  J(x):=\frac12\big(x+x^{-1}\big)-1,\qquad x>0.
+\end{equation}
+Then $J(1)=0$ and $J(x)=J(1/x)$.
+In logarithmic coordinates, $J(e^t)=\cosh(t)-1$.
+Consequently, the d'Alembert lift $H(t):=1+J(e^t)$ is exactly $H(t)=\cosh(t)$ and therefore satisfies \eqref{eq:dalembert}.
+Translating back to $J$ yields the canonical composition rule (the $c=2$ specialization of \eqref{eq:F-bilinear-law}):
+\[
+  J(xy)+J(x/y)=2J(x)J(y)+2J(x)+2J(y)\qquad (x,y>0).
+\]
+
+\subsection{The degenerate $c=0$ branch: quadratic log-costs}\label{subsec:degenerate-c0}
+
+When $c=0$, the bilinear family \eqref{eq:F-bilinear-law} becomes
+\[
+  F(xy)+F(x/y)=2F(x)+2F(y),
+\]
+equivalently \eqref{eq:quadratic-fe} for $G(t)=F(e^t)$.
+Under mild regularity (e.g.\ continuity), \eqref{eq:quadratic-fe} forces $G$ to be a quadratic form on $\R$, and evenness then yields
+\[
+  G(t)=\alpha t^2\qquad(\alpha\in\R).
+\]
+Thus
+\[
+  F(x)=\alpha(\log x)^2.
+\]
+This branch is consistent with the algebraic forcing up to Section~\ref{sec:polynomial-classification}, but it is qualitatively different from the hyperbolic/cosh regime.
+In applications one typically rules it out by an interaction/nonflatness gate (in the project codebase this role is played by \texttt{HasInteraction}), or by imposing a calibration that is incompatible with $c=0$.
+
+\subsection{Why symmetry matters}\label{subsec:why-symmetry}
+
+If the symmetry condition \eqref{eq:P-symmetric} is dropped, reciprocity of $F$ is no longer forced, and non-reciprocal solutions appear.
+For example, let $F(x)=\log x$ on $\Rp$.
+Then for all $x,y>0$,
+\[
+  F(xy)+F(x/y)=\log(xy)+\log(x/y)=2\log x=2F(x),
+\]
+so \eqref{eq:poly-law} holds with the polynomial combiner $P(u,v)=2u$, which is \emph{not} symmetric.
+Here $F(1/x)=-F(x)$, so reciprocity fails.
+This simple example explains why symmetry of the law is a natural structural axiom: it is precisely what enforces the quotient-swap identity (Lemma~\ref{lem:swap-quotients}) and hence reciprocity (Lemma~\ref{lem:reciprocity}).
+
+\subsection{Why polynomiality and regularity matter}\label{subsec:why-poly-regularity}
+
+The polynomial hypothesis is not a technical convenience but the core ``inevitability'' lever.
+Without it, one can always define a combiner on the range by
+\[
+  P\big(F(x),F(y)\big):=F(xy)+F(x/y),
+\]
+and extend it arbitrarily to all of $\R^2$; in that generality, there is no meaningful classification of admissible laws.
+
+Regularity enters at the step where we promote identities holding on $\mathrm{range}(F)$ to polynomial identities on all of $\R$.
+Lemma~\ref{lem:range-interval} guarantees that $F(\Rp)$ contains an interval, and Lemma~\ref{lem:poly-interval} then forces a univariate polynomial determined on that interval to be determined everywhere.
+If $F(\Rp)$ were thin (e.g.\ discrete), then many distinct polynomials could agree on the range, and coefficient forcing would fail.
+
+\subsection{Why the quadratic restriction is used here}\label{subsec:why-quadratic}
+
+Theorem~\ref{thm:bilinear-forced} currently assumes that $P$ is quadratic.
+As noted in Remark~\ref{rem:beyond-quadratic}, the axis constraints alone imply a factorization
+$P(u,v)=2u+2v+uv\,R(u,v)$ with $R$ symmetric polynomial, but do not by themselves force $R$ to be constant.
+Eliminating higher-order terms requires additional structure (for example, a compatibility axiom arising from composing \eqref{eq:poly-law} across three factors, or a smoothness hypothesis enabling Taylor comparison in log-coordinates).
+We leave these strengthenings to future work; the quadratic classification already yields the d'Alembert inevitability and matches the current formalization.
+
+\section{Formalization plan (Lean~4)}\label{sec:formalization}
+
+This section briefly records how the main arguments align with the current Lean~4 development in the \texttt{IndisputableMonolith} library, and what remains to be formalized for a fully end-to-end certificate.
+
+\subsection{What is already formalized}\label{subsec:already-formalized}
+
+The algebraic ``inevitability of the law'' portion of the paper is the primary formal target and is already largely present.
+In particular, the key steps appear in the module
+\texttt{IndisputableMonolith/Foundation/DAlembert/Inevitability.lean}:
+\begin{itemize}
+  \item \textbf{Derived reciprocity from symmetry of the law.}
+  The paper's Lemmas~\ref{lem:swap-quotients} and \ref{lem:reciprocity} correspond to Lean lemmas deriving
+  $F(x/y)=F(y/x)$ and $F(z)=F(1/z)$ from the symmetry of $P$ together with multiplicative consistency.
+  \item \textbf{Axis constraints.}
+  Lemma~\ref{lem:P-doubling-axes} (promotion of $P(0,v)=2v$ from the range to a polynomial identity) is implemented using the intermediate value theorem to obtain an interval in the range of $F$, mirroring Lemma~\ref{lem:range-interval}.
+  \item \textbf{Quadratic coefficient elimination.}
+  Theorem~\ref{thm:bilinear-forced} is formalized as a coefficient-forcing statement for a symmetric quadratic ansatz for $P$, yielding the bilinear family $P(u,v)=2u+2v+cuv$.
+\end{itemize}
+
+This decomposition is intentional: the Lean development isolates the \emph{algebraic classification of the law} from the analytic classification of d'Alembert solutions.
+
+\subsection{What remains (and how to proceed)}\label{subsec:formalization-remaining}
+
+There are two natural directions for strengthening the formal certificate.
+
+\medskip\noindent\textbf{(i) Beyond quadratic: ruling out higher-degree symmetric polynomials.}
+To remove Assumption~\ref{ass:quadratic-law}, one needs additional structure beyond the axis constraints (Remark~\ref{rem:beyond-quadratic}).
+A promising formal path is to introduce a \emph{compatibility axiom} encoding associativity/consistency under composing three ratios, derive a polynomial identity for $R(u,v)$ in the factorization $P(u,v)=2u+2v+uvR(u,v)$, and then use polynomial rigidity to show $R$ is constant.
+
+\medskip\noindent\textbf{(ii) Analytic end-to-end: from d'Alembert to $\cosh$ and the unique cost.}
+Sections~\ref{sec:reduction}--\ref{sec:unique-cost} appeal to classical solution theory for \eqref{eq:dalembert}.
+A full Lean certificate would either:
+\begin{itemize}
+  \item import a suitable d'Alembert classification lemma from Mathlib (under continuity/measurability hypotheses), or
+  \item develop a project-local classification for the even, normalized hyperbolic branch needed here.
+\end{itemize}
+With this in place, Theorem~\ref{thm:calibration-c-eq-two} and Corollary~\ref{cor:unique-cost} become straightforward formal consequences of the already-formal algebraic reduction plus elementary calculus at the origin.
+
+\appendix
+
+\section{A polynomial factorization lemma}\label{app:factorization}
+
+In Sections~\ref{sec:first-forcing-layer}--\ref{sec:polynomial-classification} we repeatedly use that the axis constraints $P(0,v)=2v$ and $P(u,0)=2u$ force strong algebraic divisibility.
+For convenience we record the basic factorization statement used in Remark~\ref{rem:beyond-quadratic}.
+
+\begin{lemma}[Axis constraints imply an $uv$ factor]\label{lem:uv-factor}
+Let $P\in\R[u,v]$ satisfy
+\[
+  P(0,v)=2v\quad\text{for all }v\in\R,
+  \qquad
+  P(u,0)=2u\quad\text{for all }u\in\R.
+\]
+Then there exists a polynomial $R\in\R[u,v]$ such that for all $u,v\in\R$,
+\begin{equation}\label{eq:uv-factor}
+  P(u,v)=2u+2v+uv\,R(u,v).
+\end{equation}
+If moreover $P$ is symmetric (i.e.\ $P(u,v)=P(v,u)$), then $R$ is symmetric as well.
+\end{lemma}
+
+\begin{proof}
+Define $Q(u,v):=P(u,v)-2u-2v\in\R[u,v]$.
+The hypotheses give $Q(0,v)=0$ for all $v$ and $Q(u,0)=0$ for all $u$.
+Write
+\[
+  Q(u,v)=\sum_{i,j\ge 0} a_{ij}u^iv^j.
+\]
+The identity $Q(0,v)=0$ forces $a_{0j}=0$ for all $j$, hence every monomial in $Q$ has $i\ge 1$, i.e.\ $u$ divides $Q$.
+Similarly, $Q(u,0)=0$ forces $a_{i0}=0$ for all $i$, hence every monomial has $j\ge 1$, i.e.\ $v$ divides $Q$.
+Therefore $uv$ divides $Q$, so $Q(u,v)=uv\,R(u,v)$ for some $R\in\R[u,v]$, proving \eqref{eq:uv-factor}.
+If $P$ is symmetric, then $Q$ is symmetric; since $uv$ is symmetric, the quotient $R$ must be symmetric as well.
+\end{proof}
+
+\section{Coefficient elimination in the symmetric quadratic case}\label{app:quadratic-elimination}
+
+For completeness we spell out the coefficient forcing used in Section~\ref{sec:polynomial-classification}.
+Nothing deep occurs here: the work is to reduce the functional constraints to polynomial identities on the axes (Section~\ref{sec:first-forcing-layer}), after which one compares coefficients.
+
+\begin{lemma}[Symmetry and axis constraints force the bilinear family]\label{lem:quadratic-coeff-elim}
+Let $P\in\R[u,v]$ be a polynomial of the quadratic form
+\[
+  P(u,v)=a+bu+cv+d\,uv+e\,u^2+f\,v^2
+  \qquad (a,b,c,d,e,f\in\R),
+\]
+and assume $P$ is symmetric: $P(u,v)=P(v,u)$ for all $u,v\in\R$.
+If additionally
+\[
+  P(0,v)=2v\quad\text{for all }v\in\R,
+\]
+then necessarily $a=0$, $b=c=2$, and $e=f=0$, and therefore
+\[
+  P(u,v)=2u+2v+d\,uv.
+\]
+\end{lemma}
+
+\begin{proof}
+Symmetry forces equality of coefficients after swapping $u$ and $v$, hence $b=c$ and $e=f$.
+Setting $u=0$ gives
+\[
+  P(0,v)=a+cv+f\,v^2.
+\]
+By hypothesis this equals $2v$ for all $v\in\R$, so coefficient comparison yields $a=0$, $c=2$, and $f=0$.
+Using $b=c$ and $e=f$ we obtain $b=2$ and $e=0$.
+Substituting into the quadratic form yields $P(u,v)=2u+2v+d\,uv$.
+\end{proof}
+
+\begin{remark}[How this connects to the functional equation]\label{rem:quadratic-elim-connection}
+In the functional setting, the equality $P(0,v)=2v$ is first obtained \emph{on the range} via Lemma~\ref{lem:P-boundary-on-range}.
+Regularity (Lemma~\ref{lem:range-interval}) then promotes it to an identity for all $v\in\R$ by polynomial rigidity (Lemma~\ref{lem:poly-interval}).
+The algebra in Lemma~\ref{lem:quadratic-coeff-elim} is exactly the final step in the proof of Theorem~\ref{thm:bilinear-forced}.
+\end{remark}
+
+\section{Classical d'Alembert classification (statement)}\label{app:dalembert-classification}
+
+For completeness we record a standard classification statement for the d'Alembert equation.
+This is the analytic input used implicitly in Sections~\ref{sec:reduction}--\ref{sec:unique-cost} (together with the curvature calibration in Section~\ref{sec:calibration}).
+
+\begin{theorem}[Classical classification of d'Alembert solutions (informal)]\label{thm:dalembert-classical}
+Let $H:\R\to\R$ satisfy the d'Alembert equation
+\[
+  H(t+u)+H(t-u)=2H(t)H(u)\qquad (t,u\in\R),
+\]
+and assume $H$ is not identically zero.
+Then $H(0)=1$ and there exists an additive function $a:\R\to\R$ such that
+\[
+  H(t)=\cosh(a(t))=\frac{e^{a(t)}+e^{-a(t)}}{2}.
+\]
+If, in addition, $H$ is continuous (or measurable and locally bounded), then $a(t)=kt$ for some constant $k\in\R$, and hence
+\[
+  H(t)=\cosh(kt)\quad\text{or}\quad H(t)=\cos(kt),
+\]
+with the trigonometric case arising from purely imaginary ``$k$'' in the additive representation.
+\end{theorem}
+
+\begin{remark}[Selecting the hyperbolic branch]\label{rem:select-hyperbolic}
+In the present paper, the lift $H$ is obtained from a real-valued cost by \eqref{eq:def-H} and satisfies $H(0)=1$.
+A curvature calibration such as \eqref{eq:kappa-calibration} together with nonflatness/interaction assumptions typically selects the hyperbolic branch $H(t)=\cosh(kt)$ with $k>0$.
+\end{remark}
+
+\end{document}
+

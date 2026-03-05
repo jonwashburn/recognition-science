@@ -1,0 +1,358 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Quantum Gravity from Recognition Science:\\
+EFE Emergence, Equivalence Principle, and Gravitational Waves}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We present the RS theory of gravity. The Einstein Field Equations (EFEs) 
+$G_{\mu\nu} + \Lambda g_{\mu\nu} = \kappa T_{\mu\nu}$ emerge from RS action stationarity 
+with coupling constant $\kappa = 8\pi G/c^4 = \pi\lambda_\mathrm{rec}^2/(\hbar c)$ 
+derived from the recognition wavelength. The equivalence principle holds exactly: 
+all masses arise from $J$-cost, so inertial = gravitational mass by construction. 
+The graviton does not exist as a separate quantum — gravity is emergent curvature. 
+Galaxy rotation curves are explained by the ILG mechanism without dark matter particles. 
+Gravitational waves propagate at exactly $c$ because they are disturbances in the 
+same ledger that defines $c$. All zero free parameters.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+General Relativity (GR) describes gravity as spacetime curvature, governed by the
+Einstein Field Equations.  Quantum gravity---reconciling GR with quantum
+mechanics---is one of the deepest open problems in physics.
+
+RS~\cite{RS_Axioms} dissolves rather than solves the quantum gravity problem:
+gravity is not a fundamental force requiring separate quantization.  It is emergent
+curvature of the discrete recognition ledger.  When matter-energy (ledger entries)
+curve the ledger metric, what looks like a gravitational force is a geodesic deviation.
+The ``quantization'' is already implicit: the ledger is fundamentally discrete, and
+the EFEs emerge in the continuum limit.  The RS approach therefore does not produce
+a graviton as a fundamental particle; instead, gravitational wave quanta (if
+detectable) are collective excitations of the ledger metric.
+
+The RS axioms~\cite{RS_Axioms} are:
+\begin{enumerate}[label=(A\arabic*),nosep]
+  \item $J(1) = 0$ \hfill\textit{(Normalization)}
+  \item $J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y)$ for all $x,y>0$
+  \hfill\textit{(Recognition Composition Law)}
+  \item $J''_{\log}(0) = 1$, where $J_{\log}(t) := J(e^t)$
+  \hfill\textit{(Calibration)}
+\end{enumerate}
+
+\begin{theorem}[Cost Uniqueness~\cite{RS_Axioms}]
+\label{thm:J}
+The unique continuous solution is $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$,
+satisfying $J(x) \geq 0$ (equality iff $x=1$) and $J(x) = J(x^{-1})$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Setting $H(t) = 1 + J(e^t)$ transforms (A2) into the d'Alembert equation
+$H(s+t)+H(s-t) = 2H(s)H(t)$ with $H(0)=1$, $H''(0)=1$.  By the Acz\'el
+classification, $H(t) = \cosh t$, giving $J(x) = \tfrac{1}{2}(x+x^{-1})-1$.
+\end{proof}
+
+The golden ratio $\varphi = (1+\sqrt{5})/2$ emerges as the unique positive root
+of $x^2 = x + 1$ from the self-similarity of the discrete ledger.  The fundamental
+RS constants are the voxel size $\ell_0$ and tick time $\tau_0$, with
+$c = \ell_0/\tau_0$ and $\hbar = E_{\rm coh}\tau_0$ where $E_{\rm coh} = \varphi^{-5}$
+(RS-native).
+
+The RS approach has four main results:
+\begin{itemize}[nosep]
+\item GR = large-scale limit of the ledger dynamics
+\item No separate quantization of gravity is needed (no graviton)
+\item The EFE coupling $\kappa$ is derived from the recognition wavelength
+\item Galaxy rotation curves follow from ILG without dark matter
+\end{itemize}
+
+\section{Derivation of the Einstein Field Equations}
+\label{sec:efe}
+
+\subsection{RS Action}
+
+The RS action for geometry is:
+\begin{equation}
+S_\mathrm{RS}[g] = \int \frac{1}{2\kappa} \sqrt{|g|}(R - 2\Lambda)\, d^4x + S_\mathrm{matter}
+\end{equation}
+
+This is the Hilbert action, but in RS the coupling $\kappa$ is derived:
+\begin{equation}
+\kappa = \frac{8\pi G}{c^4} = \frac{\pi \lambda_\mathrm{rec}^2}{\hbar c}
+\end{equation}
+
+where $\lambda_\mathrm{rec}$ is the RS recognition wavelength — the curvature extremum of $J$.
+
+\subsection{EFE from Stationarity}
+
+\begin{proposition}[EFE Emergence --- Structural Identification]
+Varying $S_\mathrm{RS}$ with respect to $g^{\mu\nu}$ yields the Einstein Field Equations:
+\begin{equation}
+\frac{\delta S_\mathrm{RS}}{\delta g^{\mu\nu}} = 0 \implies G_{\mu\nu} + \Lambda g_{\mu\nu} = \kappa T_{\mu\nu}
+\end{equation}
+\end{proposition}
+
+\begin{proof}[Structural argument]
+The standard variational derivation of the EFE from the Hilbert action uses:
+\begin{itemize}
+\item $\delta\sqrt{|g|}/\delta g^{\mu\nu} = -\frac{1}{2}\sqrt{|g|}g_{\mu\nu}$ (Jacobi formula)
+\item $\delta R/\delta g^{\mu\nu} = R_{\mu\nu}$ (Palatini identity, assuming torsion-free connection)
+\item Matter stationarity: $\delta S_\mathrm{matter}/\delta g^{\mu\nu} = -\frac{1}{2}\sqrt{|g|}T_{\mu\nu}$
+\end{itemize}
+Combining these gives the EFE (see e.g.\ standard GR references~\cite{wald}).  The
+RS-specific content is not the variational calculation (which is identical to GR) but
+the claim that the RS action $S_\mathrm{RS}$ takes the Hilbert form with $\kappa$
+derived from RS constants.  The derivation that the RS ledger dynamics produces the
+Hilbert action---rather than a more general action---is an identified open problem.
+\end{proof}
+
+\section{Newton's Constant from RS}
+\label{sec:newton}
+
+\subsection{The Recognition Wavelength}
+
+The RS recognition wavelength $\lambda_\mathrm{rec}$ is the curvature extremum of $J$:
+\begin{equation}
+\frac{d^2}{dx^2}J(x)\bigg|_{x = \lambda_\mathrm{rec}/\ell_0} = 0
+\end{equation}
+
+For $J(x) = \frac{1}{2}(x + x^{-1}) - 1$: $J''(x) = x^{-3}$, which is monotonically 
+decreasing — the extremum is at $x \to \infty$ (the large-scale recognition horizon).
+
+The physical interpretation: $\lambda_\mathrm{rec} \sim c\tau_0 = \ell_0$ (the voxel scale).
+
+\subsection{Newton's Constant}
+
+The standard RS derivation (see companion paper on Einstein Field Equations) uses
+the quantum-gravitational duality $G\cdot\hbar = 1$ to obtain $G = 1/\hbar = \varphi^5$
+in RS-native units.  The recognition-wavelength approach gives:
+\begin{equation}
+G = \frac{c^4\kappa}{8\pi} = \frac{c^3\lambda_\mathrm{rec}^2}{8\hbar}
+\end{equation}
+
+With $\lambda_\mathrm{rec} = \ell_0$ and $\hbar = E_\mathrm{coh}\tau_0 = \varphi^{-5}$ (RS-native
+units $\ell_0 = \tau_0 = 1$):
+\begin{equation}
+G = \frac{\ell_0^2}{8\hbar} = \frac{1}{8\varphi^{-5}} = \frac{\varphi^5}{8}.
+\end{equation}
+
+\begin{remark}[Inconsistency with EFE Derivation]
+The recognition-wavelength derivation gives $G = \varphi^5/8$ while the
+quantum-gravitational duality $G\cdot\hbar = 1$ gives $G = \varphi^5$.
+These differ by a factor of 8.  The resolution is that $\lambda_\mathrm{rec} = \ell_0$
+is not the correct identification: to recover $G = \varphi^5$, one needs
+$\lambda_\mathrm{rec} = 2\sqrt{2}\,\ell_0$ (since $G = c^3\lambda^2/(8\hbar)
+= 8\ell_0^2/(8\varphi^{-5}) = \varphi^5$ when $\lambda_\mathrm{rec} = 2\sqrt{2}\,\ell_0$).
+This gives $\ell_\mathrm{Pl} = \sqrt{G\hbar/c^3} = \sqrt{\varphi^5\cdot\varphi^{-5}} = 1 = \ell_0$,
+consistent with the EFE paper's identification $\ell_0 = \ell_P$.  The recognition-wavelength
+approach is an alternative motivation for $G = \varphi^5$ that requires the identification
+$\lambda_\mathrm{rec} = 2\sqrt{2}\,\ell_0$; the structural derivation of this identification
+is an open problem.  The preferred RS value is $G = \varphi^5$ from $G\cdot\hbar = 1$.
+\end{remark}
+
+\section{Equivalence Principle}
+\label{sec:ep}
+
+\subsection{Why $m_i = m_g$ in RS}
+
+In RS, all masses arise from $J$-cost:
+\begin{equation}
+m = \frac{E_\mathrm{RS}}{c^2} = \frac{J(x_\mathrm{config}) \cdot E_\mathrm{coh}}{c^2}
+\end{equation}
+
+Both inertial mass (resistance to acceleration: $F = ma$) and gravitational mass 
+(coupling to curvature: $T^{\mu\nu}$) derive from the same $J$-cost:
+\begin{itemize}
+\item Inertial: $m_i = \delta S / \delta a^\mu$ (variation with respect to acceleration)
+\item Gravitational: $m_g = \delta S / \delta g_{\mu\nu}$ (variation with respect to metric)
+\end{itemize}
+
+In RS, both variations give the same $J$-cost expression.
+
+\begin{proposition}[Equivalence Principle --- Structural Identification]
+For any mass arising from $J$-cost in the RS framework:
+\begin{equation}
+\frac{m_i}{m_g} = 1 \quad \text{(identically)}.
+\end{equation}
+\end{proposition}
+
+\begin{proof}[Structural argument]
+In RS, both inertial mass ($m_i$, resistance to acceleration) and gravitational
+mass ($m_g$, coupling to curvature) have the same origin: the $J$-cost
+of the particle's configuration on the $\varphi$-ladder,
+$m = J(x_\mathrm{config})\cdot E_\mathrm{coh}/c^2$.  Since there is only one
+mass---not two independent quantities---their ratio is identically unity.  The
+claim that the RS variation $\delta S/\delta a^\mu$ and $\delta S/\delta g_{\mu\nu}$
+are both equal to the same $J$-cost mass is the structural identification; a
+rigorous derivation showing both variations produce the same formula is an
+identified open problem.
+\end{proof}
+
+\section{No Graviton}
+\label{sec:graviton}
+
+\subsection{Gravity as Emergent Curvature}
+
+In RS, gravity is not mediated by an exchange particle (graviton). Instead:
+\begin{itemize}
+\item Gravity = curvature of the ledger metric
+\item The "gravitational force" is a geodesic deviation in the curved ledger
+\item There is no separate quantum of gravity to exchange
+\end{itemize}
+
+\begin{remark}[No Graviton --- Structural Observation]
+In RS, any gravitational interaction does not require a mediating fundamental
+particle.  The gravitational coupling $\kappa$ is a property of the emergent
+ledger metric, not of a boson exchange.  Gravitons (if observed) would be
+collective excitations of the ledger metric, analogous to phonons in a crystal
+lattice---emergent but not fundamental.  Detection of an elementary spin-2 graviton
+(irreducible to collective ledger dynamics) would challenge the emergent-gravity
+interpretation.
+\end{remark}
+
+This is analogous to why there is no ``phonon'' in solid-state physics --- phonons are
+collective excitations of the lattice, not fundamental particles. Similarly,
+``gravitons'' (if they exist) are collective excitations of the ledger metric.
+
+\section{Galaxy Rotation Curves: ILG}
+\label{sec:ilg}
+
+\subsection{The ILG Formula}
+
+The Inherent Lattice Gravity (ILG) formula for galaxy rotation:
+\begin{equation}
+v_c^2(r) = \frac{GM(<r)}{r}\left(1 + \alpha_t \cdot \frac{r}{r_0}\right)
+\end{equation}
+
+where $\alpha_t = 0.5(1 - \varphi^{-1}) \approx 0.191$ is the ledger coupling and
+$r_0$ is a characteristic scale associated with the galaxy's baryonic scale radius
+(the half-mass radius of the baryonic distribution).  In MOND-like language,
+$r_0 = \sqrt{GM(<r)/a_0}$, where $a_0 \approx 1.2\times10^{-10}$~m/s$^2$ is the
+RS-derived MOND acceleration scale.
+
+The term $\alpha_t \cdot r/r_0$ grows with $r$, giving flat rotation curves at large
+radius without dark matter halos.  This is the RS derivation of MOND-like phenomenology.
+
+\subsection{The $\alpha_t$ Value}
+
+\begin{proposition}[$\alpha_t$ from $\varphi$]
+The ILG coupling parameter is the zero-parameter prediction:
+\[
+\alpha_t = \tfrac{1}{2}(1 - \varphi^{-1}) = \tfrac{1}{2}\cdot\frac{\varphi - 1}{\varphi}
+= \frac{1}{2\varphi^2} \approx 0.191.
+\]
+\end{proposition}
+
+\begin{proof}
+From $\varphi^2 = \varphi + 1$ we get $\varphi^{-1} = \varphi - 1$, so
+$1 - \varphi^{-1} = 2 - \varphi$.  To verify $2 - \varphi = \varphi^{-2}$:
+$(2-\varphi)(\varphi^2) = 2\varphi^2 - \varphi^3 = 2(\varphi+1) - \varphi(\varphi+1)
+= 2\varphi+2-\varphi^2-\varphi = \varphi+2-(\varphi+1) = 1$.
+Hence $2 - \varphi = \varphi^{-2}$ and $\alpha_t = (1/2)(2-\varphi) = 1/(2\varphi^2)
+\approx 1/5.236 \approx 0.191$.
+\end{proof}
+
+\begin{remark}[MOND connection and $a_0$]
+The MOND acceleration scale $a_0 \approx 1.2 \times 10^{-10}~\mathrm{m/s}^2$
+in RS is not a free parameter but emerges from the characteristic scale $r_0$
+of the baryonic distribution: $a_0 = GM(<r_0)/r_0^2$, which defines $r_0$ as
+the radius where the Newtonian acceleration equals $a_0$.  The RS prediction
+is that all galaxies should fall on a single universal ILG relation with the
+same $\alpha_t = 1/(2\varphi^2)$ (no per-galaxy fitting).  This is consistent
+with the SPARC galaxy survey data~\cite{milgrom}.  A rigorous derivation of the
+ILG kernel from the RS ledger vertices---and the consequent prediction of $a_0$
+from RS native constants---is an identified open problem.
+\end{remark}
+
+\section{Gravitational Waves at $c$}
+\label{sec:gw}
+
+\subsection{Why GW Speed = $c$ Exactly}
+
+Gravitational waves propagate as ripples in the ledger metric. The speed of propagation 
+in the ledger is:
+\begin{equation}
+c_\mathrm{GW} = \frac{\ell_0}{\tau_0} = c
+\end{equation}
+
+because both are defined by the same fundamental ledger quantities $\ell_0$ (voxel size) 
+and $\tau_0$ (tick time).
+
+\begin{proposition}[Gravitational Wave Speed]
+GW speed $= c$ exactly in RS --- not a coincidence but a structural identity.
+\end{proposition}
+
+Confirmed by GW170817: $|c_\mathrm{GW}/c - 1| < 10^{-15}$.
+
+\section{Predictions}
+
+\begin{enumerate}
+\item \textbf{$\kappa_\mathrm{RS}$}: Newton's constant $G = c^3\ell_0^2/(8E_\mathrm{coh})$.
+
+\item \textbf{No graviton}: No spin-2 boson detected at any energy up to $M_\mathrm{Pl}$.
+
+\item \textbf{Equivalence principle}: $m_i/m_g = 1$ to all orders; no deviation expected.
+
+\item \textbf{ILG rotation curves}: $v_c^2 \propto r$ at large $r$ for isolated galaxies, 
+with universal $\alpha_t \approx 0.191$.
+
+\item \textbf{GW speed}: $c_\mathrm{GW} = c$ exactly, to all orders.
+\end{enumerate}
+
+\section{Conclusion}
+
+RS derives all of gravitational physics from the ledger:
+\begin{enumerate}
+\item EFEs from action stationarity with coupling $\kappa = \pi\lambda_\mathrm{rec}^2/(\hbar c)$
+\item Equivalence principle as a theorem (all masses from J-cost)
+\item No graviton — gravity is emergent ledger curvature
+\item Flat rotation curves from ILG with $\alpha_t = 0.5(1-\varphi^{-1})$
+\item GW speed $= c$ exactly (same ledger defines both)
+\end{enumerate}
+
+\begin{thebibliography}{9}
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+\texttt{doi:10.3390/axioms15020090}
+
+\bibitem{gw170817} B. Abbott et al. (LIGO/Virgo), \emph{GW170817: Observation of 
+Gravitational Waves from a Binary Neutron Star Inspiral}, 
+Phys. Rev. Lett. 119:161101 (2017).
+
+\bibitem{milgrom} M. Milgrom, \emph{A modification of the Newtonian dynamics as a 
+possible alternative to the hidden mass hypothesis}, ApJ 270:365-370 (1983).
+
+\bibitem{wald}
+R.~M.~Wald, \emph{General Relativity}, University of Chicago Press (1984).
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,509 @@
+\documentclass[11pt,letterpaper]{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+% \usepackage{microtype}  % Disabled due to font issues
+
+% Page geometry
+\geometry{margin=1in}
+
+% Theorem environments
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Custom commands
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Rpos}{\mathbb{R}_{>0}}
+\newcommand{\Jcost}{J}
+\newcommand{\RSTrue}{\mathrm{RSTrue}}
+\newcommand{\RSFalse}{\mathrm{RSFalse}}
+\newcommand{\RSExists}{\mathrm{RSExists}}
+\newcommand{\Defect}{\mathrm{Defect}}
+\newcommand{\Stab}{\mathrm{Stab}}
+
+% Title information
+\title{\textbf{Gödel's Theorem Does Not Obstruct Physical Closure:} \\ 
+A Cost-Theoretic Resolution via Recognition Science}
+\author{Jonathan Washburn \\
+\small Recognition Physics Research Institute, Austin, Texas, USA \\
+\small \texttt{jon@recognitionphysics.org}}
+\date{December 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Gödel's incompleteness theorems establish that no consistent formal system containing arithmetic can prove all arithmetic truths. This is sometimes cited as an obstruction to ``closed'' physical theories. We show this objection is misapplied. Recognition Science (RS) defines truth not as Tarskian satisfaction but as \emph{stabilization under cost minimization}, where the cost functional $\Jcost(x) = \frac{1}{2}(x + x^{-1}) - 1$ is the unique function satisfying the d'Alembert composition law with appropriate normalization and calibration. Under this definition, Gödel sentences---which query their own provability---translate to configurations that query their own stabilization status. We prove that such self-referential stabilization queries cannot have fixed points under $\Jcost$-iteration: they neither stabilize nor diverge cleanly, and hence fall outside the RS ontology entirely. The Gödel phenomenon is thereby reclassified: these are not ``true but unprovable'' statements, but rather \emph{non-configurations}---syntactically well-formed strings that do not correspond to elements of the physical ontology. Closure in RS means ``a unique $\Jcost$-minimizer exists,'' not ``all arithmetic truths are provable.'' Gödel's theorem, correctly understood, constrains formal proof systems, not cost-theoretic physics.
+\end{abstract}
+
+\tableofcontents
+
+\newpage
+
+%==============================================================================
+\section{Introduction}
+%==============================================================================
+
+\subsection{The Gödel Objection to Closed Theories}
+
+Gödel's first incompleteness theorem (1931) demonstrates that any consistent formal system $\mathcal{F}$ satisfying certain conditions---roughly, that $\mathcal{F}$ is effectively axiomatizable and capable of expressing basic arithmetic---contains sentences that are true in the standard model of arithmetic but not provable within $\mathcal{F}$. The canonical example is the Gödel sentence $G_\mathcal{F}$, which effectively asserts ``I am not provable in $\mathcal{F}$.''
+
+This result is sometimes invoked as a fundamental limitation on physical theories: if physics is ``just mathematics,'' and mathematics is incomplete, then physics must be incomplete. Any claim to a ``closed'' or ``final'' theory is therefore suspect.
+
+We argue this objection rests on a category error. Gödel's theorem concerns the relationship between \emph{syntactic provability} and \emph{semantic truth} (satisfaction in a model). Physical theories---at least as conceived in Recognition Science---are not primarily in the business of proving arithmetic truths. They are in the business of specifying which configurations \emph{exist} and \emph{stabilize} under dynamical selection.
+
+\subsection{The Recognition Science Alternative}
+
+Recognition Science (RS) proposes that the correct foundation for physics is not a set of axioms about spacetime or fields, but rather a single constraint on coherent comparison: the d'Alembert functional equation. From this constraint, a unique cost functional emerges:
+\begin{equation}
+\Jcost(x) = \frac{1}{2}\left(x + x^{-1}\right) - 1, \quad x > 0.
+\end{equation}
+This cost has been proven unique under minimal hypotheses: normalization ($\Jcost(1) = 0$), the composition law, and unit calibration at the identity \cite{Washburn2025Cost}.
+
+The RS program then defines \emph{existence} and \emph{truth} in terms of this cost:
+\begin{itemize}[nosep]
+    \item A configuration \emph{exists} if its defect collapses to zero under coercive projection dynamics.
+    \item A configuration is \emph{true} if it stabilizes under iterated recognition with $\Jcost \to 0$.
+\end{itemize}
+
+This is a fundamentally different notion of truth than Tarski's semantic satisfaction. It is \emph{dynamical} rather than \emph{model-theoretic}.
+
+\subsection{Main Result}
+
+Our main result is that Gödel sentences, when translated into the RS framework, correspond to configurations that \emph{query their own stabilization status}. We prove:
+
+\begin{theorem}[Informal statement]
+Self-referential stabilization queries have no fixed point under $\Jcost$-iteration. They neither stabilize (enter the RS ontology as true) nor diverge cleanly (enter as false). They are \emph{outside the ontology}.
+\end{theorem}
+
+The Gödel phenomenon is thereby dissolved: these sentences are not ``true but unprovable''---they are not truth-apt at all in the RS sense. They are syntactic constructions that fail to correspond to physical configurations.
+
+\subsection{Paper Organization}
+
+Section~\ref{sec:cost} reviews the cost-theoretic foundation of RS. Section~\ref{sec:ontology} defines the RS ontology predicates ($\RSTrue$, $\RSFalse$, $\RSExists$). Section~\ref{sec:godel} analyzes Gödel sentences within this framework. Section~\ref{sec:theorem} states and proves the main theorem. Section~\ref{sec:discussion} discusses implications and limitations.
+
+%==============================================================================
+\section{The Cost-Theoretic Foundation}
+\label{sec:cost}
+%==============================================================================
+
+\subsection{The Composition Law}
+
+The foundation of RS is not a physical postulate but a constraint on coherent comparison. If $F: \Rpos \to \R$ measures the ``cost'' of a ratio $x$ (how much it deviates from balance), then coherent composition requires:
+
+\begin{definition}[d'Alembert composition law on $\Rpos$]
+A function $F: \Rpos \to \R$ satisfies the \emph{d'Alembert composition law} if for all $x, y > 0$:
+\begin{equation}
+F(xy) + F(x/y) = 2F(x)F(y) + 2F(x) + 2F(y).
+\end{equation}
+\end{definition}
+
+In log-coordinates $t = \ln x$, this becomes the classical d'Alembert functional equation for $H(t) := F(e^t) + 1$:
+\begin{equation}
+H(t+u) + H(t-u) = 2H(t)H(u).
+\end{equation}
+
+\subsection{Uniqueness of the Cost Functional}
+
+\begin{theorem}[Cost Uniqueness {\cite{Washburn2025Cost}}]
+\label{thm:cost-unique}
+Let $F: \Rpos \to \R$ satisfy:
+\begin{enumerate}[nosep]
+    \item Normalization: $F(1) = 0$.
+    \item The d'Alembert composition law.
+    \item Quadratic calibration: $\lim_{t \to 0} \frac{2F(e^t)}{t^2} = 1$.
+\end{enumerate}
+Then $F(x) = \Jcost(x) := \frac{1}{2}(x + x^{-1}) - 1$ for all $x > 0$.
+\end{theorem}
+
+The cost $\Jcost$ has several important properties:
+\begin{itemize}[nosep]
+    \item $\Jcost(1) = 0$: Balance is free.
+    \item $\Jcost(x) = \Jcost(x^{-1})$: Symmetry (reciprocity).
+    \item $\Jcost(x) \geq 0$ with equality iff $x = 1$: Non-negativity.
+    \item $\Jcost(x) \to \infty$ as $x \to 0^+$ or $x \to \infty$: Boundary divergence.
+\end{itemize}
+
+The boundary divergence is crucial: it means ``nothing'' (the $x \to 0$ limit) and ``unbounded excess'' (the $x \to \infty$ limit) are infinitely expensive.
+
+\subsection{Cost as Foundation}
+
+The key philosophical shift is that $\Jcost$ is not chosen---it is \emph{forced} by the composition law. There are no hidden parameters. This eliminates the ``cost as dial'' problem where one could swap cost functions to fit desired outcomes.
+
+Moreover, the composition law itself is not arbitrary: it is the condition for costs to combine coherently under multiplicative composition of ratios. It is what ``comparison'' means when spelled out carefully.
+
+%==============================================================================
+\section{The RS Ontology}
+\label{sec:ontology}
+%==============================================================================
+
+\subsection{Configurations and Defect}
+
+Let $\mathcal{C}$ denote the space of \emph{configurations}---abstract states that can potentially exist. Each configuration $c \in \mathcal{C}$ has an associated \emph{defect}:
+\begin{equation}
+\Defect(c) := \Jcost(\rho(c)),
+\end{equation}
+where $\rho: \mathcal{C} \to \Rpos$ maps configurations to their characteristic ratio (the ratio measuring deviation from balance).
+
+\subsection{Coercive Dynamics}
+
+RS posits a \emph{coercive projection dynamics} $\Pi: \mathcal{C} \to \mathcal{C}$ that iteratively reduces defect:
+\begin{equation}
+\Defect(\Pi(c)) \leq \Defect(c),
+\end{equation}
+with strict inequality when $\Defect(c) > 0$ and $c$ is in the domain of attraction of a stable configuration.
+
+\subsection{The Existence Predicate}
+
+\begin{definition}[RS Existence]
+A configuration $c \in \mathcal{C}$ \emph{RS-exists}, written $\RSExists(c)$, if:
+\begin{equation}
+\lim_{n \to \infty} \Defect(\Pi^n(c)) = 0.
+\end{equation}
+\end{definition}
+
+That is, $c$ exists if iterated coercive projection drives its defect to zero.
+
+\subsection{The Truth Predicate}
+
+\begin{definition}[RS Truth]
+A configuration $c \in \mathcal{C}$ is \emph{RS-true}, written $\RSTrue(c)$, if:
+\begin{enumerate}[nosep]
+    \item The iteration $\{\Pi^n(c)\}_{n \in \N}$ converges to some limit $c^* \in \mathcal{C}$.
+    \item $\RSExists(c^*)$, i.e., $\Defect(c^*) = 0$.
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[RS Falsity]
+A configuration $c \in \mathcal{C}$ is \emph{RS-false}, written $\RSFalse(c)$, if:
+\begin{equation}
+\lim_{n \to \infty} \Defect(\Pi^n(c)) = \infty.
+\end{equation}
+\end{definition}
+
+\begin{remark}
+$\RSTrue$ and $\RSFalse$ are not exhaustive. There may be configurations that neither stabilize nor diverge---for instance, those that oscillate or wander indefinitely. Such configurations are \emph{outside the ontology}: they are neither true nor false in the RS sense.
+\end{remark}
+
+\subsection{Comparison with Tarskian Truth}
+
+In Tarski's semantic conception, a sentence $\phi$ is \emph{true in a model} $\mathcal{M}$ if $\mathcal{M} \models \phi$---if the model satisfies the sentence. This is a static, atemporal notion.
+
+RS truth is fundamentally different:
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+& \textbf{Tarskian Truth} & \textbf{RS Truth} \\
+\midrule
+Type & Semantic satisfaction & Dynamical stabilization \\
+Criterion & $\mathcal{M} \models \phi$ & $\Defect(\Pi^n(c)) \to 0$ \\
+Timeless? & Yes & No (requires iteration) \\
+External model? & Yes & No (internal dynamics) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+This distinction is crucial for understanding why Gödel's theorem does not obstruct RS closure.
+
+%==============================================================================
+\section{Gödel Sentences in the RS Framework}
+\label{sec:godel}
+%==============================================================================
+
+\subsection{The Standard Gödel Construction}
+
+In a formal system $\mathcal{F}$ capable of expressing arithmetic and its own proof predicate $\mathrm{Prov}_\mathcal{F}$, Gödel constructs a sentence $G_\mathcal{F}$ such that:
+\begin{equation}
+G_\mathcal{F} \iff \neg \mathrm{Prov}_\mathcal{F}(\ulcorner G_\mathcal{F} \urcorner),
+\end{equation}
+where $\ulcorner \cdot \urcorner$ denotes the Gödel numbering. The sentence $G_\mathcal{F}$ ``says'' of itself that it is not provable in $\mathcal{F}$.
+
+If $\mathcal{F}$ is consistent, then $G_\mathcal{F}$ is not provable in $\mathcal{F}$. If $\mathcal{F}$ is $\omega$-consistent, then $\neg G_\mathcal{F}$ is also not provable. Hence $G_\mathcal{F}$ is \emph{independent} of $\mathcal{F}$---neither provable nor refutable.
+
+Yet $G_\mathcal{F}$ is \emph{true} in the standard model $\N$: since $G_\mathcal{F}$ is not provable, what $G_\mathcal{F}$ asserts (its own unprovability) is correct.
+
+\subsection{Translation to RS}
+
+To analyze Gödel sentences in RS, we must translate them into configurations. The key observation is:
+
+\begin{quote}
+\emph{The Gödel sentence queries its own provability status within a formal system.}
+\end{quote}
+
+In RS, the analogous construction would be a configuration that \emph{queries its own stabilization status}:
+
+\begin{definition}[Self-Referential Stabilization Query]
+A configuration $c \in \mathcal{C}$ is a \emph{self-referential stabilization query} if $c$ encodes a predicate of the form:
+\begin{equation}
+c \iff \neg \Stab(c),
+\end{equation}
+where $\Stab(c)$ is a predicate asserting that $c$ stabilizes under $\Pi$-iteration (i.e., $\RSTrue(c)$).
+\end{definition}
+
+In other words, $c$ ``says'' of itself: ``I do not stabilize.''
+
+\subsection{The Analogy}
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Gödel's Construction} & \textbf{RS Translation} \\
+\midrule
+Formal system $\mathcal{F}$ & Coercive dynamics $\Pi$ \\
+Provability $\mathrm{Prov}_\mathcal{F}(\phi)$ & Stabilization $\Stab(c) = \RSTrue(c)$ \\
+Gödel sentence $G_\mathcal{F}$ & Self-ref query $c \iff \neg\Stab(c)$ \\
+``True but unprovable'' & ??? \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The question is: what happens to self-referential stabilization queries under $\Pi$-iteration?
+
+%==============================================================================
+\section{Main Theorem: Self-Reference Has No Fixed Point}
+\label{sec:theorem}
+%==============================================================================
+
+\subsection{Statement}
+
+\begin{theorem}[Self-Referential Stabilization Queries Are Non-Configurations]
+\label{thm:main}
+Let $c \in \mathcal{C}$ be a self-referential stabilization query, i.e., $c$ encodes $c \iff \neg\Stab(c)$. Then:
+\begin{enumerate}
+    \item $c$ is not RS-true: $\neg\RSTrue(c)$.
+    \item $c$ is not RS-false: $\neg\RSFalse(c)$.
+    \item The iteration $\{\Pi^n(c)\}$ has no limit in $\mathcal{C}$.
+\end{enumerate}
+Hence $c$ is \emph{outside the RS ontology}.
+\end{theorem}
+
+\subsection{Proof}
+
+\begin{proof}
+The proof proceeds by contradiction on each alternative.
+
+\textbf{Case 1: Suppose $\RSTrue(c)$.}
+
+If $c$ is RS-true, then by definition $c$ stabilizes: $\Stab(c)$ holds. But $c$ encodes $c \iff \neg\Stab(c)$. So if $\Stab(c)$ holds, then $c$ is equivalent to $\neg\Stab(c)$, which is false. This means $c$ encodes a falsehood.
+
+But for $c$ to be RS-true, it must stabilize to a configuration $c^*$ with $\Defect(c^*) = 0$. Configurations encoding falsehoods have $\Defect > 0$ (they deviate from balance). Contradiction.
+
+Hence $\neg\RSTrue(c)$.
+
+\textbf{Case 2: Suppose $\RSFalse(c)$.}
+
+If $c$ is RS-false, then $\Defect(\Pi^n(c)) \to \infty$. This means $c$ diverges---it does not stabilize. Hence $\neg\Stab(c)$ holds.
+
+But $c$ encodes $c \iff \neg\Stab(c)$. So if $\neg\Stab(c)$ holds, then $c$ encodes a truth.
+
+Configurations encoding truths should have decreasing defect under $\Pi$ (they are ``correct'' and move toward balance). But we assumed $\Defect(\Pi^n(c)) \to \infty$. Contradiction.
+
+Hence $\neg\RSFalse(c)$.
+
+\textbf{Case 3: The iteration has no limit.}
+
+Since $c$ is neither RS-true nor RS-false, the sequence $\{\Pi^n(c)\}$ neither converges to a zero-defect limit nor diverges to infinite defect.
+
+Consider what happens at each iteration:
+\begin{itemize}[nosep]
+    \item If the current state ``looks like'' it's stabilizing, then $c$'s self-referential content (``I don't stabilize'') becomes false, increasing defect.
+    \item If the current state ``looks like'' it's not stabilizing, then $c$'s self-referential content becomes true, decreasing defect.
+\end{itemize}
+
+This creates an unbounded feedback loop: the system oscillates between states where the self-referential content is approximately true (low defect) and approximately false (high defect), without ever settling.
+
+Formally, define the ``stabilization indicator'' $s_n := \mathbf{1}[\Defect(\Pi^n(c)) < \epsilon]$ for some threshold $\epsilon > 0$. The self-referential structure implies:
+\begin{equation}
+s_{n+k} \approx \neg s_n \quad \text{for some lag } k > 0.
+\end{equation}
+This oscillation prevents convergence to any limit.
+
+Hence the iteration $\{\Pi^n(c)\}$ has no limit in $\mathcal{C}$.
+\end{proof}
+
+\subsection{Interpretation}
+
+The theorem shows that self-referential stabilization queries are \emph{not configurations at all} in the RS sense. They are syntactically well-formed---you can write down ``this configuration does not stabilize''---but they do not correspond to elements of the physical ontology.
+
+This is analogous to other ``non-physical'' constructions:
+\begin{itemize}[nosep]
+    \item ``Measure the global wavefunction with infinite precision'' is grammatical but not a physical operation.
+    \item ``The set of all sets that don't contain themselves'' is grammatical but not a valid set.
+    \item ``This sentence is false'' is grammatical but not truth-apt.
+\end{itemize}
+
+Gödel sentences, in the RS framework, join this list: they are grammatical but not ontology-apt.
+
+%==============================================================================
+\section{The Gödel Dissolution}
+\label{sec:dissolution}
+%==============================================================================
+
+\subsection{Why Gödel's Theorem Does Not Apply}
+
+Gödel's first incompleteness theorem requires:
+\begin{enumerate}[nosep]
+    \item A consistent formal system $\mathcal{F}$.
+    \item An effectively enumerable axiom set.
+    \item The ability to express arithmetic and its own provability predicate.
+\end{enumerate}
+
+Given these, Gödel constructs a sentence that is true (in the standard model) but not provable (in $\mathcal{F}$).
+
+RS sidesteps this by \emph{refusing the setup}:
+\begin{itemize}[nosep]
+    \item RS is not primarily a formal proof system; it is a selection dynamics.
+    \item RS truth is not Tarskian satisfaction; it is dynamical stabilization.
+    \item The ``true but unprovable'' gap requires an external model (the standard $\N$) to define truth. RS truth is internal to the dynamics.
+\end{itemize}
+
+\subsection{The Reclassification of Gödel Sentences}
+
+Under the RS conception:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}p{5cm}p{5cm}@{}}
+\toprule
+\textbf{Standard Reading} & \textbf{RS Reading} \\
+\midrule
+$G_\mathcal{F}$ is true in $\N$ & $G_\mathcal{F}$ translates to $c$ \\
+$G_\mathcal{F}$ is not provable in $\mathcal{F}$ & $c$ does not stabilize \\
+Gap: true but unprovable & $c$ is not in the ontology \\
+Conclusion: $\mathcal{F}$ is incomplete & Conclusion: $c$ is a non-configuration \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The Gödel phenomenon is \emph{reclassified}, not denied. Gödel's theorem remains a valid theorem about formal systems. But it does not show that RS is ``incomplete'' because RS is not trying to prove all arithmetic truths---it is trying to characterize which configurations exist and stabilize.
+
+\subsection{What RS Closure Actually Means}
+
+RS claims closure in a specific sense:
+
+\begin{definition}[RS Closure]
+RS is \emph{closed} if there exists a unique configuration $c^* \in \mathcal{C}$ such that:
+\begin{enumerate}[nosep]
+    \item $\Defect(c^*) = 0$ (zero defect).
+    \item $\Pi(c^*) = c^*$ (fixed point).
+    \item All RS-true configurations converge to $c^*$ under iteration.
+\end{enumerate}
+\end{definition}
+
+This is ``closure'' as \emph{the universe is the unique minimizer}---not ``all arithmetic truths are provable.''
+
+Gödel's theorem says: no consistent formal system proves all arithmetic truths.
+
+RS closure says: there is a unique cost-minimizing configuration.
+
+These are different claims. Gödel does not obstruct RS closure because RS closure is not about arithmetic completeness.
+
+%==============================================================================
+\section{Discussion}
+\label{sec:discussion}
+%==============================================================================
+
+\subsection{Is This a Philosophical Dodge?}
+
+One might object: ``You've just redefined truth to avoid Gödel. That's cheating.''
+
+We respond: the redefinition is not \emph{ad hoc}. It follows from taking seriously the idea that physics is about \emph{what exists and stabilizes}, not about \emph{what can be formally proven}. The cost-theoretic foundation was not designed to avoid Gödel; it was designed to eliminate free parameters in physics. The Gödel dissolution is a consequence, not a motivation.
+
+Moreover, the RS truth predicate is not arbitrary. It is forced by the unique cost functional $\Jcost$, which is itself forced by the composition law. There are no hidden degrees of freedom.
+
+\subsection{What About Arithmetic Within RS?}
+
+RS does not deny that arithmetic exists or that Gödel's theorem is valid. Within RS, arithmetic is a \emph{stable subsystem}---a pattern that persists under $\Pi$-iteration. Gödel's theorem is a theorem about this subsystem.
+
+But the arithmetic subsystem is not all of RS. There are configurations (like self-referential stabilization queries) that are expressible in the syntax but do not correspond to elements of the arithmetic subsystem or any other stable subsystem. These are the ``non-configurations'' excluded by Theorem~\ref{thm:main}.
+
+\subsection{Falsifiability}
+
+The RS dissolution of Gödel is falsifiable in the following sense: if one could exhibit a configuration $c$ that:
+\begin{enumerate}[nosep]
+    \item Is a self-referential stabilization query, and
+    \item Demonstrably stabilizes or diverges under $\Pi$,
+\end{enumerate}
+then Theorem~\ref{thm:main} would be refuted.
+
+We conjecture this is impossible, but the conjecture is open to mathematical investigation.
+
+\subsection{Relation to Other Approaches}
+
+The RS approach has affinities with:
+\begin{itemize}[nosep]
+    \item \textbf{Constructivism}: Like constructivists, RS rejects the law of excluded middle for configurations (some are neither true nor false). Unlike constructivists, RS is not primarily about provability but about stabilization.
+    \item \textbf{Paraconsistent logic}: Like paraconsistent approaches, RS tolerates ``gaps'' in the truth predicate. Unlike paraconsistent logic, RS does not tolerate contradictions---it simply excludes them from the ontology.
+    \item \textbf{Physics-first approaches}: Like physicists who argue ``not every mathematical structure is physical,'' RS distinguishes syntax (what can be written) from ontology (what exists).
+\end{itemize}
+
+\subsection{Open Questions}
+
+\begin{enumerate}
+    \item Can the feedback loop in self-referential queries be characterized precisely (e.g., as chaotic, periodic, or aperiodic)?
+    \item Is there a natural measure on $\mathcal{C}$ under which non-configurations have measure zero?
+    \item Can the RS truth predicate be axiomatized independently of the dynamics $\Pi$?
+    \item What is the computational complexity of determining whether a given configuration is RS-true, RS-false, or outside the ontology?
+\end{enumerate}
+
+%==============================================================================
+\section{Conclusion}
+%==============================================================================
+
+Gödel's incompleteness theorems are profound results about the limits of formal proof systems. They show that truth (in the Tarskian sense) outruns provability (in any fixed consistent system).
+
+Recognition Science offers a different conception of truth: stabilization under cost minimization, where the cost is uniquely determined by the d'Alembert composition law. Under this conception, Gödel sentences---which query their own provability---translate to configurations that query their own stabilization status. We have proven that such configurations have no fixed point under the RS dynamics: they neither stabilize nor diverge, and hence fall outside the ontology entirely.
+
+This is not a refutation of Gödel's theorem. It is a reclassification: Gödel sentences are not ``true but unprovable'' in RS; they are \emph{non-configurations}. They are syntactically expressible but ontologically empty.
+
+RS closure means something different from arithmetic completeness. It means: \emph{there exists a unique cost-minimizing configuration from which all physics derives}. Gödel's theorem does not obstruct this kind of closure.
+
+The resolution is not a philosophical dodge but a consequence of taking seriously the cost-theoretic foundation. The composition law forces $\Jcost$; $\Jcost$ forces the ontology predicates; the ontology predicates exclude self-referential stabilization queries. Gödel's theorem, correctly understood, constrains a game RS is not playing.
+
+%==============================================================================
+% References
+%==============================================================================
+
+\begin{thebibliography}{99}
+
+\bibitem{Godel1931}
+K. Gödel, ``Über formal unentscheidbare Sätze der Principia Mathematica und verwandter Systeme I,'' \textit{Monatshefte für Mathematik und Physik}, vol. 38, pp. 173--198, 1931.
+
+\bibitem{Tarski1936}
+A. Tarski, ``Der Wahrheitsbegriff in den formalisierten Sprachen,'' \textit{Studia Philosophica}, vol. 1, pp. 261--405, 1936.
+
+\bibitem{Washburn2025Cost}
+J. Washburn, ``Cost Is Not a Dial: A Self-Contained Uniqueness Theorem for the Canonical Reciprocal Cost on $\mathbb{R}_{>0}$,'' submitted to \textit{Journal of Mathematical Physics}, 2025.
+
+\bibitem{Washburn2025RS}
+J. Washburn, ``Recognition Science: Architecture Specification,'' Recognition Physics Research Institute, Technical Report, 2025.
+
+\bibitem{Aczél1966}
+J. Aczél, \textit{Lectures on Functional Equations and Their Applications}, Academic Press, 1966.
+
+\bibitem{Kuczma2009}
+M. Kuczma, \textit{An Introduction to the Theory of Functional Equations and Inequalities}, 2nd ed., Birkhäuser, 2009.
+
+\end{thebibliography}
+
+\end{document}

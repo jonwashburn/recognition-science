@@ -1,0 +1,810 @@
+\documentclass[11pt]{article}
+
+% Core packages
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage[hidelinks]{hyperref}
+
+% Theorem environments
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{remark}[theorem]{Remark}
+
+% Notation (minimal, domain-agnostic)
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\cmin}{c_{\min}}
+\newcommand{\Knet}{K_{\mathrm{net}}}
+\newcommand{\Cproj}{C_{\mathrm{proj}}}
+\newcommand{\Ceng}{C_{\mathrm{eng}}}
+\newcommand{\Cdisp}{C_{\mathrm{disp}}}
+
+\newcommand{\Defect}{D}
+\newcommand{\Ortho}{O}
+\newcommand{\Gap}{G}
+\newcommand{\Tests}{T}
+
+\title{\textbf{CPM Method Closure:}\\
+\large A Domain-Agnostic Certificate for Coercivity and Aggregation}
+\author{Jonathan Washburn\\Recognition Physics Institute}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The Coercive Projection Method (CPM) is a reusable proof kernel that converts three quantitative hypotheses into global, domain-independent consequences. In this paper we isolate a \emph{method-closure} theorem for CPM: given nonnegative constants $(\Knet,\Cproj,\Ceng,\Cdisp)$ and four abstract functionals on a state space---defect $\Defect$, orthogonal mass $\Ortho$, energy gap $\Gap$, and test supremum $\Tests$---we assume (A) a projection--defect inequality $\Defect \le \Knet\Cproj\,\Ortho$, (B) an energy control inequality $\Ortho \le \Ceng\,\Gap$, and (C) a dispersion/interface inequality $\Ortho \le \Cdisp\,\Tests$. We prove the universal closure consequences:
+\[
+\Defect \le (\Knet\Cproj\Ceng)\,\Gap,\qquad
+\Defect \le (\Knet\Cproj\Cdisp)\,\Tests,
+\]
+and, when $\Knet\Cproj\Ceng>0$, the reverse coercivity form
+\[
+\Gap \ge \cmin\,\Defect,\qquad \cmin := (\Knet\Cproj\Ceng)^{-1}.
+\]
+To prevent vacuity, we additionally provide an explicit toy witness model satisfying the assumptions, yielding a self-contained certificate that CPM closure is consistent. The entire development is machine-verified in Lean 4 as a small, stable API intended for downstream domain instantiations.
+\end{abstract}
+
+\paragraph{Keywords.}
+coercivity; projection methods; defect-energy inequality; aggregation; certificates; Lean formalization
+
+\tableofcontents
+
+\section{Introduction}
+\label{sec:intro}
+
+The Coercive Projection Method (CPM) is best understood as a \emph{reusable closure kernel}:
+it turns a small set of quantitative inequalities into universal consequences that can be
+transported across domains.
+In many settings one wants to argue that ``being far from a structured set'' is expensive,
+or that failing local checks forces a global deficit.  CPM isolates the part of such arguments
+that is \emph{purely algebraic} from the part that is \emph{domain-specific}.
+
+\subsection{Motivation: separate the method from the instance}
+Across analysis, geometry, PDE, and number theory, a typical CPM-style proof decomposes into two layers:
+\begin{itemize}
+  \item \textbf{Domain layer (hard):} define the concrete objects and supply the estimates
+  that connect them to a structured set (projection bounds, dispersion bounds, energy bounds).
+  \item \textbf{Method layer (routine but essential):} once those estimates are available with
+  explicit constants, propagate them into coercivity and aggregation inequalities that drive the
+  rest of the argument (existence, stability, positivity, local-to-global implications).
+\end{itemize}
+The domain layer changes from paper to paper; the method layer does not.
+This paper formalizes the method layer as a \emph{standalone closure theorem} that downstream work can cite
+and reuse without re-proving the same algebra each time.
+
+\subsection{What ``method closure'' means in this paper}
+We work in a deliberately minimal setting.  Fix a state space (type) and four real-valued functionals:
+\[
+\Defect,\ \Ortho,\ \Gap,\ \Tests : \text{(state)} \to \R,
+\]
+interpreted abstractly as:
+\begin{itemize}
+  \item $\Defect$ --- a nonnegative ``distance-to-structure'' proxy;
+  \item $\Ortho$ --- a nonnegative ``off-structure mass'' proxy (often a squared projection norm);
+  \item $\Gap$ --- a nonnegative ``energy gap'' proxy;
+  \item $\Tests$ --- a nonnegative ``local test supremum'' proxy (dispersion/interface checks).
+\end{itemize}
+We assume three inequalities (A/B/C) relating these quantities via nonnegative constants
+$(\Knet,\Cproj,\Ceng,\Cdisp)$.  Informally:
+\[
+\text{(A)}\ \Defect \lesssim \Ortho,\qquad
+\text{(B)}\ \Ortho \lesssim \Gap,\qquad
+\text{(C)}\ \Ortho \lesssim \Tests,
+\]
+with explicit multiplicative factors.
+
+\emph{Method closure} is the claim that these three hypotheses are \textbf{closed} under a small set of
+universal deductions, producing the two key consequences:
+\begin{align*}
+  \Defect(x) &\le (\Knet\Cproj\Ceng)\,\Gap(x),\\
+  \Defect(x) &\le (\Knet\Cproj\Cdisp)\,\Tests(x),
+\end{align*}
+for every state $x$.  When the product $\Knet\Cproj\Ceng$ is strictly positive, we also derive the
+``reverse'' coercivity form
+\[
+\Gap(x)\ \ge\ \cmin\,\Defect(x),
+\qquad
+\cmin := (\Knet\Cproj\Ceng)^{-1}.
+\]
+We emphasize two design choices that matter for reuse:
+\begin{itemize}
+  \item \textbf{No hidden divisions.}  The forward inequalities require only nonnegativity.
+  The reverse form explicitly tracks the additional strict-positivity hypothesis needed to invert the product.
+  \item \textbf{Intermediate functional $\Ortho$.}  CPM often proceeds through a tractable intermediate quantity
+  (a projection or residual).  Keeping $\Ortho$ explicit makes the interface match how proofs are actually structured.
+\end{itemize}
+
+\subsection{Why a certificate includes a witness (non-vacuity)}
+In a purely formal presentation, it is easy to write theorems of the form
+``for every model satisfying A/B/C, conclusion holds'': the conclusions can be derived by straightforward algebra.
+However, this has a subtle failure mode in mechanized or certificate-style settings:
+if the assumptions are inconsistent, then quantifying over ``all models'' becomes vacuous.
+
+For this reason, our closure statement is packaged as a \emph{certificate} that includes a
+concrete witness model satisfying the assumptions.
+The witness is intentionally simple; it is not meant to model any physical or mathematical system.
+Its sole purpose is to certify that the method layer is not empty: CPM's abstract assumptions are mutually
+consistent and can be instantiated.
+
+\subsection{Scope and non-goals}
+This paper is intentionally not domain-specific.  In particular:
+\begin{itemize}
+  \item We do \textbf{not} prove that any particular domain satisfies A/B/C; that work belongs to domain papers.
+  \item We do \textbf{not} define semantics or ``meaning''; CPM method closure is a quantitative inequality engine,
+  not a theory of reference.
+  \item We do \textbf{not} commit to a particular analytic framework (Hilbert spaces, measures, PDE regularity).
+  Those choices live in the domain layer.
+\end{itemize}
+
+\subsection{Roadmap}
+Section~\ref{sec:summary} states the closure consequences in a compact, citation-friendly form.
+Section~\ref{sec:setup} fixes the constants and abstract functionals.
+Section~\ref{sec:assumptions} records the A/B/C assumptions.
+Section~\ref{sec:closure} proves the method-closure theorems (AB coercivity and AC aggregation).
+Section~\ref{sec:witness} gives the non-vacuity witness model.
+Section~\ref{sec:interface} provides an instantiation checklist for domain authors.
+Section~\ref{sec:lean} documents the Lean 4 formalization as a stable API and certificate wrapper,
+and Section~\ref{sec:discussion} records limitations and clarifies what ``closure'' does and does not imply.
+
+\section{Executive Summary of Results}
+\label{sec:summary}
+
+This section states the CPM method-closure theorem in a citation-ready form.
+All objects here are \emph{domain-agnostic}: the conclusions depend only on the inequalities below.
+
+\subsection{CPM data and assumptions}
+\paragraph{Data.}
+Fix a state space $X$ (a type), four functionals
+\[
+\Defect,\ \Ortho,\ \Gap,\ \Tests : X \to \R,
+\]
+and nonnegative constants $\Knet,\Cproj,\Ceng,\Cdisp \in \R$.
+
+\paragraph{Assumptions (A/B/C).}
+For every state $x\in X$, assume:
+\begin{align}
+  \textnormal{(A)}\quad \Defect(x) &\le \Knet\,\Cproj\,\Ortho(x), \label{eq:asmpA} \\
+  \textnormal{(B)}\quad \Ortho(x)  &\le \Ceng\,\Gap(x), \label{eq:asmpB} \\
+  \textnormal{(C)}\quad \Ortho(x)  &\le \Cdisp\,\Tests(x). \label{eq:asmpC}
+\end{align}
+
+\subsection{Derived closure inequalities}
+\begin{theorem}[CPM method closure: A/B/C $\Rightarrow$ coercivity and aggregation]\label{thm:method-closure}
+Assume \eqref{eq:asmpA}--\eqref{eq:asmpC} hold for all $x\in X$ with nonnegative constants
+$\Knet,\Cproj,\Ceng,\Cdisp\ge 0$.
+Then for all $x\in X$ the following \emph{closure inequalities} hold:
+\begin{align}
+  \Defect(x) &\le (\Knet\,\Cproj\,\Ceng)\,\Gap(x), \label{eq:AB-forward}\\
+  \Defect(x) &\le (\Knet\,\Cproj\,\Cdisp)\,\Tests(x). \label{eq:AC}
+\end{align}
+Moreover, if $\Knet\,\Cproj\,\Ceng>0$ (e.g.\ if $\Knet>0$, $\Cproj>0$, and $\Ceng>0$), define
+\begin{equation}\label{eq:cmin-def}
+  \cmin := (\Knet\,\Cproj\,\Ceng)^{-1}.
+\end{equation}
+Then the \emph{reverse} coercivity inequality holds for all $x\in X$:
+\begin{equation}\label{eq:AB-reverse}
+  \Gap(x)\ \ge\ \cmin\,\Defect(x).
+\end{equation}
+\end{theorem}
+
+\begin{remark}[Certificate statement (non-vacuous closure)]
+The phrase ``CPM method closure'' is used in this paper in the following precise sense:
+\begin{enumerate}
+  \item \textbf{Closure:} any model (i.e.\ any choice of $X,\Defect,\Ortho,\Gap,\Tests$) satisfying
+  Assumptions \eqref{eq:asmpA}--\eqref{eq:asmpC} automatically satisfies the closure inequalities
+  \eqref{eq:AB-forward}, \eqref{eq:AC}, and (under \eqref{eq:cmin-def}) \eqref{eq:AB-reverse}.
+  \item \textbf{Non-vacuity:} there exists at least one concrete witness model satisfying A/B/C,
+  so the closure theorem is not an empty implication arising from inconsistent hypotheses.
+\end{enumerate}
+Section~\ref{sec:witness} provides an explicit witness model, and Section~\ref{sec:lean} records the
+Lean 4 formalization and certificate wrappers used to mechanize these statements.
+\end{remark}
+
+\section{Formal Setup}
+\label{sec:setup}
+
+\subsection{Constants and the coercivity constant \texorpdfstring{$\cmin$}{cmin}}
+The CPM method layer is parameterized by four real constants:
+\[
+\Knet,\ \Cproj,\ \Ceng,\ \Cdisp \in \R.
+\]
+Throughout, these constants are assumed \emph{nonnegative}.
+In many applications one has $\Knet\ge 1$ and $\Cproj,\Ceng,\Cdisp\ge 1$, but the method-closure
+algebra only requires $\Knet,\Cproj,\Ceng,\Cdisp\ge 0$.
+
+\paragraph{Two derived products.}
+We will repeatedly use the combined constants
+\begin{equation}\label{eq:KCE}
+  \Knet\Cproj\Ceng
+  \qquad\text{and}\qquad
+  \Knet\Cproj\Cdisp.
+\end{equation}
+The first product is the constant that governs coercivity (AB), and the second is the constant that governs
+the aggregation/test bound (AC).
+
+\paragraph{The coercivity constant \texorpdfstring{$\cmin$}{cmin}.}
+The forward coercivity inequality (AB) has the form
+\[
+\Defect \le (\Knet\Cproj\Ceng)\,\Gap.
+\]
+To rewrite this as a reverse inequality
+\[
+\Gap \ge \cmin\,\Defect,
+\]
+we must invert the product $\Knet\Cproj\Ceng$.  This is possible only under a \emph{strict positivity}
+assumption, which we keep explicit:
+\begin{equation}\label{eq:KCE-pos}
+  \Knet\Cproj\Ceng>0.
+\end{equation}
+When \eqref{eq:KCE-pos} holds, we define
+\begin{equation}\label{eq:cmin}
+  \cmin := (\Knet\Cproj\Ceng)^{-1}.
+\end{equation}
+We stress that \eqref{eq:cmin} is a \emph{definition}, not an extra postulate:
+the only additional hypothesis needed for the reverse form is the positivity condition \eqref{eq:KCE-pos}.
+
+\begin{remark}[Why we separate forward vs.\ reverse]
+In domain work it is common to ``divide by the constant'' without comment.  Since this paper is meant
+to be reusable as a certificate component (including in mechanized settings), we track precisely where
+invertibility is required.  The forward inequalities require only nonnegativity; the reverse form requires
+\eqref{eq:KCE-pos}.
+\end{remark}
+
+\subsection{State space and functionals}
+Fix a state space $X$.  No structure on $X$ is assumed: $X$ may be a set, a type, a space of functions,
+or a space of configurations.
+We consider four real-valued functionals on $X$:
+\[
+\Defect,\ \Ortho,\ \Gap,\ \Tests : X \to \R.
+\]
+The CPM closure result is purely \emph{relational}: it depends only on inequalities between these functionals.
+It does not require norms, inner products, measures, or topology.
+
+\paragraph{Intended interpretation (optional).}
+In typical CPM instantiations, these functionals arise from a structured set $\mathsf{S}$ in a normed/Hilbert space
+and a projection map:
+\begin{itemize}
+  \item $\Defect(x)$ is a proxy for distance-to-structure, often $\mathrm{dist}(x,\mathsf{S})^2$;
+  \item $\Ortho(x)$ is a proxy for off-structure mass, often $\|\mathrm{proj}_{\mathsf{S}^\perp}x\|^2$;
+  \item $\Gap(x)$ is a proxy for an energy gap, often $E(x)-E(x_0)$ for a structured minimizer $x_0\in\mathsf{S}$;
+  \item $\Tests(x)$ is a proxy for a supremum of local test violations (dispersion/interface checks).
+\end{itemize}
+This paper does not assume these interpretations; they are provided only to clarify the role of the symbols.
+
+\begin{definition}[CPM data]\label{def:cpm-data}
+A \emph{CPM datum} is the choice of a state space $X$ together with functionals
+$\Defect,\Ortho,\Gap,\Tests : X\to\R$ and constants $(\Knet,\Cproj,\Ceng,\Cdisp)\in\R^4$.
+\end{definition}
+
+\begin{remark}[What a domain must supply]
+To apply CPM in a new domain, the domain work supplies:
+(i) the concrete space $X$ and the functionals $(\Defect,\Ortho,\Gap,\Tests)$, and
+(ii) proofs of Assumptions A/B/C with explicit constants.
+Once those are in place, the method layer contributes the closure inequalities mechanically.
+\end{remark}
+
+\section{CPM Assumptions (A/B/C)}
+\label{sec:assumptions}
+
+\noindent
+This section records the \emph{only} hypotheses used by the CPM method layer.
+All domain-specific work enters through proofs that these inequalities hold for the chosen
+functionals and constants.  The closure theorems in Section~\ref{sec:closure} will use no further
+structure.
+
+\subsection{Assumption A: Projection--Defect inequality (distance reduction)}
+\label{subsec:asmpA}
+
+Assumption~\ref{asmp:A} reduces a potentially complicated defect functional $\Defect$ to a more tractable
+intermediate quantity $\Ortho$ (often an ``orthogonal'' or ``off-structure'' residual).
+The constants $\Knet$ and $\Cproj$ should be read as follows:
+\begin{itemize}
+  \item $\Knet$ (\emph{net/covering constant}) accounts for discretization or model reduction steps
+  (e.g.\ passing from a continuum of structured directions to a finite $\varepsilon$-net, or from a
+  global structured set to a finite family of local structured templates).
+  \item $\Cproj$ (\emph{projection constant}) accounts for the geometry of the reduction:
+  how well $\Ortho$ controls the distance-to-structure proxy encoded by $\Defect$.
+\end{itemize}
+The method closure never inspects how $\Knet$ or $\Cproj$ are obtained; it only propagates them as factors.
+
+\begin{assumption}[A: Projection--Defect inequality]\label{asmp:A}
+There exists $\Knet\ge 0$ and $\Cproj\ge 0$ such that for all states $x$,
+\[
+\Defect(x) \le \Knet\,\Cproj\,\Ortho(x).
+\]
+\end{assumption}
+
+\subsection{Assumption B: Energy control (coercive link)}
+\label{subsec:asmpB}
+
+Assumption~\ref{asmp:B} is the mechanism that turns ``off-structure mass'' into an \emph{energy gap}.
+In applications, $\Gap$ is usually defined relative to a structured baseline (a minimizer or a reference state),
+and $\Ceng$ is the constant that witnesses that the gap is strong enough to control deviations.
+At the method level, $\Ceng$ is just another nonnegative scalar carried through algebra.
+
+\begin{assumption}[B: Energy control]\label{asmp:B}
+There exists $\Ceng\ge 0$ such that for all states $x$,
+\[
+\Ortho(x) \le \Ceng\,\Gap(x).
+\]
+\end{assumption}
+
+\subsection{Assumption C: Dispersion/interface tests (aggregation link)}
+\label{subsec:asmpC}
+
+Assumption~\ref{asmp:C} is the input required for an aggregation or ``local-to-global'' step.
+The functional $\Tests(x)$ is intended to represent a supremum over local test violations or interface checks
+that are easier to estimate than global defect.  The constant $\Cdisp$ quantifies how strongly these tests
+control the off-structure mass $\Ortho$.
+
+\begin{assumption}[C: Dispersion/interface tests]\label{asmp:C}
+There exists $\Cdisp\ge 0$ such that for all states $x$,
+\[
+\Ortho(x) \le \Cdisp\,\Tests(x).
+\]
+\end{assumption}
+
+\subsection{How the assumptions split: AB vs.\ AC}
+\label{subsec:split}
+
+It is useful to view CPM closure as two coupled but logically distinct deductions:
+\begin{itemize}
+  \item \textbf{AB (coercivity):} Assumptions~\ref{asmp:A} and \ref{asmp:B} imply that the defect is controlled by
+  the energy gap, yielding the coercivity inequalities \eqref{eq:AB-forward} and (under positivity) \eqref{eq:AB-reverse}.
+  \item \textbf{AC (aggregation):} Assumptions~\ref{asmp:A} and \ref{asmp:C} imply that the defect is controlled by the
+  test functional, yielding \eqref{eq:AC}.  In applications this is the entry point for ``local tests $\Rightarrow$ global structure''.
+\end{itemize}
+The role of the intermediate functional $\Ortho$ is precisely to make both deductions uniform across domains:
+many proofs naturally obtain bounds on a residual/projection quantity first, and only later relate it to energy or tests.
+
+\begin{remark}[Nonnegativity of the functionals]
+Many domain instantiations arrange, by definition, that for all $x\in X$,
+\[
+\Defect(x)\ge 0,\qquad \Ortho(x)\ge 0,\qquad \Gap(x)\ge 0,\qquad \Tests(x)\ge 0.
+\]
+Method closure does not require these inequalities explicitly: it uses only Assumptions~\ref{asmp:A}--\ref{asmp:C}
+and basic order-preserving algebra.  We therefore keep nonnegativity as an \emph{optional} semantic convention rather than
+an extra hypothesis.
+\end{remark}
+
+\section{Method Closure Theorems}
+\label{sec:closure}
+
+\subsection{AB coercivity (forward)}
+In this subsection we prove that Assumptions~\ref{asmp:A} and~\ref{asmp:B} imply that defect is controlled
+by the energy gap, with an explicit multiplicative constant.
+
+\begin{proposition}[AB coercivity (forward)]\label{prop:AB-forward}
+Assume $\Knet,\Cproj,\Ceng\ge 0$ and that Assumptions~\ref{asmp:A} and~\ref{asmp:B} hold.
+Then for every state $x\in X$,
+\[
+\Defect(x)\ \le\ (\Knet\,\Cproj\,\Ceng)\,\Gap(x).
+\]
+\end{proposition}
+
+\begin{proof}
+Fix $x\in X$. By Assumption~\ref{asmp:A},
+\[
+\Defect(x)\ \le\ \Knet\,\Cproj\,\Ortho(x).
+\]
+By Assumption~\ref{asmp:B}, $\Ortho(x)\le \Ceng\,\Gap(x)$.  Since $\Knet\,\Cproj\ge 0$, multiplying preserves the
+inequality:
+\[
+\Knet\,\Cproj\,\Ortho(x)\ \le\ \Knet\,\Cproj\,(\Ceng\,\Gap(x)).
+\]
+Combining these two inequalities yields
+\[
+\Defect(x)\ \le\ \Knet\,\Cproj\,(\Ceng\,\Gap(x))\ =\ (\Knet\,\Cproj\,\Ceng)\,\Gap(x),
+\]
+as claimed.
+\end{proof}
+
+\subsection{AB coercivity (reverse, via \texorpdfstring{$\cmin$}{cmin})}
+The reverse form is the usual statement of coercivity: the energy gap is bounded below by a positive multiple
+of defect.  It is equivalent to the forward form when the constant product is strictly positive, but we keep
+the strict-positivity condition explicit because it is exactly where division becomes valid.
+
+\begin{proposition}[AB coercivity (reverse)]\label{prop:AB-reverse}
+Assume $\Knet,\Cproj,\Ceng\ge 0$ and Assumptions~\ref{asmp:A} and~\ref{asmp:B}.
+Assume in addition that
+\[
+\Knet\,\Cproj\,\Ceng>0,
+\]
+and define $\cmin := (\Knet\,\Cproj\,\Ceng)^{-1}$.
+Then for every $x\in X$,
+\[
+\Gap(x)\ \ge\ \cmin\,\Defect(x).
+\]
+\end{proposition}
+
+\begin{proof}
+Fix $x\in X$ and set $p:=\Knet\,\Cproj\,\Ceng$.  By Proposition~\ref{prop:AB-forward}, we have
+$\Defect(x)\le p\,\Gap(x)$.  Since $p>0$, multiplying both sides by $p^{-1}$ preserves the inequality:
+\[
+p^{-1}\Defect(x)\ \le\ p^{-1}(p\,\Gap(x))\ =\ \Gap(x).
+\]
+Recalling that $p^{-1}=\cmin$ proves the claim.
+\end{proof}
+
+\begin{remark}[Equivalence of forward and reverse forms]
+When $p:=\Knet\Cproj\Ceng>0$, the forward inequality $\Defect\le p\,\Gap$ and the reverse inequality
+$\Gap\ge p^{-1}\Defect$ are logically equivalent.  In CPM papers one often uses whichever form is most convenient
+for the downstream argument (e.g.\ existence of minimizers, monotone descent, or stability bounds).
+\end{remark}
+
+\subsection{AC aggregation bound}
+The aggregation bound replaces the energy gap by a ``test'' functional.  In applications $\Tests$ is typically
+computable or locally checkable; controlling $\Tests$ then yields a global defect bound.
+
+\begin{proposition}[AC aggregation bound]\label{prop:AC}
+Assume $\Knet,\Cproj,\Cdisp\ge 0$ and that Assumptions~\ref{asmp:A} and~\ref{asmp:C} hold.
+Then for every state $x\in X$,
+\[
+\Defect(x)\ \le\ (\Knet\,\Cproj\,\Cdisp)\,\Tests(x).
+\]
+\end{proposition}
+
+\begin{proof}
+Fix $x\in X$. By Assumption~\ref{asmp:A},
+\[
+\Defect(x)\ \le\ \Knet\,\Cproj\,\Ortho(x).
+\]
+By Assumption~\ref{asmp:C}, $\Ortho(x)\le \Cdisp\,\Tests(x)$.  Since $\Knet\,\Cproj\ge 0$, multiplying preserves the
+inequality:
+\[
+\Knet\,\Cproj\,\Ortho(x)\ \le\ \Knet\,\Cproj\,(\Cdisp\,\Tests(x)).
+\]
+Combining yields
+\[
+\Defect(x)\ \le\ \Knet\,\Cproj\,(\Cdisp\,\Tests(x))\ =\ (\Knet\,\Cproj\,\Cdisp)\,\Tests(x),
+\]
+as claimed.
+\end{proof}
+
+\subsection{Convenience corollaries}
+The following corollaries are often convenient when presenting a domain instantiation, especially when the
+domain work has already normalized constants to $1$ or has chosen $\Ortho$ to coincide with $\Defect$.
+
+\begin{corollary}[Normalized constants]\label{cor:normalized}
+Assume Assumptions~\ref{asmp:A}--\ref{asmp:C} hold.
+\begin{enumerate}
+  \item If $\Knet=\Cproj=\Ceng=1$, then $\Defect(x)\le \Gap(x)$ for all $x$.
+  \item If $\Knet=\Cproj=\Cdisp=1$, then $\Defect(x)\le \Tests(x)$ for all $x$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+Immediate from Propositions~\ref{prop:AB-forward} and~\ref{prop:AC} by substituting the specified constants.
+\end{proof}
+
+\begin{corollary}[Subspace case]\label{cor:subspace}
+Assume Assumption~\ref{asmp:A} holds with $\Knet=\Cproj=1$ and moreover that $\Ortho(x)=\Defect(x)$ for all $x$.
+Then $\Defect(x)=\Ortho(x)$ for all $x$, and the AB and AC conclusions reduce to
+\[
+\Defect(x)\le \Ceng\,\Gap(x),
+\qquad
+\Defect(x)\le \Cdisp\,\Tests(x).
+\]
+\end{corollary}
+
+\begin{proof}
+The equality $\Defect=\Ortho$ is by hypothesis.  Substituting $\Knet=\Cproj=1$ and $\Ortho=\Defect$ into
+Assumptions~\ref{asmp:B} and~\ref{asmp:C} yields the displayed inequalities.
+\end{proof}
+
+\section{Non-Vacuity: A Concrete Witness Model}
+\label{sec:witness}
+
+The closure implications proved in Section~\ref{sec:closure} have the schematic form
+\[
+\text{(A/B/C assumptions)}\ \Longrightarrow\ \text{(closure inequalities)}.
+\]
+As a purely logical statement, such an implication can be true even if there are \emph{no} instances of the
+assumptions.  In that case the implication holds vacuously.
+For ordinary mathematical exposition this is rarely a concern because the assumptions typically arise from a
+concrete construction in the same paper.  In a \emph{method closure} paper---whose purpose is to package the
+method layer as a reusable component---it is important to certify that the assumptions are mutually consistent,
+so that downstream users are not building on an empty interface.
+
+This motivates the present section: we give an explicit toy CPM datum satisfying Assumptions~\ref{asmp:A}--\ref{asmp:C}.
+The witness is intentionally minimal.  It is \emph{not} intended to model any real domain; it exists solely to
+establish non-vacuity of the CPM method layer and to support certificate-style uses (see Section~\ref{sec:lean}).
+
+\subsection{A minimal toy witness}
+
+Let $X_{\mathrm{toy}}$ be a singleton state space, i.e.\ $X_{\mathrm{toy}}=\{\star\}$.
+Define constant functionals
+\[
+\Defect(\star)=1,\quad \Ortho(\star)=1,\quad \Gap(\star)=1,\quad \Tests(\star)=1,
+\]
+and choose constants
+\[
+\Knet := 1,\qquad \Cproj := 2,\qquad \Ceng := 1,\qquad \Cdisp := 1.
+\]
+With these choices, Assumptions~\ref{asmp:A}--\ref{asmp:C} reduce to numerical inequalities.
+
+\begin{proposition}[Existence of a non-vacuous CPM instance]\label{prop:toy-witness}
+There exists a CPM datum $(X,\Defect,\Ortho,\Gap,\Tests;\Knet,\Cproj,\Ceng,\Cdisp)$
+satisfying Assumptions~\ref{asmp:A}--\ref{asmp:C}.  Moreover, the coercivity product is strictly positive:
+\[
+\Knet\,\Cproj\,\Ceng = 2 > 0,
+\]
+so the reverse coercivity constant $\cmin=(\Knet\Cproj\Ceng)^{-1}$ is well-defined and equals $1/2$.
+\end{proposition}
+
+\begin{proof}
+Take $X=X_{\mathrm{toy}}=\{\star\}$ with the constant functionals and constants defined above.
+Then:
+\begin{itemize}
+  \item \textbf{Assumption A:} $\Defect(\star)=1\le 1\cdot 2\cdot 1 = 2 = \Knet\,\Cproj\,\Ortho(\star)$.
+  \item \textbf{Assumption B:} $\Ortho(\star)=1\le 1\cdot 1 = \Ceng\,\Gap(\star)$.
+  \item \textbf{Assumption C:} $\Ortho(\star)=1\le 1\cdot 1 = \Cdisp\,\Tests(\star)$.
+\end{itemize}
+Finally, $\Knet\,\Cproj\,\Ceng=1\cdot 2\cdot 1=2>0$, so $\cmin=2^{-1}=1/2$.
+\end{proof}
+
+\begin{remark}[Why the witness is deliberately simple]
+The role of Proposition~\ref{prop:toy-witness} is not to validate CPM in any domain, but to certify that the
+method assumptions are not internally contradictory.  Domain papers provide substantive instantiations by
+defining meaningful functionals $(\Defect,\Ortho,\Gap,\Tests)$ and proving A/B/C from domain structure.  In
+contrast, the toy witness is a consistency check for the \emph{interface}.
+\end{remark}
+
+\section{How to Instantiate CPM in a New Domain}
+\label{sec:interface}
+
+This section is a practical interface guide for domain authors.
+It explains what must be provided in a domain instantiation, what can be cited from the present paper,
+and how to keep constants and hypotheses organized so that CPM arguments remain auditable.
+
+\subsection{Minimal instantiation checklist}
+To instantiate CPM in a new domain, provide the following data and proofs.
+We write $X$ for the domain's state space and keep the notation of
+Sections~\ref{sec:setup}--\ref{sec:assumptions}.
+
+\paragraph{Step 1 (state space).}
+Specify the class of objects you want to control and choose a corresponding state space $X$.
+Typical choices include:
+\begin{itemize}
+  \item a space of fields/configurations on a manifold,
+  \item a family of functions (e.g.\ boundary data, kernels, or test functions),
+  \item a parameterized class of arithmetic objects (e.g.\ weights, characters, truncated Euler products),
+  \item a space of programs/traces in a discrete system.
+\end{itemize}
+
+\paragraph{Step 2 (structured set, optional but clarifying).}
+Although the method layer does not require it, it is often clarifying to identify an intended
+``structured'' subset $\mathsf{S}$ of an ambient space, together with a baseline element $x_0\in\mathsf{S}$.
+In many proofs $\mathsf{S}$ is a subspace or cone of ``admissible'' or ``ideal'' configurations.
+
+\paragraph{Step 3 (define the four functionals).}
+Define functionals $\Defect,\Ortho,\Gap,\Tests:X\to\R$.
+The most common pattern is:
+\begin{itemize}
+  \item \textbf{Defect:} $\Defect(x)=\mathrm{dist}(x,\mathsf{S})^2$ or a proxy for it.
+  \item \textbf{Orthogonal mass:} $\Ortho(x)=\|\mathrm{proj}_{\mathsf{S}^{\perp}}x\|^2$ or a proxy that is easier to estimate.
+  \item \textbf{Energy gap:} $\Gap(x)=E(x)-E(x_0)$ for a suitable energy functional $E$.
+  \item \textbf{Tests:} $\Tests(x)$ is a supremum (or sum) of \emph{local} checks (dispersion/interface tests) whose control is feasible.
+\end{itemize}
+The method closure will treat these as black-box real-valued functions.
+
+\paragraph{Step 4 (choose constants).}
+Exhibit explicit constants $(\Knet,\Cproj,\Ceng,\Cdisp)$, typically derived from a combination of:
+\begin{itemize}
+  \item a discretization/covering argument (contributing to $\Knet$),
+  \item a projection or rank-one estimate (contributing to $\Cproj$),
+  \item an energy comparison/coercivity estimate (contributing to $\Ceng$),
+  \item a dispersion/interface inequality (contributing to $\Cdisp$).
+\end{itemize}
+Keep these constants explicit and avoid ``absorbing'' them into big-O notation if the goal is a reusable certificate.
+
+\paragraph{Step 5 (prove A/B/C).}
+Prove Assumptions~\ref{asmp:A}--\ref{asmp:C} for your chosen functionals and constants.
+In many domains, the proofs naturally factor as:
+\[
+\Defect \ \lesssim\ \text{(net loss)}\times\text{(projection loss)}\times \Ortho,
+\qquad
+\Ortho\ \lesssim\ \text{(energy gap)},
+\qquad
+\Ortho\ \lesssim\ \text{(tests)}.
+\]
+
+\subsection{What method closure gives you ``for free''}
+Once A/B/C are established, the following consequences require no additional domain input:
+\begin{itemize}
+  \item \textbf{AB coercivity (forward):} apply Proposition~\ref{prop:AB-forward} to obtain
+  $\Defect \le (\Knet\Cproj\Ceng)\,\Gap$.
+  \item \textbf{AB coercivity (reverse):} if $\Knet\Cproj\Ceng>0$, define $\cmin=(\Knet\Cproj\Ceng)^{-1}$
+  and apply Proposition~\ref{prop:AB-reverse} to obtain $\Gap\ge \cmin\,\Defect$.
+  \item \textbf{AC aggregation:} apply Proposition~\ref{prop:AC} to obtain
+  $\Defect \le (\Knet\Cproj\Cdisp)\,\Tests$.
+\end{itemize}
+In domain exposition, it is usually best to cite these three results rather than re-proving the same multiplicative
+chaining argument.  This is precisely the purpose of a method-closure paper.
+
+\subsection{How to package CPM in a domain paper}
+A domain paper can present CPM usage cleanly by organizing the argument into three layers:
+\begin{enumerate}
+  \item \textbf{Domain definitions:} define $X$ and the functionals $(\Defect,\Ortho,\Gap,\Tests)$, and record the constants.
+  \item \textbf{Domain estimates:} prove Assumptions~\ref{asmp:A}--\ref{asmp:C} as named lemmas (often the hardest part).
+  \item \textbf{Closure invocation:} cite Propositions~\ref{prop:AB-forward}, \ref{prop:AB-reverse}, \ref{prop:AC}
+  to obtain the global inequalities, and then use those inequalities to finish the domain-specific theorem.
+\end{enumerate}
+This structure has two advantages: it keeps the method layer auditable (constants are visible), and it makes
+it clear to readers which steps are genuinely domain-dependent.
+
+\subsection{A few standard downstream uses}
+While CPM is not tied to any one conclusion, the closure inequalities commonly support:
+\begin{itemize}
+  \item \textbf{Stability from margins:} if you can show $\Gap(x)$ (or $\Tests(x)$) is small, then $\Defect(x)$ is small,
+  hence $x$ is close to $\mathsf{S}$ in the relevant metric/proxy.
+  \item \textbf{Convergence of descent procedures:} if an algorithm produces a sequence $(x_n)$ with $\Gap(x_n)\to 0$,
+  the reverse coercivity form implies $\Defect(x_n)\to 0$ (under $\Knet\Cproj\Ceng>0$).
+  \item \textbf{Local-to-global structure:} if local tests enforce $\Tests(x)=0$ (or $\Tests(x)$ below a threshold),
+  AC gives a global defect bound, which is then converted into membership or positivity by a domain lemma.
+\end{itemize}
+These are templates: the final step (``defect small implies property'') is always domain-specific.
+
+\section{Machine Verification (Lean 4)}
+\label{sec:lean}
+
+The results of this paper are mechanized in the Lean 4 theorem prover in a way that deliberately mirrors the
+mathematical interface presented above.  The goal of the mechanization is not to add new assumptions or
+domain content, but to provide a small, stable, audit-friendly kernel that downstream projects can import
+without re-proving the method algebra.
+
+\subsection{Core method layer: abstract constants, model, and closure theorems}
+The core formalization lives in \texttt{IndisputableMonolith/CPM/LawOfExistence.lean}.
+It defines:
+\begin{itemize}
+  \item a constants bundle \texttt{Constants} containing $(\Knet,\Cproj,\Ceng,\Cdisp)$ and nonnegativity fields,
+  \item the derived coercivity constant \texttt{cmin} (our $\cmin$),
+  \item an abstract CPM model \texttt{Model} parameterized by a state type $\beta$,
+  \item and the three method-layer theorems corresponding to AB/AC closure.
+\end{itemize}
+
+\subsection{Dictionary from this paper to Lean}
+The following correspondence is intended to be exact:
+\begin{itemize}
+  \item \textbf{State space.} Paper $X$ corresponds to Lean's type parameter $\beta$.
+  \item \textbf{Functionals.} Paper functionals correspond to fields of a Lean model $M : \texttt{Model}\ \beta$:
+  \begin{align*}
+    \Defect &\leftrightarrow M.\texttt{defectMass},\\
+    \Ortho  &\leftrightarrow M.\texttt{orthoMass},\\
+    \Gap    &\leftrightarrow M.\texttt{energyGap},\\
+    \Tests  &\leftrightarrow M.\texttt{tests}.
+  \end{align*}
+  \item \textbf{Constants.} Paper constants correspond to fields of $M.\texttt{C}:\texttt{Constants}$:
+  \begin{align*}
+    (\Knet,\Cproj,\Ceng,\Cdisp)\ \leftrightarrow\ 
+    (&M.\texttt{C.Knet},\ M.\texttt{C.Cproj},\\
+     &M.\texttt{C.Ceng},\ M.\texttt{C.Cdisp}).
+  \end{align*}
+  \item \textbf{Assumptions.} The assumptions A/B/C are precisely the structural fields of \texttt{Model}:
+  \begin{align*}
+    \textnormal{(A)}\ &\leftrightarrow\ M.\texttt{projection\_defect},\\
+    \textnormal{(B)}\ &\leftrightarrow\ M.\texttt{energy\_control},\\
+    \textnormal{(C)}\ &\leftrightarrow\ M.\texttt{dispersion}.
+  \end{align*}
+  \item \textbf{Closure theorems.} The key results of Section~\ref{sec:closure} correspond to the following Lean theorems:
+  \begin{itemize}
+    \item Proposition~\ref{prop:AB-forward} corresponds to\\
+    \texttt{Model.defect\_le\_constants\_mul\_energyGap}.
+    \item Proposition~\ref{prop:AB-reverse} corresponds to\\
+    \texttt{Model.energyGap\_ge\_cmin\_mul\_defect}, whose hypotheses include
+    strict positivity of $(\Knet,\Cproj,\Ceng)$ (matching our $ \Knet\Cproj\Ceng>0 $ requirement).
+    \item Proposition~\ref{prop:AC} corresponds to\\
+    \texttt{Model.defect\_le\_constants\_mul\_tests}.
+  \end{itemize}
+\end{itemize}
+
+\subsection{Certificates and eval-friendly reports}
+On top of the core method kernel, the repository provides certificate wrappers and lightweight reports.
+In particular, several adapters expose \texttt{\#eval}-friendly confirmation strings:
+\begin{itemize}
+  \item \textbf{Method certificate.} \texttt{IndisputableMonolith/URCGenerators/CPMMethodCert.lean}
+  defines a certificate predicate \texttt{CPMMethodCert.verified} which (i) asserts the generic AB/AC consequences
+  for arbitrary models and (ii) bundles a concrete witness \texttt{toyModel} to prevent vacuity.
+  \item \textbf{Closure wrapper.}\\
+  \texttt{IndisputableMonolith/URCGenerators/CPMClosureCert.lean}
+  packages the method certificate into a minimal top-level \texttt{CPMClosureCert}.
+  \item \textbf{Report adapter.} \texttt{IndisputableMonolith/URCAdapters/CPMClosureReport.lean}
+  provides \texttt{\#eval}-friendly strings (e.g.\ \texttt{cpm\_closure\_ok}) so that interactive audits can confirm
+  the certificate without exposing implementation details.
+\end{itemize}
+
+\begin{remark}[Relationship to the witness in this paper]
+The witness model used in Lean (\texttt{toyModel}) plays the same logical role as Proposition~\ref{prop:toy-witness}:
+it certifies that the interface assumptions are satisfiable.  Domain work remains responsible for producing
+nontrivial, problem-specific models.
+\end{remark}
+
+\section{Discussion and Limits}
+\label{sec:discussion}
+
+This paper isolates the CPM \emph{method layer} as a standalone, reusable unit.
+It is therefore important to be explicit about what is proved here, what is intentionally left to domain papers,
+and what kinds of additional structure are needed for downstream interpretations.
+
+\subsection{What method closure does guarantee}
+Assuming A/B/C (Section~\ref{sec:assumptions}) with explicit constants, the method layer guarantees:
+\begin{itemize}
+  \item \textbf{A uniform coercivity inequality.}  AB implies $\Defect \le (\Knet\Cproj\Ceng)\,\Gap$
+  (Proposition~\ref{prop:AB-forward}).  When $\Knet\Cproj\Ceng>0$, this is equivalent to the reverse form
+  $\Gap \ge \cmin\,\Defect$ with $\cmin=(\Knet\Cproj\Ceng)^{-1}$ (Proposition~\ref{prop:AB-reverse}).
+  \item \textbf{A uniform aggregation/test bound.}  AC implies $\Defect \le (\Knet\Cproj\Cdisp)\,\Tests$
+  (Proposition~\ref{prop:AC}).
+  \item \textbf{Non-vacuity of the interface.}  The assumptions are satisfiable (Section~\ref{sec:witness}),
+  so ``closure'' is not merely a vacuous implication.
+\end{itemize}
+These consequences are intentionally elementary: CPM's value is that \emph{many} difficult domain problems can be
+reduced to verifying A/B/C, after which the coercivity/aggregation propagation is immediate and auditable.
+
+\subsection{What method closure does not guarantee}
+Method closure does \emph{not} by itself establish any of the following:
+\begin{itemize}
+  \item \textbf{That A/B/C hold in a particular domain.}  The analytic or combinatorial heart of a CPM instantiation is
+  proving Assumptions~\ref{asmp:A}--\ref{asmp:C} with explicit constants; this is domain work.
+  \item \textbf{That small defect implies the final domain theorem.}  CPM delivers defect bounds; the implication
+  ``$\Defect$ small $\Rightarrow$ property'' is always domain-specific and must be proved separately.
+  \item \textbf{A theory of semantics or meaning.}  CPM method closure is a quantitative inequality engine.
+  Even if a domain chooses to interpret ``structure'' as ``admissibility'' or ``normal form,'' the method layer
+  does not by itself define an aboutness relation, an object space, or an argmin selection rule.
+  (In other words: CPM can help certify canonical \emph{representations}; it does not, on its own, imply
+  reference or meaning.)
+  \item \textbf{Uniqueness of constants.}  The present paper treats $(\Knet,\Cproj,\Ceng,\Cdisp)$ as inputs.
+  Deriving them from deeper principles (when desired) is a separate layer.
+\end{itemize}
+
+\subsection{Common pitfalls in CPM instantiations}
+The following issues recur in CPM-style arguments and are worth flagging explicitly:
+\begin{itemize}
+  \item \textbf{Hidden non-uniformity.}  If the constants depend on scale, dimension, or parameters,
+  then the closure inequalities remain true but may lose their intended force unless one proves uniform bounds.
+  \item \textbf{Untracked division.}  The reverse coercivity form requires strict positivity of $\Knet\Cproj\Ceng$.
+  When constants are obtained by inequalities rather than exact identities, it is easy to forget this step.
+  \item \textbf{Over-absorbing constants into asymptotic notation.}  For certificate-style reuse, it is preferable to keep
+  constants explicit and to isolate the exact lemmas where each constant is introduced.
+  \item \textbf{Choice of intermediate functional $\Ortho$.}  The method layer is agnostic to $\Ortho$, but the domain layer
+  benefits from selecting an $\Ortho$ that (i) is provably controlled by energy/tests and (ii) is strong enough to control defect.
+\end{itemize}
+
+\subsection{Relationship to other closure certificates (optional)}
+In larger ``bundle'' developments, CPM method closure is often packaged together with additional closure statements
+(e.g.\ uniqueness or selection of a preferred scale, or consistency bundles for a broader framework).
+From an engineering and audit standpoint, it is advantageous to keep CPM method closure separate:
+it has a small dependency surface, a simple interface, and a mechanically checkable proof.
+Other certificates may depend on additional subprojects and should be audited as separate targets.
+
+\subsection{Recommended citation usage}
+When using CPM as a lemma in a domain paper, it is usually sufficient to cite
+Propositions~\ref{prop:AB-forward}, \ref{prop:AB-reverse} (when applicable), and \ref{prop:AC}
+after stating A/B/C with explicit constants.
+This makes clear which parts of the argument are domain estimates and which parts are method closure.
+
+\appendix
+
+\section{Algebraic Lemmas}
+\label{sec:appendix-algebra}
+% TODO: Product positivity, inversion, rearrangements, etc.
+
+\section{Alternative Normalizations}
+\label{sec:appendix-normalizations}
+% TODO: Discuss how constants shift under rescalings; optional.
+
+\section*{References}
+% TODO: Add references if/when you cite external results.
+
+\end{document}
+

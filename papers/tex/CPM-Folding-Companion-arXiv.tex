@@ -1,0 +1,236 @@
+\documentclass[12pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Struct}{\mathsf{S}}
+\newcommand{\Defect}{\mathsf{D}}
+\newcommand{\Energy}{\mathsf{E}}
+\newcommand{\Cnet}{K_{\mathrm{net}}}
+\newcommand{\Cproj}{C_{\mathrm{proj}}}
+\newcommand{\Ceng}{C_{\mathrm{eng}}}
+
+\title{A CPM Companion for Protein Folding\\(Coercive Projection Method \texorpdfstring{$\to$}{->} Folding as Phase Recognition)}
+\author{Jonathan Washburn}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We provide a concise companion to ``Protein folding as phase recognition'' that instantiates the Coercive Projection Method (CPM) for protein folding. We (i) restate CPM's projection and coercivity theorems with explicit constants, (ii) define a structured set \(\Struct\) of native-compatible states (geometry, phase, scheduler), a squared-distance defect \(\Defect\), and a quadratic energy \(\Energy\) chosen to make the coercivity constant explicit and parameter-free, (iii) give concrete projection operators (Ramachandran, rotamer, contact/H-bond/disulfide, phase-band, scheduler) with \(\Cproj\approx 2\) and an eight-beat aligned net with \(\Cnet=((1+\varepsilon)/(1-\varepsilon))^2\) at \(\varepsilon=1/8\), and (iv) define local tests and an aggregator that imply global existence when instrument-aligned windows pass. The resulting coercivity constant is \(c=(\Cnet\,\Cproj\,\Ceng)^{-1}=49/162\approx 0.302\), fixed by the eight-beat alignment and the rank-one/Hermitian bound. This yields a parameter-free, auditable CPM route to native-phase existence consistent with the eight-beat IR signatures around 724\,cm$^{-1}$.
+\end{abstract}
+
+\section{CPM statements (with constants)}
+
+\begin{assumption}[Projection inequality]\label{asmp:projection}
+There exists a finite net $\{\xi_\ell\}\subset \Struct$ and constants $\Cnet\ge 1$, $\Cproj>0$ such that for all fibers $x$,
+\begin{equation}
+ d_{\Struct}(x)^2\ \le\ \Cnet\,\min_{\ell,\lambda\ge 0}\,\lVert x-\lambda\xi_\ell\rVert^2\ \le\ \Cnet\,\Cproj\,\lVert \mathrm{proj}_{\Struct^{\perp}}x\rVert^2.
+\end{equation}
+\end{assumption}
+
+\begin{assumption}[Energy control]\label{asmp:energy}
+There exists $\Ceng>0$ and a reference $\alpha_0\in\Struct$ such that for all admissible fields $\alpha$,
+\begin{equation}
+ \int \lVert \mathrm{proj}_{\Struct^{\perp}}\alpha_x\rVert^2\,d\mu(x)\ \le\ \Ceng\,\big(\Energy(\alpha)-\Energy(\alpha_0)\big).
+\end{equation}
+\end{assumption}
+
+\begin{theorem}[Coercivity]\label{thm:coercivity}
+Under Assumptions~\ref{asmp:projection}--\ref{asmp:energy},
+\begin{equation}
+ \Defect(\alpha)\ \le\ (\Cnet\,\Cproj\,\Ceng)\,\big(\Energy(\alpha)-\Energy(\alpha_0)\big),\quad\text{hence}\quad \Energy(\alpha)-\Energy(\alpha_0)\ \ge\ c\,\Defect(\alpha),
+\end{equation}
+with $c=(\Cnet\,\Cproj\,\Ceng)^{-1}$.
+\end{theorem}
+
+\begin{lemma}[Rank-one/Hermitian projection]\label{lem:rankone}
+For Hermitian $H$ on a $d$-dimensional space,
+\begin{equation}
+ \min_{\lambda\ge 0,\,\lVert v\rVert=1}\ \lVert H-\lambda\,v\otimes v^*\rVert_{\mathrm{HS}}^2\ \le\ 2\,\Big\lVert H-\tfrac{\mathrm{tr}H}{d}I\Big\rVert_{\mathrm{HS}}^2.
+\end{equation}
+Thus $\Cproj\le 2$ in the Hermitian model.
+\end{lemma}
+
+\begin{proposition}[Cone vs net]\label{prop:cone-net}
+For a unit $\varepsilon$-net on a compact subset of the unit sphere, one may record $\Cnet=((1+\varepsilon)/(1-\varepsilon))^2$.
+\end{proposition}
+
+\section{Folding instantiation: $\Struct$, $\Defect$, $\Energy$}
+
+\paragraph{State space.} Let $\mathcal X=\mathcal X_{\mathrm{geom}}\oplus\mathcal X_{\mathrm{phase}}\oplus\mathcal X_{\mathrm{sched}}$ with fiberwise inner products. The geometry block encodes lifted dihedrals/rotamers/contacts/H-bonds/disulfides/clash; the phase block encodes 8-beat demodulated complex phasors per cycle; the scheduler block encodes eight-window sums and cycle fences.
+
+\paragraph{Structured set.} Define $\Struct=\Struct_{\mathrm{geom}}\cap\Struct_{\mathrm{phase}}\cap\Struct_{\mathrm{sched}}$, where:
+\begin{itemize}
+ \item $\Struct_{\mathrm{geom}}$: convex surrogates for Ramachandran and rotamer cones, half-spaces or quadratic cones for contacts/H-bonds/disulfides, and a convex clash shell;
+ \item $\Struct_{\mathrm{phase}}$: band-limited 8-beat phasors inside pre-registered bands around $\tilde\nu_0\approx 724\,\mathrm{cm}^{-1}$ with coherence caps;
+ \item $\Struct_{\mathrm{sched}}$: linear subspace enforcing eight-window neutrality (sliding sum $=0$) and $2^{10}$ cycle fences with a linearized token cap.
+\end{itemize}
+All are closed; hence $\Struct$ is closed.
+
+\paragraph{Concrete fiber model.} For residue $i$, lift torsions to a unit vector
+\begin{equation}
+ u_i\ :=\ (\cos\phi_i,\sin\phi_i,\cos\psi_i,\sin\psi_i,\cos\chi_{i1},\sin\chi_{i1},\ldots)\in\R^{d_{\mathrm{tor}}},
+\end{equation}
+and let $d_{ij}$ denote inter-atomic distances entering contacts/H-bonds/disulfides/clash. For the phase block, let $z=(z_1,\ldots,z_8)\in\C^8$ be the beat-resolved phasor vector (demodulated). For the scheduler, let $s\in\R^{m}$ encode the per-instruction ledger cost and token trace; linear functionals $A_8 s$ form the sliding 8-window sums and $A_{\mathrm{cyc}} s$ enforce $2^{10}$ fences.
+
+\paragraph{$\Struct_{\mathrm{geom}}$ (convex surrogates).} Take
+\begin{equation}
+ \Struct_{\mathrm{geom}}\ :=\ \bigcap_{i}\,R_i\ \cap\ \bigcap_{i}\,\mathcal R^{\mathrm{rot}}_i\ \cap\ \bigcap_{(i,j)\in\mathcal C}\,\{d_{ij}\le d_0\}\ \cap\ \bigcap_{(i,j)\in\mathcal H}\,\mathcal H_{ij}\ \cap\ \bigcap_{(i,j)\in\mathcal S}\,\mathcal S_{ij}\ \cap\ \bigcap_{(a,b)\in\mathcal P}\,\{d_{ab}\ge d_{\min}\}^{\mathrm{cvx}},
+\end{equation}
+where $R_i$ and $\mathcal R^{\mathrm{rot}}_i$ are convex cones approximating Ramachandran/rotamer admissible regions in the $(\cos,\sin)$-lift, $\{d_{ij}\le d_0\}$ is a second-order cone (SOC) contact constraint, $\mathcal H_{ij}$ and $\mathcal S_{ij}$ are convex H-bond/disulfide geometry cones, and $\{d_{ab}\ge d_{\min}\}^{\mathrm{cvx}}$ is a convex surrogate of the clash exclusion (linearized SOC barriers around current iterate). Each set is closed and convex; intersections preserve closedness.
+
+\paragraph{$\Struct_{\mathrm{phase}}$ (band/coherence).} Let $\tilde\nu_0\approx724$\,cm$^{-1}$ and pre-registered detunings $\{\delta_k\}$ and width $\Delta$. Define
+\begin{equation}
+ \Struct_{\mathrm{phase}}\ :=\ \Big\{z\in\C^8:\ z_k\in B_k\ \text{for all}\ k,\ \mathrm{circVar}(z)\le 0.40\Big\},\quad B_k=[\tilde\nu_0+\delta_k-\Delta,\ \tilde\nu_0+\delta_k+\Delta],
+\end{equation}
+interpreting $z_k\in B_k$ via the demodulated spectral support (orthogonal projector onto band-limited components). The coherence cap uses a convex bound on circular variance in the demodulated coordinates.
+
+\paragraph{$\Struct_{\mathrm{sched}}$ (linear subspace/cap).} Let
+\begin{equation}
+ \Struct_{\mathrm{sched}}\ :=\ \{s\in\R^{m}:\ A_8 s=0,\ A_{\mathrm{cyc}}s=0,\ \lVert T s\rVert_2\le 1\},
+\end{equation}
+where $A_8$ encodes all sliding 8-instruction sums, $A_{\mathrm{cyc}}$ enforces cycle fences, and $Ts$ extracts the token signal with a convex cap (a linear relaxation of parity).
+
+\paragraph{Defect.} The pointwise defect $d_{\Struct}(x)$ is the Euclidean distance to $\Struct$ in the product metric; the global defect is
+\begin{equation}
+ \Defect(\alpha)\ :=\ \sum_{i}\,d_{\Struct}(\alpha_{x_i})^2\ +\ \sum_{k=1}^{8}\,d_{\Struct}(\alpha_{t_k})^2\ +\ d_{\Struct}(\alpha_{\mathrm{sched}})^2,
+\end{equation}
+which equals $\int d_{\Struct}(\alpha_x)^2\,d\mu(x)$ when written as a sum/integral over fibers.
+
+\paragraph{Energy (parameter-free).} Take $\Energy(\alpha)=\int \lVert \mathrm{proj}_{\Struct^{\perp}}\alpha_x\rVert^2\,d\mu(x)$ and $\Energy(\alpha_0)=0$ for $\alpha_0\in\Struct$. Then Assumption~\ref{asmp:energy} holds with $\Ceng=1$.
+
+\section{Projections, nets, and constants}
+
+\paragraph{Projections.} Each block admits a nearest-point projection:
+\begin{itemize}
+ \item $P_{\mathrm{Rama}}(u_i)$ and $P_{\mathrm{rot}}(u_i)$ are orthogonal projections to the convex cones $R_i$ and $\mathcal R^{\mathrm{rot}}_i$ in the lifted coordinates; these are nonexpansive ($1$-Lipschitz).
+ \item $P_{\mathrm{contact}}$ to $\{d_{ij}\le d_0\}$ is the SOC projection; similarly for $P_{\mathrm{Hbond}}$ and $P_{\mathrm{SS}}$ to their convex cones.
+ \item $P_{\mathrm{phase}}$ projects onto the band-limited subspace and clamps coherence via a convex cap; this is an orthogonal projector in the demodulated frame.
+ \item $P_{\mathrm{sched}}$ is the orthogonal projection onto $\{A_8 s=0,\ A_{\mathrm{cyc}}s=0\}$ followed by radial clipping to $\lVert Ts\rVert_2\le 1$ (nonexpansive).
+\end{itemize}
+Composing these Hermitian block projections yields a rank-one/Hermitian residual bound; by Lemma~\ref{lem:rankone} we may take $\Cproj\le 2$ for the fiberwise control.
+
+\paragraph{Eight-beat net.} Choose $\varepsilon=1/8$ (eight-tick aligned) in each fiber to obtain $\Cnet=((1+\varepsilon)/(1-\varepsilon))^2=(9/7)^2$.
+
+\paragraph{Constants from $\varphi$.} Use $J''(1)=1$ to fix units, $J_{\mathrm{bit}}=\ln\varphi$, recognition quantum $E_{\mathrm{coh}}=\varphi^{-5}$\,eV, and the recognition wavelength $\lambda_0\approx 13.8\,\mu$m ($\tilde\nu_0\approx 724\,$cm$^{-1}$). These fix band centers and measurement gates without tuning.
+
+\paragraph{Coercivity constant.} With $\Ceng=1$, $\Cproj=2$, $\Cnet=(9/7)^2$, Theorem~\ref{thm:coercivity} gives $c=(\Cnet\,\Cproj\,\Ceng)^{-1}=\dfrac{49}{162}\approx 0.302$.
+
+\section{Local tests and aggregation}
+
+\paragraph{Windows and tests.} Let $\mathcal W=\mathcal W_{\mathrm{geom}}\cup\mathcal W_{\mathrm{cont}}\cup\mathcal W_{\mathrm{phase}}\cup\mathcal W_{\mathrm{sched}}$ with bounded overlap $M$.
+\begin{align}
+ T^{\mathrm{geom}}_{W}(\alpha)&:= \frac{1}{|W|}\sum_{i\in W}\big(\mathrm{dist}(u_i,R_i)^2+\mathrm{dist}(u_i,\mathcal R^{\mathrm{rot}}_i)^2\big),\\
+ T^{\mathrm{cont}}_{W}(\alpha)&:= \frac{1}{|W|}\sum_{(i,j)\in W}\Big(\mathrm{dist}(d_{ij},\{\le d_0\})^2+\mathrm{dist}((i,j),\mathcal H_{ij})^2+\mathrm{dist}((i,j),\mathcal S_{ij})^2\Big),\\
+ T^{\mathrm{phase}}_{k}(\alpha)&:= \mathrm{dist}(z_k,\text{band }B_k)^2+\big(\max\{0,\mathrm{circVar}(z)-0.40\}\big)^2,\\
+ T^{\mathrm{sched}}_{W}(\alpha)&:= \frac{1}{|W|}\sum_{\ell\in W}\big(\lVert (A_8 s)_\ell\rVert_2^2+\lVert (A_{\mathrm{cyc}} s)_\ell\rVert_2^2+\max\{0,\lVert Ts\rVert_2-1\}^2\big),
+\end{align}
+with the coherence penalty fixed to unit weight by the CPM unit choice ($J''(1)=1$). Set $T_W$ to the corresponding form per window.
+
+\paragraph{Aggregator.} Bounded overlap and nonexpansive projections give
+\begin{equation}
+ \Defect(\alpha)\ \le\ M\,\Cnet\,\Cproj\,\sup_{W\in\mathcal W} T_W[\alpha] \ =:\ K_\ast\,\sup_{W}T_W[\alpha].
+\end{equation}
+In particular, if $\sup_W T_W[\alpha]\le \tau<\tau_c:=c/K_\ast$, then $\Energy(\alpha)-\Energy(\alpha_0)\ge c\,\Defect(\alpha)$ and the domain-specific positivity (native-phase membership) holds by Theorem~\ref{thm:coercivity}.
+
+\section{Existence sketch (CPM pattern)}
+\begin{theorem}[Existence of a native-phase realizer]
+Assume the convex surrogates and band/coherence caps above, eight-beat instrument alignment, and bounded window overlap $M$. Then there exists $\tau_c>0$ (explicit via $c$, $\Cnet$, $\Cproj$, $M$) such that whenever $\sup_{W\in\mathcal W}T_W[\alpha]\le \tau<\tau_c$, one has $\Energy(\alpha)-\Energy(\alpha_0)\ge c\,\Defect(\alpha)$ and $\Defect(\alpha)\le K_\ast\,\tau$. In particular, $\alpha$ lies within distance $\sqrt{K_\ast\,\tau}$ of $\Struct$.
+\end{theorem}
+\begin{proof}[Sketch]
+Define $\Struct$, $\Defect$, and $\Energy$ as above. Projection/nonexpansiveness and the Hermitian rank-one bound imply Assumption~\ref{asmp:projection} with $\Cproj\le 2$; the eight-beat $\varepsilon=1/8$ net gives $\Cnet=(9/7)^2$. Choosing $\Energy=\lVert\mathrm{proj}_{\Struct^{\perp}}\rVert^2$ yields Assumption~\ref{asmp:energy} with $\Ceng=1$. Apply Theorem~\ref{thm:coercivity} to obtain coercivity with $c=49/162$. Bounded window overlap elevates local tests to a global bound $\Defect\le K_\ast\sup_W T_W$. If $\sup_W T_W\le \tau<\tau_c:=c/K_\ast$, the conclusion follows.
+\end{proof}
+
+\section{Experiments, acceptance bands, falsifiers, and PNAL/LNAL invariants}
+
+\paragraph{Primary assay (dual-comb IR; $\varphi$-timed).} Use dual-comb mid-IR with $\varphi$-timed sampling gates to probe the eight-beat timeline during folding. Targets: G~$\beta$-hairpin (1GB1~A~41--56) as a decisive anchor, followed by Trp-cage, Villin~HP35, and WW.
+\begin{itemize}
+ \item \textbf{Initiation and windows:} microfluidic initiation; align LISTEN gates to eight beats per cycle; acquire demodulated phasors $z\in\C^8$ per cycle.
+ \item \textbf{Band-pass and demodulation:} fixed pipeline (band-pass $\to$ I/Q demod $\to$ unwrap $\to$ baseline); daily RF/phase calibration.
+ \item \textbf{Outcomes:} per-beat SNR, circular variance, and beat-map correlation against pre-registered bands $\{B_k\}$; time-to-lock with/without LISTEN closed loop.
+\end{itemize}
+
+\paragraph{Acceptance bands and thresholds (pre-registered).} Let $\tilde\nu_0\approx724$\,cm$^{-1}$ and fix per-target detunings $\{\delta_k\}$, width $\Delta$, and LISTEN gates:
+\begin{equation}
+ B_k\ =\ [\,\tilde\nu_0+\delta_k-\Delta,\ \tilde\nu_0+\delta_k+\Delta\,],\qquad \Delta\in[5,25]~\text{cm}^{-1}.
+\end{equation}
+Example (G~$\beta$-hairpin): $\delta_k=[-18,-12,-6,0,6,12,18,24]$~cm$^{-1}$, $\Delta=15$~cm$^{-1}$, gates $\{1,\dots,8\}$. Acceptance:
+\begin{equation}
+ \mathrm{SNR}_k\ \ge\ 5\sigma,\quad \mathrm{circVar}(z)\ <\ 0.40,\quad \rho(\text{pred},\text{meas})\ \ge\ 0.30\ \text{(primary endpoint)}.
+\end{equation}
+Calibration includes buffer-only runs (LOD estimation), band-shuffle nulls, and misaligned LISTEN schedules to quantify false-positive rates.
+
+\paragraph{Closed-loop LISTEN test (acceleration).} Compare open-loop vs closed-loop LISTEN on the same target and buffer. Endpoint: reduced time-to-lock and increased beat coherence under closed-loop, within the same acceptance bands.
+
+\paragraph{Robustness and replication.} Cross-day and cross-instrument runs (at least two days/instruments). Report band acceptance, $\rho$, and time-to-lock; pre-registered nulls must fail the primary endpoint.
+
+\paragraph{Falsifiers (hard).}
+\begin{enumerate}
+ \item \textbf{Missing eight-beat features:} canonical targets fail $\rho\ge0.30$ and/or SNR and coherence thresholds while negative controls do not show the signature.
+ \item \textbf{Beat–motif mismatch:} measured beat assignments systematically disagree with motif predictions (helix, $\beta$-pairing, long-range contacts) beyond declared tolerances.
+ \item \textbf{LISTEN inefficacy:} closed-loop LISTEN does not reduce time-to-lock or improve coherence relative to open-loop.
+ \item \textbf{Invariant–outcome decoupling:} programs that satisfy invariants (token parity, eight-window neutrality, legal triads, $2^{10}$ fences) nevertheless fail structure/phase endpoints across benchmarks.
+ \item \textbf{Recognition wavelength failure:} robust features occur at wavelengths incompatible with $\tilde\nu_0\approx724$~cm$^{-1}$ after calibration cross-checks.
+\end{enumerate}
+
+\paragraph{PNAL/LNAL invariants and audit mapping.} Compilation ensures and logs:
+\begin{itemize}
+ \item \textbf{Token parity $\le 1$:} at most one open \texttt{LOCK} token; audited via a token trace; encoded by the convex cap $\lVert Ts\rVert_2\le1$ in $\Struct_{\mathrm{sched}}$.
+ \item \textbf{Eight-window neutrality:} every sliding block of 8 instructions has net ledger cost zero; encoded by $A_8 s=0$.
+ \item \textbf{Legal triads:} any \texttt{BRAID} closure uses an $\mathrm{SU}(3)$ root-triangle; enforced at compile time and mapped into $\Struct_{\mathrm{geom}}$ admissible closures.
+ \item \textbf{$2^{10}$ cycle fences:} no instruction crosses the global fence; midpoint \texttt{FLIP} at tick~512; encoded by $A_{\mathrm{cyc}} s=0$.
+\end{itemize}
+Artifacts: \texttt{phase\_timeline.csv}, \texttt{invariants.json} (counts for parity, 8-window, triads, fences), \texttt{metrics.json} (RMSD, contact F1), and provenance (container digest, commit hash, CPU flags). Passing local gates (bands, SNR/coherence, invariants) implies small $\sup_W T_W$ and, by CPM coercivity with $c=49/162$, small global $\Defect$.
+
+\section{Constants summary}
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Symbol & Definition & Value & Notes \\
+\midrule
+$\varepsilon$ & Net radius & $\tfrac{1}{8}$ & Eight-beat aligned \\
+$\Cnet$ & $\big(\tfrac{1+\varepsilon}{1-\varepsilon}\big)^2$ & $\big(\tfrac{9}{7}\big)^2\ \approx\ 1.65306$ & Cone vs net bound \\
+$\Cproj$ & Projection constant & $\le 2$ (take 2) & Rank-one/Hermitian lemma \\
+$\Ceng$ & Energy control & $1$ & By definition $\Energy=\lVert\mathrm{proj}\rVert^2$ \\
+$c$ & Coercivity & $\dfrac{1}{\Cnet\,\Cproj\,\Ceng}=\dfrac{49}{162}\ \approx\ 0.30247$ & From Theorem~\ref{thm:coercivity} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Conclusion}
+We presented a parameter-free CPM instantiation for protein folding that: (i) models the native set as a product of closed convex cones/subspaces across geometry, phase, and scheduler; (ii) chooses a quadratic energy that makes the energy-control constant unity; (iii) supplies explicit projections with $\Cproj\le 2$ and an eight-beat aligned net with $\Cnet=(9/7)^2$; and (iv) aggregates local, instrument-aligned tests to a global existence guarantee with coercivity constant $c=49/162$. This closes the loop between executable PNAL/LNAL programs, eight-beat IR observables near $724$\,cm$^{-1}$, and a rigorous CPM existence framework. The companion Lean stubs (projection inequality and energy control) are natural next steps to further mechanize the argument.
+
+\section{Scope and limitations}
+Our convex $\Struct_{\mathrm{geom}}$ surrogates approximate discrete admissibility (Ramachandran/rotamers, clash) and contact/H-bond/disulfide geometry; tighter convexifications can refine constants without introducing parameters. Aggregation relies on bounded window overlap $M$ (fixed by design) and instrument alignment to eight-beat timing; severe misalignment or unresolved bandwidth will weaken phase tests. The CPM constants $(\Cnet,\Cproj,\Ceng)$ are fixed by eight-beat alignment, rank-one/Hermitian control, and the energy choice; improvements to projection sharpness reduce $\Cproj$ and thus increase $c$.
+
+\section{Artifacts}
+We recommend releasing: (i) a constants table with $(\Cnet,\Cproj,\Ceng,c)$, (ii) window/test definitions $T_W$, (iii) LaTeX sources and a one-command build, and (iv) JSON schemas for bands, gates, and invariants logs.
+
+\end{document}
+
+

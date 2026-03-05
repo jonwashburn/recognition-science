@@ -1,0 +1,316 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Complex Hilbert Space from Recognition Science:\\
+$e^{i\pi} = -1$ from the 8-Tick Half-Period}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We derive the necessity of complex Hilbert space for quantum
+mechanics from the Recognition Science 8-tick epoch.  The epoch has
+$2^D = 8$ ticks ($D = 3$).  The $k$-th tick carries phase
+$e^{ik\pi/4}$ ($k = 0, 1, \ldots, 7$), the 8th roots of unity.
+At the half-period ($k = 4$): $e^{i\pi} = -1$, a real quantity
+acquires a sign flip.  To represent this phase evolution continuously,
+complex numbers are required: $\mathbb{R}$ cannot support continuous
+rotations in a plane, but $\mathbb{C}$ can.  The full-period return
+$e^{2i\pi} = 1$ restores reality.  Thus $\mathbb{C}$ is the minimum
+field extension needed for the 8-tick dynamics.  Real quantum mechanics
+($\mathbb{R}$) fails because it cannot represent the half-period
+phase.  Quaternionic quantum mechanics ($\mathbb{H}$) is unnecessary
+because $\mathbb{C}$ suffices---the 8-tick structure provides no
+additional cyclic structure requiring a third imaginary unit.  The sum
+of all 8 phases vanishes: $\sum_{k=0}^7 e^{ik\pi/4} = 0$ (vacuum
+fluctuation cancellation).
+\end{abstract}
+
+\section{Introduction}
+
+Why does quantum mechanics use complex numbers~\cite{Stueckelberg}?
+This is one of the deepest structural questions in physics.  Adler~\cite{Adler} explored quaternionic QM; recent experiments have ruled out
+real QM~\cite{Renou}.  RS~\cite{RS_Axioms} derives the answer: the 8-tick
+epoch forces $\mathbb{C}$.
+
+\section{Recognition Science Framework}
+\label{sec:framework}
+
+Recognition Science derives all physics from a single primitive,
+the \emph{recognition cost functional} $J(x)$, uniquely determined
+by three axioms:
+
+\begin{definition}[RS Cost Functional]
+For $x > 0$: $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{definition}
+
+\noindent\textbf{Axiom A1 (Normalization):} $J(1) = 0$.\\
+\textbf{Axiom A2 (Recognition Composition Law, RCL):}
+$J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y)$ for all $x, y > 0$.\\
+\textbf{Axiom A3 (Calibration):} $J''_{\log}(0) = 1$, where
+$J_{\log}(t) := J(e^t)$.
+
+\begin{theorem}[Cost Uniqueness]
+\label{thm:unique}
+The unique continuous solution to \textup{(A1)--(A3)} is
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Setting $f(t) = J_{\log}(t) + 1$ and rewriting \textup{(A2)} gives the
+d'Alembert equation $f(s+t) + f(s-t) = 2f(s)f(t)$.  By the Acz\'el
+classification theorem~\cite{Aczel1966}, the unique continuous solution
+with $f(0) = 1$ and $f''(0) = 1$ is $f(t) = \cosh t$.
+\end{proof}
+
+\noindent The 8-tick epoch ($2^D = 8$ for $D = 3$, forced by the gap-45
+synchronization $\operatorname{lcm}(8,45)=360$) carries phases
+$e^{ik\pi/4}$, $k = 0, \ldots, 7$---the 8th roots of unity.  These
+require $\mathbb{C}$ to represent: $\mathbb{R}$ cannot encode $e^{i\pi/4}$.
+
+\section{The 8-Tick Phase Structure}
+
+\begin{definition}[Tick Phases]
+The phase at tick $k$ ($k = 0, 1, \ldots, 7$) is
+$\omega_k = e^{ik\pi/4}$, the 8th roots of unity.
+\end{definition}
+
+\begin{remark}[Periodicity]
+$\omega_k^8 = e^{8ik\pi/4} = e^{2\pi ik} = 1$ for all $k \in \{0,\ldots,7\}$.
+The phase returns to unity after one complete epoch.
+\end{remark}
+
+\begin{remark}[Half-Period Phase and Fermion Sign]
+$\omega_4 = e^{4i\pi/4} = e^{i\pi} = -1$ (by Euler's formula).  The
+RS structural identification is that fermionic statistics correspond
+to the half-epoch phase: a particle whose state acquires $-1$ under
+a full 8-tick cycle (2 epochs) is identified with a spin-$1/2$ fermion.
+This is an identification, not a derivation of the spin-statistics
+theorem (see Remark below).
+\end{remark}
+
+\begin{remark}[Boson Phase]
+$\omega_0 = e^{0} = 1$.  The RS structural identification is that
+bosons carry the trivial phase (no sign flip under a full cycle),
+consistent with integer spin.
+\end{remark}
+
+\begin{remark}[Spin-Statistics --- Structural Identification]
+The identification $\omega_4 = -1$ (fermions) and $\omega_0 = 1$
+(bosons) provides an RS structural basis for the spin-statistics
+connection.  The full spin-statistics theorem (Pauli, 1940) is a deep
+consequence of Lorentz invariance and local field theory, not derived
+here.  The RS contribution is the identification of the $-1$ sign with
+the half-period phase $e^{i\pi}$ of the 8-tick epoch: particles
+associated with the 4-tick half-period are identified with fermions.
+A rigorous derivation of the Spin-Statistics theorem from the RS
+ledger structure is an identified open problem.
+\end{remark}
+
+\section{Why $\mathbb{C}$ Is Required}
+
+\begin{proposition}[Reals Insufficient for 8-Tick Phases]
+$\mathbb{R}$ cannot represent all 8-tick phases: $\omega_1 = e^{i\pi/4}
+= (1+i)/\sqrt{2} \notin \mathbb{R}$.
+\end{proposition}
+
+\begin{proof}
+$\omega_1 = \cos(\pi/4) + i\sin(\pi/4) = (1 + i)/\sqrt{2}$.  This
+has a nonzero imaginary part.  No real number can represent a rotation
+in a plane; $\mathbb{C}$ is the minimum extension of $\mathbb{R}$
+that supports multiplication-as-rotation.
+\end{proof}
+
+\begin{proposition}[Quaternions Unnecessary --- Structural Argument]
+$\mathbb{H}$ provides no additional cyclic structure for the 8-tick dynamics.
+\end{proposition}
+
+\begin{proof}[Structural argument]
+The 8-tick phases $\{\omega_k = e^{ik\pi/4} : k = 0,\ldots,7\}$ form
+the cyclic group $\mathbb{Z}_8$, which is a subgroup of $U(1)
+\subset \mathbb{C}^\times$.  Every element of $\mathbb{Z}_8$ can be
+expressed using $\mathbb{C}$ alone; no third or fourth imaginary unit
+($j$, $k$ in $\mathbb{H}$) is needed to generate the 8th roots of
+unity.  Quaternionic QM would introduce $SU(2)$ holonomy, providing
+more structure than the single $U(1)$ of the 8-tick phases.  Since the
+RS 8-tick structure is a $\mathbb{Z}_8$ subgroup of $U(1)$, $\mathbb{C}$
+is sufficient and $\mathbb{H}$ is redundant for this purpose.
+\end{proof}
+
+\section{The Number Field Classification}
+
+By the Frobenius theorem~\cite{Frobenius}, the only finite-dimensional associative
+division algebras over $\mathbb{R}$ are $\mathbb{R}$, $\mathbb{C}$,
+and $\mathbb{H}$.  Any quantum theory with a Hilbert space must use
+one of these.  $\mathbb{R}$ fails: it cannot support continuous
+phase rotations; $e^{i\pi/4}$ has no analogue in $\mathbb{R}$.
+$\mathbb{H}$ is unnecessary: the 8-tick structure provides one
+cyclic degree of freedom; quaternions introduce $i$, $j$, $k$ with
+noncommutative multiplication, but the phases live in a single
+$U(1) \subset \mathbb{C}^\times$.  $\mathbb{C}$ is uniquely
+selected: the minimal division algebra that extends $\mathbb{R}$,
+contains the 8th roots of unity, and introduces no superfluous
+structure.
+
+\section{Experimental Evidence Against Real QM}
+
+Renou et al.~\cite{Renou} (2021) performed a loophole-free Bell
+experiment that ruled out real quantum mechanics.  In real QM the
+state space is over $\mathbb{R}$ and correlations are constrained;
+the observed correlations violate the bounds real QM permits.  Real
+QM predicts a maximum violation strictly less than complex QM for
+certain configurations; the measured violations exceeded the
+real-QM bound, confirming complex amplitudes.  This is consistent
+with RS: the 8-tick structure requires $\mathbb{C}$, and experiment
+excludes $\mathbb{R}$.
+
+\section{Vacuum Fluctuation Cancellation}
+
+\begin{theorem}[Phase Sum Vanishes]
+$\sum_{k=0}^7 e^{ik\pi/4} = 0$.
+\end{theorem}
+
+\begin{proof}
+The sum of all $n$th roots of unity vanishes for $n \geq 2$:
+$\sum_{k=0}^{n-1} e^{2\pi ik/n} = 0$.  For $n = 8$:
+$\sum_{k=0}^7 e^{ik\pi/4} = 0$.
+\end{proof}
+
+This has physical significance: vacuum fluctuations at each of the 8
+tick phases cancel exactly, explaining why the vacuum energy is not
+divergent but finite.
+
+\section{The Cosmological Constant Connection}
+
+The cosmological constant problem: naive QFT predicts vacuum energy
+$\sim M_{\mathrm{Pl}}^4$, while observation gives $\rho_\Lambda \sim
+10^{-120} M_{\mathrm{Pl}}^4$.  In RS, $\sum_{k=0}^7 \omega_k = 0$
+provides a structural contribution to this cancellation: vacuum
+fluctuations associated with the 8-tick epoch phases sum to zero
+exactly.  The RS claim is that the leading-order epoch contribution to
+vacuum energy vanishes by this phase cancellation.
+
+\begin{remark}[Status of the Cosmological Constant Connection]
+The full resolution of the cosmological constant problem requires
+explaining why $\rho_\Lambda \ll M_{\mathrm{Pl}}^4$; the phase sum
+$\sum \omega_k = 0$ shows that the 8-tick epoch contribution is exactly
+zero, but does not address vacuum energy contributions from QFT modes
+outside the epoch structure.  The identification of ``epoch vacuum
+fluctuations'' with the dominant divergent QFT contribution is a
+structural hypothesis, not a derivation.  This is an identified open
+problem; a companion paper on the Cosmological Constant addresses it
+in detail.
+\end{remark}
+
+\section{Euler's Formula}
+
+\begin{remark}[Euler's Formula in RS Context]
+The standard identity $e^{i\theta} = \cos\theta + i\sin\theta$
+(Euler's formula) describes how the 8-tick phase $e^{ik\pi/4}$ evolves
+continuously between commits.  In RS, Euler's formula is not merely a
+mathematical curiosity: it is the structural necessity that relates the
+discrete tick-phase assignments to continuous-time quantum dynamics.
+The amplitude of a state between commits is described by a complex
+exponential; the phase wraps around the unit circle over the 8-tick epoch.
+\end{remark}
+
+\section{Comparison of Quantum Formulations}
+
+Table~\ref{tab:qm-comparison} summarizes the four formulations.
+
+\begin{table}[htbp]
+\centering
+\caption{Comparison of quantum formulations.}
+\label{tab:qm-comparison}
+{\small
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Property & Real & Complex & Quat.\ & RS \\
+\midrule
+Number field & $\mathbb{R}$ & $\mathbb{C}$ & $\mathbb{H}$ & $\mathbb{C}$ \\
+8-tick phases & No & Yes & Yes & Yes \\
+Half-period & No & Yes & Yes & Yes \\
+$\sum \omega_k$ & N/A & 0 & 0 & 0 \\
+Experiment & Ruled out & OK & N/A & OK \\
+Minimal & No & Yes & No & Yes \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+Real QM cannot represent the 8-tick phases.  Complex QM is minimal
+and experimentally confirmed.  Quaternionic QM is unnecessarily
+rich.  RS predicts $\mathbb{C}$ and is consistent with experiment.
+
+\section{Predictions}
+
+\begin{enumerate}
+\item \textbf{No quaternionic effects.}  RS predicts no observables
+  sensitive to $j$ or $k$; the 8-tick structure provides no such
+  degrees of freedom.
+\item \textbf{Vacuum energy.}  Dominant vacuum contribution from the
+  epoch vanishes; residual $\Lambda$ terms arise from other
+  mechanisms.
+\item \textbf{Phase coherence.}  Interference at fundamental scales
+  should privilege phase differences $\Delta\theta = m\pi/4$
+  ($m \in \mathbb{Z}$).
+\item \textbf{No real-QM revival.}  RS and Renou et al.\ exclude
+  real QM; any future support would contradict both.
+\end{enumerate}
+
+\section{Conclusion}
+
+Complex Hilbert space is forced by the 8-tick epoch: the phases
+$e^{ik\pi/4}$ require $\mathbb{C}$.  Real QM is excluded
+($\omega_1$ has imaginary part).  Quaternionic QM is unnecessary
+(no additional cyclic structure).  Vacuum fluctuations cancel
+($\sum \omega_k = 0$).
+
+\begin{thebibliography}{9}
+
+\bibitem{Aczel1966}
+J.~Acz\'el, \emph{Lectures on Functional Equations and Their Applications},
+Academic Press, New York (1966).
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+\texttt{doi:10.3390/axioms15020090}
+
+\bibitem{Stueckelberg}
+E.~C.~G.~Stueckelberg, ``Quantum Theory in Real Hilbert Space,''
+Helv.\ Phys.\ Acta \textbf{33}, 727 (1960).
+
+\bibitem{Adler}
+S.~L.~Adler, \textit{Quaternionic Quantum Mechanics and Quantum Fields}
+(Oxford University Press, 1995).
+
+\bibitem{Renou}
+M.-O.~Renou \emph{et al.}, ``Quantum Theory Based on Real Numbers
+Can Be Experimentally Falsified,'' Nature \textbf{600}, 625 (2021).
+
+\bibitem{Frobenius}
+F.~G.~Frobenius, ``\"Uber lineare Substitutionen und bilineare
+Formen,'' J.\ Reine Angew.\ Math.\ \textbf{84}, 1 (1878).
+\end{thebibliography}
+
+\end{document}

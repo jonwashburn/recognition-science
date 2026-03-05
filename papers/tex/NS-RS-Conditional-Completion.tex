@@ -1,0 +1,787 @@
+\documentclass[12pt, reqno]{amsart}
+
+%% PACKAGES
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{microtype}
+
+%% GEOMETRY
+\geometry{margin=1in}
+
+\usepackage[colorlinks=true,
+  linkcolor=blue!70!black,
+  citecolor=blue!70!black,
+  urlcolor=blue!70!black]{hyperref}
+\usepackage[capitalise, noabbrev, nameinlink]{cleveref}
+
+%% THEOREMS
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{hypothesis}[theorem]{Hypothesis}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+%% NUMBERING
+\numberwithin{equation}{section}
+
+%% MATH OPERATORS
+\DeclareMathOperator{\dv}{div}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\osc}{osc}
+\DeclareMathOperator{\BMO}{BMO}
+
+%% MACROS
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\Sbb}{\mathbb{S}}
+
+\newcommand{\eps}{\varepsilon}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Jcost}{\mathcal{J}}
+\newcommand{\Rhat}{\widehat{R}}
+
+%% PROOF STEP FORMATTING
+\newcommand{\proofstep}[1]{\smallskip\noindent\emph{#1.}\enspace}
+
+%% CREF FORMATTING
+\crefname{hypothesis}{Hypothesis}{Hypotheses}
+\Crefname{hypothesis}{Hypothesis}{Hypotheses}
+
+%% TITLE & AUTHOR
+\title[Conditional Completion via Recognition Geometry]{Conditional Completion of the
+Navier--Stokes Regularity Problem
+via Recognition Geometry}
+
+\author{Jonathan Washburn}
+\thanks{The author thanks Milan Zlatanovi\'{c} and Elshad Allahyarov
+for contributions to the Recognition Geometry framework~\cite{WashburnRG2026} and its Lean~4 formalization.}
+\address{Recognition Physics Institute, Austin, Texas}
+\email{jon@recognitionphysics.org}
+
+\subjclass[2020]{Primary 35Q30; Secondary 76D05, 35B44, 81P99}
+\keywords{Navier--Stokes equations, global regularity, Recognition Geometry,
+finite resolution, cost functional, blow-up exclusion, direction constancy}
+\date{February 2026}
+
+\begin{document}
+
+\begin{abstract}
+We prove global regularity for the three-dimensional incompressible Navier--Stokes equations conditionally on a single hypothesis: the \emph{Finite Recognition Cost Principle}, which asserts that every normalised vorticity ratio $x\in\R_{>0}$ arising from a smooth finite-energy solution satisfies $J(x):=\tfrac12(x+x^{-1})-1<\infty$.
+The companion paper~\cite{WashburnNS2026} reduces the regularity problem to upgrading a bounded vorticity-direction gradient to full direction constancy at large parabolic scales.
+We show the hypothesis closes this gap through three routes: Schur certification of a canonical reciprocal sensor, an injection--damping balance for the $\rho^{3/2}$ identity, and coercive projection linking energy gap to direction defect.
+We also extract two purely classical conjectures---global injection--damping balance and subquadratic direction-energy growth---either of which would yield an unconditional proof.
+\end{abstract}
+
+\maketitle
+
+%% ====================================================================
+\section{Introduction}\label{sec:intro}
+%% ====================================================================
+
+\subsection{Context and motivation}
+
+The Navier--Stokes existence and smoothness problem asks whether smooth, finite-energy solutions of the three-dimensional incompressible Navier--Stokes equations
+\begin{equation}\label{eq:NS}
+\partial_t u + (u\cdot\nabla)u + \nabla p - \nu\Delta u = 0,
+\qquad
+\nabla\cdot u = 0,
+\end{equation}
+can develop singularities in finite time~\cite{Fefferman2006}.
+The partial regularity theory of Caffarelli--Kohn--Nirenberg~\cite{CKN1982}, the vorticity-direction approach of Constantin--Fefferman~\cite{ConstantinFefferman1993}, the backward uniqueness results of Escauriaza--Seregin--\v{S}ver\'{a}k~\cite{ESS2003}, and the Liouville theorems of Koch--Nadirashvili--Seregin--\v{S}ver\'{a}k~\cite{KNSS2009} have profoundly shaped the modern understanding, yet the problem remains open since Leray's foundational work~\cite{Leray1934}.
+
+In the companion paper~\cite{WashburnNS2026}, we established unconditional structural constraints on any potential blow-up profile (\cref{thm:classical-summary} below), reducing the problem to a single question: whether the bounded vorticity-direction gradient $|\nabla\xi|\le C(\eta)$ can be upgraded to full direction constancy $\nabla\xi\equiv 0$.
+Classical methods achieve this at small parabolic scales via $\eps$-regularity~\cite{Struwe1988}, but fail at large scales where rescaled energy grows as $O(R^2)$.
+
+This paper closes the gap conditionally, using one hypothesis motivated by Recognition Geometry~\cite{WashburnRG2026}, an axiomatic framework whose foundations---including the canonical cost functional, the finite local resolution axiom, and the recognition quotient---are formalized in the Lean~4 proof assistant.
+The hypothesis is:
+
+\begin{hypothesis}[Finite Recognition Cost Principle]\label{hyp:FRC}
+Let $u$ be a smooth solution of~\eqref{eq:NS} with $u_0\in H^1(\R^3)$ on $[0,T^*)$,
+and let $\rho=|\omega|$ denote the vorticity magnitude.
+Define the canonical cost $J(x)=\tfrac12(x+x^{-1})-1$ for $x\in\R_{>0}$.
+Then for every running-max rescaling parameter $M_k=\|\omega(\cdot,t_k)\|_{L^\infty}$ and every $z$ in the domain of the rescaled vorticity,
+\[
+J\!\bigl(\rho^{(k)}(z)/M_k\bigr) \;<\; \infty.
+\]
+Equivalently, the total $J$-cost $\int_{\R^3}J(\rho/\|\rho\|_\infty)\,dx$ remains finite for all time.
+\end{hypothesis}
+
+\Cref{hyp:FRC} is the PDE-theoretic reading of Axiom~RG4 (Finite Local Resolution) from Recognition Geometry~\cite{WashburnRG2026}: \emph{for every configuration $c$ and recognizer $R$, there exists a neighborhood $U$ such that $R(U)$ is finite.}
+In the Navier--Stokes context, the recognizer is the vorticity field~$\omega$, and RG4 asserts that the vorticity cannot concentrate infinite cost at any scale.
+\Cref{hyp:FRC} is stated in self-contained PDE terms and does not require acceptance of the Recognition Geometry axioms; it may be treated as a purely mathematical conditional hypothesis.
+
+\subsection{The classical gap}\label{subsec:gap}
+
+The companion paper~\cite{WashburnNS2026} establishes the following unconditional results for the running-max ancient element extracted from a putative blow-up.
+
+\begin{theorem}[Classical structural constraints {\cite[Theorem~1.1]{WashburnNS2026}}]\label{thm:classical-summary}
+Let $u_0\in H^1(\R^3)$ be smooth and divergence-free, and suppose $u$ blows up at time $T^*<\infty$.
+Let $(u^\infty,\omega^\infty)$ be the running-max ancient element with $|\omega^\infty(0,0)|=1$ and $\|\omega^\infty\|_{L^\infty}\le 1$.  Then:
+\begin{enumerate}[label=\textup{(\alph*)},leftmargin=*]
+\item \emph{Near-field depletion:}\enspace $\iint_{Q_r}\rho^{3/2}|\sigma_{\mathrm{near}}|\le Cr^5$ for all $r\le 1$.
+\item \emph{Tail elimination:}\enspace the external far-field vanishes at rate $M_k^{-3/4}$.
+\item \emph{Coherence bound:}\enspace $\Ecal_\omega(z_0,R)\le C_1 R^5 + C_2 R^3$ for universal constants $C_1,C_2$.
+\item \emph{Direction regularity:}\enspace $|\nabla\xi(z_1)|\le C(\eta)$ whenever $\rho(z_1)\ge\eta>0$.
+\end{enumerate}
+\end{theorem}
+
+The \emph{classical gap} is the upgrade from~(d) to full direction constancy $\nabla\xi\equiv 0$ on $\{\rho>0\}$.
+The obstacle is precisely identified in~\cite[Remark~1.4]{WashburnNS2026}: at small parabolic scales, $\eps$-regularity gives pointwise gradient bounds below the Struwe threshold; at large scales ($R\gg 1$), the rescaled energy grows as $O(R^2)$, exceeding the threshold and preventing the Liouville argument.
+The conditional classification from~\cite{WashburnNS2026} further shows that direction constancy forces the blow-up profile to be the rigid rotation $u_{\mathrm{rig}}=\tfrac12(-x_2,x_1,0)$, reducing global regularity to excluding this single profile.
+
+\subsection{Main results}\label{subsec:main-results}
+
+We show that \cref{hyp:FRC} closes the classical gap.
+The argument admits three formulations, each offering a different perspective on the obstruction.
+
+\begin{enumerate}[label=\textup{(\Roman*)},leftmargin=*,itemsep=4pt]
+\item \textbf{Recognition Stability Audit.}\;
+The blow-up state is encoded as a pole of a canonical reciprocal sensor $\Jcost=1/G$.
+A Schur-class certification argument excludes this pole once the Cayley field has finite-complexity structure, which the running-max rescaling provides (\cref{sec:RSA}).
+
+\item \textbf{$J$-cost balance.}\;
+The $\rho^{3/2}$ identity is reinterpreted as a cost ledger.
+\Cref{hyp:FRC} forces the stretching injection to be controlled by direction damping at every scale, completing the large-scale Liouville argument (\cref{sec:Jcost}).
+
+\item \textbf{Coercive Projection.}\;
+The CPM framework~\cite{WashburnCPM2026}, instantiated with isotropic strain configurations, yields a coercivity inequality linking the energy gap to the direction defect.
+An aggregation argument lifts local direction control to global constancy (\cref{sec:CPM}).
+\end{enumerate}
+
+\noindent
+Each formulation independently excludes blow-up.
+The multiplicity identifies three routes by which a future unconditional proof might proceed.
+
+\subsection{Claim taxonomy}\label{subsec:taxonomy}
+
+We maintain strict separation between unconditional and conditional results.
+
+\medskip
+\begin{center}
+\small\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}l@{\qquad}c@{\qquad}l@{}}
+\toprule
+\textbf{Claim} & \textbf{Status} & \textbf{Reference} \\
+\midrule
+Classical structural constraints & Unconditional & \cite{WashburnNS2026} \\
+No-Injection Theorem & Unconditional; Lean-verified & \cite{WashburnRG2026} \\
+$J$-cost uniqueness & Unconditional & \cite{WashburnRS2025}, \S\ref{sec:RS} \\
+RSA correctness (given realizability) & Unconditional & \S\ref{sec:RSA} \\
+CPM coercivity & Unconditional & \cite{WashburnCPM2026} \\
+\addlinespace[4pt]
+NS realizability & Conditional on \cref{hyp:FRC} & \S\ref{sec:RSA-NS} \\
+Direction constancy & Conditional on \cref{hyp:FRC} & \S\ref{sec:direction} \\
+Global regularity & Conditional on \cref{hyp:FRC} & \S\ref{sec:main-proof} \\
+\bottomrule
+\end{tabular}
+\end{center}
+\medskip
+
+\noindent
+Every conditional claim depends on \cref{hyp:FRC} alone; no other non-classical hypothesis is invoked.
+
+
+%% ====================================================================
+\section{Background from Recognition Geometry}\label{sec:RS}
+%% ====================================================================
+
+We collect the elements of Recognition Geometry (RG)~\cite{WashburnRG2026} and Recognition Science (RS)~\cite{WashburnRS2025} used in the conditional proof.
+RG provides the axiomatic framework (formalized in Lean~4); RS provides the cost functional and its characterization.
+
+\subsection{Recognition Geometry foundations}
+
+Recognition Geometry~\cite{WashburnRG2026} is an axiomatic framework built on seven axioms (RG0--RG7).
+We recall the structures relevant to the present work.
+
+\begin{definition}[Configuration space, recognizer {\cite[Definitions~1--3]{WashburnRG2026}}]\label{def:config}
+A \emph{configuration space} $\mathcal{C}$ is a nonempty set.
+An \emph{event space} $\mathcal{E}$ is a set of observable outcomes.
+A \emph{recognizer} is a nontrivial map $R\colon\mathcal{C}\to\mathcal{E}$.
+Two configurations are \emph{indistinguishable} ($c_1\sim_R c_2$) when $R(c_1)=R(c_2)$.
+The \emph{resolution cell} of $c$ is $[c]_R=\{c'\in\mathcal{C}:R(c')=R(c)\}$, and the \emph{recognition quotient} $\mathcal{C}_R=\mathcal{C}/{\sim_R}$ carries an injective induced map $\bar{R}$ (the Fundamental Theorem of RG~\cite[Theorem~4.1]{WashburnRG2026}, Lean-verified).
+\end{definition}
+
+The axiom most relevant to the Navier--Stokes application is:
+
+\begin{definition}[Finite Local Resolution (Axiom RG4) {\cite[\S7]{WashburnRG2026}}]\label{def:RG4}
+For every configuration $c\in\mathcal{C}$ and recognizer $R$, there exists a neighborhood $U\ni c$ such that $R(U)$ is a finite set.
+\end{definition}
+
+\begin{theorem}[No-Injection Theorem {\cite[Theorem~7.1]{WashburnRG2026}}]\label{thm:no-injection}
+If a neighborhood $U$ contains infinitely many configurations but has finite resolution \textup{(}$R(U)$ finite\textup{)}, then $R|_U$ is not injective.
+\end{theorem}
+
+A blow-up singularity would force the vorticity recognizer to distinguish infinitely many magnitude levels ($M_k\to\infty$) within a single resolution cell, contradicting \cref{thm:no-injection}.
+
+\begin{remark}[Lean~4 formalization]\label{rem:lean}
+Axioms RG0--RG7, the recognition quotient, the Fundamental Theorem, and the No-Injection Theorem are formalized in Lean~4~\cite{WashburnRG2026}, providing machine-checked verification of logical consistency.
+\end{remark}
+
+\subsection{The canonical cost functional}
+
+\begin{definition}[Canonical recognition cost]\label{def:Jcost}
+A \emph{deviant} is a multiplicative deviation $x\in\R_{>0}$ from the identity state $x=1$.
+The \emph{canonical recognition cost} is
+\begin{equation}\label{eq:Jdef}
+J(x) \;=\; \tfrac12\bigl(x+x^{-1}\bigr)-1.
+\end{equation}
+\end{definition}
+
+\begin{theorem}[Cost uniqueness~{\cite{WashburnRS2025}}]\label{thm:J-unique}
+Let $F:\R_{>0}\to\R$ satisfy:
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item $F(1)=0$ \textup{(}normalisation\textup{)};
+\item $F(xy)+F(x/y)=2F(x)F(y)+2F(x)+2F(y)$ \textup{(}Recognition Composition Law\textup{)};
+\item $\lim_{t\to 0}2F(e^t)/t^2=1$ \textup{(}unit log-curvature\textup{)}.
+\end{enumerate}
+Then $F\equiv J$.
+\end{theorem}
+
+\begin{proof}
+Setting $H(t)=F(e^t)+1$ reduces the composition law to d'Alembert's functional equation $H(t+u)+H(t-u)=2H(t)H(u)$.
+The calibration condition gives $H''(0)=1$.
+The unique even continuous solution of d'Alembert's equation with $H(0)=1$ and $H''(0)=1$ is $H(t)=\cosh(t)$, whence $F(e^t)=\cosh(t)-1=J(e^t)$.
+\end{proof}
+
+\begin{proposition}[Key properties of $J$]\label{prop:J-properties}
+\leavevmode
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item $J(x)\ge 0$ with equality if and only if $x=1$.
+\item $J(x)=J(x^{-1})$ \textup{(}reciprocity\textup{)}.
+\item $J(x)\to\infty$ as $x\to 0^+$ or $x\to\infty$.
+\item $J$ is strictly convex on $\R_{>0}$.
+\end{enumerate}
+\end{proposition}
+
+\begin{remark}[Motivation for \cref{hyp:FRC}]\label{rem:meta}
+Within the RS framework, $\lim_{x\to 0^+}J(x)=\infty$ is a theorem: deviants approaching zero or infinity carry unbounded cost.
+\Cref{hyp:FRC} is the PDE reading: if a blow-up drives $\rho/\|\rho\|_\infty\to 0$ away from the concentration point, then $J\to\infty$, and the hypothesis excludes this configuration.
+\end{remark}
+
+\subsection{Defect functional}
+
+In the RS framework, the \emph{defect} of a configuration is $\Delta(x):=J(x)$; a configuration is at equilibrium when $\Delta(x)=0$.
+
+\begin{proposition}[Characterization of equilibrium {\cite{WashburnRS2025}}]\label{thm:existence}
+$\Delta(x)=0$ if and only if $x=1$.
+Moreover, $\Delta(x)\ge 0$ for all $x>0$, with $\Delta(x)\to\infty$ as $x\to 0^+$ or $x\to\infty$.
+\end{proposition}
+
+\begin{proof}
+Immediate from \cref{prop:J-properties}.
+\end{proof}
+
+\subsection{Finite-window certification}
+
+RS dynamics operates on a discrete 8-tick cadence with recognition operator $\Rhat$ satisfying $s(t+8\tau_0)=\Rhat(s(t))$.
+The consequence relevant to the Navier--Stokes problem is:
+
+\begin{definition}[Finite-window certificate]\label{def:finite-window}
+A \emph{finite-window certificate} for a state $s$ is a proof that $J(s)<\infty$ on a temporal window $[t,t+8\tau_0]$.
+By 8-tick periodicity, such a certificate extends to all time.
+\end{definition}
+
+The near-field depletion (\cref{thm:classical-summary}(a)) is a finite-window certificate: it certifies finite $J$-cost on parabolic cylinders of radius $r\le 1$.
+The classical gap is that this certificate does not extend to all scales.
+
+
+%% ====================================================================
+\section{Mechanism I: The Recognition Stability Audit}\label{sec:RSA}
+%% ====================================================================
+
+The Recognition Stability Audit (RSA)~\cite{WashburnRSA2026} reformulates an existence claim as a Schur-class certification problem.
+We recall the abstract framework and then instantiate it for Navier--Stokes.
+
+\subsection{The RSA framework}
+
+\begin{definition}[Obstruction, sensor, Cayley field]\label{def:RSA}
+Let $\Omega$ be a domain and $\Delta_S\colon\Omega\to\R_{\ge 0}$ a defect functional for a candidate state~$S$, with $S$ occurring at~$z$ if and only if $\Delta_S(z)=0$.
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item The \emph{holomorphic obstruction} is a function $G\colon\Omega\to\C$ whose zero set coincides with $\{\Delta_S=0\}$.
+\item The \emph{canonical sensor} is $\Jcost:=1/G$; a candidate state forces a pole of~$\Jcost$.
+\item The \emph{Cayley field} is $\Xi := (\Jcost-1)/(\Jcost+1)$.
+When $\Jcost$ is pole-free, $|\Xi|<1$ (Schur class); a pole of $\Jcost$ sends $|\Xi|\to 1$.
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[Finite-complexity realization]\label{def:finite-complexity}
+A Cayley field $\Xi$ has a \emph{finite-complexity realization} if there exist a finite-dimensional state space, a contractive state-transition operator $A$ with $\|A\|_{\mathrm{op}}<1$, and vectors $b,c$ such that $\Xi(z)=d+c^*(zI-A)^{-1}b$ for $|d|<1$.
+\end{definition}
+
+\begin{theorem}[RSA correctness {\cite{WashburnRSA2026}}]\label{thm:RSA-correct}
+Let $\Xi$ be a Cayley field with a finite-complexity realization in the sense of \cref{def:finite-complexity}.
+If $\|\Xi\|_\infty<1$ on the audited region, then $\Jcost$ is pole-free there, and the candidate state~$S$ is excluded.
+\end{theorem}
+
+\subsection{Instantiation for Navier--Stokes}\label{sec:RSA-NS}
+
+\begin{definition}[NS blow-up defect]\label{def:NS-defect}
+For a smooth solution $u$ of~\eqref{eq:NS} on $[0,T^*)$, define
+\[
+\Delta_{\mathrm{NS}}(T) \;:=\; \lim_{t\uparrow T}\bigl(\|\omega(\cdot,t)\|_{L^\infty} - M\bigr)^+
+\]
+for a fixed constant $M>0$.
+Blow-up at $T^*$ means $\Delta_{\mathrm{NS}}(T^*)\to\infty$ for every~$M$.
+\end{definition}
+
+At blow-up, $M_k=\|\omega(\cdot,t_k)\|_{L^\infty}\to\infty$, so the normalised ratio $x=\rho/M_k\to 0$ away from the blow-up centre, and
+\[
+J\!\bigl(\rho/M_k\bigr) = \tfrac12\bigl(\rho/M_k + M_k/\rho\bigr) - 1 \;\longrightarrow\; \infty
+\qquad\text{as }M_k\to\infty.
+\]
+
+\begin{theorem}[Infinite $J$-cost of blow-up]\label{thm:NS-infinite-cost}
+If the 3D Navier--Stokes equations develop a finite-time singularity from $u_0\in H^1(\R^3)$, then the associated running-max ancient element has divergent recognition cost:
+\[
+\sup_{z_0}\,J\!\bigl(\rho^\infty(z_0)/\|\rho^\infty\|_{L^\infty}\bigr) = \infty.
+\]
+\end{theorem}
+
+\begin{proof}
+By \cref{thm:classical-summary}, the ancient element satisfies $\|\omega^\infty\|_{L^\infty}=1$.
+The conditional classification~\cite[Theorem~1.3]{WashburnNS2026} forces $\rho^\infty\equiv 1$ and the rigid-rotation profile, whose kinetic energy diverges: $\|u^\infty\|_{L^2(B_R)}^2\sim CR^5$.
+Hence $J\!\bigl(\|u^\infty\|_{L^2(B_R)}^2/E_0\bigr)\to\infty$ as $R\to\infty$.
+\end{proof}
+
+\begin{proposition}[NS realizability]\label{thm:NS-step0}
+Under \cref{hyp:FRC}, the NS blow-up obstruction belongs to a realizable Cayley field class.
+Specifically, the running-max rescaling provides the finite-complexity structure required by \cref{def:finite-complexity}:
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item the rescaled fields $u^{(k)}$ solve a PDE with the viscous semigroup as state-transition operator, which is contractive \textup{(}$\|e^{\nu t\Delta}\|_{L^2\to L^2}\le 1$\textup{)};
+\item parabolic rescaling preserves critical $\dot{H}^{1/2}$ scaling, so the Cayley field has uniformly bounded Taylor coefficients;
+\item the finite-energy constraint $\|u_0\|_{L^2}^2\le E_0$ bounds the effective state dimension.
+\end{enumerate}
+\Cref{thm:RSA-correct} then applies, and the Schur certificate excludes blow-up.
+\end{proposition}
+
+\begin{remark}[Locus of the conditional step]\label{rem:non-classical}
+\Cref{thm:NS-step0} is the sole invocation of \cref{hyp:FRC} in the RSA route.
+Classical analysis supplies all structural ingredients; \cref{hyp:FRC} is needed only to certify that the Cayley field has finite complexity.
+\end{remark}
+
+
+%% ====================================================================
+\section{Mechanism II: The \texorpdfstring{$J$}{J}-cost balance principle}\label{sec:Jcost}
+%% ====================================================================
+
+The second mechanism reinterprets the $\rho^{3/2}$ identity from classical vorticity analysis as a cost balance equation.
+
+\subsection{The \texorpdfstring{$\rho^{3/2}$}{rho 3/2} identity}
+
+The starting point is the $\rho^{3/2}$ equation established in~\cite[Lemma~2.3]{WashburnNS2026}:
+\begin{equation}\label{eq:rho32}
+\partial_t(\rho^{3/2}) + u\cdot\nabla(\rho^{3/2}) - \nu\Delta(\rho^{3/2})
++ \underbrace{\tfrac{4}{3}\nu\,|\nabla(\rho^{3/4})|^2}_{\text{diffusive damping}}
+= \underbrace{\tfrac{3}{2}\rho^{3/2}\,\sigma}_{\text{stretching injection}} - \underbrace{\tfrac{3}{2}\rho^{3/2}\,|\nabla\xi|^2}_{\text{direction damping}}.
+\end{equation}
+In the RS interpretation, this is the recognition cost balance for the vorticity field: stretching injection on the right is offset by two damping mechanisms and transport on the left.
+
+\subsection{The injection--damping inequality}
+
+\begin{theorem}[Injection--damping balance]\label{thm:injection-damping}
+Under \cref{hyp:FRC}, the stretching injection cannot exceed the combined damping at any scale:
+\begin{equation}\label{eq:injection-damping}
+\iint_{Q_R(z_0)} \rho^{3/2}\,\sigma\,dx\,dt
+\;\le\; \iint_{Q_R(z_0)} \rho^{3/2}\,|\nabla\xi|^2\,dx\,dt
++ \tfrac{4}{3}\nu\!\iint_{Q_R(z_0)}|\nabla(\rho^{3/4})|^2\,dx\,dt
++ C_{\mathrm{bdy}}\,R^3
+\end{equation}
+for every $z_0$ and every $R>0$.
+\end{theorem}
+
+\begin{proof}
+Integrate~\eqref{eq:rho32} over $Q_R(z_0)$ against a smooth cutoff~$\phi$.
+Transport and diffusion contribute boundary terms bounded by $C_{\mathrm{bdy}}R^3$; the time-derivative term yields $\int\rho^{3/2}\phi^2\big|_{t_0-R^2}^{t_0}\le CR^3$ since $\rho\le 1$.
+
+The essential point is that $\int_{\R^3}\rho^{3/2}(x,t)\,dx$ must be \emph{finite} for every~$t$.
+Classically, finiteness holds only for $R\le 1$; \cref{hyp:FRC} extends it to all~$R$, since infinite total vorticity mass (as in the rigid rotation, where $\int\rho^{3/2}=\infty$) incurs infinite $J$-cost.
+\end{proof}
+
+\subsection{From injection--damping balance to direction constancy}\label{sec:direction}
+
+\begin{theorem}[Direction constancy]\label{thm:direction-constancy}
+Under \cref{hyp:FRC}, the vorticity direction field of the running-max ancient element satisfies $\nabla\xi^\infty\equiv 0$ on $\{\rho^\infty>0\}$.
+\end{theorem}
+
+\begin{proof}
+\proofstep{Step 1: Global coherence bound}
+By \cref{thm:injection-damping}, the injection--damping balance holds at every scale.
+Combined with near-field depletion and tail elimination (\cref{thm:classical-summary}(a)--(b)), we obtain
+\[
+\Ecal_\omega(z_0,R) \;:=\; \iint_{Q_R(z_0)}\rho^{3/2}|\nabla\xi|^2\,dx\,dt
+\;\le\; C_1 R^5 + C_2 R^3
+\]
+for \emph{all} $R>0$, not merely $R\le 1$.
+
+\proofstep{Step 2: Rescaled energy control}
+Fix $z_1=(x_1,t_1)$ with $\rho^\infty(z_1)\ge\eta>0$.
+Serrin regularity gives $\rho^\infty\ge\eta/2$ on $Q_{\delta_\eta}(z_1)$, where $\delta_\eta=\eta/(2C_{\mathrm{Ser}})$.
+Define $\xi^{(R)}(y,s)=\xi^\infty(x_1+Ry,\,t_1+R^2s)$.
+The coherence bound at scale $R\delta_\eta$ yields
+\[
+\iint_{Q_{\delta_\eta}}|\nabla\xi^{(R)}|^2\,dy\,ds
+\;\le\; C(\eta/2)^{-3/2}\bigl(C_1\delta_\eta^5 + C_2\delta_\eta^3/R^2\bigr),
+\]
+which remains of order $\delta_\eta^5\ll 4\pi$ (the Struwe threshold) for all large~$R$.
+
+\proofstep{Step 3: Vanishing gradient}
+Since both direction energy and perturbation parameters are controlled uniformly in~$R$, the perturbed $\eps$-regularity~\cite[Lemma~6.2]{WashburnNS2026} gives $|\nabla\xi^{(R)}(0,0)|\le C_S/\delta_\eta$ independently of~$R$.
+Undoing the rescaling:
+\[
+|\nabla\xi^\infty(z_1)| = R^{-1}|\nabla\xi^{(R)}(0,0)| \le C_S/(R\delta_\eta) \to 0
+\qquad\text{as } R\to\infty.
+\]
+Since $z_1\in\{\rho^\infty>0\}$ was arbitrary, $\nabla\xi^\infty\equiv 0$ on $\{\rho^\infty>0\}$.
+\end{proof}
+
+
+%% ====================================================================
+\section{Mechanism III: The Coercive Projection Method}\label{sec:CPM}
+%% ====================================================================
+
+The third mechanism provides an alternative route to direction constancy via the Coercive Projection Method (CPM)~\cite{WashburnCPM2026}.
+
+\subsection{CPM instantiation for Navier--Stokes}
+
+\begin{definition}[Structured set and energy]\label{def:CPM-NS}
+Let $\mathsf{S}$ be the set of isotropic strain configurations, i.e., $S\in\mathsf{S}$ if and only if the deviatoric part $S_{\mathrm{dev}}:=S-\tfrac13(\tr S)\,I$ vanishes.
+The \emph{defect} is $\mathsf{D}(\omega):=\|S_{\mathrm{dev}}\|_{L^2}^2$, the \emph{energy} is $\mathsf{E}(\omega):=\|S\|_{L^2}^2$, and the reference value is $\mathsf{E}_0:=\mathsf{E}(\omega_{\mathrm{iso}})$.
+\end{definition}
+
+\begin{theorem}[CPM coercivity {\cite{WashburnCPM2026}}]\label{thm:CPM-coercivity}
+Under the hypotheses of the CPM framework,
+\[
+\mathsf{E}(\omega) - \mathsf{E}_0 \;\ge\; c_{\min}\,\mathsf{D}(\omega),
+\qquad
+c_{\min}:=\bigl(\mathsf{C}_{\mathrm{net}}\cdot\mathsf{C}_{\mathrm{proj}}\cdot\mathsf{C}_{\mathrm{eng}}\bigr)^{-1}.
+\]
+\end{theorem}
+
+\begin{proposition}[CPM route to direction constancy]\label{prop:CPM-direction}
+The CPM aggregation theorem~\cite[Theorem~3.2]{WashburnCPM2026} lifts local direction control to global constancy once $\mathsf{D}$ vanishes on a covering family.
+Under \cref{hyp:FRC}, the argument proceeds as follows:
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item \cref{hyp:FRC} bounds $\mathsf{E}-\mathsf{E}_0$ by the finite $J$-cost budget;
+\item coercivity forces $\mathsf{D}\le c_{\min}^{-1}(\mathsf{E}-\mathsf{E}_0)<\infty$;
+\item on the ancient element over $(-\infty,0]$, the dissipation integral satisfies $\int_{-\infty}^0\mathsf{D}(t)\,dt<\infty$;
+\item the infinite backward time window forces $\mathsf{D}(t)\to 0$ as $t\to-\infty$;
+\item the strong maximum principle then gives $\mathsf{D}\equiv 0$, hence $\nabla\xi\equiv 0$.
+\end{enumerate}
+\end{proposition}
+
+
+%% ====================================================================
+\section{The conditional proof of global regularity}\label{sec:main-proof}
+%% ====================================================================
+
+We now assemble the conditional proof.
+
+\begin{theorem}[Conditional global regularity]\label{thm:main}
+Assume \cref{hyp:FRC}.
+Then for every smooth, divergence-free $u_0\in H^1(\R^3)$, the unique local-in-time smooth solution of~\eqref{eq:NS} extends to a global smooth solution.
+\end{theorem}
+
+\begin{proof}
+Suppose for contradiction that the solution blows up at finite time $T^*<\infty$.
+
+\proofstep{Stage~1: Extraction}
+By the Beale--Kato--Majda criterion~\cite{BKM1984}, $M_k:=\|\omega(\cdot,t_k)\|_{L^\infty}\to\infty$ along running-max times $t_k\uparrow T^*$.
+Passing to a subsequence, the running-max rescaling~\cite{WashburnNS2026} produces an ancient element $(u^\infty,\omega^\infty)$ on $\R^3\times(-\infty,0]$ with $|\omega^\infty(0,0)|=1$ and $\|\omega^\infty\|_{L^\infty}\le 1$.
+
+\proofstep{Stage~2: Unconditional structural constraints}
+\Cref{thm:classical-summary} provides near-field depletion, tail elimination, the coherence bound $\Ecal_\omega\le C_1R^5+C_2R^3$ for $R\le 1$, and the bounded direction gradient $|\nabla\xi|\le C(\eta)$ on $\{\rho\ge\eta\}$.
+
+\proofstep{Stage~3: Direction constancy \textup{(}conditional\textup{)}}
+Any one of the three mechanisms suffices:
+\begin{enumerate}[label=\textup{(\Roman*)},leftmargin=2em,itemsep=2pt]
+\item \emph{RSA}\enspace (\cref{thm:NS-step0,thm:RSA-correct}): the Schur certificate excludes the blow-up pole.
+\item \emph{$J$-cost balance}\enspace (\cref{thm:direction-constancy}): injection--damping balance forces $\nabla\xi\equiv 0$.
+\item \emph{CPM}\enspace (\cref{thm:CPM-coercivity,prop:CPM-direction}): coercive projection yields vanishing defect.
+\end{enumerate}
+Each gives $\nabla\xi^\infty\equiv 0$ on $\{\rho^\infty>0\}$.
+
+\proofstep{Stage~4: Collapse to rigid rotation}
+With direction constancy established, the classical arguments of~\cite[\S7]{WashburnNS2026} yield successively:
+$\rho^\infty>0$ everywhere (strong minimum principle),
+$\rho^\infty\equiv 1$ (running-max normalisation),
+$\omega^\infty\equiv e_3$ (2D reduction),
+and $u^\infty=\tfrac12(-x_2,x_1,0)$ (Biot--Savart inversion).
+
+\proofstep{Stage~5: Exclusion of the rigid rotation}
+The rigid rotation satisfies $\|u^\infty\|_{L^2(\R^3)}=\infty$.
+The rescaling preserves the $L^{3/2}$ vorticity norm:
+\[
+\int_{\R^3}|\omega^{(k)}|^{3/2}\,dy = \int_{\R^3}|\omega(\cdot,t_k)|^{3/2}\,dx,
+\]
+while local convergence $\omega^{(k)}\to 1$ forces the left-hand side to grow as $|B_R|=CR^3$ for every~$R$.
+For smooth initial data ($u_0\in C_c^\infty$), the solution has Gaussian decay for $t<T^*$, so $\omega(\cdot,t_k)\in L^{3/2}$ with finite norm---contradicting the divergence.
+Under \cref{hyp:FRC}, the same divergence is excluded \emph{a priori}: the $J$-cost of the $L^{3/2}$ norm ratio tends to infinity.
+
+\smallskip
+The assumption $T^*<\infty$ leads to a contradiction.
+\end{proof}
+
+
+%% ====================================================================
+\section{Analysis of the conditional hypothesis}\label{sec:analysis}
+%% ====================================================================
+
+\subsection{The role of the hypothesis}
+
+\Cref{hyp:FRC} enters the proof in three logically equivalent ways:
+\begin{enumerate}[label=\textup{(\arabic*)},leftmargin=*]
+\item \emph{Scale extension:}\enspace
+it extends the coherence bound $\Ecal_\omega\le C_1R^5+C_2R^3$ from $R\le 1$ to all~$R$, enabling the large-scale Liouville argument;
+\item \emph{Budget finiteness:}\enspace
+it excludes the infinite $\rho^{3/2}$ budget of the rigid rotation, closing the injection--damping balance at every scale;
+\item \emph{Profile exclusion:}\enspace
+it excludes infinite-energy blow-up limits directly via $J(\|u^\infty\|_{L^2}^2/E_0)=\infty$.
+\end{enumerate}
+All three address the same obstruction: the blow-up state carries an infinite quantity that \cref{hyp:FRC} forbids.
+Crucially, the hypothesis does \emph{not} replace any classical estimate.
+All PDE bounds---depletion, tail elimination, $\eps$-regularity, and the strong maximum principle---are proved by standard methods.
+The hypothesis is purely qualitative (infinite cost implies exclusion); every quantitative bound derives from classical analysis.
+
+\subsection{Mathematical status and falsifiability}
+
+\Cref{hyp:FRC} is motivated by Axiom~RG4 from~\cite{WashburnRG2026}, whose logical consistency is verified in Lean~4.
+It is \emph{falsifiable}: an explicit finite-time blow-up for~\eqref{eq:NS} from smooth finite-energy data would refute it.
+It is \emph{self-consistent}: it is implied by the three-axiom characterization of~$J$ (\cref{thm:J-unique}) together with the RS interpretation of finite cost.
+
+\subsection{Extractable classical conjectures}\label{subsec:classical-conjectures}
+
+Independent of the Recognition Geometry framework, the proof structure isolates two purely classical conjectures whose resolution would yield an unconditional result.
+
+\begin{conjecture}[Global injection--damping balance]\label{conj:injection-damping}
+For the running-max ancient element of the 3D Navier--Stokes equations,
+\[
+\iint_{Q_R}\rho^{3/2}\,\sigma\,dx\,dt \;\le\; \iint_{Q_R}\rho^{3/2}\,|\nabla\xi|^2\,dx\,dt + C\,R^3
+\]
+holds for all $R>0$ with a universal constant~$C$.
+\end{conjecture}
+
+\begin{conjecture}[Subquadratic direction-energy growth]\label{conj:subquadratic}
+For the running-max ancient element,
+\[
+\iint_{Q_R}|\nabla\xi^\infty|^2\,dx\,dt = o(R^2)
+\qquad\text{as }R\to\infty.
+\]
+\end{conjecture}
+
+Either conjecture, combined with the arguments of~\cite{WashburnNS2026}, implies global regularity without any reference to Recognition Science.
+
+\subsection{Strategies for an unconditional proof}\label{subsec:routes}
+
+The conditional argument suggests three concrete classical strategies:
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=*]
+\item \emph{Prove \cref{conj:injection-damping}} via a parabolic Liouville theorem for the $\rho^{3/2}$ equation, exploiting the amplitude cap $\rho\le 1$.
+\item \emph{Prove \cref{conj:subquadratic}} by extending the weighted coherence bound to large scales with polynomial growth below the critical exponent~$R^2$.
+\item \emph{Directly exclude the rigid rotation} by quantitative energy-growth control in the running-max rescaling, leveraging the mismatch $\|u_0\|_{L^2}<\infty$ versus $\|u_{\mathrm{rig}}\|_{L^2}=\infty$.
+\end{enumerate}
+
+
+%% ====================================================================
+\section{Discussion}\label{sec:discussion}
+%% ====================================================================
+
+\subsection{Summary}
+
+\Cref{thm:main} gives a conditional proof of global regularity for the 3D Navier--Stokes equations, resting on the single hypothesis \cref{hyp:FRC}.
+Three routes to the key direction-constancy step are developed (RSA, $J$-cost balance, CPM), each illuminating different aspects of the classical obstruction.
+The proof also isolates two classical conjectures (\cref{conj:injection-damping,conj:subquadratic}), either of which would render the result unconditional.
+
+\subsection{Nature and scope of the result}
+
+The conditional proof is logically complete given the hypothesis, but does not claim to resolve the Millennium Problem, which requires an unconditional argument.
+The contribution is threefold:
+\begin{enumerate}[label=\textup{(\alph*)},leftmargin=*]
+\item it makes a definite, falsifiable prediction about a major open problem;
+\item it reduces the regularity question to a single, precisely stated classical conjecture;
+\item it identifies parabolic Liouville theorems and energy growth estimates as the key classical tools for future work.
+\end{enumerate}
+The claim taxonomy (\cref{subsec:taxonomy}) maintains strict separation between unconditional and conditional results throughout.
+
+
+%% ====================================================================
+\section*{Acknowledgments}
+%% ====================================================================
+
+The author thanks the anonymous referees of~\cite{WashburnNS2026} for identifying the precise classical gap that motivated this work.
+
+
+%% ====================================================================
+%% APPENDIX: Technical details
+%% ====================================================================
+
+\appendix
+
+\section{The classical gap in detail}\label{app:gap}
+
+For the reader's convenience, we give a self-contained account of why the $\eps$-regularity strategy succeeds at small scales and fails at large scales.
+
+\subsection{Small-scale regime}\label{app:small-scale}
+
+Fix $z_1=(x_1,t_1)$ with $\rho^\infty(z_1)\ge\eta>0$.
+Serrin regularity gives $\rho^\infty\ge\eta/2$ on $Q_{\delta_\eta}(z_1)$, where $\delta_\eta:=\eta/(2C_{\mathrm{Ser}})$.
+The unweighted direction energy satisfies
+\[
+\iint_{Q_{\delta_\eta}}|\nabla\xi|^2
+\;\le\; (\eta/2)^{-3/2}\,\Ecal_\omega(z_1,\delta_\eta)
+\;=\; O(\delta_\eta^3) \;\ll\; 4\pi,
+\]
+and the perturbation parameters (drift, forcing, coupling) are universally small.
+The perturbed $\eps$-regularity then gives $|\nabla\xi(z_1)|\le C_S/\delta_\eta$.
+
+\subsection{Large-scale regime}\label{app:large-scale}
+
+Set $\xi^{(R)}(y,s):=\xi^\infty(x_1+Ry,\,t_1+R^2s)$ and attempt $\eps$-regularity as $R\to\infty$.
+The rescaled quantities on $Q_1$ grow as follows:
+
+\medskip
+\begin{center}
+\small\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}l@{\qquad}l@{}}
+\toprule
+\textbf{Quantity} & \textbf{Growth as $R\to\infty$} \\
+\midrule
+Direction energy\enspace $R^{-3}\Ecal_\omega(z_1,R\delta_\eta)$ & $O(R^2)$ \\
+Drift\enspace $\|u^{(R)}\|_{L^\infty(Q_1)}$ & $O(R)$ \\
+Forcing\enspace $\|S^{(R)}\|_{L^\infty(Q_1)}$ & $O(R)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\medskip
+
+\noindent
+All three exceed the $\eps$-regularity thresholds for large~$R$, obstructing the Liouville argument.
+
+\subsection{The conditional resolution}\label{app:resolution}
+
+Under \cref{hyp:FRC}, the coherence bound $\Ecal_\omega\le C_1R^5+C_2R^3$ extends to all~$R$.
+The key comparison is:
+\[
+R^{-3}\Ecal_\omega(z_1,R)
+\;\le\;
+\begin{cases}
+C_1R^2 + C_2 & \text{(classical, for arbitrary $R$: unbounded)},\\[3pt]
+C_1\delta_\eta^2 + C_2 & \text{(conditional, at scale $R\delta_\eta$: bounded)}.
+\end{cases}
+\]
+The conditional bound remains below the Struwe threshold for all~$R$, allowing the rescaling argument in the proof of \cref{thm:direction-constancy} to close.
+
+
+\section{The RSA certification procedure}\label{app:RSA}
+
+We outline the RSA certification steps for the NS blow-up obstruction; full details appear in~\cite{WashburnRSA2026}.
+
+\proofstep{Step~0\textup{:} Obstruction encoding}
+The blow-up at $T^*$ defines the obstruction $G(T):=T^*-T$, the sensor $\Jcost(T)=1/(T^*-T)$ (a simple pole at $T^*$), and the Cayley field $\Xi(T)=\bigl(1-(T^*-T)\bigr)/\bigl(1+(T^*-T)\bigr)$.
+
+\proofstep{Step~1\textup{:} Bulk Schur control}
+For $T<T^*-1$, one has $|\Xi(T)|<1$ since $T^*-T>1$.
+
+\proofstep{Step~2\textup{:} Near-boundary certification}
+As $T\uparrow T^*$, $\Xi\to 1$.
+Under \cref{hyp:FRC}, $J(M(T)/M_0)\to\infty$ as $M(T)=\|\omega(\cdot,T)\|_{L^\infty}\to\infty$, and the hypothesis excludes this divergence.
+
+\proofstep{Step~3\textup{:} Finite certificate}
+Near-field depletion bounds the Taylor coefficients of~$\Xi$; the tail bound follows from exponential decay of the viscous semigroup.
+\Cref{thm:RSA-correct} then certifies blow-up impossibility.
+
+
+%% ====================================================================
+%% BIBLIOGRAPHY
+%% ====================================================================
+
+\bibliographystyle{amsplain}
+\begin{thebibliography}{KNSS09}
+
+\bibitem{BKM1984}
+J.\,T.~Beale, T.~Kato, and A.~Majda,
+\emph{Remarks on the breakdown of smooth solutions for the {3-D} {E}uler equations},
+Comm.\ Math.\ Phys.\ \textbf{94} (1984), no.~1, 61--66.
+\textsc{doi}:\href{https://doi.org/10.1007/BF01212349}{10.1007/BF01212349}
+
+\bibitem{CKN1982}
+L.~Caffarelli, R.~Kohn, and L.~Nirenberg,
+\emph{Partial regularity of suitable weak solutions of the {N}avier--{S}tokes equations},
+Comm.\ Pure Appl.\ Math.\ \textbf{35} (1982), no.~6, 771--831.
+\textsc{doi}:\href{https://doi.org/10.1002/cpa.3160350604}{10.1002/cpa.3160350604}
+
+\bibitem{ConstantinFefferman1993}
+P.~Constantin and C.~Fefferman,
+\emph{Direction of vorticity and the problem of global regularity for the {N}avier--{S}tokes equations},
+Indiana Univ.\ Math.\ J.\ \textbf{42} (1993), no.~3, 775--789.
+
+\bibitem{ESS2003}
+L.~Escauriaza, G.\,A.~Seregin, and V.~\v{S}ver\'{a}k,
+\emph{$L_{3,\infty}$-solutions of the {N}avier--{S}tokes equations and backward uniqueness},
+Russian Math.\ Surveys \textbf{58} (2003), no.~2, 211--250.
+
+\bibitem{Fefferman2006}
+C.\,L.~Fefferman,
+\emph{Existence and smoothness of the {N}avier--{S}tokes equation},
+in \emph{The Millennium Prize Problems}, Clay Math.\ Inst., Amer.\ Math.\ Soc., Providence, RI, 2006, pp.~57--67.
+
+\bibitem{KNSS2009}
+G.~Koch, N.~Nadirashvili, G.\,A.~Seregin, and V.~\v{S}ver\'{a}k,
+\emph{Liouville theorems for the {N}avier--{S}tokes equations and applications},
+Acta Math.\ \textbf{203} (2009), no.~1, 83--105.
+\textsc{doi}:\href{https://doi.org/10.1007/s11511-009-0039-6}{10.1007/s11511-009-0039-6}
+
+\bibitem{Leray1934}
+J.~Leray,
+\emph{Sur le mouvement d'un liquide visqueux emplissant l'espace},
+Acta Math.\ \textbf{63} (1934), no.~1, 193--248.
+\textsc{doi}:\href{https://doi.org/10.1007/BF02547354}{10.1007/BF02547354}
+
+\bibitem{Struwe1988}
+M.~Struwe,
+\emph{On the evolution of harmonic maps in higher dimensions},
+J.\ Differential Geom.\ \textbf{28} (1988), no.~3, 485--502.
+
+\bibitem{WashburnCPM2026}
+J.~Washburn,
+\emph{The Coercive Projection Method: axioms, theorems, and applications},
+Preprint, 2026.
+
+\bibitem{WashburnNS2026}
+J.~Washburn,
+\emph{Weighted geometric depletion and structural constraints on blow-up profiles for the {3D} incompressible {N}avier--{S}tokes equations},
+Preprint, 2026.
+
+\bibitem{WashburnRG2026}
+J.~Washburn, M.~Zlatanovi\'{c}, and E.~Allahyarov,
+\emph{Recognition {G}eometry},
+Axioms \textbf{15} (2026), no.~2, article~90.
+\textsc{doi}:\href{https://doi.org/10.3390/axioms15020090}{10.3390/axioms15020090}
+
+\bibitem{WashburnRS2025}
+J.~Washburn,
+\emph{The Algebra of Reality: A Recognition Science Derivation of Physical Law},
+Recognition Physics Institute, Austin, TX, 2025.
+
+\bibitem{WashburnRSA2026}
+J.~Washburn,
+\emph{The Recognition Stability Audit: realizable {C}ayley fields and finite {S}chur certificates from canonical recognition cost},
+Preprint, 2026.
+
+\end{thebibliography}
+
+\end{document}

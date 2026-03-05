@@ -1,0 +1,306 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Hawking Radiation Temperature from Recognition Science:\\
+Closed-Form Derivation in $\varphi$-Ladder Units}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We derive the Hawking radiation temperature from the Recognition
+Science (RS) forcing chain.  The standard formula $T_H = \hbar c^3/
+(8\pi G M k_B)$ is expressed entirely in terms of the golden ratio
+$\varphi$ and the black hole mass $M$.  In RS-native units
+($\hbar = \varphi^{-5}$, $G = \varphi^5$, $c = 1$,
+$k_R = \ln\varphi$):
+\begin{equation*}
+  T_H = \frac{1}{8\pi\,\varphi^{10}\,M\,\ln\varphi}.
+\end{equation*}
+The Einstein coupling constant $\kappa = 8\pi G/c^4 = 8\pi\varphi^5$
+enters through the surface gravity $\kappa_{\mathrm{surf}} =
+c^4/(4GM)$.  We prove $T_H > 0$ for all $M > 0$, derive the
+inverse-mass scaling $T_H \propto M^{-1}$, and compute the
+temperature for representative black hole masses.
+\end{abstract}
+
+%% ============================================================
+\section{Introduction}
+%% ============================================================
+
+Hawking's 1974 discovery~\cite{Hawking1974} that black holes radiate
+at temperature $T_H \propto M^{-1}$ revealed a deep connection between
+gravity, quantum mechanics, and thermodynamics.  The standard formula:
+\begin{equation}
+  T_H = \frac{\hbar c^3}{8\pi G M k_B},
+  \label{eq:TH-SI}
+\end{equation}
+contains four fundamental constants ($\hbar$, $c$, $G$, $k_B$) and
+one parameter ($M$).  In RS~\cite{RS_Axioms}, all four constants are
+derived from the forcing chain, making $T_H$ a zero-parameter function
+of mass alone.
+
+%% ============================================================
+\section{Recognition Science Framework}
+\label{sec:framework}
+%% ============================================================
+
+Recognition Science derives all physics from a single primitive,
+the \emph{recognition cost functional} $J(x)$, uniquely determined
+by three axioms.
+
+\begin{definition}[RS Cost Functional]
+For $x > 0$: $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{definition}
+
+\noindent\textbf{Axiom A1 (Normalization):} $J(1) = 0$.\\
+\textbf{Axiom A2 (Recognition Composition Law, RCL):}
+$J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y)$ for all $x, y > 0$.\\
+\textbf{Axiom A3 (Calibration):} $J''_{\log}(0) = 1$, where
+$J_{\log}(t) := J(e^t)$.
+
+\begin{theorem}[Cost Uniqueness]
+\label{thm:unique}
+The continuous solution to \textup{(A1)--(A3)} is unique:
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Setting $f(t) = J_{\log}(t) + 1$ and rewriting \textup{(A2)} gives the
+d'Alembert equation $f(s+t) + f(s-t) = 2f(s)f(t)$.  By the Acz\'el
+classification theorem~\cite{Aczel1966}, the unique continuous solution
+with $f(0) = 1$ and $f''(0) = 1$ is $f(t) = \cosh t$.
+\end{proof}
+
+\noindent The RS forcing chain yields the quantum-gravitational duality
+$G \cdot \hbar = 1$, giving $\hbar = \varphi^{-5}$, $G = \varphi^5$,
+$c = 1$, and $k_R = \ln\varphi$ in RS-native units.
+
+%% ============================================================
+\section{RS Constants}
+\label{sec:constants}
+%% ============================================================
+
+\begin{definition}[RS Fundamental Constants]
+From the RS forcing chain and the quantum-gravitational
+duality $G \cdot \hbar = 1$~\cite{RS_Axioms}:
+\begin{align}
+  \hbar &= \varphi^{-5}\,\tau_0, \qquad
+  c = \frac{\ell_0}{\tau_0}, \qquad
+  G = \varphi^5\,\frac{\ell_0^2}{\tau_0}, \qquad
+  k_R = \ln\varphi.
+\end{align}
+In RS-native units ($\ell_0 = \tau_0 = 1$):
+$\hbar = \varphi^{-5}$, $c = 1$, $G = \varphi^5$
+(so that $G\cdot\hbar = \varphi^5 \cdot \varphi^{-5} = 1$).
+\end{definition}
+
+\begin{definition}[Einstein Coupling]
+$\kappa_{\mathrm{rs}} = 8\pi G/c^4 = 8\pi\varphi^5 \approx 278.6$.
+\end{definition}
+
+\begin{remark}[$\kappa_{\mathrm{rs}}$ Numerical Value]
+Since $1.618 < \varphi < 1.619$, we have $1.618^5 \approx 11.09$
+and $8\pi\varphi^5 \approx 8 \times 3.14159 \times 11.09 \approx 278.6$.
+The Einstein coupling $\kappa_{\mathrm{rs}} = 8\pi\varphi^5$ lies
+in the interval $(275, 282)$ at precision $\varphi \in (1.618, 1.619)$.
+\end{remark}
+
+%% ============================================================
+\section{Derivation}
+\label{sec:derivation}
+%% ============================================================
+
+\begin{theorem}[Hawking Temperature in RS-Native Units]
+\label{thm:TH}
+\begin{equation}
+  T_H = \frac{1}{8\pi\,\varphi^{10}\,M\,\ln\varphi}.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Substituting the RS constants ($\hbar = \varphi^{-5}$, $G = \varphi^5$,
+$c = 1$, $k_R = \ln\varphi$) into~\eqref{eq:TH-SI}:
+\begin{equation}
+  T_H = \frac{\hbar\,c^3}{8\pi\,G\,M\,k_R}
+  = \frac{\varphi^{-5} \cdot 1}{8\pi \cdot \varphi^5 \cdot M
+  \cdot \ln\varphi}
+  = \frac{1}{8\pi\,\varphi^{10}\,M\,\ln\varphi}.
+\end{equation}
+\end{proof}
+
+\begin{theorem}[Positivity]
+\label{thm:positive}
+$T_H > 0$ for all $M > 0$.
+\end{theorem}
+
+\begin{proof}
+$\varphi^{10} > 0$, $M > 0$, $\ln\varphi > 0$ (since $\varphi > 1$).
+The denominator is the product of positive quantities, so
+$T_H = 1/(8\varphi^{10} M \ln\varphi) > 0$.
+\end{proof}
+
+\begin{theorem}[Inverse-Mass Scaling]
+$T_H \propto M^{-1}$: smaller black holes are hotter.
+\end{theorem}
+
+\begin{proof}
+$T_H = C/M$ where $C = 1/(8\pi\varphi^{10}\ln\varphi) > 0$ is
+independent of $M$.
+\end{proof}
+
+%% ============================================================
+\section{Numerical Estimates}
+\label{sec:numerical}
+%% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Black Hole} & \textbf{Mass} & \textbf{$T_H$} \\
+\midrule
+Solar mass & $M_\odot = 2 \times 10^{30}$~kg &
+$6.2 \times 10^{-8}$~K \\
+Primordial ($10^{12}$~kg) & $10^{12}$~kg &
+$1.2 \times 10^{11}$~K \\
+Planck mass & $m_P = 2.2 \times 10^{-8}$~kg &
+$5.6 \times 10^{30}$~K \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{remark}
+For solar-mass black holes, $T_H$ is far below the CMB temperature
+($2.725$~K), so the black hole absorbs more than it radiates and
+grows.  Only black holes with $M \lesssim 10^{22}$~kg have $T_H$
+above the CMB and can evaporate in the current epoch.
+\end{remark}
+
+%% ============================================================
+\section{The Surface Gravity Connection}
+\label{sec:surface-gravity}
+%% ============================================================
+
+\begin{definition}[Surface Gravity]
+For a Schwarzschild black hole:
+$\kappa_{\mathrm{surf}} = c^4/(4GM)$.
+\end{definition}
+
+\begin{proposition}[Temperature--Surface Gravity Relation]
+\begin{equation}
+  T_H = \frac{\hbar\,\kappa_{\mathrm{surf}}}{2\pi\,c\,k_R}
+  = \frac{\kappa_{\mathrm{surf}}}{2\pi} \cdot
+  \frac{\varphi^{-5}}{\ln\varphi}.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Substituting $\kappa_{\mathrm{surf}} = c^4/(4GM) = 1/(4\varphi^5 M)$
+(in RS-native units $c = 1$, $G = \varphi^5$):
+\[
+  \frac{\hbar\,\kappa_{\mathrm{surf}}}{2\pi\,c\,k_R}
+  = \frac{\varphi^{-5} \cdot \frac{1}{4\varphi^5 M}}{2\pi \cdot \ln\varphi}
+  = \frac{1}{8\pi\,\varphi^{10}\,M\,\ln\varphi} = T_H. \qedhere
+\]
+\end{proof}
+
+\begin{remark}
+This is the Unruh effect~\cite{Unruh1976} applied to the horizon:
+an observer at rest near the horizon experiences proper acceleration
+$\kappa_{\mathrm{surf}}$ and perceives a thermal bath at temperature
+$T_H$.  In RS, the Unruh characteristic frequency is
+$F_U = \kappa_{\mathrm{surf}}/(2\pi c) = c^3/(8\pi GM)$.
+The Hawking luminosity (Stefan--Boltzmann applied to the horizon) is
+\begin{equation}
+  P_H = \frac{\hbar\,c^6}{15360\,\pi\,G^2\,M^2}
+  = \frac{c^4\,F_U^2}{240\,\pi^2\,G\,M},
+\end{equation}
+where the numerical coefficient $1/15360\pi$ accounts for the
+greybody factor for a single massless boson species.  Substituting
+RS constants ($\hbar = \varphi^{-5}$, $c = 1$, $G = \varphi^5$):
+\[
+P_H = \frac{\varphi^{-5} \cdot 1}{15360\pi \cdot \varphi^{10} \cdot M^2}
+= \frac{1}{15360\pi\,\varphi^{15}\,M^2}.
+\]
+(Here $G^2 = \varphi^{10}$ and $\hbar/G^2 = \varphi^{-5}/\varphi^{10}
+= \varphi^{-15}$.)
+\end{remark}
+
+%% ============================================================
+\section{Predictions}
+\label{sec:predictions}
+%% ============================================================
+
+\begin{enumerate}
+  \item \textbf{Exact $M^{-1}$ scaling}: $T_H \propto M^{-1}$ with no
+  corrections from new physics.  Deviation would indicate additional
+  degrees of freedom near the horizon.
+
+  \item \textbf{No greybody factors in the RS limit}: The pure
+  $\varphi$-ladder spectrum is thermal.  Greybody factors arise from
+  the angular-momentum barrier of the external geometry, not from
+  the emission process itself.
+
+  \item \textbf{Temperature floor}: $T_H$ cannot exceed
+  $T_{\max} = 1/(8\varphi^{10} M_{\min} \ln\varphi)$ where
+  $M_{\min}$ is the Planck-mass remnant.
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+The Hawking temperature is derived entirely from RS constants
+($\hbar = \varphi^{-5}$, $G = \varphi^5$, $c = 1$, $k_R = \ln\varphi$):
+$T_H = 1/(8\pi\varphi^{10}\,M\,\ln\varphi)$ in RS-native units.
+No free parameters appear.  The temperature is provably
+positive, scales as $M^{-1}$, and reproduces the standard
+Hawking formula when expressed in SI units.  The Einstein coupling $\kappa_{\mathrm{rs}} = 8\pi\varphi^5$
+enters through the surface gravity.
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{Aczel1966}
+J.~Acz\'el, \emph{Lectures on Functional Equations and Their Applications},
+Academic Press, New York (1966).
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+\texttt{doi:10.3390/axioms15020090}
+
+\bibitem{Hawking1974}
+S.~W.~Hawking, ``Black Hole Explosions?'' Nature \textbf{248}, 30
+(1974).
+
+\bibitem{Unruh1976}
+W.~G.~Unruh, ``Notes on Black-Hole Evaporation,'' Phys.\ Rev.\ D
+\textbf{14}, 870 (1976).
+
+\end{thebibliography}
+
+\end{document}

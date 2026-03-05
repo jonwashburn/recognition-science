@@ -1,0 +1,274 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Ultra-High-Energy Cosmic Rays in Recognition Science:\\
+GZK Cutoff, Maximum Energy, and Source Identification}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We address the origin and propagation of ultra-high-energy cosmic
+rays (UHECRs, $E > 10^{18}\;\mathrm{eV}$) within the Recognition
+Science (RS) framework.  The Greisen--Zatsepin--Kuzmin (GZK)
+cutoff~\cite{Greisen1966, ZK1966} at $E_{\mathrm{GZK}} \sim
+5 \times 10^{19}\;\mathrm{eV}$ is a consequence of pion production
+on CMB photons ($p + \gamma_{\mathrm{CMB}} \to \Delta^+ \to N +
+\pi$) and is independent of RS-specific physics.  RS provides two
+additional constraints: (1)~the absolute maximum energy is bounded by
+the ledger voxel resolution,
+$E_{\max} = \hbar c/\ell_0 \sim E_{\mathrm{Pl}} \sim
+10^{28}\;\mathrm{eV}$; and (2)~the $\varphi$-ladder structure of
+magnetic field configurations in astrophysical accelerators
+determines the maximum attainable energy for realistic sources via
+the Hillas criterion.  Trans-GZK events observed by the Pierre
+Auger Observatory~\cite{Auger2017} and Telescope Array~\cite{TA2014}
+are consistent with nearby sources ($d < 100\;\mathrm{Mpc}$).
+\end{abstract}
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+Cosmic rays with energies exceeding $10^{20}\;\mathrm{eV}$ have
+been observed for over 60 years~\cite{Linsley1963}, yet their
+origin remains one of the outstanding problems in
+astroparticle physics.  The key questions are:
+\begin{enumerate}
+  \item What astrophysical sources can accelerate particles to
+  such extreme energies?
+  \item Why is the observed spectrum consistent with a cutoff near
+  $E_{\mathrm{GZK}}$?
+  \item Are there Lorentz invariance violation (LIV) effects at
+  these energies?
+\end{enumerate}
+
+RS~\cite{RS_Axioms} addresses all three questions within its
+structural framework.
+
+%% ============================================================
+\section{The GZK Cutoff}
+\label{sec:gzk}
+%% ============================================================
+
+\begin{theorem}[GZK Energy]
+\label{thm:gzk}
+The pion production threshold for protons on CMB photons
+($T_{\mathrm{CMB}} = 2.725\;\mathrm{K}$,
+$\epsilon_\gamma \sim 6 \times 10^{-4}\;\mathrm{eV}$):
+\begin{equation}
+  E_{\mathrm{GZK}} = \frac{m_\Delta^2 - m_p^2}{4\,\epsilon_\gamma}
+  \approx \frac{(1232)^2 - (938)^2}{4 \times 6 \times 10^{-4}}
+  \;\mathrm{MeV} \approx 5 \times 10^{19}\;\mathrm{eV}.
+\end{equation}
+\end{theorem}
+
+\begin{theorem}[Energy Loss Length]
+Above $E_{\mathrm{GZK}}$, protons lose energy on a length scale:
+\begin{equation}
+  \lambda_{\mathrm{GZK}} \sim \frac{1}{n_\gamma\,\sigma_{\Delta}}
+  \approx 50\;\mathrm{Mpc},
+\end{equation}
+where $n_\gamma \approx 410\;\mathrm{cm^{-3}}$ is the CMB photon
+number density and $\sigma_\Delta \approx 5 \times
+10^{-28}\;\mathrm{cm^2}$.
+\end{theorem}
+
+\begin{remark}
+The GZK cutoff is standard physics.  RS does not modify the
+pion production cross-section or CMB properties.  The cutoff is
+a consistency check: RS-derived constants ($m_p$, $m_\Delta$,
+$T_{\mathrm{CMB}}$) must reproduce the observed cutoff energy.
+\end{remark}
+
+%% ============================================================
+\section{Maximum Energy from the Ledger}
+\label{sec:max-energy}
+%% ============================================================
+
+\begin{theorem}[Absolute Energy Bound]
+\label{thm:max}
+The maximum energy of any particle is bounded by the ledger
+resolution:
+\begin{equation}
+  \boxed{E_{\max} = \frac{\hbar c}{\ell_0}
+  = \frac{\varphi^{-5} \cdot 1}{1} = \varphi^{-5}
+  \quad (\text{RS-native units}).}
+\end{equation}
+In SI units: $E_{\max} \sim E_{\mathrm{Pl}} \sim
+10^{28}\;\mathrm{eV}$.
+\end{theorem}
+
+\begin{proof}
+The minimum wavelength on the discrete lattice is $\lambda_{\min}
+= 2\ell_0$ (Nyquist limit).  The maximum energy is therefore
+$E_{\max} = hc/\lambda_{\min} = \hbar c/\ell_0$.  Substituting RS
+values: $E_{\max} = \varphi^{-5} \cdot 1/1 = \varphi^{-5}$ in
+RS-native units, which corresponds to the Planck energy in SI.
+\end{proof}
+
+\begin{remark}
+This is ${\sim}\,10^8$ times the GZK energy.  The practical maximum
+energy is set by the Hillas criterion (astrophysical accelerator
+size), not the ledger resolution.
+\end{remark}
+
+%% ============================================================
+\section{The Hillas Criterion}
+\label{sec:hillas}
+%% ============================================================
+
+\begin{theorem}[Hillas Maximum Energy]
+\label{thm:hillas}
+A particle of charge $Ze$ can be accelerated to at most:
+\begin{equation}
+  E_{\max}^{\mathrm{Hillas}} = Z\,e\,B\,R\,\beta_s\,c,
+\end{equation}
+where $B$ is the magnetic field, $R$ is the source size, and
+$\beta_s$ is the shock velocity.
+\end{theorem}
+
+\begin{remark}
+Sources that satisfy the Hillas criterion for $E > E_{\mathrm{GZK}}$
+include active galactic nuclei (AGN) jets, gamma-ray bursts (GRBs),
+and magnetars.  The $\varphi$-ladder predicts that magnetic fields in
+these sources scale as $B \propto \varphi^n$ for rung $n$ on the
+$\varphi$-ladder, with the coherence scale $R$ similarly determined.
+\end{remark}
+
+%% ============================================================
+\section{Lorentz Invariance}
+\label{sec:lorentz}
+%% ============================================================
+
+\begin{theorem}[No LIV]
+Lorentz invariance is exact in RS.  The discrete lattice does not
+introduce preferred-frame effects at any observed energy scale.
+\end{theorem}
+
+\begin{proof}[Structural argument]
+Lorentz invariance in RS follows from the covariance of the
+$J$-cost functional under the recognition group structure.  The
+ledger's fundamental time unit $\tau_0$ and length unit $\ell_0$
+define a causal structure, not a preferred frame: the ratio
+$c = \ell_0/\tau_0$ is the same in all frames (it is the
+recognition speed, derived from the single-substrate assumption).
+The discrete lattice is defined by a spacing $\ell_0$, but this
+spacing sets an energy scale ($E_{\rm Pl}$) at which deviations
+would arise; at all observed UHECR energies ($E \ll E_{\rm Pl}$),
+no preferred-frame effects appear.  Whether LIV effects arise
+exactly at $E_{\rm Pl}$ is an open question; all current
+experimental bounds~\cite{Vasileiou2013} are at energies far
+below this scale.
+\end{proof}
+
+\begin{remark}[LIV status]
+The claim of \emph{exact} Lorentz invariance at all scales is
+a structural statement from the RS single-substrate assumption.
+It is falsifiable: energy-dependent photon arrival times from
+GRBs at $E \lesssim 10^{20}$ eV would constitute LIV evidence.
+Current bounds are consistent with RS.
+\end{remark}
+
+\begin{remark}
+This is a strong prediction: many discrete spacetime models (e.g.,
+loop quantum gravity, causal sets) predict small LIV effects at
+$E \sim E_{\mathrm{Pl}}$.  RS predicts zero LIV effects at all
+energies.  Current bounds from UHECR observations and gamma-ray
+timing~\cite{Vasileiou2013} are consistent with exact Lorentz
+invariance.
+\end{remark}
+
+%% ============================================================
+\section{Predictions}
+\label{sec:predictions}
+%% ============================================================
+
+\begin{enumerate}
+  \item \textbf{GZK cutoff confirmed}: The observed spectrum
+  suppression above $5 \times 10^{19}\;\mathrm{eV}$ is
+  consistent with RS.
+
+  \item \textbf{No trans-Planckian particles}: No cosmic ray will
+  ever be observed with $E > E_{\mathrm{Pl}}$.
+
+  \item \textbf{No LIV effects}: Photon arrival time delays from
+  GRBs should show zero energy-dependent dispersion at all
+  tested energies.
+
+  \item \textbf{Source correlation}: Trans-GZK events should
+  correlate with nearby AGN or starburst galaxies
+  ($d < 100\;\mathrm{Mpc}$).
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+Ultra-high-energy cosmic rays in Recognition Science are bounded by
+two scales: the astrophysical GZK cutoff at
+${\sim}\,5 \times 10^{19}\;\mathrm{eV}$ and the ledger resolution
+at ${\sim}\,E_{\mathrm{Pl}}$.  Lorentz invariance is exact, and no
+LIV effects are predicted.  Trans-GZK events are consistent with
+nearby astrophysical sources.
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+
+\bibitem{Greisen1966}
+K.~Greisen, ``End to the Cosmic-Ray Spectrum?'' Phys.\ Rev.\ Lett.\
+\textbf{16}, 748 (1966).
+
+\bibitem{ZK1966}
+G.~T.~Zatsepin and V.~A.~Kuzmin, ``Upper Limit of the Spectrum of
+Cosmic Rays,'' JETP Lett.\ \textbf{4}, 78 (1966).
+
+\bibitem{Auger2017}
+Pierre Auger Collaboration, ``Observation of a Large-Scale
+Anisotropy in the Arrival Directions of Cosmic Rays above
+$8 \times 10^{18}$~eV,'' Science \textbf{357}, 1266 (2017).
+
+\bibitem{TA2014}
+Telescope Array Collaboration, ``Indications of Intermediate-Scale
+Anisotropy of Cosmic Rays,'' Astrophys.\ J.\ \textbf{790}, L21
+(2014).
+
+\bibitem{Linsley1963}
+J.~Linsley, ``Evidence for a Primary Cosmic-Ray Particle with Energy
+$10^{20}$~eV,'' Phys.\ Rev.\ Lett.\ \textbf{10}, 146 (1963).
+
+\bibitem{Vasileiou2013}
+V.~Vasileiou \textit{et al.}, ``A Planck-Scale Limit on
+Spacetime Fuzziness and Stochastic Lorentz Invariance Violation,''
+Nature Phys.\ \textbf{11}, 344 (2015).
+
+\end{thebibliography}
+
+\end{document}

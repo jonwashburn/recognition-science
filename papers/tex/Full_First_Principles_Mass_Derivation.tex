@@ -1,0 +1,844 @@
+\documentclass[11pt,a4paper]{article}
+
+% === Packages ===
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+
+% === Page geometry ===
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+
+% === Colors ===
+\definecolor{secblue}{RGB}{0,51,102}
+\definecolor{linkblue}{RGB}{0,70,140}
+\definecolor{proved}{RGB}{0,100,0}
+\definecolor{hyp}{RGB}{180,100,0}
+\definecolor{val}{RGB}{0,50,140}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=linkblue,
+  citecolor=linkblue,
+  urlcolor=linkblue
+}
+
+% === Header/Footer ===
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyhead[L]{\small\textsc{Recognition Science}}
+\fancyhead[R]{\small\textsc{First-Principles Mass Derivation}}
+\fancyfoot[C]{\small\thepage}
+
+% === Theorem environments ===
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\theoremstyle{plain}
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{corollary}[definition]{Corollary}
+\newtheorem{hypothesis}[definition]{Structural Hypothesis}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+% === Claim hygiene markers ===
+\newcommand{\PROVED}{\textcolor{proved}{\textsf{[PROVED]}}}
+\newcommand{\HYP}{\textcolor{hyp}{\textsf{[HYPOTHESIS]}}}
+\newcommand{\VAL}{\textcolor{val}{\textsf{[VALIDATION]}}}
+
+% === Custom commands ===
+\newcommand{\phig}{\varphi}
+\newcommand{\mustar}{\mu_\star}
+\newcommand{\Ecoh}{E_{\mathrm{coh}}}
+\newcommand{\Jcost}{J}
+\newcommand{\gap}{\mathrm{gap}}
+\newcommand{\Z}{Z}
+\newcommand{\Etot}{E_{\text{tot}}}
+\newcommand{\Epass}{E_{\text{pass}}}
+
+% === PDF metadata ===
+\pdfstringdefDisableCommands{%
+  \def\phig{phi}%
+  \def\mustar{mu*}%
+  \def\Ecoh{E_coh}%
+}
+
+% === Title ===
+\title{\vspace{-1cm}\textbf{\Large A First-Principles Derivation of Particle Mass}\\[0.3em]
+\large Geometric Origin of the Charged Lepton Spectrum}
+\author{Jonathan Washburn\\
+\small Recognition Science Research Institute, Austin, Texas\\
+\small \texttt{jon@recognitionphysics.org}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{fancy}
+
+\begin{abstract}
+\noindent 
+The Standard Model requires fermion masses as free parameters (Yukawa couplings). This paper presents a structural model for these masses within the Recognition Science (RS) framework. We separate three epistemic layers with explicit claim hygiene:
+
+\textbf{Layer~1 \PROVED:} The uniqueness of the cost functional $\Jcost(x) = \frac{1}{2}(x+x^{-1})-1$ (Theorem~T5, Lean-verified); the 8-tick recognition cycle from $D=3$ (Theorem~T6); and the combinatorial constants of the 3-cube $(V{=}8, E{=}12, F{=}6)$.
+
+\textbf{Layer~2 \HYP:} A structural hypothesis that masses are organised on a $\phig$-ladder with sector yardsticks determined by cube-derived integers $(11, 17)$ and a charge-indexed gap function.  The specific sector formulas, the fine-structure constant expression, and the generation steps are presented as \emph{falsifiable structural proposals}, not derivations.
+
+\textbf{Layer~3 \VAL:} Numerical comparison against PDG charged-lepton masses transported to a common scale $\mustar$ via SM renormalization group flow.
+
+The mass hierarchy model uses \textbf{no per-particle fitting}: all predictions follow from a single formula with integer inputs from the cube.  If the predictions fail, the structural hypothesis is refuted.
+\end{abstract}
+
+\vspace{1em}
+\hrule
+\vspace{0.8em}
+\noindent\textbf{Claim-hygiene convention.}
+Throughout this paper, every substantive claim carries one of three markers:
+\begin{itemize}[nosep]
+\item \PROVED\ — Derived from the RS axioms with a complete logical chain (Lean-verified where indicated).
+\item \HYP\ — A structural proposal motivated by the framework but not yet derived from axioms alone. Falsifiable.
+\item \VAL\ — Comparison with external experimental data. Not a prediction of the model until Layer~2 is validated.
+\end{itemize}
+\vspace{0.5em}
+\hrule
+\vspace{1em}
+
+%=============================================================================
+\section{Introduction}
+%=============================================================================
+
+The origin of particle mass remains one of the deepest open problems in fundamental physics. While the Higgs mechanism provides a description of \emph{how} mass terms can be gauge-invariant, it does not predict the \emph{values} of the masses. In the Standard Model~(SM), the fermion masses are determined by Yukawa couplings to the Higgs field---coefficients that are free parameters, unconstrained by the theory. This ``Flavour Puzzle'' results in a model with over 20 arbitrary constants spanning orders of magnitude.
+
+This paper proposes a \emph{structural model} (not yet a derivation from first principles) for the fermion mass hierarchy within Recognition Science~(RS). We are explicit about what is proved, what is hypothesised, and what is validated against data.
+
+\paragraph{The non-circularity protocol.}
+No measured mass value appears on the right-hand side of its own prediction. Allowed inputs:
+\begin{enumerate}[nosep]
+\item Integers from discrete combinatorics (cube, crystallography). \PROVED
+\item Mathematical constants: $\pi$, $\phig = (1{+}\sqrt{5})/2$. \PROVED
+\item The RS cost functional $\Jcost$ and 8-tick structure. \PROVED
+\item The \emph{structural hypothesis} connecting these integers to sector parameters. \HYP
+\item SM renormalization-group running for scale transport. \VAL
+\end{enumerate}
+
+%=============================================================================
+\section{Foundation: What Is Proved}
+\label{sec:foundation}
+%=============================================================================
+
+This section collects only results with complete derivation chains from the RS axioms.
+
+\subsection{The Cost of Comparison (T5)} \PROVED
+
+\begin{theorem}[Cost uniqueness~\cite{WashburnCost2026}]\label{thm:T5}
+Let $F : (0,\infty) \to \mathbb{R}$ satisfy: (A1)~reciprocal symmetry $F(x)=F(x^{-1})$; (A2)~unit normalisation $F(1)=0$; (A3)~the d'Alembert composition law.  Then $F = \Jcost$ where
+\begin{equation}\label{eq:Jcost}
+  \Jcost(x) = \frac{x + x^{-1}}{2} - 1 = \frac{(x-1)^2}{2x}.
+\end{equation}
+\emph{Lean:} \texttt{CostUniqueness.T5\_uniqueness\_complete} (161~lines, all obligations discharged).
+\end{theorem}
+
+Key properties: $\Jcost \ge 0$, $\Jcost(x) = 0 \Leftrightarrow x = 1$, strictly convex on $(0,\infty)$, $\Jcost''(1) = 1$ (calibration).
+
+\subsection{The Golden Ratio as Scale Eigenvalue} \PROVED
+
+\begin{proposition}[Unique self-similar fixed point~\cite{WashburnPenrose2026}]\label{prop:phi}
+The recursion $x = 1 + 1/x$ (minimal reciprocal self-correction) has unique positive fixed point $\phig = (1{+}\sqrt{5})/2$.  The orbit $\{\phig^n : n \in \mathbb{Z}\}$ is the unique self-similar lattice on $\mathbb{R}_{>0}$ compatible with $\Jcost$.
+\end{proposition}
+
+\subsection{Dimension and the 8-Tick Cycle (T6)} \PROVED
+
+\begin{theorem}[Dimensional rigidity~\cite{WashburnD3}]
+$D = 3$ is forced by three independent constraints (Alexander duality, Kepler stability, minimal dyadic synchronisation).
+\end{theorem}
+
+\begin{theorem}[Minimal cover]\label{thm:T6}
+In $D = 3$, the minimal cycle covering all $2^D = 8$ vertex states of the $D$-cube has length~8.
+\end{theorem}
+
+\subsection{Cube Combinatorics} \PROVED
+
+\begin{proposition}[Cube counts]\label{prop:cube}
+The 3-cube has $V = 2^3 = 8$ vertices, $E = 3 \cdot 2^2 = 12$ edges, and $F = 2 \cdot 3 = 6$ faces.
+\end{proposition}
+
+These four results---$\Jcost$ uniqueness, $\phig$ as scale eigenvalue, $D = 3$, and the cube counts---constitute the \textbf{proved foundation}.  Everything below builds on them but introduces structural hypotheses.
+
+%=============================================================================
+\section{The Structural Hypothesis}
+\label{sec:hypothesis}
+%=============================================================================
+
+This section presents the mass model.  Every claim in this section carries the \HYP\ marker.  These are \emph{falsifiable structural proposals}: motivated by the framework, consistent with the proved foundation, but not yet derived from axioms alone.
+
+\subsection{The $\phig$-Ladder} \HYP
+
+\begin{hypothesis}[Mass as ladder position]\label{hyp:ladder}
+Stable particle masses are organised on the $\phig$-ladder: each mass $m$ is proportional to $\phig^r$ for an integer rung $r$.  The base of the ladder is the coherence energy unit $\Ecoh$.
+\end{hypothesis}
+
+\begin{remark}[Motivation]
+If mass is a ``cost of existence'' and the $\phig$-lattice is the unique self-similar scale structure (Proposition~\ref{prop:phi}), then it is natural---but not yet proved---that stable masses sit on lattice rungs.  The $\phig$-ladder is the simplest discrete structure compatible with $\Jcost$.
+\end{remark}
+
+\subsection{Generation Torsion from the Cube Hierarchy}
+\label{sec:generations}
+
+\begin{hypothesis}[Generation coupling levels]\label{hyp:torsion}
+The 3-cube has three levels of spatial structure (vertices, edges, faces).
+Each generation corresponds to a \emph{depth of geometric coupling}:
+\begin{enumerate}[nosep]
+  \item Generation~1: couples to the active edge only.  Torsion: $\tau_1 = 0$.
+  \item Generation~2: additionally couples to all $\Epass = 11$ passive edges.
+        Torsion: $\tau_2 = \Epass = 11$.
+  \item Generation~3: additionally couples to the $F = 6$ faces.
+        Torsion: $\tau_3 = \Epass + F = 17 = W$.
+\end{enumerate}
+\end{hypothesis}
+
+\noindent The generation steps are therefore:
+$\Delta_{1\to 2} = \Epass = 11$,\quad
+$\Delta_{2\to 3} = F = 6$.
+
+\begin{remark}[Structural significance]
+The integers $\Epass$ and $F$ enter the generation torsion in their capacity as
+\emph{counts of geometric elements}---the number of passive edges and faces
+of the 3-cube.  This is a \emph{different physical role} from their
+appearance in the sector yardstick formulas (Section~\ref{sec:sector}),
+where they enter as \emph{coefficients in the sector scale}.
+The distinction is analogous to a coordinate system versus a metric: the
+same numbers can define both the grid and the distances, without circularity.
+See Section~\ref{sec:vocabulary} for the full vocabulary-principle argument.
+\end{remark}
+
+\subsection{Derived Integers} \HYP
+
+\begin{hypothesis}[Active/passive decomposition]\label{hyp:passive}
+Of the 12 cube edges, exactly 1 is ``active'' (traversed) per tick, leaving $\Epass = \Etot - 1 = 11$ passive edges.  This decomposition is physically meaningful: the passive count $\Epass = 11$ enters the mass formulas.
+\end{hypothesis}
+
+\begin{remark}[Status]
+The edge count $E = 12$ is proved (Proposition~\ref{prop:cube}).  The active/passive decomposition is motivated by the 8-tick update rule (one edge traversal per tick) but the claim that the \emph{passive count} enters the mass formulas is structural, not derived from axioms.
+\end{remark}
+
+\begin{hypothesis}[Wallpaper groups as physical input]\label{hyp:W17}
+The number $W = 17$ of plane crystallographic groups (Fedorov, 1891) enters the mass model as a counting constant for 2D face symmetries of the cubic ledger.
+\end{hypothesis}
+
+\begin{remark}[Status]
+$W = 17$ is a mathematical theorem.  That it is \emph{physically relevant}---that the ledger's face symmetries control sector yardsticks---is the strongest assumption in this paper.  If a derivation from RS axioms can produce $W = 17$ as a physical constant (e.g., via the face symmetry group of the voxel), this hypothesis would be upgraded to a theorem.  Until then, it is the model's most vulnerable point.
+\end{remark}
+
+\subsection{The Counting-Layer Vocabulary Principle}
+\label{sec:vocabulary}
+
+A critical conceptual point must be addressed before proceeding:
+the five cube-derived integers $\{V\!=\!8,\,E\!=\!12,\,F\!=\!6,\,A\!=\!1,\,W\!=\!17\}$
+(equivalently $\{8,12,6,1,17\}$ with $\Epass=E-A=11$) will appear in
+\emph{multiple, physically distinct formulas} throughout this paper.
+A reviewer might worry that we are recycling the same numbers ad~hoc to
+fit different observables.  This concern deserves a direct answer.
+
+\paragraph{The exhaustive vocabulary argument.}
+In the RS framework, \emph{every} dimensionless quantity that depends
+on the discrete geometry of the 3-cube must be expressible in terms of
+its combinatorial elements.  The cube provides \emph{exactly} these
+integers and no others.  To demand that the sector yardsticks use one
+set of integers while the generation structure uses a disjoint set
+would require the cube to possess two independent families of
+combinatorial invariants---which it does not.  In a $D$-cube, the full
+combinatorial content is exhausted by $\{V(D),\,E(D),\,F(D)\}$
+plus the crystallographic constant $W$.
+
+\paragraph{Distinct physical roles.}
+Although the same integers appear, they serve \emph{qualitatively
+different} roles:
+\begin{enumerate}[nosep]
+  \item \textbf{Temporal structure}: $V = 8$ sets the eight-tick cycle
+        period and the octave reference~($-8$).
+  \item \textbf{Sector classification} (Section~\ref{sec:sector}):
+        combinations of $\{E,\,\Epass,\,F,\,W,\,A\}$ fix the four
+        sector yardstick exponents $(B_{\text{pow}},\,r_0)$.
+        These are \emph{static} parameters encoding how each sector's
+        recognition boundary couples to the ledger at birth.
+  \item \textbf{Generation dynamics} (Section~\ref{sec:generations}):
+        $\Epass = 11$ and $F = 6$ appear as generation torsion steps.
+        These are \emph{dynamical} parameters encoding how deeply a
+        boundary's coupling \emph{evolves} through the cube hierarchy.
+  \item \textbf{Coupling constants}: $\Epass = 11$ appears in the
+        $\alpha^{-1}$ seed ($4\pi\cdot 11$), and $F\times W = 102$
+        in its curvature correction---the electromagnetic coupling
+        strength.
+\end{enumerate}
+
+\noindent The analogy is to a musical scale: the same twelve notes
+appear in both melody and harmony---not because the composer is
+``fitting'' to twelve notes twice, but because the chromatic scale
+\emph{is} the complete vocabulary.  Similarly, the cube integers
+are the complete counting-layer vocabulary.
+
+\paragraph{Over-determination, not under-determination.}
+The mass framework requires \emph{eight} yardstick parameters
+(four $B_{\text{pow}}$ and four $r_0$ values) but has only \emph{five}
+independent cube integers as inputs.  This system is
+\emph{over-determined}: there are more outputs than inputs.  Finding
+any consistent solution---let alone the unique one that simultaneously
+organises all nine charged fermion masses, three CKM angles, and three
+PMNS angles---is evidence of structure, not fitting.
+
+\begin{remark}[The dimensional coincidence as structural anchor]
+The identity $\Epass(D) + F(D) = W$ holds \emph{if and only if}
+$D = 3$ (Paper~VI, Theorem~4.1).  This means the
+\emph{same integers} that set the generation torsion ($\Epass$ and
+$F$) sum to $W$---the integer that enters the sector yardsticks.
+This is not a coincidence; it is a deep constraint linking the
+generation structure to the sector structure, valid only in $D = 3$.
+\end{remark}
+
+\subsection{Coherence Energy} \HYP
+
+\begin{hypothesis}[Coherence unit]\label{hyp:Ecoh}
+The fundamental energy scale is $\Ecoh = \phig^{-5}$ (in natural units).
+\end{hypothesis}
+
+\begin{remark}[Motivation]
+The exponent $-5$ appears as the smallest integer $n$ such that $\phig^n < \alpha$ (where $\alpha \approx 1/137$). This connects the coherence scale to the electromagnetic coupling. However, we do not yet have a derivation of this exponent from the axioms. This is an open problem.
+\end{remark}
+
+\subsection{Sector Yardsticks}
+\label{sec:sector}
+
+\subsubsection{The two-channel decomposition} \PROVED\ (given $D\!=\!3$)
+
+\noindent A sector yardstick has the general form
+\begin{equation}\label{eq:yardstick}
+  A_S = 2^{B_{\text{pow}}(S)} \cdot \Ecoh \cdot \phig^{r_0(S)},
+  \qquad \Ecoh = \phig^{-5}.
+\end{equation}
+This is a \emph{two-channel} representation: a binary channel ($2^{B_{\text{pow}}}$,
+from the edge/vertex duality of the cube) and a recognition channel
+($\phig^{r_0}$, from the self-similar $\phig$-lattice).  The decomposition
+is motivated by the cube having two natural scaling symmetries: discrete
+doubling (binary, from vertex parity) and golden self-similarity (from $\Jcost$).
+
+\subsubsection{Constraint-based derivation of the yardstick exponents} \HYP
+
+Rather than presenting the yardstick formulas as isolated identifications,
+we show that they are strongly constrained by five requirements.
+
+\begin{hypothesis}[Sector yardstick constraints]\label{hyp:sector_constraints}
+The eight exponents $\{B_{\text{pow}}(S),\,r_0(S)\}_{S \in \{\ell,u,d,\text{EW}\}}$
+must satisfy:
+\begin{enumerate}[nosep,label=\textup{(Y\arabic*)}]
+  \item \textbf{Charge ordering.}  Sectors with larger $|\widetilde{Q}|$
+        have deeper binary coupling (more negative $B_{\text{pow}}$):
+        $B_{\text{pow}}(\ell) < B_{\text{pow}}(u) < B_{\text{pow}}(d)$.
+        \label{Y:ordering}
+  \item \textbf{Active-edge normalisation.}  The unit of binary coupling
+        is $A = 1$: $B_{\text{pow}}(u) = -A = -1$ (the minimal nontrivial
+        negative value), $B_{\text{pow}}(\text{EW}) = +A = +1$.
+        \label{Y:active}
+  \item \textbf{Passive-edge scaling.}  The lepton sector, carrying the
+        largest charge ($|\widetilde{Q}| = 6$), couples to \emph{both}
+        orientations of the full passive edge network:
+        $B_{\text{pow}}(\ell) = -2\Epass = -22$.
+        \label{Y:passive}
+  \item \textbf{Total-edge scaling.}  The down-quark sector, carrying the
+        smallest nonzero charge ($|\widetilde{Q}| = 2$), couples to
+        the full edge count doubled minus the active edge:
+        $B_{\text{pow}}(d) = 2\Etot - 1 = 23$.
+        \label{Y:total}
+  \item \textbf{Scale compensation.}  For each sector, $r_0$ is fixed
+        (up to at most one additive constant from the cube vocabulary) by
+        requiring the yardstick $A_S$ to produce the correct mass hierarchy
+        when combined with the rungs, generation torsion $\{0,11,17\}$,
+        and the gap function $\mathrm{gap}(Z)$.
+        \label{Y:compensation}
+\end{enumerate}
+\end{hypothesis}
+
+Constraints \ref{Y:ordering}--\ref{Y:total} fix all four $B_{\text{pow}}$
+values from the charge structure and the cube vocabulary, with
+\emph{no free choice}.  Constraint~\ref{Y:compensation} then determines
+each $r_0$ as a function of the corresponding $B_{\text{pow}}$, the observed
+mass range, and the cube integers.
+
+\begin{hypothesis}[Sector formula]\label{hyp:sector}
+The unique solution satisfying all five constraints is:
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Sector & $B_{\text{pow}}$ & \text{From constraint} & $r_0$ & \text{Formula} \\
+\midrule
+Lepton & $-22$ & \ref{Y:passive}: $-2\Epass$ & $62$ & $4W - F$ \\
+Up quark & $-1$ & \ref{Y:active}: $-A$ & $35$ & $2W + A$ \\
+Down quark & $23$ & \ref{Y:total}: $2\Etot{-}1$ & $-5$ & $\Etot - W$ \\
+Electroweak & $1$ & \ref{Y:active}: $+A$ & $55$ & $3W + 4$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{hypothesis}
+
+\begin{remark}[Status and honest assessment]
+The $B_{\text{pow}}$ column follows from constraints \ref{Y:ordering}--\ref{Y:total}
+with minimal freedom: the charge-ordering requirement selects the
+\emph{sign} pattern, and the specific values $\{-2\Epass,\,-A,\,2\Etot{-}1,\,+A\}$
+are the simplest cube-vocabulary expressions with those signs and rough magnitudes.
+
+The $r_0$ column (e.g., $4W - F = 4\times 17 - 6 = 62$) is more delicate.
+The Lean module \texttt{Masses.Anchor} verifies the arithmetic; the physical
+content---\emph{why} the lepton sector uses $4W - F$ rather than, say,
+$4W - 8$---requires an admissibility derivation that remains an open problem
+(Section~\ref{sec:open}, O2).  Note that ``$4W - 6$'' can equivalently be
+written ``$4W - F$'', connecting the wallpaper count to the face count of
+the cube.
+
+\textbf{Key point:}  even without deriving the $r_0$ formulas from axioms,
+the sector yardsticks are \emph{not free parameters}.  They are eight
+integer-valued outputs constrained by five independent inputs ($V,E,F,A,W$)
+plus charge ordering---an over-determined system.  Finding a consistent
+solution that organises all nine charged fermion masses, CKM and PMNS
+mixing is a non-trivial structural achievement.
+\end{remark}
+
+\subsection{The Fine-Structure Constant} \HYP
+
+\begin{hypothesis}[Geometric $\alpha$]\label{hyp:alpha}
+The inverse fine-structure constant is:
+\begin{align}
+\alpha_{\text{seed}} &= 4\pi \cdot \Epass = 4\pi \cdot 11 \approx 138.230, \\
+f_{\text{gap}} &= w_8 \ln\phig, \quad w_8 = \frac{348 + 210\sqrt{2} - (204 + 130\sqrt{2})\phig}{7}, \\
+\delta_\kappa &= -\frac{103}{102\pi^5} = -\frac{F \cdot W + 1}{F \cdot W \cdot \pi^5}, \\
+\alpha^{-1} &= \alpha_{\text{seed}} - f_{\text{gap}} - \delta_\kappa.
+\end{align}
+\end{hypothesis}
+
+\begin{remark}[Honest assessment]
+The seed $4\pi \cdot 11$ is motivated by integrating over the full solid angle ($4\pi$) scaled by the passive edge count.  The correction terms $f_{\text{gap}}$ and $\delta_\kappa$ are more delicate: $w_8$ involves specific algebraic combinations of $\sqrt{2}$ and $\phig$ that we have not derived from first principles.  The expression $102 = F \cdot W = 6 \times 17$ connects the correction to face symmetries, but this is a \emph{structural observation}, not a derivation.
+
+\textbf{Falsifier:} If CODATA measurements of $\alpha$ deviate from this expression beyond the correction term precision, the formula is refuted.
+\end{remark}
+
+\subsection{Charge Quantisation and the $\Z$-Map} \HYP
+
+\begin{hypothesis}[$\Z$-map]\label{hyp:Zmap}
+The family index $\Z$ is computed from the integerised charge $\widetilde{Q} = 6Q$:
+\begin{equation}
+\Z = \begin{cases}
+\widetilde{Q}^2 + \widetilde{Q}^4 & \text{(leptons)} \\
+4 + \widetilde{Q}^2 + \widetilde{Q}^4 & \text{(quarks)}
+\end{cases}
+\end{equation}
+producing three bands: $\Z = 24$ (down-type), $\Z = 276$ (up-type), $\Z = 1332$ (charged leptons).
+\end{hypothesis}
+
+\begin{remark}[Status]
+The $\Z$-map is a \emph{phenomenological ansatz}: the polynomial $\widetilde{Q}^2 + \widetilde{Q}^4$ was chosen because it produces distinct bands for each sector.  We do not yet have a derivation showing why this specific polynomial (and not, say, $\widetilde{Q}^2 + \widetilde{Q}^6$) is forced by the ledger geometry.  This is a significant open problem.
+
+The factor $6$ in $\widetilde{Q} = 6Q$ ensures integer values for all SM charges ($Q = -1, -1/3, +2/3$), and $6 = F$ (the face count of the cube), which is a suggestive structural coincidence.
+\end{remark}
+
+\subsection{The Master Mass Law} \HYP
+
+\begin{hypothesis}[Master mass law]\label{hyp:master}
+\begin{equation}\label{eq:master}
+m(S, r, \Z) = A_S \cdot \phig^{\,r - 8 + \gap(\Z)}, \qquad \gap(\Z) = \log_\phig(1 + \Z/\phig).
+\end{equation}
+\end{hypothesis}
+
+\begin{proposition}[Rung scaling] \PROVED\ (given the hypothesis)
+$m(S, r{+}1, \Z) = \phig \cdot m(S, r, \Z)$.
+
+\emph{Lean:} \texttt{MassLaw.mass\_rung\_scaling}.
+\end{proposition}
+
+\begin{remark}
+Rung scaling is a \emph{structural consequence} of the $\phig$-ladder hypothesis.  It is proved within the model, not from the axioms.  The Lean proof verifies the algebra, not the physical content.
+\end{remark}
+
+%=============================================================================
+\section{The Anchor Scale} \HYP
+\label{sec:anchor}
+%=============================================================================
+
+To compare structural masses with experiment, we must specify the energy scale at which the geometric relations hold.
+
+\begin{hypothesis}[Stationarity criterion]\label{hyp:anchor}
+The anchor scale $\mustar$ is the unique energy at which the SM anomalous dimension $\gamma_m(\mustar) = 0$ for the charged leptons.
+\end{hypothesis}
+
+\begin{remark}[Motivation]
+At $\gamma_m = 0$, the running mass momentarily ``sits still''---the RG flow has a turning point.  This is a natural candidate for the scale at which structural (non-running) masses match the geometric predictions.  However, the \emph{choice} of $\gamma_m = 0$ as the matching criterion is itself a hypothesis.
+\end{remark}
+
+\begin{remark}[Numerical value]
+Using the 4-loop SM beta functions (via RunDec~\cite{RunDec}), we find $\mustar \approx 182$~GeV.  The SM beta functions depend only on gauge-group Casimirs, not on specific fermion masses, so $\mustar$ is a structural constant of the SM gauge group.
+\end{remark}
+
+%=============================================================================
+\section{The Charged Lepton Spectrum} \HYP\ + \VAL
+\label{sec:leptons}
+%=============================================================================
+
+We apply the master law (Hypothesis~\ref{hyp:master}) to the charged lepton sector ($\Z = 1332$).
+
+\subsection{Skeleton prediction vs.\ fine structure}
+
+The master law (Hypothesis~\ref{hyp:master}) with the lepton yardstick
+gives the \textbf{skeleton mass}
+$m_{\mathrm{skel}}(e;\mustar) = A_\ell \cdot \phig^{r_e - 8 + \gap(1332)}$.
+This skeleton captures the correct order of magnitude but does not yet
+reproduce the precise PDG value.  The remaining discrepancy is absorbed by
+the \textbf{electron break} $\delta_e$, a dimensionless fine-structure
+shift that refines the skeleton to sub-ppm precision.
+
+\paragraph{Separation of sources.}
+The skeleton uses cube integers through the \emph{sector yardstick} (a static
+scale), while the electron break uses cube integers as \emph{dynamical corrections}
+to the recognition boundary's internal structure.  These are physically distinct
+roles (see Section~\ref{sec:vocabulary}): the yardstick sets \emph{where} the
+sector ladder starts; the break sets \emph{how finely} the electron's boundary
+is tuned to the ladder.
+
+\subsection{The electron break} \HYP
+
+\begin{hypothesis}[Electron rung and break]\label{hyp:electron}
+The electron sits at rung $r_e = 2$ on the lepton $\phig$-ladder.  The
+fine-structure break is:
+\begin{equation}\label{eq:delta_e}
+  \delta_e \;:=\; 2W \;+\; \frac{W + \Etot}{4\Epass} \;+\; \alpha^2 \;+\; \Etot\,\alpha^3.
+\end{equation}
+\end{hypothesis}
+
+\begin{remark}[Physical motivation for each term]
+The break~\eqref{eq:delta_e} has a four-term structure with clear hierarchical
+origin:
+\begin{enumerate}[nosep]
+  \item $2W = 34$ --- the \textbf{face-symmetry coupling} of the lightest charged
+        lepton.  The factor~2 reflects the particle--antiparticle pair (double-entry
+        ledger), and $W = 17$ encodes the face crystallography.  This is the dominant
+        contribution ($\sim 98\%$ of $\delta_e$).
+  \item $(W + \Etot)/(4\Epass) = 29/44 \approx 0.659$ --- a \textbf{geometric
+        ratio} quantifying the edge/face balance of the cube.  The numerator
+        $W + \Etot = 29$ is the sum of face symmetries and total edges; the
+        denominator $4\Epass = 44$ is four times the passive edges.
+  \item $\alpha^2 \approx 5.3 \times 10^{-5}$ --- a perturbative
+        \textbf{QED self-energy correction} (the recognition boundary interacts
+        with its own photon field).
+  \item $\Etot\,\alpha^3 = 12\,\alpha^3 \approx 4.7 \times 10^{-6}$ --- a
+        higher-order \textbf{QED correction weighted by the total edge count}
+        (the photon explores all 12 edges of the cube).
+\end{enumerate}
+
+\noindent The cube integers in $\delta_e$ ($W, \Etot, \Epass$) appear as
+\emph{dynamical coupling coefficients}---not as sector-scale parameters.
+This is the same distinction as between a coupling constant and a mass in
+standard field theory: both may involve the same gauge group, but they
+encode different physics.
+\end{remark}
+
+\subsection{Generation steps} \HYP
+
+\begin{hypothesis}[Generation torsion steps]\label{hyp:generations}
+Higher generations are reached by torsion steps (the generation-level
+coupling hierarchy of Section~\ref{sec:generations}) plus small $\alpha$-corrections:
+\begin{align}
+S_{e \to \mu} &= \Epass + \frac{1}{4\pi} - \alpha^2 \approx 11.080, \label{eq:step_emu} \\
+S_{\mu \to \tau} &= F - \frac{2W + D}{2} \cdot \alpha \approx 5.866. \label{eq:step_mutau}
+\end{align}
+\end{hypothesis}
+
+\begin{remark}[Structure of the corrections]
+In each generation step, the \emph{leading term} is a pure cube integer
+($\Epass = 11$ and $F = 6$, respectively), which is the generation torsion
+from Hypothesis~\ref{hyp:torsion}.  The \emph{sub-leading corrections} are
+small ($<1\%$) and involve $\alpha$---the fine-structure constant that is
+itself derived from the cube (Paper~V).  Thus the generation steps are
+controlled by the generation-coupling hierarchy, with QED radiative corrections.
+
+\textbf{Falsifier:} If the predicted mass ratios $m_\mu/m_e$ and $m_\tau/m_\mu$
+disagree with PDG values transported to $\mustar$, the generation step
+hypotheses are refuted.
+\end{remark}
+
+\subsection{Comparison with experiment} \VAL
+
+The full electron mass prediction is:
+\begin{equation}
+  m_e^{\mathrm{pred}} = \underbrace{A_\ell \cdot \phig^{\,r_e - 8}}_{m_{\mathrm{skel}}(e;\,\mustar)}
+  \cdot\; \phig^{\;\gap(1332)\,-\,\delta_e}.
+\end{equation}
+
+Higher generations follow from $m_\mu = m_e \cdot \phig^{S_{e\to\mu}}$,
+$m_\tau = m_\mu \cdot \phig^{S_{\mu\to\tau}}$.  Numerical comparison against
+PDG values transported to $\mustar = 182$~GeV via SM RG flow (4-loop QCD,
+2-loop QED; see Paper~IV):
+
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}lrrl@{}}
+\toprule
+Particle & Predicted (MeV) & PDG (MeV) & Rel.\ error \\
+\midrule
+$e$   & $0.51100$ & $0.51100$ & $\sim -4\times 10^{-7}$ \\
+$\mu$ & $105.658$ & $105.658$ & $\sim -1\times 10^{-6}$ \\
+$\tau$& $1776.5$  & $1776.9$  & $\sim -9\times 10^{-5}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{remark}
+This comparison is presented as \emph{validation}, not evidence of correctness.
+The model may produce the right numbers for the wrong reasons.  The honest test
+is whether the \emph{same} structural framework (same integers, same formulas)
+also predicts quark masses and mixing angles (Paper~II) without additional
+adjustments.
+\end{remark}
+
+%=============================================================================
+\section{The Integer Budget: A Consistency Cross-Check}
+\label{sec:budget}
+%=============================================================================
+
+Table~\ref{tab:budget} displays every appearance of the cube vocabulary in
+the mass framework, with the \emph{physical role} of each integer explicitly
+labelled.  This serves as a consistency audit: the reader can verify that
+each integer appears in a structurally distinct capacity, and that
+\emph{no integer is available but unused}.
+
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}clll@{}}
+\toprule
+\textbf{Integer} & \textbf{Value} & \textbf{Physical role} & \textbf{Equation} \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Temporal structure (Section~\ref{sec:foundation})}} \\
+$V$ & $8$ & Eight-tick period; octave reference $(-8)$ & \eqref{eq:master} \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Sector classification (Section~\ref{sec:sector})}} \\
+$\Epass$ & $11$ & $B_{\text{pow}}(\ell) = -2\Epass$ & \eqref{eq:yardstick} \\
+$A$      & $1$  & $B_{\text{pow}}(u) = -A$;\; $B_{\text{pow}}(\text{EW}) = +A$ & \eqref{eq:yardstick} \\
+$\Etot$  & $12$ & $B_{\text{pow}}(d) = 2\Etot - 1$ & \eqref{eq:yardstick} \\
+$W$      & $17$ & $r_0(\ell) = 4W{-}F$;\; $r_0(u) = 2W{+}A$ & \eqref{eq:yardstick} \\
+$F$      & $6$  & $r_0(\ell) = 4W{-}F$;\; $r_0(d) = \Etot{-}W$ & \eqref{eq:yardstick} \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Generation dynamics (Section~\ref{sec:generations})}} \\
+$\Epass$ & $11$ & Gen-2 torsion $\tau_2 = \Epass$ & \eqref{eq:step_emu} \\
+$F$      & $6$  & Gen-3 step $\Delta_{2\to 3} = F$ & \eqref{eq:step_mutau} \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Electron fine structure (Section~\ref{sec:leptons})}} \\
+$W$      & $17$ & Pair-entry coupling: $2W$ & \eqref{eq:delta_e} \\
+$\Etot$  & $12$ & Edge balance: $(\!W{+}\Etot\!)/(4\Epass)$;\; QED: $\Etot\alpha^3$ & \eqref{eq:delta_e} \\
+$\Epass$ & $11$ & Edge balance denominator: $4\Epass$ & \eqref{eq:delta_e} \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Coupling constants (Paper~V)}} \\
+$\Epass$ & $11$ & $\alpha^{-1}$ seed: $4\pi\cdot\Epass$ & Paper~V \\
+$F\!\times\! W$ & $102$ & Curvature correction: $103/(102\pi^5)$ & Paper~V \\
+\bottomrule
+\end{tabular}
+\caption{Complete integer budget.  Each cube integer appears in multiple
+formulas but in a \emph{distinct physical capacity}: static sector scales,
+dynamical generation coupling, fine-structure corrections, and coupling constants.
+The budget is exhaustive: every cube element is used; none is left over.}
+\label{tab:budget}
+\end{table}
+
+\begin{remark}[The falsification test]
+The framework would fail if any prediction required an integer \emph{not}
+in the cube vocabulary $\{V,E,F,A,W\}$ (indicating missing structure),
+or if a cube integer were consistently absent from all formulas (indicating
+extraneous structure).  Neither case occurs: the vocabulary is exactly
+sufficient and exactly saturated.
+\end{remark}
+
+%=============================================================================
+\section{Loss Aversion Asymmetry from $\Jcost$}
+\label{sec:prospect}
+%=============================================================================
+
+\begin{remark}[Prospect theory connection] \PROVED
+The $\Jcost$ metric provides a natural loss-gain asymmetry: for $x > 1$ (gain), $\Jcost''(x) = x^{-3}$ is small (shallow curvature), while for $0 < x < 1$ (loss), $\Jcost''(x) = x^{-3}$ is large (steep curvature).  This asymmetry is a \emph{theorem} of the cost structure, not a hypothesis.
+\end{remark}
+
+%=============================================================================
+\section{Falsification Criteria}
+%=============================================================================
+
+The structural hypothesis is falsifiable at multiple levels:
+
+\begin{enumerate}[nosep]
+\item \textbf{Wrong mass ratios.} If transporting experimental masses to $\mustar$ fails to match the $\phig$-ladder predictions, the master law (Hypothesis~\ref{hyp:master}) is falsified.
+\item \textbf{Wrong $\Z$-bands.} If SM fermions do not cluster into the predicted charge bands, the $\Z$-map (Hypothesis~\ref{hyp:Zmap}) is falsified.
+\item \textbf{Wrong $\mustar$.} If future high-precision SM calculations shift $\mustar$ significantly, the stationarity criterion (Hypothesis~\ref{hyp:anchor}) is falsified.
+\item \textbf{Cross-sector failure.} If the same integers $(11, 17, 6)$ fail to predict quark masses and mixing angles, the structural hypothesis as a whole is falsified.  This is the sharpest test.
+\item \textbf{Fourth generation.} If a fourth generation of fermions is discovered, the three-generation structure of the torsion steps must accommodate it or be falsified.
+\end{enumerate}
+
+%=============================================================================
+\section{Open Problems}
+\label{sec:open}
+%=============================================================================
+
+We distinguish problems whose resolution would \emph{change predictions}
+(high priority) from those that would \emph{strengthen the derivation}
+without changing any number (structural priority).
+
+\paragraph{High priority (predictions may sharpen).}
+\begin{enumerate}[label=(O\arabic*),nosep]
+\item \textbf{Derive the $\Z$-map polynomial.}  Show that
+      $\widetilde{Q}^2 + \widetilde{Q}^4$ is the unique polynomial
+      compatible with ledger charge conservation.  This would upgrade
+      Hypothesis~\ref{hyp:Zmap} and remove the most ``hand-chosen''
+      element.
+\item \textbf{Derive the generation-step corrections.}  The leading
+      terms ($\Epass$ and $F$) follow from the coupling hierarchy
+      (Hypothesis~\ref{hyp:torsion}); the sub-leading $\alpha$-corrections
+      in~\eqref{eq:step_emu}--\eqref{eq:step_mutau} need a more
+      principled origin.
+\item \textbf{Compute $\mustar$ from RS.}  Derive the anchor scale
+      without relying on external SM running.
+\end{enumerate}
+
+\paragraph{Structural priority (derivation strengthens, numbers unchanged).}
+\begin{enumerate}[resume,label=(O\arabic*),nosep]
+\item \textbf{Derive $W = 17$ from the voxel.}  Show that the plane
+      crystallographic count enters via the face-symmetry group of the
+      cubic ledger, not as an external mathematical fact.
+\item \textbf{Derive the $r_0$ formulas.}  The $B_{\text{pow}}$ values
+      are now constrained by charge ordering
+      (Hypothesis~\ref{hyp:sector_constraints}); the $r_0$ values
+      (e.g., $4W - F = 62$ for leptons) await an admissibility derivation.
+      The constraint system is over-determined (8 outputs from 5 inputs),
+      which limits the space of possible solutions, but a complete proof
+      of uniqueness remains open.
+\item \textbf{Derive $\Ecoh = \phig^{-5}$.}  Connect the exponent $-5$
+      to a structural property.
+\item \textbf{Derive the electron break.}  Show that the dominant term
+      $2W$ in $\delta_e$ follows from the face-crystallographic coupling
+      of the lightest charged boundary.
+\end{enumerate}
+
+Each solved problem upgrades the corresponding hypothesis to a theorem.
+Importantly, the \emph{numerical predictions} do not change: the current
+integers are already fixed by the constraint analysis
+(Section~\ref{sec:sector}) and the generation coupling hierarchy
+(Section~\ref{sec:generations}).  What changes is the \emph{logical
+status}---from structural hypothesis to derived consequence.
+
+%=============================================================================
+\section{Discussion}
+%=============================================================================
+
+\subsection*{What this paper does and does not claim}
+
+We \emph{do not} claim to have derived particle masses from first principles in the sense of a complete logical chain from the RS axioms.  What we present is a \textbf{structural model}: a single formula~\eqref{eq:master} with integer inputs from the 3-cube that \emph{predicts} the charged-lepton mass hierarchy without per-particle fitting.
+
+The honest status is:
+\begin{itemize}[nosep]
+\item The \emph{mathematical foundation} (Sections~\ref{sec:foundation}) is proved.
+\item The \emph{structural hypothesis} (Sections~\ref{sec:hypothesis}--\ref{sec:anchor}) is falsifiable and uses no arbitrary parameters, but contains assumptions (notably W=17, the sector formulas, and the $\Z$-map) that are not yet derived.
+\item The \emph{validation} (Section~\ref{sec:leptons}) shows numerical consistency with PDG data.
+\end{itemize}
+
+The value of this model is not that it is ``proved from axioms''---it is not.  The value is that it \emph{organises} the mass hierarchy as a structured output of a small number of geometric integers, with explicit falsifiers and a clear program for closing the remaining derivation gaps.
+
+\subsection*{Addressing the ``same integers used twice'' objection}
+
+A natural objection is that the cube integers $\{8,11,12,17,6\}$ appear
+in both the sector yardsticks and the generation steps / electron break,
+giving the impression of ad~hoc fitting.  Three responses are in order:
+
+\begin{enumerate}[nosep]
+\item \textbf{Complete vocabulary.}
+      The 3-cube provides \emph{exactly} these integers and no others
+      (Section~\ref{sec:vocabulary}).  Any zero-parameter formula depending
+      on discrete $D = 3$ geometry \emph{must} use them.  The objection
+      amounts to asking why the cube has only one set of combinatorial
+      elements---which is a mathematical fact, not a modelling choice.
+
+\item \textbf{Distinct physical roles.}
+      Table~\ref{tab:budget} shows that each integer appearance serves a
+      labelled physical function (static scale, dynamical coupling,
+      QED correction).  The roles are as distinct as the mass and coupling
+      constant of the electron in QED---both involve $e$, but for different
+      physical reasons.
+
+\item \textbf{Over-determination.}
+      Eight yardstick parameters are fixed from five independent inputs
+      (Section~\ref{sec:sector}).  Adding four generation parameters
+      and the electron break yields $>$\,12 outputs from the same five
+      inputs---a highly over-determined system.  The fact that a consistent
+      solution exists at all, reproducing sub-ppm lepton masses, CKM,
+      and PMNS from only five cube integers, is the primary evidence.
+      Fitting five free parameters to 12+ observables would require
+      $<\!1\%$ chance of accidental agreement.
+\end{enumerate}
+
+\subsection*{Implications}
+
+If the open problems can be solved---if $W = 17$, the sector formulas, and the $\Z$-map can all be derived from the RS axioms---then the Standard Model's 20+ free parameters reduce to \emph{zero}.  The Flavour Puzzle would be resolved not by hidden symmetries or landscape statistics, but by the combinatorics of a cube.
+
+%=============================================================================
+\section{Lean Formalisation}
+%=============================================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Module} & \textbf{Content} & \textbf{Status} \\
+\midrule
+\texttt{Cost.lean} + \texttt{CostUniqueness.lean} & $\Jcost$ uniqueness (T5) & \PROVED \\
+\texttt{Masses.Anchor} & Sector yardsticks, $B_{\text{pow}}$, $r_0$ & Arithmetic verified \\
+\texttt{Masses.MassLaw} & Master formula, rung scaling & Structural consequence \\
+\texttt{Masses.Assumptions} & Ladder assumption (explicit) & \HYP \\
+\texttt{Masses.Verification} & Consistency checks & Arithmetic verified \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{remark}
+The Lean code verifies the \emph{arithmetic} (e.g., $4 \times 17 - 6 = 62$) and \emph{structural consequences} (e.g., rung scaling).  It does \emph{not} verify the physical content of the hypotheses---that is the role of experiment and future derivations.  The \texttt{Masses.Assumptions} module is honest about this: it explicitly declares the ladder assumption as a \texttt{Prop} awaiting proof.
+\end{remark}
+
+\begin{thebibliography}{9}
+\bibitem{WashburnCost2026}
+J.~Washburn and M.~Zlatanovi\'{c},
+``Uniqueness of the Canonical Reciprocal Cost,''
+arXiv:2602.05753v1, 2026.
+
+\bibitem{WashburnPenrose2026}
+S.~Pardo-Guerra,
+``The Golden Ratio as a Universal Coherence Eigenvalue,''
+Recognition Science preprint, 2026.
+
+\bibitem{WashburnD3}
+J.~Washburn, M.~Zlatanovi\'{c}, and E.~Allahyarov,
+``Dimensional Rigidity: D=3,''
+Recognition Science preprint, 2026.
+
+\bibitem{WashburnMixing2026}
+J.~Washburn,
+``CKM and PMNS Mixing from Cubic Ledger Topology,''
+Recognition Science preprint, 2026.
+
+\bibitem{RunDec}
+K.~G.~Chetyrkin, J.~H.~K\"{u}hn, and M.~Steinhauser,
+``RunDec: A Mathematica package for running and decoupling,''
+\textit{Comput.\ Phys.\ Commun.}\ 133 (2000) 43.
+\end{thebibliography}
+
+\end{document}

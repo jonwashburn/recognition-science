@@ -1,0 +1,621 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+% Notation
+\newcommand{\phig}{\varphi}
+\newcommand{\Jcost}{J}
+\newcommand{\Ecoh}{E_{\mathrm{coh}}}
+\newcommand{\muStar}{\mu_{\star}}
+\newcommand{\mRS}{m^{\mathrm{RS}}}
+\newcommand{\mPred}{m^{\mathrm{pred}}}
+\newcommand{\kappaEV}{\kappa_{\mathrm{eV}}}
+\newcommand{\Sigmanu}{\Sigma m_\nu}
+\newcommand{\RS}{Recognition Science}
+\newcommand{\SM}{Standard Model}
+
+% Claim tags
+\newcommand{\PROVED}{\textcolor{blue!70!black}{\footnotesize\textsf{[PROVED]}}}
+\newcommand{\HYP}{\textcolor{orange!80!black}{\footnotesize\textsf{[HYP]}}}
+\newcommand{\CERT}{\textcolor{teal}{\footnotesize\textsf{[CERT]}}}
+\newcommand{\VAL}{\textcolor{purple!70!black}{\footnotesize\textsf{[VAL]}}}
+
+\title{\textbf{Neutrino Masses from the Deep $\phig$-Ladder:\\
+Fractional Rungs, Mass Splittings, and the $\phig^7$ Ratio}\\[0.5em]
+\large Paper III of V: The Neutrino Sector}
+\author{Jonathan Washburn\\
+\small Recognition Science Research Institute, Austin, Texas\\
+\small \texttt{washburn.jonathan@gmail.com}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Papers I and II established the \RS{} (RS) mechanism of mass and derived
+predictions for all nine charged fermions from integer positions on the
+golden-ratio ($\phig$) ladder.  This paper extends the framework to
+neutrinos, which occupy the \emph{deep} (low-mass) end of the ladder.
+
+The charged sectors use integer rungs; the neutrino sector requires
+\emph{fractional} (quarter-step) rungs, reflecting the vastly finer mass
+resolution needed at the sub-eV scale.  We assign a specific rung triple
+$(r_1,r_2,r_3)=(-239/4,-231/4,-217/4)$ and derive:
+\begin{itemize}[nosep]
+  \item absolute masses $m_1\approx 0.00354\,\mathrm{eV}$,
+        $m_2\approx 0.00926\,\mathrm{eV}$,
+        $m_3\approx 0.0499\,\mathrm{eV}$,
+  \item a mass sum $\Sigmanu\approx 0.063\,\mathrm{eV}$
+        (below current cosmological bounds),
+  \item normal ordering ($m_1<m_2<m_3$) as a structural consequence
+        (not a fit choice),
+  \item the \textbf{key structural prediction}: an exact squared-mass ratio
+        $(m_3^2/m_2^2)=\phig^7\approx 29.03$, independent of the eV calibration
+        seam,
+  \item mass-squared splittings $\Delta m^2_{21}\approx 7.33\times 10^{-5}\,
+        \mathrm{eV}^2$ and $\Delta m^2_{31}\approx 2.48\times 10^{-3}\,
+        \mathrm{eV}^2$, consistent with NuFIT summary windows.
+\end{itemize}
+
+The ratio of splittings $R_\Delta=\Delta m^2_{31}/\Delta m^2_{21}=
+(\phig^{11}-1)/(\phig^4-1)\approx 33.82$ is seam-free (the calibration
+parameter cancels) and constitutes the most robust falsifiable prediction of the
+deep-ladder hypothesis.  We also discuss the no-go result for integer rungs
+$(0,11,19)$ with $Z_\nu=0$ at the anchor, explaining why the neutrino sector
+requires a qualitatively different approach from the charged sectors, and we
+provide a comprehensive set of falsifiers.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%=============================================================================
+\section{Introduction}
+%=============================================================================
+
+\subsection{The neutrino puzzle}
+
+Neutrinos present unique challenges.  Oscillation experiments measure mass-squared
+\emph{differences} $\Delta m^2_{21}$ and $\Delta m^2_{31}$ with remarkable precision,
+but do not determine the absolute mass scale.  The mass ordering (normal vs.\
+inverted) remains an open question.  The absolute scale is constrained by
+cosmological bounds on $\Sigmanu$ and kinematic measurements
+($\beta$-decay endpoints), but neither has produced a definitive value.
+
+Within the \RS{} framework, the charged fermion masses are organized by integer
+rungs on the $\phig$-ladder at the anchor scale $\muStar$.  Neutrinos, however,
+are qualitatively different for two reasons:
+
+\begin{enumerate}[nosep]
+  \item \textbf{Vanishing charge band}: Neutrinos have $Q=0$, so the integerized
+        charge $\tilde{Q}=6Q=0$ and the band label $Z_\nu=0$.  The gap function
+        gives $\mathrm{gap}(0)=\log_\phig(1+0/\phig)=0$---there is no band
+        correction.  The structural ingredient that splits the charged families
+        is absent.
+
+  \item \textbf{Deep ladder}: Neutrino masses ($\sim 10^{-2}\,\mathrm{eV}$) are
+        $\sim 10^{10}$ times smaller than the electron mass.  On the $\phig$-ladder
+        this corresponds to rungs in the deep negative region (around $r\sim -55$
+        to $-60$), far from the charged sector rungs ($r\sim 2$ to~$21$).
+\end{enumerate}
+
+\subsection{The no-go for integer rungs and its resolution}
+
+A natural first attempt applies the same integer rung convention to neutrinos with
+the charged-sector generation torsion $\{0,11,17\}$, giving the formal rung triple
+$(r_1,r_2,r_3)=(0,11,19)$.  However, as documented in the companion analysis, this
+triple fails the acceptance test: neither normal nor inverted ordering produces
+splittings consistent with NuFIT data under $Z_\nu=0$ with a single neutrino
+yardstick.
+
+This no-go is instructive rather than fatal.  It identifies the precise structural
+point where the neutrino sector diverges from the charged sectors: the \emph{rung
+resolution}.  The resolution is to allow \textbf{fractional rungs}---specifically,
+quarter-step positions $r\in\frac{1}{4}\mathbb{Z}$---on the deep ladder.
+
+\subsection{Organization of this paper}
+
+Section~2 defines the deep ladder and the fractional rung convention.
+Section~3 derives the neutrino mass predictions under a specific rung triple.
+Section~4 computes mass-squared splittings and derives the seam-free $\phig^7$ ratio.
+Section~5 proves that normal ordering is a structural consequence.
+Section~6 checks cosmological consistency.
+Section~7 discusses the relationship to Dirac vs.\ Majorana nature.
+Section~8 lists falsifiers.
+Section~9 concludes.
+
+
+%=============================================================================
+\section{The Deep $\phig$-Ladder: Fractional Rungs}
+\label{sec:deep_ladder}
+%=============================================================================
+
+\subsection{Ladder coordinate}
+
+As in the charged sectors, the base-$\phig$ logarithm defines the ladder coordinate:
+\PROVED{}
+\begin{equation}
+  r(x) := \log_\phig(x) = \frac{\ln x}{\ln\phig}.
+\end{equation}
+For two masses $m_a,m_b>0$ separated by rung offset $\Delta r$: \PROVED{}
+\begin{equation}
+  \frac{m_a}{m_b} = \phig^{\Delta r},
+  \qquad
+  \frac{m_a^2}{m_b^2} = \phig^{2\Delta r}.
+\end{equation}
+
+\subsection{Quarter-step convention}
+
+For the neutrino sector, we extend the rung lattice: \HYP{}
+\begin{equation}
+  r \in \tfrac{1}{4}\mathbb{Z}.
+  \label{eq:quarter_rungs}
+\end{equation}
+
+This extension is motivated by:
+\begin{itemize}[nosep]
+  \item \textbf{Resolution}: neutrino splittings are extremely small compared to
+        charged sectors, requiring finer exponent increments than integer steps
+        provide,
+  \item \textbf{Octave compatibility}: quarter steps are the simplest refinement
+        compatible with the eight-tick period ($8\times\frac{1}{4}=2$, an integer).
+\end{itemize}
+
+\subsection{Rung assignment}
+
+The specific deep-ladder rung triple is: \HYP{}
+\begin{equation}
+  (r_1,r_2,r_3) = \left(-\frac{239}{4},\;-\frac{231}{4},\;-\frac{217}{4}\right).
+  \label{eq:nu_rungs}
+\end{equation}
+The rung differences are:
+\begin{align}
+  r_2 - r_1 &= \frac{-231-(-239)}{4} = 2, \label{eq:dr21}\\
+  r_3 - r_2 &= \frac{-217-(-231)}{4} = \frac{7}{2}, \label{eq:dr32}\\
+  r_3 - r_1 &= \frac{-217-(-239)}{4} = \frac{11}{2}. \label{eq:dr31}
+\end{align}
+
+The appearance of $11/2$ for $r_3-r_1$ and $7/2$ for $r_3-r_2$ reflects
+the deep-ladder signature: the ``$11$'' of the charged sector generation
+torsion appears halved, while the ``$7$'' carries echoes of the $\phig^7$
+structural identity that governs the atmospheric-to-solar hierarchy.
+
+
+%=============================================================================
+\section{Neutrino Mass Predictions}
+\label{sec:mass_predictions}
+%=============================================================================
+
+\subsection{The eV reporting seam}
+
+Absolute neutrino masses in eV require a global calibration seam: \CERT{}
+\begin{equation}
+  \kappaEV := \frac{\hbar}{\tau_0\cdot(1\,\mathrm{eV})}
+  \approx 1.086\times 10^{10}\,\mathrm{eV},
+  \label{eq:kappa}
+\end{equation}
+where $\tau_0$ is the fundamental tick (from the eight-tick closure).  This seam
+is fixed once for the entire framework and is \emph{not} adjusted per neutrino.
+
+Equivalently, pinning the seam algebraically: \CERT{}
+\begin{equation}
+  \kappaEV = 2^{-22}\,\phig^{51}\times 10^6\,\mathrm{eV}.
+\end{equation}
+
+\subsection{Mass law for neutrinos}
+
+The deep-ladder mass hypothesis is: \HYP{}
+\begin{equation}
+  m_i^{\mathrm{pred}} = \kappaEV\cdot\phig^{r_i},
+  \qquad i\in\{1,2,3\}.
+  \label{eq:nu_mass}
+\end{equation}
+Note the absence of a gap function ($Z_\nu=0\Rightarrow\mathrm{gap}(0)=0$).
+
+\subsection{Predicted absolute masses}
+
+Evaluating~\eqref{eq:nu_mass} with the rung triple~\eqref{eq:nu_rungs}: \CERT{}
+\begin{align}
+  m_1^{\mathrm{pred}} &\approx 0.00354\,\mathrm{eV}, \\
+  m_2^{\mathrm{pred}} &\approx 0.00926\,\mathrm{eV}, \\
+  m_3^{\mathrm{pred}} &\approx 0.0499\,\mathrm{eV}.
+\end{align}
+The mass sum: \CERT{}
+\begin{equation}
+  \Sigmanu^{\mathrm{pred}} \approx 0.063\,\mathrm{eV}.
+\end{equation}
+
+
+%=============================================================================
+\section{Mass-Squared Splittings and the $\phig^7$ Ratio}
+\label{sec:splittings}
+%=============================================================================
+
+\subsection{Splitting definitions}
+
+Standard definitions: \PROVED{}
+\begin{equation}
+  \Delta m^2_{21} := m_2^2 - m_1^2,
+  \qquad
+  \Delta m^2_{31} := m_3^2 - m_1^2.
+\end{equation}
+
+\subsection{Predicted splittings}
+
+From the mass law~\eqref{eq:nu_mass}: \PROVED{}
+\begin{equation}
+  \Delta m^2_{ij} = \kappaEV^2\left(\phig^{2r_i}-\phig^{2r_j}\right).
+\end{equation}
+Numerically: \CERT{}
+\begin{align}
+  \Delta m^2_{21} &\approx 7.33\times 10^{-5}\,\mathrm{eV}^2, \\
+  \Delta m^2_{31} &\approx 2.48\times 10^{-3}\,\mathrm{eV}^2.
+\end{align}
+Both fall within NuFIT summary windows for normal ordering. \VAL{}
+
+\subsection{The exact $\phig^7$ squared-mass ratio}
+
+The seam $\kappaEV$ cancels in the squared-mass ratio: \PROVED{}
+\begin{equation}
+  \frac{(m_3^{\mathrm{pred}})^2}{(m_2^{\mathrm{pred}})^2}
+  = \phig^{2(r_3-r_2)} = \phig^{2\times 7/2} = \phig^7.
+  \label{eq:phi7}
+\end{equation}
+This is the single most important structural prediction of the neutrino
+sector: \HYP{}
+\begin{equation}
+\boxed{
+  \frac{m_3^2}{m_2^2} = \phig^7 \approx 29.03.
+}
+\end{equation}
+It is \emph{seam-free} (independent of $\kappaEV$) and testable with
+oscillation data alone once absolute mass information becomes available.
+
+\subsection{Seam-free splitting ratio}
+
+The ratio of mass-squared splittings is also seam-free: \PROVED{}
+\begin{equation}
+  R_\Delta := \frac{\Delta m^2_{31}}{\Delta m^2_{21}}
+  = \frac{\phig^{2(r_3-r_1)}-1}{\phig^{2(r_2-r_1)}-1}
+  = \frac{\phig^{11}-1}{\phig^4-1}
+  \approx 33.82.
+  \label{eq:Rdelta}
+\end{equation}
+This depends only on $\phig$ and the rung differences, not on any
+calibration convention.
+
+
+%=============================================================================
+\section{Normal Ordering as a Structural Consequence}
+\label{sec:ordering}
+%=============================================================================
+
+\subsection{Monotonicity of the ladder map}
+
+Since $\phig>1$, the map $r\mapsto\kappaEV\cdot\phig^r$ is strictly increasing
+in $r$ for any $\kappaEV>0$. \PROVED{}
+
+\subsection{Rung ordering implies mass ordering}
+
+The rung triple satisfies $r_1<r_2<r_3$: \HYP{}
+\begin{equation}
+  -\frac{239}{4} < -\frac{231}{4} < -\frac{217}{4}.
+\end{equation}
+By monotonicity: \PROVED{}
+\begin{equation}
+  m_1^{\mathrm{pred}} < m_2^{\mathrm{pred}} < m_3^{\mathrm{pred}}.
+\end{equation}
+\textbf{Normal ordering is not a choice in RS; it is forced by the discrete
+rung assignment.}  If future experiments decisively establish inverted ordering,
+the rung triple~\eqref{eq:nu_rungs} is refuted.
+
+
+%=============================================================================
+\section{Cosmological Consistency}
+\label{sec:cosmology}
+%=============================================================================
+
+\subsection{The mass sum constraint}
+
+Current cosmological analyses within $\Lambda$CDM-like frameworks constrain: \VAL{}
+\begin{equation}
+  \Sigmanu \lesssim 0.12\,\mathrm{eV}
+  \quad\text{(representative bound)}.
+\end{equation}
+The predicted sum $\Sigmanu^{\mathrm{pred}}\approx 0.063\,\mathrm{eV}$ is
+comfortably within this bound. \VAL{}
+
+\subsection{Near-future sensitivity}
+
+Next-generation surveys (e.g., DESI, Euclid, CMB-S4) may tighten the bound
+toward $\Sigmanu\lesssim 0.06\,\mathrm{eV}$.  If the bound crosses below
+$0.063\,\mathrm{eV}$, the deep-ladder mass scale is directly pressured. \VAL{}
+
+\subsection{Kinematic endpoint}
+
+The KATRIN experiment constrains $m_\beta<0.45\,\mathrm{eV}$ (90\%~CL) from
+tritium $\beta$-decay.  The predicted effective mass
+$m_\beta^{\mathrm{pred}}\approx\sqrt{\sum|U_{ei}|^2 m_i^2}\sim 0.01\,\mathrm{eV}$
+is far below current sensitivity but within reach of proposed future
+experiments. \VAL{}
+
+
+%=============================================================================
+\section{Dirac vs.\ Majorana Nature}
+\label{sec:dirac_majorana}
+%=============================================================================
+
+The deep-ladder framework treats neutrinos as Dirac fermions with $Z_\nu=0$ at
+the anchor.  Under this assignment:
+\begin{itemize}[nosep]
+  \item Lepton number is conserved,
+  \item The effective Majorana mass $m_{\beta\beta}$ for neutrinoless double-beta
+        decay is zero,
+  \item The mass hierarchy is governed purely by the rung triple and the single
+        neutrino yardstick.
+\end{itemize}
+
+The Majorana alternative would require $Z_\nu\neq 0$ (a nonzero anchor residue)
+or additional discrete structure (writhe parity of the neutral braid triple).
+The current framework does not exclude the Majorana possibility in principle,
+but the simplest realization ($Z_\nu=0$, Dirac) is the one tested here.
+
+\textbf{Falsifier}: detection of neutrinoless double-beta decay at a rate
+inconsistent with zero $m_{\beta\beta}$ would require modification of the
+$Z_\nu=0$ assignment.
+
+
+%=============================================================================
+\section{The Integer-Rung No-Go and Its Structural Resolution}
+\label{sec:nogo}
+%=============================================================================
+
+\subsection{The formal rung triple $(0,11,19)$}
+
+If one applies the charged-sector generation torsion $\{0,11,17\}$ directly to
+neutrinos (with the same baseline rung conventions), the formal triple is
+$(r_1,r_2,r_3)=(0,11,19)$.  The splitting ratio would be: \PROVED{}
+\begin{equation}
+  R_\Delta^{\mathrm{integer}} = \frac{\phig^{38}-1}{\phig^{22}-1}
+  \approx 2{,}207,
+\end{equation}
+which is $\sim 65$ times larger than the observed $R_\Delta\approx 33.8$.
+Both normal and inverted orderings fail the acceptance test.
+
+\subsection{The structural explanation: confinement to the edge level}
+
+Paper~VI derives the generation torsion $\{0,11,17\}$ from coupling levels
+of the 3-cube: generation~1 couples through the active edge only ($\tau_1=0$),
+generation~2 couples to all passive edges ($\tau_2=E_{\mathrm{passive}}=11$),
+and generation~3 additionally couples to faces ($\tau_3=E_{\mathrm{passive}}+F=17$).
+
+For charged fermions ($Z\neq 0$), the nonzero charge band provides a
+\textbf{locking potential} that enables face-level coupling: the boundary
+``grips'' the face structure through its charge.  The full hierarchy spans
+$E_{\mathrm{passive}}+F = 17 = W$ rungs.
+
+For neutrinos ($Z=0$), the charge band vanishes.  Without it, \textbf{face
+coupling is blocked}: there is no charge-mediated mechanism to lock the
+neutral boundary to the 2-dimensional face structure.  The neutrino hierarchy
+is therefore \emph{confined to the edge level}, spanning only
+$E_{\mathrm{passive}}=11$ --- but at \textbf{half resolution}:
+\begin{equation}
+\boxed{
+  \text{Neutrino total span} = \frac{E_{\mathrm{passive}}}{2} = \frac{11}{2}.
+}
+\label{eq:nu_span}
+\end{equation}
+
+The factor of $1/2$ arises because the neutral boundary, lacking a charge band,
+couples to the passive edge network with half the locking strength of a charged
+boundary.  Integer steps require the charge band's discrete grip; without it,
+the coupling is ``impedance-mismatched'' and the effective step size halves.
+
+\subsection{The edge-level decomposition: $4+7=11$}
+
+The doubled rung differences of the deep-ladder neutrino triple are: \PROVED{}
+\begin{equation}
+  2\times\Delta_{1\to 2} = 4,\qquad
+  2\times\Delta_{2\to 3} = 7,\qquad
+  2\times\Delta_{1\to 3} = 11.
+  \label{eq:doubled}
+\end{equation}
+The sum $4+7=11=E_{\mathrm{passive}}$ is \emph{exact}: the neutrino generation
+structure, in doubled coordinates, exhaustively partitions the passive edge count.
+
+The sub-decomposition $4+7$ reflects the internal structure of the passive
+edge network of the 3-cube:
+\begin{itemize}[nosep]
+  \item $4 = 2^{D-1}$: the edges along a single spatial direction (one full
+        ``direction slot'' of the cube).
+  \item $7 = E_{\mathrm{passive}} - 2^{D-1} = 11-4$: the remaining passive
+        edges spanning the other two directions.
+\end{itemize}
+
+This is a \textbf{sub-partition} of the passive edge set---the same
+active/passive splitting principle (Paper~VI) applied \emph{within} the
+edge level:
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+& Charged sector & Neutrino sector & Neutrino (doubled) \\
+\midrule
+Gen 1$\to$2 step & $E_{\mathrm{passive}}=11$ & $2$ & $4 = 2^{D-1}$ \\
+Gen 2$\to$3 step & $F=6$ & $7/2$ & $7 = E_{\mathrm{passive}}-2^{D-1}$ \\
+Total span & $W=17$ & $11/2$ & $11 = E_{\mathrm{passive}}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Why the $\phig^7$ ratio and $R_\Delta\approx 33.8$ are now explained}
+
+The atmospheric-to-solar mass-squared ratio $m_3^2/m_2^2=\phig^7$ is no longer
+an unexplained numerical coincidence.  It arises because: \HYP{}
+\begin{equation}
+  2(r_3-r_2) = 2\times\frac{7}{2} = 7
+  = E_{\mathrm{passive}} - 2^{D-1} = 11 - 4.
+\end{equation}
+The exponent $7$ is the \emph{remaining passive edge count after extracting
+one direction}: it is the second step of the sub-partition within the edge
+level.
+
+The splitting ratio $R_\Delta = (\phig^{11}-1)/(\phig^4-1)\approx 33.82$ now
+also has a structural interpretation:
+\begin{itemize}[nosep]
+  \item The numerator exponent $11 = 2\times(11/2) = E_{\mathrm{passive}}$
+        is the total passive edge count.
+  \item The denominator exponent $4 = 2\times 2 = 2^{D-1}$ is one direction's
+        edge count.
+\end{itemize}
+$R_\Delta$ is a ratio of $\phig$-polynomials built entirely from passive-edge
+sub-counts of the 3-cube.
+
+\subsection{Summary: the neutrino resolution}
+
+The neutrino no-go is resolved by three observations from the cube partition
+framework:
+\begin{enumerate}[nosep]
+  \item $Z=0$ blocks face coupling $\Rightarrow$ the hierarchy is confined to
+        the edge level ($E_{\mathrm{passive}}=11$, not $W=17$).
+  \item Without charge-band locking, coupling operates at half resolution
+        $\Rightarrow$ fractional ($\frac{1}{2}$-integer) rungs.
+  \item The edge level has internal structure ($4+7=11$)
+        $\Rightarrow$ three generations are still accommodated within the
+        reduced span.
+\end{enumerate}
+
+This transforms the neutrino rung triple from a data-constrained hypothesis
+into a \emph{structural consequence} of the same cube geometry that organizes
+the charged sectors.
+
+
+%=============================================================================
+\section{Falsifiers}
+\label{sec:falsifiers}
+%=============================================================================
+
+\subsection{Seam-free falsifiers (depend only on $\phig$ and rung differences)}
+
+\paragraph{F1: Splitting-ratio mismatch.}
+If $R_\Delta=\Delta m^2_{31}/\Delta m^2_{21}$ departs from the predicted value
+$(\phig^{11}-1)/(\phig^4-1)\approx 33.82$ beyond experimental uncertainty, the
+rung triple is refuted. \VAL{}
+
+\paragraph{F2: Ordering mismatch.}
+If inverted ordering is decisively established, the rung ordering
+$r_1<r_2<r_3$ is refuted. \VAL{}
+
+\paragraph{F3: Squared-mass ratio mismatch.}
+If absolute mass information establishes $m_3^2/m_2^2\neq\phig^7$, the rung
+gap hypothesis is refuted. \VAL{}
+
+\subsection{Scale falsifiers (test the eV reporting seam)}
+
+\paragraph{F4: Oscillation windows.}
+If updated NuFIT windows exclude $\Delta m^{2,\mathrm{pred}}_{21}$ or
+$\Delta m^{2,\mathrm{pred}}_{31}$, either the rung triple or the seam is
+refuted. \VAL{}
+
+\paragraph{F5: Cosmological exclusion.}
+If cosmological bounds establish $\Sigmanu < 0.062\,\mathrm{eV}$, the
+predicted mass scale is ruled out. \VAL{}
+
+\paragraph{F6: Direct mass detection.}
+A kinematic measurement robustly implying a mass scale well above the
+predicted window refutes the deep-ladder assignment. \VAL{}
+
+\paragraph{F7: Neutrinoless double-beta decay.}
+Detection of $0\nu\beta\beta$ at a level inconsistent with the Dirac
+$Z_\nu=0$ assignment would require extending the framework. \VAL{}
+
+
+%=============================================================================
+\section{Conclusions}
+\label{sec:conclusions}
+%=============================================================================
+
+This paper has extended the \RS{} mass framework to the neutrino sector via
+the deep $\phig$-ladder with fractional (quarter-step) rungs.
+
+\subsection{What is structural}
+
+\begin{itemize}[nosep]
+  \item The ladder mathematics: ratios are $\phig$-powers of rung differences;
+        the seam cancels from ratios. \PROVED{}
+  \item Normal ordering: forced by rung ordering plus $\phig>1$. \PROVED{}
+  \item The $\phig^7$ squared-mass ratio: a seam-free structural prediction. \HYP{}
+  \item The seam-free splitting ratio $R_\Delta=(\phig^{11}-1)/(\phig^4-1)$. \HYP{}
+\end{itemize}
+
+\subsection{What is hypothesized}
+
+\begin{itemize}[nosep]
+  \item The quarter-step rung lattice $r\in\frac{1}{4}\mathbb{Z}$. \HYP{}
+  \item The specific rung triple $(-239/4,-231/4,-217/4)$. \HYP{}
+  \item The Dirac nature ($Z_\nu=0$, $m_{\beta\beta}=0$). \HYP{}
+\end{itemize}
+
+\subsection{What the validation indicates}
+
+Under the declared seam, $\Delta m^2_{21}$ and $\Delta m^2_{31}$ both fall
+within NuFIT windows.  The mass sum $\Sigmanu\approx 0.063\,\mathrm{eV}$ is
+consistent with current cosmological bounds.  The splitting ratio
+$R_\Delta\approx 33.82$ is consistent with the experimental value
+$R_\Delta^{\mathrm{exp}}\approx 33.4$. \VAL{}
+
+\subsection{The core falsifiers}
+
+The most robust tests are seam-free:
+\begin{itemize}[nosep]
+  \item The splitting ratio $R_\Delta$ (testable now),
+  \item The mass ordering (testable with current and near-future experiments),
+  \item The $\phig^7$ ratio (testable when absolute mass information becomes
+        available).
+\end{itemize}
+
+The neutrino sector represents the frontier of the RS mass program.  The
+charged sectors exhibit remarkable agreement with data; the neutrino sector
+requires a structural extension (fractional rungs) that is natural within the
+framework but not yet derived from the same pure counting-layer arguments that
+fix the charged sector.  Closing this gap---deriving the neutrino rung lattice
+from first principles---remains the primary open problem.
+
+\begin{thebibliography}{99}
+\bibitem{PDG2024} R.~L.~Workman \textit{et al.} [Particle Data Group],
+  Prog.\ Theor.\ Exp.\ Phys.\ \textbf{2022}, 083C01 (2022) and 2024 update.
+\bibitem{NuFIT} I.~Esteban \textit{et al.}, NuFIT~5.x (2024);
+  \url{http://www.nu-fit.org}.
+\bibitem{Washburn2025} J.~Washburn,
+  ``The Algebra of Reality: A Recognition Science Derivation of Physical Law,''
+  \textit{Axioms} \textbf{15}(2), 90 (2025).
+\bibitem{PaperI} J.~Washburn,
+  ``The Origin of Mass in Recognition Science: Cost Geometry, Recognition
+  Boundaries, and the $\varphi$-Ladder'' (Paper~I of this series).
+\bibitem{PaperII} J.~Washburn,
+  ``Charged Fermion Masses and Flavor Mixing from $\varphi$-Ladder Geometry''
+  (Paper~II of this series).
+\bibitem{KATRIN} M.~Aker \textit{et al.} [KATRIN Collaboration],
+  Nat.\ Phys.\ \textbf{18}, 160--166 (2022).
+\end{thebibliography}
+
+\end{document}

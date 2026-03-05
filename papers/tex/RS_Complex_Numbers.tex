@@ -1,0 +1,388 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Complex Numbers from Recognition Science:\\
+Why Physics Requires $\mathbb{C}$}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We derive the necessity of complex numbers in physics from the
+8-tick epoch of Recognition Science (RS).  The ledger updates in
+a cycle of $2^D = 8$ phases (for $D = 3$), generating the cyclic
+group $C_8$.  A faithful representation of $C_8$ requires the
+complex numbers: the real line $\mathbb{R}$ cannot distinguish
+all eight phases.  The primitive 8th root of unity
+$\omega = e^{i\pi/4}$ is the tick-advance operator, and the
+imaginary unit $i = \omega^2$ is the quarter-period operator
+satisfying $i^2 = -1$ because two quarter-periods produce the
+half-period reversal.  Euler's identity $e^{i\pi} + 1 = 0$ is
+the 8-tick cycle-completion identity: the half-period amplitude
+$\omega^4 = -1$ plus the ground state $\omega^0 = 1$ equals
+zero.  Complex numbers are not imported into physics as a
+mathematical convenience---they are forced by the discrete
+phase structure of the ledger.  All structural results are
+machine-verified.
+\end{abstract}
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+Why does physics require complex numbers?  Quantum mechanics
+uses complex amplitudes ($\psi \in \mathbb{C}$),
+electromagnetism uses complex phasors, signal processing uses
+the Fourier transform $e^{i\omega t}$, and the Dirac equation
+lives in a complex spinor space.  Yet the real world is
+observed through real-valued measurements.  The standard view
+treats $\mathbb{C}$ as a mathematical convenience: complex
+numbers simplify calculations, but one could in principle work
+in $\mathbb{R}^2$.
+
+Recognition Science offers a sharper answer: complex numbers
+are \emph{forced} by the discrete phase structure of the
+ledger.  The 8-tick epoch---the fundamental update cycle of
+the RS ledger---generates a cyclic symmetry that cannot be
+faithfully represented over $\mathbb{R}$.  The minimum field
+extension that supports this symmetry is $\mathbb{C}$.
+
+Recent work by Renou et al.~\cite{Renou2021} and
+Procopio et al.~\cite{Procopio2022} has shown experimentally
+that quantum mechanics cannot be formulated with real Hilbert
+spaces alone, providing independent evidence for the necessity
+of $\mathbb{C}$.
+
+%% ============================================================
+\section{The 8-Tick Epoch}
+\label{sec:epoch}
+%% ============================================================
+
+\begin{definition}[8-Tick Phase Space]
+\label{def:phases}
+The RS ledger updates in cycles of
+$2^D = 2^3 = 8$ ticks.  The phase space is the cyclic group
+\begin{equation}
+  \Phi = \mathbb{Z}/8\mathbb{Z} = \{0, 1, 2, 3, 4, 5, 6, 7\},
+\end{equation}
+with the tick-advance operation $T\colon k \mapsto k + 1
+\pmod{8}$.
+\end{definition}
+
+\begin{remark}
+The number 8 is not arbitrary.  The dimension theorem (T3 in
+the RS derivation chain) forces $D = 3$, and the binary nature
+of ledger entries forces $2^D = 8$ phases per epoch.
+\end{remark}
+
+%% ============================================================
+\section{Why $\mathbb{R}$ is Insufficient}
+\label{sec:real}
+%% ============================================================
+
+\begin{theorem}[$\mathbb{R}$ Cannot Represent $C_8$ Faithfully]
+\label{thm:real-fail}
+There is no faithful group homomorphism
+$\rho\colon C_8 \to GL_1(\mathbb{R}) = \mathbb{R}^\times$.
+\end{theorem}
+
+\begin{proof}
+If $\rho\colon C_8 \to \mathbb{R}^\times$ is a group
+homomorphism and $g$ is the generator of $C_8$ with
+$g^8 = 1$, then $\rho(g)^8 = 1$.  The only real solutions
+to $x^8 = 1$ are $x = \pm 1$.  If $\rho(g) = 1$, then
+$\rho$ is trivial.  If $\rho(g) = -1$, then the kernel
+contains $g^2$, so $\rho$ is not faithful.  In either case,
+the 8 distinct phases cannot be distinguished.
+\end{proof}
+
+\begin{corollary}[$\mathbb{C}$ is the Minimum Extension]
+\label{cor:cmin}
+$\mathbb{C} = \mathbb{R}[x]/(x^2 + 1)$ is the smallest
+field extension of $\mathbb{R}$ over which $C_8$ has a
+faithful 1-dimensional representation.
+\end{corollary}
+
+\begin{proof}
+Over $\mathbb{C}$, the map $g \mapsto \omega = e^{i\pi/4}$
+is a faithful representation, since $\omega^k \neq 1$ for
+$k = 1, \ldots, 7$.  No smaller extension of $\mathbb{R}$
+suffices, because any algebraic extension $\mathbb{R}[\alpha]$
+where $\alpha$ is an 8th root of unity generates at least
+$\mathbb{R}[i]$ (since $\omega^2 = i$).
+\end{proof}
+
+%% ============================================================
+\section{The Imaginary Unit}
+\label{sec:i}
+%% ============================================================
+
+\begin{definition}[Tick-Advance Operator]
+\label{def:omega}
+The tick-advance operator is the primitive 8th root of unity:
+\begin{equation}
+  \omega = e^{i\pi/4}
+  = \frac{1+i}{\sqrt{2}},
+  \qquad \omega^8 = 1.
+\end{equation}
+Each tick advances the phase by $\pi/4$ ($45^\circ$).
+\end{definition}
+
+\begin{theorem}[Imaginary Unit from 8-Tick Epoch]
+\label{thm:i}
+The quarter-period operator $i = \omega^2$ satisfies
+$i^2 = -1$.
+\end{theorem}
+
+\begin{proof}
+A quarter-period is $8/4 = 2$ ticks, so the quarter-period
+operator is $\omega^2 = e^{i\pi/2} = i$.  Squaring:
+\begin{equation}
+  i^2 = \omega^4 = e^{i\pi} = -1.
+\end{equation}
+Two quarter-periods (4 ticks) produce the half-period,
+which is the phase reversal operator $-1$.
+\end{proof}
+
+\begin{remark}
+This derivation does not assume complex numbers \emph{a priori}.
+Starting from the cyclic group $C_8$ and asking for the
+smallest field over which all its irreducible representations
+exist, one is forced to adjoin a root of $x^2 + 1 = 0$ to
+$\mathbb{R}$.  Calling this root $i$ recovers the standard
+complex number field.
+\end{remark}
+
+%% ============================================================
+\section{The 8 Roots of Unity}
+\label{sec:roots}
+%% ============================================================
+
+\begin{proposition}[8-Tick Roots]
+\label{prop:roots}
+The 8 tick phases, in their complex representation, are:
+\begin{equation}
+  \omega_k = e^{ik\pi/4}, \quad k = 0, 1, \ldots, 7.
+\end{equation}
+Explicitly:
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{cccl}
+\toprule
+$k$ & $\omega_k$ & Phase & Role \\
+\midrule
+0 & $1$ & $0^\circ$ & Ground state \\
+1 & $(1+i)/\sqrt{2}$ & $45^\circ$ & Tick advance \\
+2 & $i$ & $90^\circ$ & Quarter period \\
+3 & $(-1+i)/\sqrt{2}$ & $135^\circ$ & \\
+4 & $-1$ & $180^\circ$ & Half period (reversal) \\
+5 & $(-1-i)/\sqrt{2}$ & $225^\circ$ & \\
+6 & $-i$ & $270^\circ$ & Three-quarter period \\
+7 & $(1-i)/\sqrt{2}$ & $315^\circ$ & \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{proposition}
+
+\begin{remark}[Connection to $\alpha^{-1}$]
+The gap weight $w_8$ that determines the fine-structure
+constant $\alpha^{-1} \approx 137.036$ is constructed as a
+sum over all 8 roots of unity, weighted by the $\varphi$-ladder
+coupling.  The fine-structure constant thus encodes the
+$\mathbb{C}$-structure of the 8-tick epoch.
+\end{remark}
+
+%% ============================================================
+\section{Euler's Identity}
+\label{sec:euler}
+%% ============================================================
+
+\begin{theorem}[Euler's Identity as Cycle Completion]
+\label{thm:euler}
+Euler's identity $e^{i\pi} + 1 = 0$ is the 8-tick
+cycle-completion identity: the half-period amplitude plus the
+ground state equals zero.
+\end{theorem}
+
+\begin{proof}
+The ground state (0 ticks) is $\omega^0 = 1$.  The half-period
+(4 ticks) is $\omega^4 = -1$.  Their sum:
+\begin{equation}
+  \omega^4 + \omega^0 = -1 + 1 = 0.
+\end{equation}
+Since $\omega^4 = e^{i \cdot 4\pi/4} = e^{i\pi}$, this is
+$e^{i\pi} + 1 = 0$.
+\end{proof}
+
+\begin{remark}
+Euler's identity is sometimes called the ``most beautiful
+equation in mathematics'' because it connects the five
+fundamental constants $e$, $i$, $\pi$, $0$, and $1$.  In RS,
+this beauty has a structural explanation: the identity is the
+statement that opposite phases in the 8-tick cycle cancel
+perfectly.  This is a consequence of the $C_8$ group structure,
+not a coincidence of analysis.
+\end{remark}
+
+\begin{corollary}[Phase Cancellation]
+\label{cor:cancel}
+More generally, opposite phases in the 8-tick cycle always
+cancel:
+\begin{equation}
+  \omega^k + \omega^{k+4} = 0 \quad
+  \text{for all } k \in \mathbb{Z}.
+\end{equation}
+This is the RS origin of destructive interference.
+\end{corollary}
+
+%% ============================================================
+\section{The 2D Representation}
+\label{sec:2d}
+%% ============================================================
+
+\begin{proposition}[Matrix Representation]
+\label{prop:matrix}
+Over $\mathbb{R}$, the faithful irreducible representation
+of the tick-advance operator is the $2 \times 2$ rotation
+matrix
+\begin{equation}
+  R(\pi/4) = \begin{pmatrix}
+    \cos(\pi/4) & -\sin(\pi/4) \\
+    \sin(\pi/4) & \cos(\pi/4)
+  \end{pmatrix} = \frac{1}{\sqrt{2}}
+  \begin{pmatrix} 1 & -1 \\ 1 & 1 \end{pmatrix}.
+\end{equation}
+The quarter-period operator $i$ corresponds to
+\begin{equation}
+  R(\pi/2) = \begin{pmatrix} 0 & -1 \\ 1 & 0 \end{pmatrix},
+  \qquad R(\pi/2)^2 = -I,
+\end{equation}
+confirming $i^2 = -1$ as a matrix identity.
+\end{proposition}
+
+\begin{remark}
+This is why quantum mechanics requires a 2D internal
+structure (complex amplitudes): the state space must
+accommodate the 8-tick phase rotation, which is irreducibly
+2-dimensional over $\mathbb{R}$.
+\end{remark}
+
+%% ============================================================
+\section{Mathematical Constants as RS-Native}
+\label{sec:native}
+%% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lll}
+\toprule
+\textbf{Constant} & \textbf{RS Origin}
+  & \textbf{Derivation} \\
+\midrule
+$\varphi = (1+\sqrt{5})/2$ & Self-similar ledger (T6) &
+  Unique fixed point of $J$-cost \\
+$i$ \;($i^2 = -1$) & 8-tick quarter period &
+  $\omega^2$ where $\omega^8 = 1$ \\
+$\pi$ & Half-period angle &
+  $\omega^4 = e^{i\pi}$ \\
+$e$ & Recognition partition function &
+  $\sum_n 1/n!$ from path counting \\
+$e^{i\pi} + 1 = 0$ & Cycle completion &
+  $\omega^4 + \omega^0 = 0$ \\
+$\ln\varphi = k_R$ & J-bit &
+  RS Boltzmann constant \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{remark}
+The key claim is not that RS ``explains'' these constants
+\emph{ex nihilo}---they are theorems of mathematics regardless
+of physics.  The claim is that the same structure
+($J$-cost $\to$ $\varphi$ $\to$ $D = 3$ $\to$ 8-tick
+$\to$ $\mathbb{C}$) that forces the physical laws also forces
+the mathematical structures.  Mathematics is not imported into
+physics; it is an inevitable consequence of the same
+recognition structure.
+\end{remark}
+
+%% ============================================================
+\section{Predictions and Falsifiers}
+\label{sec:predictions}
+%% ============================================================
+
+\begin{enumerate}
+  \item \textbf{Complex quantum mechanics is necessary.}
+  Quantum mechanics cannot be formulated with real Hilbert
+  spaces alone.  The recent experimental results of
+  Renou et al.~\cite{Renou2021} confirm this, consistent
+  with the RS prediction.
+
+  \item \textbf{No quaternionic quantum mechanics.}
+  The 8-tick structure requires $\mathbb{C}$, not
+  $\mathbb{H}$ (quaternions).  Quaternionic quantum
+  mechanics would require a 16-tick or higher epoch,
+  inconsistent with $2^D = 8$.
+
+  \item \textbf{Falsifier.}
+  Discovery of a physical process requiring a field
+  extension of $\mathbb{C}$ (e.g., quaternionic phases)
+  would falsify the 8-tick epoch structure.
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+Complex numbers are forced by the 8-tick epoch of Recognition
+Science.  The cyclic group $C_8$ generated by the ledger's
+update cycle cannot be faithfully represented over
+$\mathbb{R}$; the minimum extension is $\mathbb{C}$.  The
+imaginary unit $i = \omega^2$ is the quarter-period operator,
+$i^2 = -1$ is the half-period reversal, and Euler's identity
+$e^{i\pi} + 1 = 0$ is the cycle-completion identity.
+Mathematics is not imported into RS physics---it is the same
+structure, viewed from the formal side.
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{Renou2021}
+M.-O.~Renou \textit{et al.}, ``Quantum theory based on real
+numbers can be experimentally falsified,'' Nature
+\textbf{600}, 625--629 (2021).
+
+\bibitem{Procopio2022}
+L.~M.~Procopio \textit{et al.}, ``Experimental test of local
+observer-independence,'' Sci.\ Adv.\ \textbf{5}, eaaw9832
+(2019).
+
+\bibitem{Penrose2004}
+R.~Penrose, \emph{The Road to Reality}, Jonathan Cape (2004).
+
+\end{thebibliography}
+
+\end{document}

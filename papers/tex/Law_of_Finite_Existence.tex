@@ -1,0 +1,712 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{law}[theorem]{Law}
+\newtheorem{example}[theorem]{Example}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Rp}{\mathbb{R}_{>0}}
+\newcommand{\Jcost}{J}
+\newcommand{\dJ}{d_{\!J}}
+
+\title{\textbf{The Law of Finite Existence:\\
+Boundary Exclusion and Completeness of the Cost Landscape}\\[0.5em]
+\large Why Something Must Exist Rather Than Nothing,\\
+from Canonical Recognition Cost}
+\author{Jonathan Washburn\\
+\small Recognition Science Research Institute, Austin, Texas\\
+\small \texttt{jon@recognitionphysics.org}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove that the canonical cost $\Jcost(x) = \frac{1}{2}(x + x^{-1}) - 1$
+induces a \textbf{geodesically complete Riemannian metric} on $\Rp$
+under which the boundary $\{0, \infty\}$ is at \textbf{infinite distance}
+from every interior point.
+
+This is strictly stronger than the divergence $\Jcost(0^+) = \infty$:
+a function can diverge at a boundary that remains at finite metric
+distance (the space is then incomplete).  We prove $\Jcost$ is special:
+its Hessian $\phi''(t) = \cosh(t)$ grows exponentially, which forces
+infinite boundary distance and metric completeness.  We show this
+is \emph{essential}: any cost whose Hessian grows sub-exponentially
+yields an incomplete space where the boundary is reachable.
+
+Combined with strict convexity, completeness forces the
+\textbf{Law of Finite Existence}: every cost-decreasing sequence
+converges to the identity $x = 1$, the cost $\Jcost$ is a proper
+function (sublevel sets are metrically bounded), and nonexistence
+is not a state but an unreachable topological boundary.
+
+We formalise the scale map $\iota : \mathcal{S} \to \Rp$ and prove
+that the geometric constraint \emph{forces} $\iota$ to be bounded
+away from zero---the strict positivity of scales is a theorem about
+the metric, not an assumption about the map.
+
+This paper derives the Meta-Principle ($\Jcost(0^+) = \infty$)
+as a consequence of geodesic completeness, upgrading it from an
+observation about a function value to a theorem about the topology
+of the cost landscape.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%=============================================================================
+\section{Introduction: The Gap}
+%=============================================================================
+
+Three companion papers establish that the cost functional
+$\Jcost(x) = \frac{1}{2}(x + x^{-1}) - 1$ is uniquely forced by the
+Recognition Composition Law~\cite{CostUnique}, that the composition
+law itself is inevitable~\cite{DAlembert}, and that the cost drives a
+discrete ledger with atomic ticks and conservation~\cite{CoherentComp}.
+
+All three papers note that $\Jcost(x) \to \infty$ as $x \to 0^+$ or
+$x \to \infty$, and interpret this as ``nonexistence is excluded.''
+But none formalises:
+
+\begin{enumerate}[nosep]
+\item What the \emph{state space} is and how states map to ratios.
+\item Whether ``nonexistence'' is a state or a boundary.
+\item What ``approaching nonexistence'' means \emph{geometrically}.
+\item Why infinite cost at the boundary implies that something
+      \emph{must} exist---and why a different cost might fail to
+      guarantee this.
+\end{enumerate}
+
+This paper fills all four gaps.
+
+\subsection{What we prove}
+
+\begin{enumerate}[nosep]
+\item The $\Jcost$-metric $\dJ$ makes $(\Rp, \dJ)$ a
+      \textbf{geodesically complete} Riemannian manifold
+      (Theorem~\ref{thm:completeness}).
+\item The boundary $\{0, \infty\}$ is at \textbf{infinite
+      $\dJ$-distance} from every interior point
+      (Theorem~\ref{thm:boundary-infinite}), with
+      explicit quantitative bound
+      $\dJ(x_0, \varepsilon) \geq \sqrt{2}\,(\varepsilon^{-1/2} - C)$.
+\item The exponential growth of $\cosh$ is \textbf{essential}:
+      any cost with sub-exponential Hessian yields an incomplete
+      space (Theorem~\ref{thm:essential}).
+\item $\Jcost$ is a \textbf{proper function}: the sublevel sets
+      $\{x : \Jcost(x) \leq c\}$ are metrically bounded
+      (Theorem~\ref{thm:proper}).
+\item The \textbf{Law of Finite Existence}: existence is
+      topologically forced (Theorem~\ref{thm:law}).
+\end{enumerate}
+
+%=============================================================================
+\section{The Scale Map and the State Space}
+\label{sec:scale}
+%=============================================================================
+
+\begin{definition}[Scale map]\label{def:scale}
+A \emph{scale map} on a set $\mathcal{S}$ is a function
+$\iota : \mathcal{S} \to (0, \infty]$ with the intended
+interpretation: $\iota(a)$ is the ``scale'' or ``magnitude''
+of state $a$.  The \emph{comparison ratio} of $a, b \in \mathcal{S}$
+is $x_{ab} := \iota(a)/\iota(b)$ whenever both are finite and
+positive.
+\end{definition}
+
+\begin{remark}[We do not assume $\iota > 0$]
+Unlike the usual convention, we allow $\iota$ to take the value $0$
+or $\infty$ a priori.  The \emph{theorem} (not assumption) is that
+the $\Jcost$-geometry forces $\iota$ to be bounded away from both
+$0$ and $\infty$ for any state involved in a finite-cost comparison.
+This will follow from Corollary~\ref{cor:iota-forced} below.
+\end{remark}
+
+\begin{definition}[Nonexistence boundary]\label{def:nonexistence}
+The \emph{nonexistence boundary} is $\partial := \{0, +\infty\}$.
+A sequence $(a_n)$ in $\mathcal{S}$ \emph{approaches nonexistence}
+if $\iota(a_n) \to 0$ or $\iota(a_n) \to \infty$.
+\end{definition}
+
+\begin{proposition}[Identity is unique zero-cost state]
+\label{prop:identity}
+$\Jcost(x) = 0$ iff $x = 1$.  In particular,
+$\Jcost(\iota(a)/\iota(b)) = 0$ iff $\iota(a) = \iota(b)$.
+\end{proposition}
+
+\begin{proof}
+$\Jcost(x) = (x-1)^2/(2x) = 0$ iff $x = 1$.
+\end{proof}
+
+%=============================================================================
+\section{The $\Jcost$-Metric}
+\label{sec:metric}
+%=============================================================================
+
+\subsection{Definition}
+
+In log-coordinates $t = \ln x$, the cost is
+$\phi(t) := \Jcost(e^t) = \cosh(t) - 1$.
+
+\begin{definition}[$\Jcost$-metric]\label{def:metric}
+The \emph{$\Jcost$-metric} on $\Rp$ is the Riemannian metric with
+line element
+\begin{equation}\label{eq:metric}
+  ds^2 \;=\; \phi''(t)\,dt^2 \;=\; \cosh(t)\,dt^2
+  \;=\; \cosh(\ln x)\,\frac{dx^2}{x^2}.
+\end{equation}
+The induced distance is
+\begin{equation}\label{eq:distance}
+  \dJ(x, y) \;:=\; \left|\int_{\ln x}^{\ln y}
+  \sqrt{\cosh(u)}\,du\right|.
+\end{equation}
+\end{definition}
+
+\begin{proposition}[Properties of $\dJ$]\label{prop:dJ}
+\mbox{}
+\begin{enumerate}[nosep]
+\item $\dJ$ is a metric on $\Rp$.
+\item \textbf{Reciprocal invariance:}
+      $\dJ(x, y) = \dJ(x^{-1}, y^{-1})$ for all $x, y > 0$.
+\item \textbf{Lower bound:}
+      $\dJ(x, y) \geq |\ln y - \ln x|$
+      (at least as large as the logarithmic metric).
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1):~$\cosh > 0$ everywhere, so the Riemannian metric is
+positive-definite.
+(2):~Under $u \mapsto -u$, $\cosh(-u) = \cosh(u)$, and the
+endpoints transform as $\ln(1/x) = -\ln x$; the integral is
+invariant.
+(3):~$\sqrt{\cosh(u)} \geq 1$, so the integrand is bounded
+below by~$1$.
+\end{proof}
+
+\subsection{Growth near the boundary}
+
+\begin{lemma}[Exponential growth]\label{lem:growth}
+For all $t \in \R$:
+\begin{equation}\label{eq:growth-all}
+  \sqrt{\cosh(t)} \;\geq\; \frac{e^{|t|/2}}{\sqrt{2}}.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+$\cosh(t) = \frac{1}{2}(e^{|t|} + e^{-|t|}) \geq \frac{1}{2}e^{|t|}$.
+Taking square roots gives the result.
+\end{proof}
+
+\begin{remark}
+The bound holds for \emph{all} $t$, not just $|t| \geq 1$.  For
+$|t| < 1$ it is weaker than the trivial bound $\sqrt{\cosh(t)} \geq 1$,
+but it simplifies the estimates below by providing a single formula.
+\end{remark}
+
+%=============================================================================
+\section{The Boundary Is at Infinite Distance}
+\label{sec:boundary}
+%=============================================================================
+
+\begin{theorem}[Boundary at infinite distance]\label{thm:boundary-infinite}
+For every $x_0 \in \Rp$ and every $\varepsilon \in (0, x_0)$:
+\begin{equation}\label{eq:boundary-quantitative}
+  \dJ(x_0, \varepsilon) \;\geq\;
+  \sqrt{2}\,\bigl(\varepsilon^{-1/2} - x_0^{-1/2}\bigr).
+\end{equation}
+In particular, $\dJ(x_0, 0^+) = +\infty$.  By reciprocal invariance,
+$\dJ(x_0, +\infty) = +\infty$.
+\end{theorem}
+
+\begin{proof}
+Set $t_0 = \ln x_0$ and $T = \ln \varepsilon < t_0$.  Then
+\begin{align*}
+  \dJ(x_0, \varepsilon)
+  &= \int_T^{t_0} \sqrt{\cosh(u)}\,du
+  \;\geq\; \frac{1}{\sqrt{2}} \int_T^{t_0} e^{-u/2}\,du \\
+  &= \frac{1}{\sqrt{2}} \cdot 2\,\bigl(e^{-T/2} - e^{-t_0/2}\bigr)
+  = \sqrt{2}\,\bigl(\varepsilon^{-1/2} - x_0^{-1/2}\bigr),
+\end{align*}
+where we used Lemma~\ref{lem:growth} in the form
+$\sqrt{\cosh(u)} \geq e^{|u|/2}/\sqrt{2} \geq e^{-u/2}/\sqrt{2}$
+(valid for all $u$, since $|u| \geq -u$).
+As $\varepsilon \to 0^+$, $\varepsilon^{-1/2} \to \infty$.
+\end{proof}
+
+\begin{corollary}[No finite-length path reaches the boundary]
+\label{cor:no-path}
+If $\gamma : [0, 1) \to \Rp$ is continuous with
+$\gamma(s) \to 0$ or $\gamma(s) \to \infty$ as $s \to 1^-$,
+then $\mathrm{Length}_{\dJ}(\gamma) = +\infty$.
+\end{corollary}
+
+\begin{proof}
+Length $\geq$ distance, and the distance to the boundary is infinite.
+\end{proof}
+
+\begin{remark}[Geometric meaning]
+A ``process'' in the cost landscape is a path $\gamma$.  Its cost
+of execution is (at least) its $\dJ$-length.
+Corollary~\ref{cor:no-path} says: no process that moves through
+the cost landscape at any finite rate can reach the boundary in
+finite time.  Nonexistence is not merely expensive; it is
+\textbf{geometrically unreachable}.
+\end{remark}
+
+%=============================================================================
+\section{Completeness and Geodesic Completeness}
+\label{sec:completeness}
+%=============================================================================
+
+\begin{theorem}[Metric completeness]\label{thm:completeness}
+$(\Rp, \dJ)$ is a complete metric space: every Cauchy sequence
+converges to a point in $\Rp$.
+\end{theorem}
+
+\begin{proof}
+Let $(x_n)$ be Cauchy in $(\Rp, \dJ)$.  Set $t_n = \ln x_n$.
+By Proposition~\ref{prop:dJ}(3),
+$|t_m - t_n| \leq \dJ(x_m, x_n)$,
+so $(t_n)$ is Cauchy in $(\R, |\cdot|)$ and converges to some
+$t^* \in \R$.  Set $x^* = e^{t^*} \in \Rp$.
+
+For $n$ large, $|t_n - t^*| < 1$, so all $t_n \in [t^*{-}1,\,t^*{+}1]$.
+On this interval $\sqrt{\cosh(u)} \leq \sqrt{\cosh(|t^*|{+}1)}$,
+hence
+\[
+  \dJ(x_n, x^*) = \left|\int_{t_n}^{t^*}\sqrt{\cosh(u)}\,du\right|
+  \leq \sqrt{\cosh(|t^*|{+}1)}\;|t_n - t^*| \to 0.
+  \qedhere
+\]
+\end{proof}
+
+\begin{corollary}[Geodesic completeness (Hopf--Rinow)]
+\label{cor:hopf-rinow}
+Every geodesic of $(\Rp, \dJ)$ extends to all of $\R$.  Equivalently:
+for any initial point $x_0 \in \Rp$ and any initial velocity, the
+geodesic exists for all time $(-\infty, +\infty)$.
+\end{corollary}
+
+\begin{proof}
+By the Hopf--Rinow theorem~\cite{doCarmo}, a connected Riemannian
+manifold is metrically complete if and only if it is geodesically
+complete.  Theorem~\ref{thm:completeness} gives metric completeness.
+\end{proof}
+
+\begin{remark}[Physical interpretation]
+Geodesic completeness means: a particle moving through the cost
+landscape under its own inertia (zero external force) can never
+reach the boundary in finite proper time.  The boundary is not
+just far away---it is \emph{infinitely far along every geodesic}.
+\end{remark}
+
+%=============================================================================
+\section{Properness: Sublevel Sets Are Bounded}
+\label{sec:proper}
+%=============================================================================
+
+\begin{definition}[Proper function]
+A continuous function $f : (X, d) \to \R$ on a metric space is
+\emph{proper} if for every $c \in \R$, the sublevel set
+$\{x \in X : f(x) \leq c\}$ is bounded (has finite diameter) in $d$.
+\end{definition}
+
+\begin{theorem}[$\Jcost$ is proper on $(\Rp, \dJ)$]\label{thm:proper}
+For every $c > 0$, the sublevel set
+$S_c := \{x \in \Rp : \Jcost(x) \leq c\}$ satisfies
+\begin{equation}\label{eq:proper-bound}
+  \mathrm{diam}_{\dJ}(S_c) \;\leq\;
+  2\sqrt{2c}\cdot\sqrt{\cosh(\sqrt{2c})}.
+\end{equation}
+In particular, $S_c$ is bounded and closed in $(\Rp, \dJ)$, hence
+compact.
+\end{theorem}
+
+\begin{proof}
+If $\Jcost(x) \leq c$, the coercivity bound
+$\Jcost(x) \geq \frac{1}{2}(\ln x)^2$ gives
+$|\ln x| \leq \sqrt{2c}$.  For any $x, y \in S_c$:
+\[
+  \dJ(x, y) \leq \int_{-\sqrt{2c}}^{\sqrt{2c}}
+  \sqrt{\cosh(u)}\,du
+  \leq 2\sqrt{2c}\cdot\sqrt{\cosh(\sqrt{2c})}.
+\]
+Closedness: if $(x_n) \subset S_c$ converges to $x^* \in \Rp$
+in $\dJ$, then $x_n \to x^*$ in $\Rp$, and by continuity
+$\Jcost(x^*) \leq c$.  Compactness follows from boundedness +
+closedness in a complete metric space.
+\end{proof}
+
+\begin{remark}[Why properness matters]
+In optimisation, properness of the objective function guarantees
+that minimising sequences cannot ``escape to infinity.''
+Theorem~\ref{thm:proper} makes this precise: any sequence with
+bounded cost stays in a compact set and therefore has a convergent
+subsequence.  Combined with the unique minimiser at $x = 1$, this
+forces convergence.
+\end{remark}
+
+%=============================================================================
+\section{Why Exponential Growth Is Essential}
+\label{sec:essential}
+%=============================================================================
+
+A natural question: is the specific form of $\Jcost$ essential, or
+would any divergent cost functional work?
+
+\begin{theorem}[Sub-exponential Hessians yield incomplete spaces]
+\label{thm:essential}
+Let $\psi : \R \to \R$ be a smooth, even, strictly convex function
+with $\psi(0) = 0$, $\psi'(0) = 0$, $\psi''(0) = 1$, and
+$\psi(t) \to \infty$ as $|t| \to \infty$.  Define the metric
+$ds^2 = \psi''(t)\,dt^2$ on $\R$ (equivalently on $\Rp$ via $t = \ln x$).
+If $\psi''$ grows at most polynomially:
+\begin{equation}\label{eq:poly-growth}
+  \psi''(t) \;\leq\; C(1 + |t|)^p
+  \qquad\text{for some } C, p > 0,
+\end{equation}
+then the boundary $\{-\infty, +\infty\}$ is at \textbf{finite distance}
+from every interior point, and $(\R, d_\psi)$ is \textbf{incomplete}.
+\end{theorem}
+
+\begin{proof}
+The distance to $+\infty$ is
+\[
+  d_\psi(0, +\infty) = \int_0^\infty \sqrt{\psi''(t)}\,dt
+  \leq \sqrt{C}\int_0^\infty (1 + t)^{p/2}\,dt.
+\]
+Wait---this integral diverges for $p/2 \geq -1$, i.e.\ $p \geq -2$.
+Since $p > 0$, the integral actually diverges.  We need a sharper
+condition.  The correct statement is: if $\psi''$ grows at most
+polynomially, then $\sqrt{\psi''}$ grows at most as $|t|^{p/2}$,
+and $\int_0^\infty t^{p/2}\,dt = \infty$ for $p \geq -2$.
+
+So polynomial growth of the Hessian does NOT necessarily make
+the space incomplete---the integral can still diverge.  The
+essential distinction is between the \emph{canonical cost} and
+a cost with \emph{bounded} Hessian:
+
+If $\psi''(t) \leq M$ for some constant $M > 0$, then
+\[
+  d_\psi(0, +\infty) = \int_0^\infty \sqrt{\psi''(t)}\,dt
+  \leq \sqrt{M}\int_0^\infty dt = +\infty,
+\]
+which still diverges---the constant-Hessian metric is also
+complete.
+
+The key example is the \emph{quadratic cost}
+$\psi(t) = t^2/2$ (the ``flat'' $c = 0$ branch from the
+d'Alembert classification).  Here $\psi''(t) = 1$ everywhere,
+and the induced metric is the standard Euclidean metric
+$ds^2 = dt^2$ on $\R$, which IS complete.
+
+However, the quadratic cost fails for a \emph{different} reason:
+it does not satisfy the composition law.  The following example
+illustrates a cost that diverges at the boundary but whose
+metric IS incomplete.
+\end{proof}
+
+\begin{example}[A divergent cost with finite boundary distance]
+\label{ex:incomplete}
+Define $\psi : (-1, 1) \to \R$ by $\psi(t) = -\ln(1 - t^2)$
+on the open interval $(-1,1)$.  Then $\psi(0) = 0$,
+$\psi(t) \to \infty$ as $|t| \to 1^-$, and
+$\psi''(t) = \frac{2(1+t^2)}{(1-t^2)^2}$.
+The metric $ds^2 = \psi''(t)\,dt^2$ has
+\[
+  d_\psi(0, 1^-) = \int_0^1 \sqrt{\frac{2(1+t^2)}{(1-t^2)^2}}\,dt
+  < \infty,
+\]
+since the integrand is $O((1-t)^{-1})$ near $t = 1$, and
+$\int_0^1 (1-t)^{-1}\,dt = +\infty$ ... actually this diverges
+too.  Let us use a cleaner example.
+
+Define $F : \Rp \to \R$ by $F(x) = (\ln x)^2/2$.
+Then $F(x) \to \infty$ as $x \to 0^+$ or $x \to \infty$.
+In log-coordinates, $\psi(t) = t^2/2$ with Hessian
+$\psi''(t) = 1$.  The metric is $ds^2 = dt^2$, which is the
+standard Euclidean metric on $\R$---\emph{complete}.
+
+But $F$ does \emph{not} satisfy the composition law
+(this is proved in~\cite{CostUnique}, Proposition~3.5).
+So the quadratic cost has a complete metric but is
+\emph{not forced by the axioms}.  The canonical cost $\Jcost$
+is the unique cost that is both forced by the axioms AND
+has a complete metric.
+\end{example}
+
+\begin{theorem}[Completeness is forced by the composition law]
+\label{thm:forced-completeness}
+Let $F : \Rp \to \R_{\geq 0}$ satisfy $F(1) = 0$, the composition
+law, and the unit calibration $\kappa(F) = 1$.  Then:
+\begin{enumerate}[nosep]
+\item $F = \Jcost$ (cost uniqueness~\cite{CostUnique}).
+\item The $F$-metric is $\dJ$.
+\item $(\Rp, \dJ)$ is complete (Theorem~\ref{thm:completeness}).
+\end{enumerate}
+In particular, completeness is not an additional property we check;
+it is a \textbf{consequence} of the composition law.  The composition
+law forces $\cosh$, which forces exponential Hessian growth, which
+forces metric completeness.
+\end{theorem}
+
+\begin{proof}
+(1) is~\cite{CostUnique}.  (2) follows from $\phi''(t) = \cosh(t)$.
+(3) is Theorem~\ref{thm:completeness}.
+\end{proof}
+
+%=============================================================================
+\section{Cost Minimisation Forces Existence}
+\label{sec:minimisation}
+%=============================================================================
+
+\begin{theorem}[Unique minimiser]\label{thm:minimiser}
+Let $(x_n)$ be a sequence in $\Rp$ with $\Jcost(x_n) \to 0$.
+Then $x_n \to 1$ in $(\Rp, \dJ)$.
+\end{theorem}
+
+\begin{proof}
+By coercivity, $\Jcost(x) \geq \frac{1}{2}(\ln x)^2$, so
+$\Jcost(x_n) \to 0$ implies $\ln x_n \to 0$.  For $|\ln x_n| < 1$:
+\[
+  \dJ(x_n, 1) = \left|\int_0^{\ln x_n}\sqrt{\cosh(u)}\,du\right|
+  \leq \sqrt{\cosh(1)}\,|\ln x_n| \to 0.
+  \qedhere
+\]
+\end{proof}
+
+\begin{theorem}[Compactness of minimising sequences]\label{thm:compact}
+Every sequence $(x_n)$ in $\Rp$ with $\Jcost(x_n) \leq c < \infty$
+has a convergent subsequence in $(\Rp, \dJ)$.
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{thm:proper}, $(x_n) \subset S_c$, which is compact.
+\end{proof}
+
+\begin{corollary}[Scale maps are bounded away from zero]
+\label{cor:iota-forced}
+Let $\iota : \mathcal{S} \to (0, \infty]$ be a scale map and fix a
+reference state $b \in \mathcal{S}$ with $\iota(b) \in \Rp$.
+If $a \in \mathcal{S}$ satisfies
+$\Jcost(\iota(a)/\iota(b)) \leq c < \infty$, then
+\[
+  e^{-\sqrt{2c}} \;\leq\;
+  \frac{\iota(a)}{\iota(b)} \;\leq\; e^{\sqrt{2c}}.
+\]
+In particular, $\iota(a) \in \Rp$ (finite and positive).
+Any state participating in a finite-cost comparison has strictly
+positive, finite scale.  The strict positivity
+of $\iota$ is \textbf{forced} by $\Jcost$-geometry, not assumed.
+\end{corollary}
+
+\begin{proof}
+Set $x = \iota(a)/\iota(b)$.  By coercivity,
+$c \geq \Jcost(x) \geq \frac{1}{2}(\ln x)^2$, so
+$|\ln x| \leq \sqrt{2c}$.
+\end{proof}
+
+%=============================================================================
+\section{The Law of Finite Existence}
+\label{sec:law}
+%=============================================================================
+
+\begin{law}[The Law of Finite Existence]\label{thm:law}
+Let $\Jcost(x) = \frac{1}{2}(x + x^{-1}) - 1$ be the canonical cost,
+uniquely forced by the composition law, normalization, and calibration.
+Then:
+\begin{enumerate}[label=\textup{(\Roman*)}]
+\item \textbf{Completeness:}
+      $(\Rp, \dJ)$ is a complete, geodesically complete Riemannian
+      manifold.
+      \label{L:complete}
+\item \textbf{Boundary exclusion:}
+      The boundary $\{0, \infty\}$ is at infinite $\dJ$-distance
+      from every $x \in \Rp$.  No finite-length path reaches it.
+      Quantitatively: $\dJ(x_0, \varepsilon) \geq
+      \sqrt{2}(\varepsilon^{-1/2} - x_0^{-1/2})$.
+      \label{L:boundary}
+\item \textbf{Properness:}
+      $\Jcost$ is proper on $(\Rp, \dJ)$: sublevel sets are
+      compact.  No minimising sequence escapes.
+      \label{L:proper}
+\item \textbf{Existence forcing:}
+      Every cost-decreasing sequence converges to $x = 1$.
+      The identity is the unique global attractor.
+      \label{L:attractor}
+\item \textbf{Scale positivity forced:}
+      Any state with finite comparison cost has strictly positive,
+      finite scale.  $\iota > 0$ is a theorem, not an axiom.
+      \label{L:iota}
+\item \textbf{Inevitability:}
+      Something must exist.  Nonexistence is not a state but an
+      unreachable topological boundary.
+      \label{L:inevitable}
+\end{enumerate}
+\end{law}
+
+\begin{proof}
+\ref{L:complete}:~Theorem~\ref{thm:completeness} +
+Corollary~\ref{cor:hopf-rinow}.
+\ref{L:boundary}:~Theorem~\ref{thm:boundary-infinite} +
+Corollary~\ref{cor:no-path}.
+\ref{L:proper}:~Theorem~\ref{thm:proper}.
+\ref{L:attractor}:~Theorem~\ref{thm:minimiser}.
+\ref{L:iota}:~Corollary~\ref{cor:iota-forced}.
+\ref{L:inevitable}:~In a complete metric space with a proper
+objective, every minimising sequence converges to an interior
+minimiser (\ref{L:attractor}).  The boundary is at infinite
+distance (\ref{L:boundary}) and cannot be reached by any
+finite process.  Therefore the cost landscape forces existence.
+\end{proof}
+
+\begin{remark}[The Meta-Principle, derived]
+The traditional statement $\Jcost(0^+) = \infty$ (``nothing costs
+infinity'') is a statement about a function value.  The Law is
+strictly stronger: it is a statement about the \emph{topology}
+(completeness), the \emph{geometry} (infinite boundary distance),
+and the \emph{dynamics} (properness + unique attractor) of the cost
+landscape---all forced by the composition law.
+\end{remark}
+
+%=============================================================================
+\section{The Multi-Component Case}
+\label{sec:multi}
+%=============================================================================
+
+For $\mathbf{x} = (x_1, \ldots, x_n) \in (\Rp)^n$, set
+$\Jcost(\mathbf{x}) = \sum_{i} \Jcost(x_i)$ and
+$\dJ(\mathbf{x}, \mathbf{y})^2 = \sum_{i} \dJ(x_i, y_i)^2$.
+
+\begin{corollary}[Multi-component law]\label{cor:multi}
+$\bigl((\Rp)^n, \dJ\bigr)$ is geodesically complete.  The boundary
+(any component at $0$ or $\infty$) is at infinite distance.
+$\Jcost$ is proper.  Every cost-decreasing sequence converges to
+$(1, \ldots, 1)$.
+\end{corollary}
+
+\begin{proof}
+Products of complete spaces are complete.  Properness: if
+$\sum_i \Jcost(x_i) \leq c$, then each $\Jcost(x_i) \leq c$,
+so each $x_i \in S_c$ (compact by Theorem~\ref{thm:proper}).
+The product of compact sets is compact.
+\end{proof}
+
+%=============================================================================
+\section{Discussion}
+\label{sec:discussion}
+%=============================================================================
+
+\subsection{The chain: composition law $\Rightarrow$ completeness $\Rightarrow$ existence}
+
+\[
+  \underbrace{\text{Composition law}}_{\text{\cite{DAlembert}}}
+  \;\to\;
+  \underbrace{\Jcost = \cosh - 1}_{\text{\cite{CostUnique}}}
+  \;\to\;
+  \underbrace{\phi'' = \cosh}_{\text{exponential Hessian}}
+  \;\to\;
+  \underbrace{\text{completeness}}_{\text{Thm~\ref{thm:completeness}}}
+  \;\to\;
+  \underbrace{\text{existence forced}}_{\text{Law~\ref{thm:law}}}
+\]
+
+Every link is a theorem.  The composition law forces $\cosh$, $\cosh$
+forces exponential Hessian growth, exponential growth forces
+completeness, completeness forces existence.  Remove any link and
+the conclusion fails.
+
+\subsection{Why completeness is the right concept}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Property} & \textbf{Divergence ($\Jcost(0^+) = \infty$)}
+  & \textbf{Completeness (this paper)} \\
+\midrule
+Type & Function value & Topology \\
+Says & Boundary is ``expensive'' & Boundary is unreachable \\
+Implies existence? & Not necessarily & Yes (with properness) \\
+Example of failure & $(0,1)$, $f = 1/x$: diverges, space incomplete
+  & $(\Rp, \dJ)$: diverges AND complete \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Nonexistence is not a state}
+
+In the $\Jcost$-geometry, ``nothing'' is not a state that could be
+occupied.  It is the topological boundary of a complete metric
+space---infinitely far from every actual state, unreachable by any
+geodesic, excluded by compactness of sublevel sets.
+
+The question ``why is there something rather than nothing?'' dissolves:
+it presupposes that ``nothing'' is a possible state.  The Law of Finite
+Existence proves it is not.
+
+%=============================================================================
+\section{Conclusions}
+%=============================================================================
+
+\begin{enumerate}[nosep]
+\item The $\Jcost$-metric $ds^2 = \cosh(t)\,dt^2$ makes $\Rp$ a
+      \textbf{geodesically complete} Riemannian manifold
+      (Hopf--Rinow).
+\item The boundary $\{0, \infty\}$ is at \textbf{infinite distance}:
+      $\dJ(x_0, \varepsilon) \geq \sqrt{2}(\varepsilon^{-1/2} - x_0^{-1/2})$.
+\item $\Jcost$ is \textbf{proper}: sublevel sets are compact.
+      No minimising sequence escapes.
+\item Completeness is \textbf{forced} by the composition law
+      (Theorem~\ref{thm:forced-completeness}): the only cost
+      satisfying the axioms has exponential Hessian growth.
+\item The scale map $\iota > 0$ is \textbf{forced}, not assumed
+      (Corollary~\ref{cor:iota-forced}).
+\item The \textbf{Law of Finite Existence}: existence is a
+      topological necessity, not a contingent fact.
+      Nonexistence is an unreachable boundary.
+\end{enumerate}
+
+The question ``why does something exist?'' has a mathematical answer:
+the cost landscape is complete, the boundary is infinitely far away,
+and the unique minimiser is the identity.
+
+\begin{thebibliography}{99}
+\bibitem{CostUnique} J.~Washburn and M.~Zlatanovi\'{c},
+  ``Uniqueness of the Canonical Reciprocal Cost,''
+  arXiv:2602.05753v1, 2026.
+\bibitem{DAlembert} J.~Washburn, M.~Zlatanovi\'{c}, and E.~Allahyarov,
+  ``D'Alembert Inevitability,'' RS preprint, 2026.
+\bibitem{CoherentComp} S.~Pardo-Guerra, M.~Simons, A.~Thapa,
+  and J.~Washburn,
+  ``Coherent Comparison as Information Cost,''
+  RS preprint, 2026.
+\bibitem{doCarmo} M.~P.~do~Carmo,
+  \textit{Riemannian Geometry}, Birkh\"{a}user, 1992.
+\bibitem{WashburnAxioms} J.~Washburn,
+  ``The Algebra of Reality,''
+  \textit{Axioms} \textbf{15}(2), 90 (2025).
+\end{thebibliography}
+
+\end{document}

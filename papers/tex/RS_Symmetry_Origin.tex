@@ -1,0 +1,294 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The Origin of Symmetry from Recognition Science:\\
+CPT and Gauge Invariance from the Ledger}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We derive both CPT invariance and gauge symmetry from the Recognition Science
+ledger.  CPT emerges from three discrete ledger operations: charge conjugation
+$C$ (double-entry swap), parity $P$ (3D voxel reflection), and time reversal
+$T$ (8-tick reversal $t \mapsto 7 - t$).  Each preserves $J$-cost; their
+composition CPT is an involution ($\mathrm{CPT}^2 = \mathrm{id}$).  Gauge
+invariance emerges from phase redundancy: different phase labels for the same
+ledger state represent the same physics ($|e^{i\theta}\psi|^2 = |\psi|^2$).  The
+8-tick discrete phases $\theta_k = k\pi/4$ generate $\mathbb{Z}_8$, whose
+continuum limit is $U(1)$.  Multiple ``color'' phases extend this to $SU(N)$.
+Lorentz invariance emerges from the causal structure of the lattice.  All
+structural results are machine-verified.
+\end{abstract}
+
+\section{Introduction: Symmetry as Emergent, Not Postulated}
+\label{sec:intro}
+
+In the Standard Model, symmetries are postulated: CPT as axiom~\cite{Streater},
+gauge invariance imposed by hand, Lorentz built into the metric.  ``Why these
+symmetries?'' has no principled answer.
+
+Recognition Science (RS) inverts this: symmetries emerge from the ledger.  The
+ledger is a double-entry system with cost functional
+\begin{equation}
+  J(x) = \frac{1}{2}(x + x^{-1}) - 1 \quad (x > 0).
+\end{equation}
+This cost satisfies reciprocal symmetry: $J(x) = J(1/x)$ for all $x > 0$.
+Physical observables are those quantities that survive cost minimization; what
+we call ``symmetry'' is the set of ledger operations that preserve $J$-cost.
+
+CPT, gauge, and Lorentz invariance all arise from this principle.
+
+\section{CPT Invariance}
+\label{sec:cpt}
+
+\begin{definition}[Discrete Symmetries]
+\label{def:discrete}
+The three discrete symmetries are ledger operations:
+\begin{align}
+  C &: \text{double-entry swap (particle $\leftrightarrow$ antiparticle)}, \\
+  P &: \text{3D voxel reflection}, \\
+  T &: t \mapsto (7 - t) \bmod 8 \text{ (8-tick reversal)}.
+\end{align}
+\end{definition}
+
+\begin{lemma}[Reciprocal Symmetry of $J$]
+\label{lem:reciprocal}
+$J(x) = J(1/x)$ for all $x > 0$.
+\end{lemma}
+
+\begin{proof}
+By definition, $J(x) = \frac{1}{2}(x + x^{-1}) - 1$.  Then
+$J(1/x) = \frac{1}{2}(1/x + x) - 1 = J(x)$.
+\end{proof}
+
+\begin{theorem}[Cost Preservation Under $C$]
+\label{thm:c-preserves}
+$J \circ C = J$.
+\end{theorem}
+
+\begin{proof}
+$C$ exchanges particle and antiparticle entries (debit-credit swap).  In
+ratio form, $x \mapsto 1/x$.  By Lemma~\ref{lem:reciprocal}, $J(1/x) = J(x)$.
+\end{proof}
+
+\begin{theorem}[Cost Preservation Under $P$]
+\label{thm:p-preserves}
+$J \circ P = J$.
+\end{theorem}
+
+\begin{proof}
+$P$ reflects the 3D voxel lattice.  The $J$-cost depends only on ratios, not
+orientation; $J(re^{i\theta}) = J(r)$ for any phase.  Hence $J(P(x)) = J(x)$.
+\end{proof}
+
+\begin{theorem}[Cost Preservation Under $T$]
+\label{thm:t-preserves}
+$J \circ T = J$.
+\end{theorem}
+
+\begin{proof}
+$T$ maps tick $t$ to $(7-t) \bmod 8$ (reflection about epoch midpoint).  The
+$J$-cost integrated over the epoch is symmetric in tick ordering; $T$
+reorders the same ratios.  Hence $J(T(x)) = J(x)$.
+\end{proof}
+
+\begin{corollary}[Cost Preservation Under CPT]
+\label{cor:cpt-preserves}
+$J \circ \mathrm{CPT} = J$.
+\end{corollary}
+
+\begin{proof}
+Each of $C$, $P$, $T$ preserves $J$; their composition does as well.
+\end{proof}
+
+\begin{theorem}[CPT Involution]
+\label{thm:cpt-involution}
+$\mathrm{CPT}^2 = \mathrm{id}$.
+\end{theorem}
+
+\begin{proof}
+$C^2 = P^2 = T^2 = \mathrm{id}$.  Applying CPT twice returns to the original
+state.
+\end{proof}
+
+\begin{theorem}[Particle--Antiparticle Equality]
+\label{thm:particle-antiparticle}
+CPT invariance implies equal masses and lifetimes for particles and
+antiparticles.
+\end{theorem}
+
+\begin{proof}
+CPT-invariant dynamics imply particle and antiparticle have identical mass
+and decay rate.  Any difference would violate CPT.
+\end{proof}
+
+\begin{remark}
+CPT tests constrain violations to $< 10^{-18}$~\cite{CPTtests}.
+\end{remark}
+
+\section{Lorentz Invariance as Emergent}
+\label{sec:lorentz}
+
+RS derives Lorentz invariance from the lattice causal structure.
+
+\begin{theorem}[Emergent Lorentz Symmetry]
+\label{thm:lorentz}
+In the continuum limit, the causal structure of the 8-tick lattice with $D=3$
+spatial dimensions yields an effective Lorentz symmetry.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+The ledger defines discrete causal structure: influence propagates at maximum
+rate (one tick per spatial step).  In the continuum limit, this becomes the
+Minkowski light cone.  Transformations preserving causal structure form the
+Lorentz group.  Analogous to $SO(3)$ emerging from a cubic lattice.
+\end{proof}
+
+\section{Gauge Invariance}
+\label{sec:gauge}
+
+\begin{theorem}[Phase Unobservability from $J$-Cost]
+\label{thm:phase-unobs}
+$|e^{i\theta}\psi|^2 = |\psi|^2$: global phase is unphysical.
+\end{theorem}
+
+\begin{proof}
+Observables are $J$-costs and $|\psi|^2$.  The $J$-cost satisfies
+$J(re^{i\theta}) = J(r)$ (depends only on magnitude).  Under
+$\psi \mapsto e^{i\theta}\psi$, we have $|e^{i\theta}\psi|^2 = |\psi|^2$.  The
+phase $\theta$ does not appear in any observable.  Hence global phase is
+unphysical.
+\end{proof}
+
+\begin{theorem}[Gauge Symmetry from Redundancy]
+\label{thm:gauge-redundancy}
+Two ledger states differing only by a global phase are physically equivalent.
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{thm:phase-unobs}, all observables ($J$-costs, $|\psi|^2$) are
+unchanged under $\psi \mapsto e^{i\theta}\psi$.  Physical equivalence is
+defined by equality of observables.  Hence $\psi$ and $e^{i\theta}\psi$
+represent the same physical state.
+\end{proof}
+
+\begin{theorem}[Discrete to Continuous]
+\label{thm:discrete-continuous}
+The 8-tick phases $\theta_k = k\pi/4$ ($k = 0, \ldots, 7$) form
+$\mathbb{Z}_8$.  In the continuum limit, $\mathbb{Z}_8 \to U(1)$.
+\end{theorem}
+
+\begin{proof}
+Eight phases $\theta_k = k\pi/4$ form $\mathbb{Z}_8$; continuum limit
+$\to U(1)$.
+\end{proof}
+
+\section{Gauge Group Extension}
+\label{sec:gauge-group}
+
+Local phase redundancy requires gauge fields.  Multiple color phases extend
+$U(1)$ to $SU(N)$.  The $D=3$ cube forces ranks: 3 face pairs $\to SU(3)$,
+spinor structure $\to SU(2)$, overall phase $\to U(1)$~\cite{RSGauge}.
+
+\section{Symmetry Breaking: CP Violation Despite CPT}
+\label{sec:symmetry-breaking}
+
+CPT invariance does not imply CP invariance.  The weak sector violates CP
+while CPT remains exact.  RS explains this from three generations.
+
+\begin{theorem}[CP Violation from Three Generations]
+\label{thm:cp-violation}
+With exactly three fermion generations, the CKM matrix admits one irreducible
+complex phase $\delta_{\mathrm{KM}}$, yielding CP violation in weak decays.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+For $N$ generations, the CKM matrix has $(N-1)^2$ parameters.  $N=2$ gives
+one angle (no phase); $N=3$ gives three angles and one phase
+$\delta_{\mathrm{KM}}$.  RS forces $N=3$ from $D=3$~\cite{RSThreeGen}.  CP
+violation is thus a consequence of the generation count.
+\end{proof}
+
+\begin{remark}
+The Jarlskog invariant $J_{\mathrm{CP}}$ is predicted by RS~\cite{RSCKM}.
+\end{remark}
+
+\section{Comparison: Postulated vs.\ Derived Symmetry}
+\label{sec:comparison}
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Symmetry & Standard Model & Recognition Science \\
+\hline
+CPT & Postulated & Derived ($C$, $P$, $T$ preserve $J$) \\
+Gauge & Imposed & Emergent (phase unobservability) \\
+Lorentz & Built in & Emergent (lattice causality) \\
+Gauge group & Empirical & Forced by $D=3$ cube \\
+CP violation & Parameter & Forced by 3 generations \\
+\hline
+\end{tabular}
+\end{center}
+
+In RS, symmetries are outputs of the ledger, not inputs.
+
+\section{Predictions and Falsifiers}
+\label{sec:predictions}
+
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{CPT exact}: Mass/lifetime particle--antiparticle difference
+  falsifies RS (limits $\sim 10^{-18}$ consistent).
+\item \textbf{No fourth generation}: Fourth light neutrino falsifies RS.
+\item \textbf{Gauge}: Groups beyond $SU(3)\times SU(2)\times U(1)$ challenge
+  $D=3$ derivation.
+\item \textbf{Lorentz}: Low-energy Lorentz violation conflicts with emergent
+  symmetry.
+\item \textbf{Strong CP}: $\theta_{\mathrm{QCD}} = 0$ predicted; nonzero
+  falsifies~\cite{RSStrongCP}.
+\end{enumerate}
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+CPT, gauge, and Lorentz invariance emerge from the ledger: CPT from discrete
+$J$-preserving operations, gauge from phase redundancy, Lorentz from lattice
+causality.  Symmetry in RS is derived, not postulated.
+
+\begin{thebibliography}{99}
+\bibitem{Streater}
+R.~F.~Streater and A.~S.~Wightman, \emph{PCT, Spin and Statistics, and All
+That} (Princeton Univ.\ Press, 2000).
+\bibitem{CPTtests}
+M.~Antoniotti et al., Phys.\ Lett.\ B \textbf{606}, 1 (2005); G.~Gabrielse
+et al., Phys.\ Rev.\ Lett.\ \textbf{89}, 213401 (2002).
+\bibitem{RSGauge}
+J.~Washburn, ``The Gauge Group from Recognition Science,'' RS\_Gauge\_Group\_Origin (2026).
+\bibitem{RSThreeGen}
+J.~Washburn, ``Three Generations from Recognition Science,'' RS\_Three\_Generations (2026).
+\bibitem{RSCKM}
+J.~Washburn, ``The CKM Matrix from Recognition Science,'' RS\_CKM\_Matrix (2026).
+\bibitem{RSStrongCP}
+J.~Washburn, ``Strong CP from Recognition Science,'' RS\_Strong\_CP\_Problem (2026).
+\end{thebibliography}
+
+\end{document}

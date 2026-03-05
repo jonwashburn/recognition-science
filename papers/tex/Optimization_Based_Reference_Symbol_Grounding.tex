@@ -1,0 +1,248 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,amsthm,amssymb,mathtools}
+\usepackage{geometry}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+
+\geometry{margin=1in}
+
+% Theorem Environments
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+% Notation
+\newcommand{\Rp}{\mathbb{R}_{>0}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Mean}{\mathrm{Mean}}
+
+\newcommand{\Sym}{\mathcal{S}}
+\newcommand{\Obj}{\mathcal{O}}
+\newcommand{\iotaS}{\iota_{\Sym}}
+\newcommand{\iotaO}{\iota_{\Obj}}
+
+\newcommand{\J}{J}
+\newcommand{\RefCost}{c_{\mathcal{R}}}
+\newcommand{\logdist}{d_{\log}}
+
+\title{\textbf{Optimization-Based Reference:}\\
+\large A Cost-Theoretic Resolution of the Symbol Grounding Problem}
+\author{Jonathan Washburn\\Recognition Physics Institute}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The Symbol Grounding Problem asks how symbols can be \emph{about} things without an external interpreter. We give a resolution inside a simple, explicit optimization semantics. Building on the reciprocal convex cost characterization of Washburn--Rahnamai Barghi (accepted, 2026), we treat reference as \emph{ratio matching}: a symbol $s$ ``means'' an object $o$ when $o$ minimizes a universal mismatch penalty
+\[
+\RefCost(s,o)=\J\!\left(\frac{\iotaS(s)}{\iotaO(o)}\right),
+\qquad
+\J(x)=\frac12(x+x^{-1})-1=\cosh(\log x)-1.
+\]
+We then define a \emph{symbol} as a meaning-bearing configuration that strictly \emph{compresses} its referent: $\J(\iotaS(s))<\J(\iotaO(o))$. Under mild attainment hypotheses, meanings exist; for finite dictionaries, decision boundaries occur at geometric means and meanings are stable away from those boundaries. Most importantly, we prove a simple forcing principle: every nonzero-cost object admits a strictly cheaper mediating code given by a geometric mean, so in any system that minimizes total cost, grounded symbols are not conventions but thermodynamic necessities. This provides a clean reference-theoretic foundation for certificate-based semantics such as the Universal Light Language (ULL).
+\end{abstract}
+
+\section{Introduction}
+
+The Symbol Grounding Problem (SGP) \cite{harnad1990} highlights an apparent regress: purely formal symbols are defined only in terms of other symbols, so where does meaning ``touch the world''? Many responses appeal to extra ingredients (intentions, communities, embodiment), but those ingredients typically reintroduce an interpreter-like primitive.
+
+This paper isolates a different missing ingredient: \textbf{an intrinsic cost functional}. If configurations carry a physically meaningful cost and system dynamics are cost-minimizing, then semantic relations can be defined \emph{internally} as minimizers of a fixed objective. This aligns with the ``Cost-First'' paradigm of Recognition Science \cite{washburn2025spec}, where ontology is derived from the requirement that existence must have finite cost.
+
+\paragraph{What is proved.}
+We work in an explicitly stated model:
+\begin{itemize}
+  \item objects and symbols each come with a positive \emph{scale map} (a ``size/complexity'' in common currency),
+  \item mismatch cost is a universal function of the scale ratio,
+  \item meaning is \emph{argmin} of mismatch cost, and
+  \item ``being a symbol'' additionally requires \emph{compression} (lower intrinsic cost than the referent).
+\end{itemize}
+Within this model we prove existence and stability results, and we show a forcing mechanism that removes the homunculus: grounded symbols arise because they reduce total cost.
+
+\section{The canonical reciprocal mismatch cost}
+
+We take as input a mismatch penalty $\J:(0,\infty)\to[0,\infty)$ satisfying inversion symmetry, strict convexity, normalization at $1$, and a multiplicative d'Alembert identity (see \cite{washburn-rahnamai2026} for precise axioms).
+
+\begin{theorem}[Characterization of reciprocal convex mismatch costs {\cite[Appendix A]{washburn-rahnamai2026}}]\label{thm:J-characterization}
+Under the hypotheses of \cite{washburn-rahnamai2026}, there exists $a>0$ such that
+\[
+\J(x)=\cosh(a\log x)-1=\tfrac12(x^{a}+x^{-a})-1,\qquad x>0.
+\]
+Moreover, the parameter $a$ can be absorbed into the choice of scale maps (raising scales to the power $a$), so one may normalize to $a=1$ without loss of generality.
+\end{theorem}
+
+Throughout we use this normalized form:
+\begin{equation}\label{eq:J}
+\J(x)=\frac12(x+x^{-1})-1=\cosh(\log x)-1,\qquad x>0.
+\end{equation}
+
+\section{Costed spaces, reference, and meaning}
+
+\begin{definition}[Costed spaces]
+A \emph{costed space} is a pair $(C,\iota)$ where $C$ is a set and $\iota:C\to\Rp$ is a scale map. The induced intrinsic cost is
+\[
+J_C(c):=\J(\iota(c))\qquad(c\in C),
+\]
+where $\J$ is the canonical mismatch cost \eqref{eq:J}.
+\end{definition}
+
+We write $\Sym$ for a symbol space with scale map $\iotaS:\Sym\to\Rp$, and $\Obj$ for an object space with scale map $\iotaO:\Obj\to\Rp$.
+
+\begin{definition}[Ratio-induced reference cost]
+The \emph{reference cost} of using $s\in\Sym$ to refer to $o\in\Obj$ is
+\begin{equation}\label{eq:refcost}
+\RefCost(s,o):=\J\!\left(\frac{\iotaS(s)}{\iotaO(o)}\right).
+\end{equation}
+\end{definition}
+
+\begin{definition}[Meaning as minimization]
+The \emph{meaning set} of a symbol $s\in\Sym$ is
+\[
+\Mean(s):=\arg\min_{o\in\Obj}\ \RefCost(s,o),
+\]
+which may be empty if the minimum is not attained.
+\end{definition}
+
+\begin{lemma}[Log-distance reduction]\label{lem:log-distance}
+Fix $s\in\Sym$. Minimizers of $o\mapsto\RefCost(s,o)$ coincide with minimizers of the log-distance
+\[
+\logdist(s,o):=\bigl|\log \iotaS(s)-\log \iotaO(o)\bigr|.
+\]
+\end{lemma}
+
+\begin{proof}
+Write $u(o):=\log(\iotaS(s)/\iotaO(o))$. Then $\RefCost(s,o)=\cosh(u(o))-1$, and $\cosh(t)-1$ is strictly increasing in $|t|$ for $t\in\R$. Therefore minimizing $\RefCost(s,o)$ is equivalent to minimizing $|u(o)|=\logdist(s,o)$.
+\end{proof}
+
+\begin{proposition}[Existence of meanings under attainment]\label{prop:meaning-existence}
+Assume $\Obj$ is compact and $\iotaO:\Obj\to\Rp$ is continuous. Then for every $s\in\Sym$, $\Mean(s)$ is nonempty.
+\end{proposition}
+
+\begin{proof}
+By continuity of $\iotaO$, the map $o\mapsto \iotaS(s)/\iotaO(o)$ is continuous into $\Rp$, and $\J$ is continuous on $\Rp$, so $o\mapsto\RefCost(s,o)$ is continuous on compact $\Obj$ and hence attains its minimum.
+\end{proof}
+
+\section{Symbols as cost-minimizing compression}
+
+Meaning alone does not make something a symbol (a perfect duplicate of an object may ``mean'' it but does not compress it). We therefore add a compression predicate.
+
+\begin{definition}[Symbol predicate]\label{def:symbol-predicate}
+A configuration $s\in\Sym$ is a \emph{symbol for} $o\in\Obj$ if:
+\begin{enumerate}
+  \item \textbf{Reference:} $o\in\Mean(s)$;
+  \item \textbf{Compression:} $J_{\Sym}(s) < J_{\Obj}(o)$, i.e.\ $\J(\iotaS(s))<\J(\iotaO(o))$.
+\end{enumerate}
+\end{definition}
+
+\begin{remark}[Grounding in this model]
+In this framework, the SGP is resolved by \emph{eliminating interpretive primitives} from the definition of symbolhood. ``Aboutness'' becomes an optimization statement (argmin), and ``symbol'' becomes a strict inequality of intrinsic costs.
+\end{remark}
+
+\section{Finite dictionaries: geometric-mean boundaries and stability}
+
+For a finite object dictionary, the meaning rule produces an explicit decision geometry in scale space.
+
+\begin{proposition}[Geometric-mean boundaries {\cite[Theorem 7.3]{washburn-rahnamai2026}}]\label{prop:geom-mean}
+Let $\Obj=\{o_1,\dots,o_n\}$ be finite, with strictly increasing scales $0<y_1<\cdots<y_n$ where $y_i:=\iotaO(o_i)$. Consider symbols whose scale is a free variable $x:=\iotaS(s)\in\Rp$. Then for each $k\in\{1,\dots,n\}$, the object $o_k$ is the unique meaning of $s$ whenever
+\[
+\sqrt{y_{k-1}y_k}\;<\;x\;<\;\sqrt{y_k y_{k+1}},
+\]
+with the conventions $y_0:=0$ and $y_{n+1}:=\infty$. In particular, the decision boundary between $o_k$ and $o_{k+1}$ occurs at the geometric mean $\sqrt{y_k y_{k+1}}$.
+\end{proposition}
+
+\begin{corollary}[Local stability away from boundaries]\label{cor:stability}
+In the setting of Proposition~\ref{prop:geom-mean}, if $x$ lies a positive margin away from the boundary points, then $\Mean(s)$ is locally constant under small perturbations of $x$.
+\end{corollary}
+
+\section{A forcing principle: cheaper mediating codes always exist}
+
+We now state a simple inequality that captures a ``thermodynamic'' forcing mechanism for symbols.
+
+\begin{theorem}[Geometric-mean mediation strictly lowers total cost]\label{thm:mediation}
+Let $y\in\Rp$ and define the mediator scale $x:=\sqrt{y}$. Then
+\[
+\J(x)+\J(x/y)\le \J(y),
+\]
+with equality if and only if $y=1$. Equivalently, for $y\neq 1$,
+\[
+2\J(\sqrt{y})<\J(y).
+\]
+\end{theorem}
+
+\begin{proof}
+Write $y=t^2$ with $t>0$. Using \eqref{eq:J},
+\[
+\J(t^2)-2\J(t)
+=\left(\frac{t^2+t^{-2}}{2}-1\right)-\left((t+t^{-1})-2\right)
+=\frac{(t-1)^2+(t^{-1}-1)^2}{2}\ge 0,
+\]
+with equality iff $t=1$, i.e.\ $y=1$.
+\end{proof}
+
+\begin{corollary}[Why symbols are ``forced'' in cost-minimizing systems]\label{cor:forced}
+Suppose a system may represent an object of scale $y$ either directly (intrinsic cost $\J(y)$) or via a mediator code of scale $x$ plus a translation/mismatch step (total cost $\J(x)+\J(x/y)$). Then any cost-minimizing dynamics strictly prefers mediation for every $y\neq 1$; hence the system will generate internal surrogate configurations (codes) rather than always processing objects ``as themselves.'' This is a formal, non-mentalistic grounding mechanism.
+\end{corollary}
+
+\begin{remark}[Connection to sequential mediation]
+Theorem~\ref{thm:mediation} is the simplest instance of a general sequential mediation principle: optimal intermediate representations occur at geometric means in scale space; see \cite[Section 5.2]{washburn-rahnamai2026}.
+\end{remark}
+
+\section{Relation to ULL (certificate-based semantics)}
+
+The Universal Light Language (ULL) paper \cite{washburn2025ull} uses the same canonical mismatch cost $\J$ and defines meanings by a certificate pipeline that (i) extracts invariants, (ii) enforces legality constraints, and (iii) selects canonical normal forms under cost and neutrality constraints. The present paper provides a minimal reference-theoretic layer for that program:
+\begin{itemize}
+  \item \textbf{Intrinsic meaning}: meanings are minimizers of a fixed objective, not interpreter-dependent assignments.
+  \item \textbf{Grounded symbols}: tokens qualify as symbols precisely when they both minimize mismatch and compress higher-cost objects (Definition~\ref{def:symbol-predicate}).
+  \item \textbf{Stability}: finite dictionaries yield explicit margins (Corollary~\ref{cor:stability}), aligning with adversarial-margin reporting in certificate systems.
+  \item \textbf{Periodic Table justification}: The forcing principle (Theorem~\ref{thm:mediation}) implies that stable, low-cost ``atoms'' of meaning must exist to mediate reference to complex objects. This provides the theoretical necessity for the 20 canonical WTokens discovered in ULL.
+\end{itemize}
+
+\section{Machine Verification}
+
+The core definitions and theorems of this paper have been formalized in the Lean 4 theorem prover as part of the \texttt{IndisputableMonolith} repository. Key modules include:
+
+\begin{itemize}
+    \item \texttt{IndisputableMonolith.Foundation.Reference}: Formalizes costed spaces, reference structures, and the meaning predicate.
+    \item \texttt{IndisputableMonolith.Cost.Convexity}: Proves the strict convexity of the canonical cost $J$.
+    \item \texttt{IndisputableMonolith.Foundation.Reference.Forcing}: Formalizes the mediation forcing principle (Theorem~\ref{thm:mediation}).
+\end{itemize}
+
+This mechanization ensures that the ``grounding'' mechanism is not merely a verbal argument but a logical consequence of the cost axioms.
+
+\section{Conclusion}
+
+Within a fully explicit optimization semantics, we defined meaning as cost minimization and symbolhood as meaning plus compression. Using the canonical reciprocal cost characterized in \cite{washburn-rahnamai2026}, we obtained geometric-mean decision boundaries and a simple forcing theorem showing that cheaper mediating codes always exist. In this sense, grounding is not an extra metaphysical ingredient: it is the economical outcome of a universal mismatch geometry.
+
+\begin{thebibliography}{99}
+
+\bibitem{harnad1990}
+S. Harnad.
+\newblock The symbol grounding problem.
+\newblock {\em Physica D: Nonlinear Phenomena}, 42(1--3):335--346, 1990.
+
+\bibitem{washburn-rahnamai2026}
+J. Washburn and A. Rahnamai Barghi.
+\newblock {\em Reciprocal Convex Costs for Ratio Matching: Functional-Equation Characterization and Decision Geometry}.
+\newblock Accepted for publication, 2026. Preprint PDF available in this repository.
+
+\bibitem{washburn2025ull}
+J. Washburn.
+\newblock {\em The Universal Light Language: A Periodic Table of Meaning}.
+\newblock 2025. Manuscript; see \texttt{papers/tex/ULL-Periodic-Table-Meaning.tex}.
+
+\bibitem{washburn2025spec}
+J. Washburn.
+\newblock {\em Recognition Science Architecture Spec v2.3}.
+\newblock 2025. Technical Specification.
+
+\end{thebibliography}
+
+\end{document}
+

@@ -1,0 +1,673 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{axiom_rs}{Axiom}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Causation, Probability, and Ledger Realism\\
+from Cost Geometry}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We derive the nature of causation, the meaning of probability, and
+the structure of temporal reality from the cost functional
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.  Causation is identified with
+the ledger update: event $C$ causally precedes event $E$ if $C$ occurs
+at an earlier tick and $E$'s defect does not exceed $C$'s.  This causal
+relation is proved to be asymmetric, transitive, and irreversible.
+Probability is the fiber weight of a finite-resolution projection:
+the ledger is deterministic (unique $J$-minimizer at each tick), but any
+observer with resolution $n$ partitions the state space into $n$ fibers,
+and the natural measure on fibers constitutes probability.  This makes
+probability relational (observer-dependent) and epistemic (about what
+can be known), not ontic (about what exists).  Finally, we establish
+Ledger Realism as an alternative to both the block universe and pure
+presentism: the past (committed entries) is real, the present (current
+tick) is privileged, and the future (uncommitted entries) is genuinely
+open.  Hume's problem of causation is dissolved: the causal connection
+is not a mysterious ``necessary connexion'' but a provable structural
+relation on the ledger.  \end{abstract}
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+Three of the deepest questions in the philosophy of science concern
+causation, probability, and the nature of temporal reality.
+
+\textbf{Causation.}  Hume~\cite{Hume1748} argued that we never observe
+a ``necessary connexion'' between cause and effect---only constant
+conjunction.  This has led to a spectrum of theories: regularity
+accounts~\cite{Hume1748}, counterfactual analyses~\cite{Lewis1973},
+interventionist frameworks~\cite{Woodward2003}, and process
+theories~\cite{Salmon1984}.  None derives causation from a more
+fundamental structure.
+
+\textbf{Probability.}  What do probability statements mean?  Frequentism
+interprets probability as long-run relative frequency.  Bayesianism
+treats it as degree of belief.  Propensity theories locate probability
+in objective tendencies of physical systems.  Each has known
+difficulties, and no consensus exists~\cite{Hajek2012}.
+
+\textbf{Temporal reality.}  The block-universe view holds that past,
+present, and future are equally real---time is a static four-dimensional
+manifold.  Presentism holds that only the present exists.  The
+growing-block theory adds the past as real but keeps the future open.
+The debate connects to the problem of temporal passage: is ``becoming''
+real, or is it an illusion?~\cite{Callender2011b}
+
+We show that Recognition Science (RS)~\cite{RS_Axioms} provides
+unified answers to all three questions from the same cost functional.
+Causation is ledger update.  Probability is projection fiber weight.
+Temporal reality is Ledger Realism---a novel position that vindicates
+elements of both the block universe and presentism.
+
+%% ============================================================
+\section{The Cost Functional and Ledger Dynamics}
+\label{sec:cost}
+%% ============================================================
+
+\begin{definition}[Cost Functional]
+\label{def:J}
+For $x > 0$:
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+This is the unique normalized solution to the Recognition Composition
+Law.  It satisfies $J(x) \geq 0$ with equality iff $x = 1$,
+$J(x) = J(1/x)$, and $J''(x) = x^{-3} > 0$.
+\end{definition}
+
+\begin{definition}[Ledger Snapshot]
+\label{def:snapshot}
+A \emph{ledger snapshot} is a pair $s = (t, d)$ where $t \in \mathbb{N}$
+is the tick index and $d \geq 0$ is the total defect.
+\end{definition}
+
+\begin{definition}[Temporal Ordering]
+\label{def:before}
+Snapshot $s_1 = (t_1, d_1)$ is \emph{before} $s_2 = (t_2, d_2)$ if
+$t_1 < t_2$.
+\end{definition}
+
+\begin{definition}[Recognition Step]
+\label{def:step}
+A \emph{recognition step} is a transition
+$(t, d) \to (t{+}1, d')$ with $d' \leq d$.
+\end{definition}
+
+The dynamics are deterministic: at each tick, the ledger transitions to
+the unique $J$-cost-minimizing configuration (guaranteed by the strict
+convexity of $J$).
+
+%% ============================================================
+\section{Causation}
+\label{sec:causation}
+%% ============================================================
+
+\subsection{Definition}
+
+\begin{definition}[Causal Precedence]
+\label{def:cause}
+Snapshot $s_1 = (t_1, d_1)$ \emph{causally precedes} snapshot
+$s_2 = (t_2, d_2)$, written $s_1 \prec s_2$, if:
+\begin{equation}
+  t_1 < t_2 \quad\text{and}\quad d_2 \leq d_1.
+\end{equation}
+In words: $s_1$ occurs at an earlier tick, and $s_2$'s defect does not
+exceed $s_1$'s.
+\end{definition}
+
+This definition captures two essential features of causation: temporal
+priority (the cause occurs before the effect) and defect transfer (the
+effect's defect is bounded by the cause's).
+
+\subsection{Structural Properties}
+
+\begin{theorem}[Causal Asymmetry]
+\label{thm:asymmetry}
+Causal precedence is asymmetric: if $s_1 \prec s_2$, then
+$\neg(s_2 \prec s_1)$.
+\end{theorem}
+
+\begin{proof}
+$s_1 \prec s_2$ requires $t_1 < t_2$.  For $s_2 \prec s_1$ we would
+need $t_2 < t_1$, which contradicts $t_1 < t_2$.
+\end{proof}
+
+\begin{theorem}[Causal Transitivity]
+\label{thm:transitivity}
+Causal precedence is transitive: if $s_1 \prec s_2$ and
+$s_2 \prec s_3$, then $s_1 \prec s_3$.
+\end{theorem}
+
+\begin{proof}
+$t_1 < t_2 < t_3$ gives $t_1 < t_3$.  $d_3 \leq d_2 \leq d_1$ gives
+$d_3 \leq d_1$.
+\end{proof}
+
+\begin{theorem}[Causal Irreversibility]
+\label{thm:irrev}
+If a recognition step strictly reduces defect ($d' < d$), the causal
+relation is irreversible: no subsequent step can restore the original
+defect.
+\end{theorem}
+
+\begin{proof}
+Any step from $(t{+}1, d')$ yields $(t{+}2, d'')$ with
+$d'' \leq d' < d$.
+\end{proof}
+
+\begin{corollary}[Past Permanence]
+\label{cor:past}
+Past causal relations are permanent: once $s_1 \prec s_2$ is
+established, no future event can undo it.
+\end{corollary}
+
+\begin{theorem}[Causation--Arrow Agreement]
+\label{thm:arrow-agree}
+In a defect-monotone sequence: the causal ordering $\prec$ agrees with
+the arrow of time (the direction of non-increasing defect).  Formally,
+if the arrow points from $s_1$ to $s_2$, then $s_1 \prec s_2$, and
+conversely.
+\end{theorem}
+
+\begin{proof}
+The arrow of time from $s_1$ to $s_2$ means $t_1 < t_2$ and
+$d_2 \leq d_1$, which is exactly $s_1 \prec s_2$.
+\end{proof}
+
+\subsection{Hume's Problem Dissolved}
+
+\begin{theorem}[Hume Dissolved]
+\label{thm:hume}
+Hume's skepticism about causation is dissolved.  The ``necessary
+connexion'' between cause and effect is not a mysterious metaphysical
+relation but a provable structural feature of the ledger:
+\begin{enumerate}[label=(\roman*),nosep]
+  \item There exists a unique zero-defect state ($x = 1$).
+  \item For all $x > 0$ with $x \neq 1$, defect is strictly positive:
+  $J(x) > 0$.
+  \item Defect monotonically decreases along the tick sequence.
+\end{enumerate}
+The ``necessary connexion'' is the mathematical necessity of defect
+non-increase: the cost functional \emph{forces} the causal relation.
+\end{theorem}
+
+\begin{proof}
+(i)~$J(1) = 0$.  (ii)~$J(x) > 0$ for $x \neq 1$ by AM--GM.
+(iii)~Recognition steps do not increase defect (Definition~\ref{def:step}).
+These three facts jointly establish that the causal ordering is not
+contingent or conventional but is structurally forced by the cost
+functional.
+\end{proof}
+
+\begin{remark}
+Hume could not find the ``necessary connexion'' because he looked for it
+in the wrong place: in the sensory experience of constant conjunction.
+In RS, the connection is in the mathematics of the cost landscape.  It
+is ``necessary'' in precisely the sense that a strictly convex function
+\emph{necessarily} has a unique minimizer.
+\end{remark}
+
+%% ============================================================
+\section{Probability}
+\label{sec:probability}
+%% ============================================================
+
+\subsection{The Projection Framework}
+
+\begin{definition}[Observer]
+\label{def:observer}
+An \emph{observer} is specified by a positive integer $n$ (the
+\emph{resolution}): the number of distinguishable output states.
+\end{definition}
+
+\begin{definition}[Projection Map]
+\label{def:project}
+Given an observer with resolution $n$, the \emph{projection map}
+$\pi_n : \mathbb{R} \to \{0, 1, \ldots, n{-}1\}$ assigns each real
+number to an output label.
+\end{definition}
+
+\begin{definition}[Fiber]
+\label{def:fiber}
+The \emph{fiber} of outcome $k$ is:
+\begin{equation}
+  F_k := \pi_n^{-1}(k) = \{x \in \mathbb{R} : \pi_n(x) = k\}.
+\end{equation}
+\end{definition}
+
+\begin{theorem}[Fiber Partition]
+\label{thm:fiber}
+The fibers $\{F_0, \ldots, F_{n-1}\}$ partition the state space:
+\begin{enumerate}[label=(\roman*),nosep]
+  \item Every state belongs to exactly one fiber.
+  \item Each fiber is non-empty.
+  \item The fibers are exhaustive: $\bigcup_k F_k = \mathbb{R}$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i)~and (iii): $\pi_n$ is a total function.
+(ii)~For each $k$, there exists at least one $x$ with $\pi_n(x) = k$.
+\end{proof}
+
+\begin{theorem}[Projection is Lossy]
+\label{thm:lossy}
+For every observer with resolution $n \geq 1$, the projection map is
+many-to-one: there exist distinct $x \neq y$ with
+$\pi_n(x) = \pi_n(y)$.
+\end{theorem}
+
+\begin{proof}
+The real line is uncountable; the output set has $n$ elements.  By the
+pigeonhole principle, each fiber contains uncountably many elements.
+\end{proof}
+
+\subsection{Probability as Fiber Weight}
+
+\begin{definition}[Observer Probability]
+\label{def:prob}
+Given an observer with resolution $n$ and a symmetric uniform partition
+of the state space, the \emph{observer probability} of outcome $k$ is:
+\begin{equation}
+  P(k) = \frac{\mu(F_k)}{\sum_{j=0}^{n-1}\mu(F_j)},
+\end{equation}
+where $\mu$ is the natural measure on the state space.  For the
+$J$-cost landscape with $x > 0$, the natural measure on the positive
+reals is the Haar measure $\mu_{\rm H}(A) = \int_A \frac{dx}{x}$
+(the log-flat measure), which assigns equal weight to each $\varphi$-rung
+interval.  For a uniform $\varphi$-rung partition into $n$ equal-width
+log-intervals, $\mu_{\rm H}(F_k) = \ln\varphi$ for all $k$, giving
+$P(k) = 1/n$.
+\end{definition}
+
+\begin{remark}
+The choice of Haar measure (log-flat) is natural for the RS framework
+because the $\varphi$-ladder is a multiplicative group action: $x \mapsto
+\varphi x$ maps rungs to rungs.  The unique measure invariant under this
+action is the log-flat measure.  Any observer who partitions the
+$\varphi$-ladder into equal-width log-intervals therefore assigns uniform
+probability to each interval, and $P(k) = 1/n$ follows.  Non-uniform
+partitions correspond to observers with structure-dependent bias and
+lead to non-uniform probability distributions---which is the RS
+derivation of non-uniform priors in Bayesian probability.
+\end{remark}
+
+\begin{theorem}[Probability Axioms Satisfied]
+\label{thm:kolmogorov}
+Observer probabilities satisfy the Kolmogorov axioms:
+\begin{enumerate}[label=(\roman*),nosep]
+  \item $P(k) \geq 0$ for all $k$ (non-negativity).
+  \item $\sum_{k=0}^{n-1} P(k) = 1$ (normalization).
+  \item For disjoint outcomes $A, B \subseteq \{0,\ldots,n{-}1\}$:
+  $P(A \cup B) = P(A) + P(B)$ ($\sigma$-additivity, finite form).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i)~$P(k) = 1/n > 0$.
+(ii)~$\sum_{k} 1/n = n \cdot (1/n) = 1$.
+(iii)~For disjoint finite sets, $P(A \cup B) = |A \cup B|/n =
+(|A| + |B|)/n = |A|/n + |B|/n = P(A) + P(B)$, since
+$|A \cup B| = |A| + |B|$ for disjoint sets.
+\end{proof}
+
+\subsection{The Meaning of Probability}
+
+\begin{theorem}[Probability is Epistemic]
+\label{thm:epistemic}
+\begin{enumerate}[label=(\roman*),nosep]
+  \item The ledger is deterministic: there exists a unique zero-defect
+  state, and the dynamics have a unique $J$-minimizing next state.
+  \item Randomness arises from the lossy projection: multiple distinct
+  deterministic states map to the same observation.
+  \item Therefore, probability is epistemic (about what an observer can
+  know), not ontic (about what exists).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i)~$J(x) = 0$ if and only if $x = 1$ (by AM--GM), so there is a
+unique zero-defect state.  The cost functional is strictly convex
+($J''(x) = x^{-3} > 0$), so the $J$-minimizing next state is unique
+at each tick.  The ledger dynamics are thus deterministic.
+
+(ii)~Theorem~\ref{thm:lossy} establishes that the projection map is
+many-to-one: the fiber $F_k = \pi_n^{-1}(k)$ contains uncountably
+many distinct ledger states.  An observer recording outcome $k$ cannot
+determine which element of $F_k$ is the actual ledger state---this is
+irreducible uncertainty about the underlying deterministic state.
+
+(iii)~Since the underlying ledger state is determinate (by (i)) and
+the probability distribution arises entirely from the observer's
+finite resolution (by (ii)), probability statements say nothing about
+the ledger itself---they describe the observer's partition of the
+state space.  This is the definition of epistemic probability.
+\end{proof}
+
+\begin{remark}[Reconciling Frequentism, Bayesianism, and Propensity]
+RS vindicates elements of all three interpretations:
+\begin{itemize}[nosep]
+  \item \textbf{Frequentism}: the fiber structure is objective, so
+  long-run relative frequencies are objective features of the
+  projection.
+  \item \textbf{Bayesianism}: probability depends on the observer's
+  resolution $n$---a higher-resolution observer has finer fibers and
+  different probabilities.  Probability is thus relational to the
+  observer's information state.
+  \item \textbf{Propensity}: the $J$-cost landscape is objective and
+  determines which configurations are ``favored'' (low cost).  This
+  provides an objective ``tendency'' structure.
+\end{itemize}
+The three interpretations are not competitors but complementary aspects
+of the same underlying structure.
+\end{remark}
+
+\begin{theorem}[Higher Resolution Refines Probability]
+\label{thm:higher-res}
+If observer 2 has strictly higher resolution than observer 1
+($n_2 > n_1$), then every outcome of observer 1 can be further
+distinguished by observer 2: there exists a surjection
+$\rho : \{0,\ldots,n_2{-}1\} \to \{0,\ldots,n_1{-}1\}$ such that
+the partition by $\pi_{n_2}$ refines the partition by $\pi_{n_1}$.
+Consequently, $P_{n_2}(k') \leq P_{n_1}(\rho(k'))$ for each outcome
+$k'$, with equality only when $n_2 = n_1$.
+\end{theorem}
+
+\begin{proof}
+Any partition into $n_2 > n_1$ equal-log intervals is a refinement of
+the partition into $n_1$ intervals.  The surjection $\rho$ assigns
+each fine interval to the coarse interval containing it.  The
+probability $P_{n_2}(k') = 1/n_2 < 1/n_1 = P_{n_1}(\rho(k'))$
+strictly decreases at each refinement step.
+\end{proof}
+
+\begin{remark}
+In the limit $n \to \infty$, the observer's resolution approaches the
+full ledger state, probability concentrates on the unique deterministic
+outcome ($P \to \delta_{x_{\rm min}}$), and ``randomness'' vanishes.
+This is why quantum randomness appears irreducible only at finite
+resolution: it is a feature of the projection, not of the reality
+projected.
+\end{remark}
+
+%% ============================================================
+\section{Ledger Realism}
+\label{sec:ledger-realism}
+%% ============================================================
+
+\subsection{The Problem of Temporal Reality}
+
+The block-universe view holds that past, present, and future are
+equally real.  Presentism holds that only the present exists.  Both
+face difficulties: the block universe struggles with temporal passage
+and the apparent openness of the future; presentism struggles with
+cross-temporal relations and the truth-conditions of tensed statements.
+
+RS offers a third position: \emph{Ledger Realism}.
+
+\subsection{Past, Present, Future}
+
+\begin{definition}[Past, Present, Future]
+\label{def:ppf}
+Given a sequence of snapshots $\{s_n\}$ and a designated ``now''
+index~$k$:
+\begin{enumerate}[label=(\alph*),nosep]
+  \item The \textbf{past} is $\{s_n : n < k\}$---committed, permanent
+  ledger entries.
+  \item The \textbf{present} is $s_k$---the current tick, ontologically
+  privileged.
+  \item The \textbf{future} is $\{s_n : n > k\}$---uncommitted entries.
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Past Permanence]
+\label{thm:past-real}
+Past entries are real and permanent: for every $n < k$, snapshot $s_n$
+is a committed entry in the ledger and cannot be altered by any future
+recognition step.
+\end{theorem}
+
+\begin{proof}
+Recognition steps advance the tick ($t \to t{+}1$) and do not modify
+earlier entries.  Once committed at tick $n$, the snapshot $s_n$ is
+fixed.
+\end{proof}
+
+\begin{theorem}[Present is Privileged]
+\label{thm:present}
+The present snapshot $s_k$ is the unique snapshot at the current tick:
+$\mathrm{present}(\{s_n\}, k) = s_k$.
+\end{theorem}
+
+\begin{theorem}[Time Divides into Three]
+\label{thm:divide}
+The present divides the ledger into exactly two non-overlapping regions:
+\begin{enumerate}[label=(\roman*),nosep]
+  \item $s \in \mathrm{past} \Leftrightarrow \exists\, n < k$ with
+  $s_n = s$.
+  \item $s \in \mathrm{future} \Leftrightarrow \exists\, n > k$ with
+  $s_n = s$.
+\end{enumerate}
+No snapshot belongs to both past and future.
+\end{theorem}
+
+\begin{theorem}[Temporal Quantization]
+\label{thm:quant}
+Time is discrete: for any two snapshots with $s_1$ before $s_2$,
+\begin{equation}
+  t_2 - t_1 \geq 1.
+\end{equation}
+The minimal temporal resolution is one tick.
+\end{theorem}
+
+\begin{theorem}[8-Tick Specious Present]
+\label{thm:specious}
+The epoch length is $8 = 2^D = 2^3$ ticks (forced by the dimension-forcing
+theorem).  One complete recognition cycle spans 8 ticks, providing a
+natural ``specious present''---the minimal window of simultaneous
+information processing.
+\end{theorem}
+
+\begin{remark}
+The connection between the 8-tick fundamental epoch and the
+psychological specious present (the experienced ``now'', empirically
+$\sim 2$--$3$~s) requires identifying a conversion factor between
+recognition ticks and clock seconds.  Using the RS tick duration
+$\tau_0 = \hbar/E_{\rm coh} \approx 10^{-13}$~s, eight ticks span
+$\sim 8 \times 10^{-13}$~s---far shorter than the psychological specious
+present.  The psychological specious present is likely the result of
+many nested 8-tick epochs processed hierarchically by the neural ledger,
+not the fundamental 8-tick cycle itself.  This is an open problem in
+the application of RS to neuroscience.
+\end{remark}
+
+\subsection{Ledger Realism as a Third Way}
+
+\begin{theorem}[Block Universe Partially Vindicated]
+\label{thm:block}
+The block-universe view is correct insofar as the past is real and
+permanent (Theorem~\ref{thm:past-real}).  Past entries exist and have
+definite values, just as the block universe claims.
+\end{theorem}
+
+\begin{theorem}[Presentism Partially Vindicated]
+\label{thm:presentism}
+Presentism is correct insofar as the present is ontologically
+privileged (Theorem~\ref{thm:present}).  The current tick is not merely
+a coordinate label but a structurally distinguished point in the ledger.
+\end{theorem}
+
+\begin{remark}[Ledger Realism]
+Ledger Realism is a growing-block theory with a twist: the past is
+real (block-universe element), the present is privileged (presentist
+element), and the future is uncommitted.  It differs from the standard
+growing-block theory~\cite{Broad1923} in that the ``growth'' is not
+continuous addition of temporal slices but discrete tick-by-tick ledger
+commits.  The irreversibility of recognition steps ensures that the
+past cannot be altered.
+\end{remark}
+
+%% ============================================================
+\section{Discussion}
+\label{sec:discuss}
+%% ============================================================
+
+\subsection{Comparison with Existing Theories}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}p{3cm}p{3cm}p{3cm}p{3cm}p{3cm}@{}}
+\toprule
+& \textbf{Hume} & \textbf{Lewis} & \textbf{Woodward} & \textbf{RS} \\
+\midrule
+Causation & Conjunction & Counterfactual & Intervention & Ledger update \\
+Necessity & Denied & Modal & Structural & Proved \\
+Asymmetry & Conventional & World-similarity & Intervention dir. & Tick ordering \\
+Time & Subjective & B-theory & Neutral & Ledger Realism \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Lewis's counterfactual analysis.}
+Lewis~\cite{Lewis1973} analyzes ``$C$ causes $E$'' as: in the closest
+possible world where $C$ does not occur, $E$ does not occur either.
+RS provides a simpler account: $C$ causes $E$ because $C$'s ledger
+entry constrains $E$'s.  No appeal to possible worlds is needed.
+
+\paragraph{Woodward's interventionism.}
+Woodward~\cite{Woodward2003} analyzes causation via interventions: $C$
+causes $E$ if intervening on $C$ would change $E$.  RS is compatible:
+an ``intervention'' is a modification of a ledger entry, and the causal
+chain propagates through subsequent tick updates.  But RS is more
+fundamental: it derives the causal structure rather than taking
+interventions as primitive.
+
+\paragraph{Pearl's structural causal models.}
+Pearl~\cite{Pearl2000} formalizes causation via directed acyclic graphs
+(DAGs) and structural equations.  In RS, the ledger's tick-ordered
+entries are a DAG by construction (Theorems~\ref{thm:asymmetry} and
+\ref{thm:transitivity}), and the structural equation is the $J$-cost
+minimization rule.  RS thus provides a physical grounding for Pearl's
+formal machinery: the DAG arises from tick ordering, and the
+``structural equations'' are the RS cost dynamics.
+
+\subsection{Falsifiable Predictions}
+
+\begin{enumerate}
+  \item \textbf{Causal irreversibility.}  RS predicts that no physical
+  process at the fundamental level can reverse a causal relation
+  (restore a prior defect while advancing the tick counter).  An
+  observation of fundamental causal reversal would refute the framework.
+
+  \item \textbf{Discrete causation.}  Causal connections have a minimal
+  temporal resolution of one tick.  If causation is found to operate
+  continuously at arbitrarily fine time scales (below the Planck time),
+  the discrete ontology is falsified.
+
+  \item \textbf{Probability as projection.}  The Born rule of quantum
+  mechanics is recovered in the limit of large fiber count $n$.  At
+  very high resolution (approaching the fundamental tick scale), the
+  fiber structure is discrete and the Born rule probability distribution
+  may show small corrections of order $1/n$.  Whether such deviations
+  are observable at accessible energy scales requires a quantitative
+  connection between $n$ and the experimental probe scale---an open
+  problem.  This prediction is speculative and the direction of the
+  correction depends on the specific choice of partition.
+
+  \item \textbf{Past permanence.}  RS predicts that past events cannot
+  be altered.  Any demonstration of backward causation (genuine
+  retrocausation, not merely retrodiction) would refute the framework.
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+Three foundational questions in philosophy of science---the nature of
+causation, the meaning of probability, and the structure of temporal
+reality---receive unified answers from the cost functional
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$:
+
+\begin{enumerate}[nosep]
+  \item \textbf{Causation} is the ledger update relation $\prec$:
+  asymmetric, transitive, irreversible, and grounded in defect
+  monotonicity.  Hume's problem is dissolved: the ``necessary connexion''
+  is the mathematical necessity of cost minimization.
+
+  \item \textbf{Probability} is the fiber weight of a finite-resolution
+  projection.  It is epistemic (about observation, not reality),
+  relational (dependent on observer resolution), and objective (the
+  fiber structure is determined by the projection map).  Frequentism,
+  Bayesianism, and propensity are all partially vindicated.
+
+  \item \textbf{Temporal reality} is Ledger Realism: the past is real
+  and permanent, the present is privileged, the future is uncommitted.
+  This vindicates elements of both the block universe and presentism
+  while avoiding the difficulties of each.
+\end{enumerate}
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{Hume1748}
+D.~Hume, \emph{An Enquiry Concerning Human Understanding} (1748).
+
+\bibitem{Lewis1973}
+D.~Lewis, ``Causation,'' \emph{Journal of Philosophy} \textbf{70}, 556
+(1973).
+
+\bibitem{Woodward2003}
+J.~Woodward, \emph{Making Things Happen} (Oxford University Press,
+2003).
+
+\bibitem{Salmon1984}
+W.~Salmon, \emph{Scientific Explanation and the Causal Structure of the
+World} (Princeton University Press, 1984).
+
+\bibitem{Pearl2000}
+J.~Pearl, \emph{Causality: Models, Reasoning, and Inference} (Cambridge
+University Press, 2000).
+
+\bibitem{Hajek2012}
+A.~H\'ajek, ``Interpretations of Probability,'' in \emph{The Stanford
+Encyclopedia of Philosophy}, E.~N.~Zalta, ed.\ (2012).
+
+\bibitem{Callender2011b}
+C.~Callender, ed., \emph{The Oxford Handbook of Philosophy of Time}
+(Oxford University Press, 2011).
+
+\bibitem{Broad1923}
+C.~D.~Broad, \emph{Scientific Thought} (Kegan Paul, 1923).
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``Recognition Science: Derivation of the Cost
+Functional and Forcing Chain,'' Recognition Science Research
+Institute Technical Report (2025).
+
+\end{thebibliography}
+
+\end{document}

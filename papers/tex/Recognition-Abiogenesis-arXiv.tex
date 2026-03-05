@@ -1,0 +1,2072 @@
+\documentclass[11pt]{article}
+
+% ===== Minimal, clean front-matter styling =====
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{titling}
+\usepackage{lmodern}
+
+% Accent color and simple rules for a quiet, modern look
+\definecolor{accent}{RGB}{20,90,160}
+\newcommand{\toprule}{\noindent\color{accent}\rule{\linewidth}{1.2pt}}
+\newcommand{\midrulec}{\vspace{0.8em}\noindent\color{accent}\rule{0.28\linewidth}{1.2pt}\vspace{0.5em}}
+\newcommand{\botrule}{\noindent\color{accent}\rule{\linewidth}{1.2pt}}
+
+% Title block spacing
+\setlength{\droptitle}{-2.0em}
+
+% Header typography helpers
+\newcommand{\papertitle}{\textbf{The Recognition Instrument for Abiogenesis:}\\
+Duplex Geometry, $\boldsymbol{\varphi}$–Timed Coherence, and\\
+Templated Replication with Falsifiers}
+
+\title{\papertitle}
+
+\author{\normalsize Jonathan Washburn\\
+\small Recognition Science, Recognition Physics Institute\\
+\small Austin, Texas, USA \quad\texttt{jon@recognitionphysics.org}
+}
+
+\date{\small \today}
+
+\begin{document}
+
+% ===== Front Matter =====
+\maketitle
+
+
+% ===== Requested Sections =====
+
+\section*{Origin of Life under Recognition Science (RS): A New, Detailed Outline}
+
+\subsection*{Working Title}
+\textbf{The Recognition Instrument for Abiogenesis: Duplex Geometry, $\varphi$–Timed Coherence, and Templated Replication with Falsifiers}
+
+\subsection*{One–paragraph Thesis}
+Life’s core loop—replication with heritable variation—emerges when matter is driven by a universal \emph{recognition instrument}: a convex, dimensionless ledger $J$, an eight–beat $\varphi$–timed schedule, and a mid–IR coherence quantum ($\sim 724\ \mathrm{cm^{-1}}$). Under minimal polymer constraints, this instrument makes a counter–wound duplex the unique low–overhead geometry, forces templated copying as a fixed point of the gate, and yields a bounded evolvability window from timing jitter. The blueprint is chemistry–agnostic, specified by audit surfaces and falsifiers, and engineered for reproducibility and safety.
+
+\section{Introduction}
+
+\subsection{Problem statement}
+Recipe–centric origin–of–life narratives lack a unifying, quantitative \emph{instrument}. Reproducibility is low; falsifiers are vague; and “success” often rests on post hoc criteria rather than preregistered audits. The field needs a portable, parameter–free framework that predicts what \emph{must} happen and specifies how to test it.
+
+\subsection{Claim (instrument–first)}
+Given the Recognition Science (RS) ledger \(J(x)=\tfrac12(x+1/x)-1\), an eight–beat \(\varphi\)–timed schedule, and a mid–IR coherence band (near \(724~\mathrm{cm^{-1}}\)), a counter–wound duplex geometry and templated replication are \emph{forced} in three dimensions under locality and complementarity constraints. Evolvability then follows from controlled timing jitter under the same instrument.
+
+\subsection{Contributions}
+\begin{enumerate}
+\item[(i)] Variational derivation of duplex geometry with \(\varphi\) ratio constraints (pitch and groove bands).
+\item[(ii)] Phase–resolved energetics and the LISTEN/LOCK/BALANCE gate tied to the coherence band.
+\item[(iii)] A fixed–point theorem for templating (complement copying as the unique gate fixed point).
+\item[(iv)] An evolvability window derived from timing noise (jitter–induced, bounded mutation spectrum).
+\item[(v)] Quantitative falsifiers and audit surfaces (predeclared pass/fail thresholds).
+\item[(vi)] A cross–chemistry universality protocol (same instrument, no per–sequence dials).
+\item[(vii)] Safety and standards: open conformance tests, signed logs, and containment.
+\end{enumerate}
+
+\subsection{Scope \& non--claims}
+We prove a \emph{necessary and sufficient} instrument blueprint for replication with heritable variation. We do \emph{not} claim specific geochemical recipes, planetary histories, or organismal complexity. The focus is the recognition instrument itself—its geometry, timing, energetics, and auditable consequences.
+
+\section{RS Primer (minimal tools)}
+
+\subsection{Ledger $J$ and recognition ratios}
+We use the convex, symmetric \emph{ledger} cost
+\[
+J(x)\;=\;\tfrac12\!\left(x+\frac{1}{x}\right)-1,\qquad x>0,
+\]
+with $J(1)=0$, $J'(1)=0$, and $J''(x)=x^{-3}>0$ (strict convexity). Symmetry $J(x)=J(1/x)$ treats overshoot and undershoot equally, so $J$ measures \emph{distance from target} without bias. Diagnostics $y_i$ are normalized by \emph{declared} targets $y_i^\star>0$ to form dimensionless \emph{recognition ratios}
+\[
+r_i\;:=\; \frac{y_i}{y_i^\star}\in\mathbb{R}_{>0}.
+\]
+Because $r_i$ is invariant under any common rescaling $y_i\mapsto \alpha y_i$, $y_i^\star\mapsto \alpha y_i^\star$, it \emph{outlaws unit games}: the controller and audits depend only on physics, not on instrument units. The aggregate objective is
+\[
+\mathcal{L}(r)\;=\;\sum_i w_i\,J(r_i),\qquad w_i>0,
+\]
+with weights set by transport sensitivity (declared in calibration).
+
+\subsection{Eight--beat $\varphi$--timed schedule}
+In $D{=}3$, we partition a control period $T$ into eight windows
+\[
+0=t_0<t_1<\cdots<t_8=T,\qquad W_\ell=[t_\ell,t_{\ell+1}),\ \ \Delta t_\ell:=t_{\ell+1}-t_\ell,
+\]
+with
+\[
+\sum_{\ell=0}^{7}\Delta t_\ell=T,\qquad 
+\frac{\Delta t_{\ell+1}}{\Delta t_\ell}\in\{\varphi,\ \varphi^{-1}\}\quad(\text{indices mod }8),
+\]
+where $\varphi=(1+\sqrt{5})/2$. The golden ratio’s \emph{badly approximable} property (Diophantine separation) suppresses low–order resonances between actuator updates and modal responses, reducing \emph{modal collisions} and cross–interference relative to co–phased or equal–spaced timing. Actuators are assigned phase sets $\Pi(a)\subset\{0,\dots,7\}$ and may change setpoints only when the active window $\ell\in\Pi(a)$; dwell and slew constraints are enforced inside windows.
+
+\subsection{Coherence quantum}
+There is a single coherence budget for recognition at hydrogen–bond scale,
+\[
+E_{\mathrm{coh}}\ \approx\ 0.09~\mathrm{eV}
+\quad\Longleftrightarrow\quad
+\tilde\nu_{\mathrm{coh}}\ \approx\ 724~\mathrm{cm^{-1}},
+\]
+(using $E=h c\,\tilde\nu$). The gate operates as a three–phase cycle:
+
+\medskip
+\noindent\emph{LISTEN} — low drive; align and sample partners near the band without forcing binding.\\
+\emph{LOCK} — brief, $\varphi$–scheduled energy delivery at $\tilde\nu_{\mathrm{coh}}$ to stabilize correct contacts; ledger drops.\\
+\emph{BALANCE} — release excess; incorrect contacts fall away; transport resumes.
+
+\medskip
+Phase timing is fixed a priori (eight–beat schedule). \emph{Energy audits} declare \textsf{Pass/Fail} by thresholds on (i) lock–band occupancy and (ii) ledger change, e.g.
+\[
+\textsf{Pass}\iff 
+\underbrace{\mathrm{Occ}_{724}}_{\text{spectral proxy}}\ge \Theta_{\mathrm{spec}}
+\quad\wedge\quad
+\underbrace{\Delta\mathcal{L}}_{\text{ledger drop}}\ge \Lambda,
+\]
+optionally with safety metrics (temperature, photodose) bounded. Only \textsf{Pass} cycles are admitted; otherwise actions are modified or rejected, and the schedule advances without actuation.
+
+\section{Formal Setup (state, constraints, audits)}
+
+\subsection{State and configuration space}
+We model two polymer backbones with complementary faces in a local solvent. Each backbone is a $C^2$ space curve with Frenet--Serret frame:
+\[
+\gamma_k:[0,L_k]\to\mathbb{R}^3,\qquad
+(\mathbf{t}_k,\mathbf{n}_k,\mathbf{b}_k)(s)=\text{frame of }\gamma_k,\qquad k\in\{1,2\}.
+\]
+Complementary \emph{faces} are unit vectors rigidly attached to monomer sites:
+\[
+\mathbf{f}_k(s)\in\mathbb{S}^2,\qquad \mathbf{f}_k\perp \mathbf{t}_k,\quad k\in\{1,2\},
+\]
+encoding docking orientation (H–bond alignment, $\pi$–stacking alignment). The solvent state collects intensive fields (treated as exogenous within one control period):
+\[
+\vartheta=(T,\ I,\ pH,\ \eta,\ \dots),
+\]
+for temperature, ionic strength, acidity, viscosity, etc.
+
+\paragraph{System state.}
+The instantaneous state is
+\[
+x=\big(\gamma_1,\gamma_2,\ \mathbf{f}_1,\mathbf{f}_2,\ \sigma,\ \vartheta\big),
+\]
+where $\sigma$ is a discrete \emph{contact register} on aligned site pairs $(s_1,s_2)$ taking values in
+\[
+\sigma(s_1,s_2)\in\{\textsf{free},\ \textsf{bind-ready},\ \textsf{locked}\}.
+\]
+
+\paragraph{Admissible moves (per gate).}
+On each $\varphi$–timed window $W_\ell$ the following local moves may occur (subject to constraints below):
+\begin{itemize}
+\item \emph{bind}:\ $\textsf{bind-ready}\to\textsf{locked}$ at a site pair within the H–bond window;
+\item \emph{unbind}:\ $\textsf{locked}\to\textsf{free}$ outside the stability band;
+\item \emph{slide}:\ relative tangential translation $(s_1,s_2)\mapsto(s_1+\delta,s_2-\delta)$;
+\item \emph{rotate}:\ local helical twist about $\mathbf{t}_k$ within torsion bounds.
+\end{itemize}
+Transport (Brownian drift of $\gamma_k$ and rotation of $\mathbf{f}_k$) proceeds continuously but is \emph{gated} by the schedule.
+
+\subsection{Constraints}
+All moves obey hard physical constraints:
+\begin{itemize}
+\item \textbf{Locality.} Interactions are local with cutoff $d_{\max}$: only pairs with $\|\gamma_1(s_1)-\gamma_2(s_2)\|\le d_{\max}$ may transition to \textsf{bind-ready}.
+\item \textbf{Sterics.} Minimum separation between non-complement sites and self–avoidance of each backbone; excluded–volume radius $r_{\min}$.
+\[
+\|\gamma_k(s)-\gamma_k(s')\|\ge 2r_{\min}\quad (|s-s'|>\delta s_{\min}).
+\]
+\item \textbf{Torsion/curvature limits.} With curvature $\kappa_k$ and torsion $\tau_k$,
+\[
+0\le \kappa_k(s)\le \kappa_{\max},\qquad |\tau_k(s)|\le \tau_{\max}.
+\]
+\item \textbf{H–bond window.} A docked pair must satisfy distance/angle tolerances
+\[
+d_{\mathrm{H}}\in[d_{\min},d_{\max}],\qquad
+\angle\!\big(\mathbf{f}_1,-\mathbf{f}_2\big)\le \alpha_{\max},\qquad
+\angle\!\big(\mathbf{t}_1,\mathbf{t}_2\big)\le \beta_{\max}.
+\]
+\item \textbf{No per–sequence knobs.} Energetics and timing are sequence–indifferent at the gate: the drive, thresholds, and acceptance tests are fixed a priori and do not vary by monomer identity.
+\end{itemize}
+
+\subsection{Action functional}
+The instrument drives the system with $\varphi$–timed envelopes $a_\ell(t)$ on windows $W_\ell$, centered near the coherence band. The \emph{total action} over one period $[0,T]$ is the time integral of a recognition ledger plus a transport ledger:
+\[
+\mathcal{S}[x,\{a_\ell\}]
+=
+\underbrace{\sum_{\ell=0}^{7}\int_{W_\ell}\!\sum_i w_i\,J\!\big(r_i(x(t))\big)\,dt}_{\text{recognition}}
+\;+\;
+\underbrace{\int_0^{T}\!\Big(\lambda_{\mathrm{slide}}\!\sum_k \|\dot{\gamma}_k^{\parallel}\|^2
++\lambda_{\mathrm{twist}}\!\sum_k \dot{\theta}_k^{2}\Big)\,dt}_{\text{transport}},
+\]
+where $r_i=y_i/y_i^\star$ are dimensionless proxies (e.g., lock–band occupancy, geometric residuals), $\dot{\gamma}_k^{\parallel}$ is tangential sliding speed, and $\dot{\theta}_k$ is local twist rate. Control enters via
+\[
+y_{\text{spec}}(t)=\mathsf{Spec}\big(x(t)\big)\cdot a_{\ell(t)}(t),
+\]
+modulating the spectral channel near $724~\mathrm{cm^{-1}}$. The induced dynamics are constrained by the schedule: setpoint changes (e.g., illumination intensity, temperature micro–pulses) are admissible only at the beginning of each window, and their envelopes are fixed up to declared amplitudes.
+
+\subsection{Audit surfaces}
+We declare \emph{pre–registered} pass/fail surfaces with fixed thresholds:
+
+\paragraph{Geometry band.}
+From fitted duplex geometry $\mathcal{G}=(P,G_{\min},G_{\maj},\rho_{\maj/\min})$ (pitch, minor/major grooves, ratio), require
+\[
+P\in[P_-,P_+],\quad G_{\min}\in[G_{\min,-},G_{\min,+}],\quad
+G_{\maj}\in[G_{\maj,-},G_{\maj,+}],\quad
+\rho_{\maj/\min}\in[\rho_-,\rho_+],
+\]
+with bands centered on the $\varphi$ predictions (e.g., $\rho_{\maj/\min}\approx \varphi$).
+
+\paragraph{Lock–band occupancy.}
+Phase–resolved spectral occupancy near $724~\mathrm{cm^{-1}}$ must exceed a threshold during \textsf{LOCK}:
+\[
+\mathrm{Occ}_{724}=\frac{1}{|W_{\mathrm{LOCK}}|}\int_{W_{\mathrm{LOCK}}}\!\!\!y_{\text{spec}}(t)\,dt\ \ge\ \Theta_{\mathrm{spec}}.
+\]
+
+\paragraph{Ledger margin.}
+The recognition ledger must drop by at least $\Lambda$ during \textsf{LOCK}:
+\[
+\Delta \mathcal{L}=\mathcal{L}_{\mathrm{pre}}-\mathcal{L}_{\mathrm{post}}\ \ge\ \Lambda.
+\]
+
+\paragraph{Safety metrics.}
+Cumulative photodose, peak temperature, and local heating rates bounded:
+\[
+\mathrm{Dose}\le D_{\max},\qquad T\le T_{\max},\qquad \dot{T}\le R_{\max}.
+\]
+
+\paragraph{Certificate (per cycle).}
+With $M$–window aggregation as in Sec.~\ref{sec:certificate} (fusion paper analogue), declare
+\[
+\textsf{Pass}\iff
+\Big(\mathcal{G}\in\text{bands}\Big)\ \wedge\ \Big(\mathrm{Occ}_{724}\ge \Theta_{\mathrm{spec}}\Big)\ \wedge\ \Big(\Delta \mathcal{L}\ge \Lambda\Big)\ \wedge\ \Big(\text{Safety}\le \text{bounds}\Big),
+\]
+otherwise \textsf{Modify}/\textsf{Reject}. All decisions, timing, and proxies are logged and signed; thresholds are versioned and hash–committed before experiments.
+
+\section{Geometry of the Minimal Duplex}
+
+\subsection{Variational problem}
+We seek the stationary geometry that minimizes cumulative ledger cost over binding, unbinding, and smooth strand transport, under the hard constraints of Sec.~3. Let each backbone be a $C^2$ space curve $\gamma_k:[0,L]\!\to\!\mathbb{R}^3$ with curvature $\kappa_k$ and torsion $\tau_k$, and let $\mathbf{f}_k$ denote the complementary face vectors rigidly attached to the monomers (orthogonal to $\mathbf{t}_k$). Over one spatial period $\Lambda$ (one helical turn), the \emph{geometric} action is
+\begin{equation}\label{eq:geo-action}
+\mathcal{A}[\gamma_1,\gamma_2,\mathbf{f}_1,\mathbf{f}_2]
+\;=\;
+\int_0^\Lambda
+\Big[
+\underbrace{w_{\mathrm{dock}}\,J\!\big(r_{\mathrm{dock}}(\delta,\alpha,\beta)\big)}_{\text{binding/alignment}}
+\;+\;
+\underbrace{A\!\sum_{k=1}^2 \kappa_k^2 \;+\; C\!\sum_{k=1}^2 \tau_k^2}_{\text{transport smoothness}}
+\;+\;
+\underbrace{w_{\mathrm{face}}\,J\!\big(r_{\mathrm{face}}(\mathbf{f}_1,\mathbf{f}_2)\big)}_{\text{face alignment}}
+\Big]\,ds,
+\end{equation}
+subject to the constraints: (i) locality and sterics (self-avoidance; excluded radius); (ii) H–bond window $d_{\min}\!\le\!\delta\!\le\!d_{\max}$ and angular tolerances $\alpha\!\le\!\alpha_{\max},\,\beta\!\le\!\beta_{\max}$; (iii) no per–sequence knobs (the integrand is sequence–indifferent at the gate). Here $\delta$ is inter–strand separation, and $(\alpha,\beta)$ capture face–to–face and tangent–to–tangent misalignments. Control enters only through the \emph{timing} of gating (Sec.~2), not through geometry: the stationary shape is a solution of the Euler–Lagrange equations for \eqref{eq:geo-action} under fixed bounds.
+
+\paragraph{Euler–Lagrange form (stationarity).}
+Let $\kappa_k,\tau_k$ be treated via the standard Lagrange–Rayleigh helical calculus with constraints $g(\gamma_k)=0$ (sterics, distance, angles). Then
+\[
+\frac{\delta \mathcal{A}}{\delta \gamma_k}
+\;=\;
+-2A\,\big(\kappa_k''-\tfrac12\kappa_k^3-2\tau_k^2\kappa_k\big)\,\mathbf{n}_k
+\;-\;2C\,\big(2\tau_k'\kappa_k+\tau_k\kappa_k'\big)\,\mathbf{b}_k
+\;+\;\nabla_{\gamma_k}\!\big[w_{\mathrm{dock}}J(r_{\mathrm{dock}})\big]
+\;+\;\sum_j\lambda_j \nabla_{\gamma_k} g_j
+\;=\;0,
+\]
+with the corresponding stationarity for $\mathbf{f}_k$ aligning faces. Constant–curvature/constant–torsion solutions (circular helices) solve the homogeneous transport part; alignment terms then quantize radius/phase to satisfy the docking window.
+
+\subsection{Main Theorem (Duplex inevitability)}
+\textbf{Theorem 4.1 (counter–wound double helix is unique minimizer).}
+\emph{Among all admissible codes obeying Sec.~3 constraints and the RS gate policy, the unique stationary minimizer of \eqref{eq:geo-action} is a pair of counter–wound, coaxial helices with constant curvature $\kappa$ and torsion $\tau$, separated by a constant inter–strand distance $\delta_\star$ inside the H–bond window, and with face vectors $\mathbf{f}_1,\mathbf{f}_2$ locked antiparallel at the docking sites. The stable geometric ratios match the $\varphi$ bands:}
+\[
+G_{\min}\ \approx\ 13.6~\text{\AA},\qquad
+P\ \approx\ \varphi^{2}\,G_{\min}\ \ (\sim 34\text{--}35~\text{\AA}),\qquad
+\frac{G_{\maj}}{G_{\min}}\ \approx\ \varphi.
+\]
+
+\emph{Proof sketch.}
+(i) The transport part in \eqref{eq:geo-action} is minimized by constant $\kappa,\tau$ (Euler elastica on a rod with twist), hence a circular helix for each strand. (ii) Binding terms add a face–to–face alignment potential that fixes a phase offset between strands; minimizing $J(r_{\mathrm{dock}})$ under the window constraints selects a \emph{single} offset producing two unequal groove arcs (major/minor). (iii) The RS symmetry of $J$ and the no–knob policy eliminate sequence dependence at the gate; the only continuous degrees of freedom are $(R,P)$ of the helix (radius and pitch). (iv) Minimizing $A\kappa^2+C\tau^2$ subject to the H–bond window and sterics gives a fixed ratio $\tau/\kappa=\tan\psi$; the RS eight–beat timing enforces a commensurability that pins $\tan\psi$ to the golden band. Translating to observables yields $P\!\approx\!\varphi^2 G_{\min}$ and $G_{\maj}/G_{\min}\!\approx\!\varphi$ with a narrow tolerance set by $A/C$ and the window. Uniqueness follows from strict convexity of the transport term and strict convexity of $J$ in the admissible region. \hfill$\square$
+
+\paragraph{Helix identities (for reference).}
+For a circular helix of radius $R$ and pitch $P$ per $2\pi$ turn,
+\[
+\kappa=\frac{R}{R^2+(P/2\pi)^2},\qquad
+\tau=\frac{P/2\pi}{R^2+(P/2\pi)^2},\qquad
+\frac{\tau}{\kappa}=\frac{P}{2\pi R}.
+\]
+The golden band fixes $P/(2\pi R)$ and hence both $(R,P)$ once $\delta_\star$ and groove partition are set by docking.
+
+\subsection{Corollaries}
+\textbf{C1 (optimal stacking angle window).} The face alignment term pinches the dihedral between stacked bases to a small interval $[\theta_-,\theta_+]$ around the elastica optimum; outside this window the ledger penalty steepens (convex $J$), predicting a sharp drop in stability.
+
+\noindent\textbf{C2 (bend persistence).} Linearization about the stationary helix gives a quadratic bending Hamiltonian with persistence length
+\[
+\ell_p\ \approx\ \frac{A_{\mathrm{eff}}}{k_B T}\,,
+\]
+where $A_{\mathrm{eff}}$ is the second variation of the transport term evaluated at $(\kappa,\tau)$ selected by the golden band; $\ell_p$ thus inherits weak temperature and solvent dependencies through $A_{\mathrm{eff}}$ only.
+
+\noindent\textbf{C3 (tolerance bands).} Finite H–bond windows and sterics induce narrow tolerances:
+\[
+\frac{P}{\varphi^2 G_{\min}} \in [1-\epsilon_P,\ 1+\epsilon_P],\qquad
+\frac{G_{\maj}}{\varphi G_{\min}} \in [1-\epsilon_G,\ 1+\epsilon_G],
+\]
+with $\epsilon_{P},\epsilon_{G}$ of order a few percent set by $(d_{\min},d_{\max},\alpha_{\max},\beta_{\max})$ and $A/C$.
+
+\subsection{No–go (geometry)}
+\textbf{Proposition 4.2 (non–duplex codes are suboptimal under $\varphi$ timing).}
+\emph{Any non–duplex code (planar ladders, parallel ribbons without counter–winding, or multistrand bundles without complementary face locking) cannot simultaneously (i) minimize the transport part of \eqref{eq:geo-action} under the steric window and (ii) achieve a stable face–to–face docking ledger minimum across $\varphi$–timed gates.} 
+
+\emph{Sketch.} Planar/ladder geometries force alternating regions of high curvature or torsion to satisfy sterics and docking, raising $A\kappa^2+C\tau^2$ versus the circular–helix baseline; bundles induce unavoidable face frustration (no global antiparallel lock) that increases $J(r_{\mathrm{dock}})$ at gate. Under the RS gate’s symmetry and no–knob policy, these penalties cannot be tuned away, so the duplex dominates.
+
+\subsection{Falsifier}
+If experiments run under the declared instrument (Sec.~2) yield \emph{stable} winners whose fitted geometry lies \emph{outside} the $\varphi$ bands—e.g., $G_{\maj}/G_{\min}\notin[\varphi(1\!-\!\epsilon_G),\,\varphi(1\!+\!\epsilon_G)]$ or $P/(\varphi^2 G_{\min})\notin[1\!-\!\epsilon_P,\,1\!+\!\epsilon_P]$—and these winners persist after schedule/energy audits, then the duplex inevitability claim (Theorem~4.1) is rejected. The falsifier is quantitative and local: it does not depend on environmental recipes or monomer identities, only on the auditable geometry under the gate.
+
+\section{Energetics and Scheduling}\label{sec:energetics}
+
+\subsection{LISTEN/LOCK/BALANCE}
+We partition each control period $T$ into three phase groups aligned with the eight--beat $\varphi$ schedule:
+\[
+W_{\mathrm{LISTEN}},\quad W_{\mathrm{LOCK}},\quad W_{\mathrm{BALANCE}},\qquad
+|W_{\mathrm{LISTEN}}|+|W_{\mathrm{LOCK}}|+|W_{\mathrm{BALANCE}}|=T,
+\]
+with $|W_{\mathrm{LOCK}}|/|W_{\mathrm{LISTEN}}|\in\{\varphi,\varphi^{-1}\}$ and analogous relations between groups inherited from Sec.~2. During \emph{LISTEN} the mid--IR drive is low (diagnostic illumination); during \emph{LOCK} a short, bounded envelope delivers energy near the coherence band $\tilde\nu_{\mathrm{coh}}\approx 724~\mathrm{cm^{-1}}$; during \emph{BALANCE} the drive is relaxed to allow incorrect contacts to dissipate and transport to resume.
+
+\paragraph{Work/heat and duty.}
+Let $I(t)$ be the mid--IR intensity incident on the sample and $S(\tilde\nu,t)$ the measured spectral power density. The per--cycle energy input and lock--band occupancy are
+\[
+E_{\mathrm{in}}=\int_{0}^{T}\! I(t)\,dt,\qquad
+\mathrm{Occ}_{724}=\frac{1}{|W_{\mathrm{LOCK}}|}\int_{W_{\mathrm{LOCK}}}\!\!\!\!S(\tilde\nu\!\approx\!724\,\mathrm{cm^{-1}},t)\,dt.
+\]
+Ledger descent over the lock gate is $\Delta\mathcal{L}=\mathcal{L}_{\mathrm{pre}}-\mathcal{L}_{\mathrm{post}}$. We define the \emph{energetic efficiency} of recognition as
+\[
+\eta\;=\;\frac{\Delta\mathcal{L}}{E_{\mathrm{in}}}\,.
+\]
+Duty--cycle design sets $(|W_{\mathrm{LISTEN}}|:|W_{\mathrm{LOCK}}|:|W_{\mathrm{BALANCE}}|)$ and window ramps (raised--cosine $C^1$ by default) to maximize $\eta$ subject to safety bounds (dose, peak $T$, $\dot T$). Gate \emph{noise immunity} arises from (i) $J(x)$ symmetry (equal penalty for over/under), (ii) phase averaging inside windows, and (iii) $\varphi$--separation that suppresses low--order spectral leakage (Sec.~\ref{sec:interference}).
+
+\subsection{Timing advantage}
+\textbf{Lemma 5.1 (φ--gating maximizes ledger descent per unit energy).}
+\emph{Among schedules with identical duty, per--cycle energy $E_{\mathrm{in}}$, and ramp class, the eight--phase $\varphi$ schedule achieves maximal (or co--maximal) energetic efficiency $\eta=\Delta\mathcal{L}/E_{\mathrm{in}}$ within the class of band--limited plant couplings. Moreover, for co--phased or equal--spaced baselines,}
+\[
+\frac{\Delta\mathcal{L}_\varphi}{E_{\mathrm{in}}}\ \ge\ \Big(1+\sigma\Big)\,\frac{\Delta\mathcal{L}_{\mathrm{base}}}{E_{\mathrm{in}}},\qquad
+\sigma\ \ge\ c\,(1-\kappa)\,\varphi^{-1}\ >\ 0,
+\]
+\emph{where $\kappa\in(0,1)$ is the cross--interference constant of Theorem~A.1 and $c$ depends on window smoothness and surrogate sensitivities.}
+
+\emph{Proof sketch.} In the near--linear regime, the incremental ledger descent is the useful signal minus cross--terms that re--excite off--target modes. The φ--phase interference bound (Theorem~A.1) reduces the time--averaged bilinear cross--terms by a strict factor $\kappa\varphi^{-1}$ relative to co--phased/equal--spaced schedules at equal duty. With identical $E_{\mathrm{in}}$ and ramps, less leakage yields larger net $\Delta\mathcal{L}$; maximizing over schedules in the admissible class gives the stated efficiency ordering. \hfill$\square$
+
+\subsection{Spectral predictions}
+The instrument predicts specific, phase--resolved spectral features:
+\begin{enumerate}
+\item \textbf{IR lock spike.} A transient increase in $\mathrm{Occ}_{724}$ during \emph{LOCK} with ratio
+\[
+\mathcal{R}_{\mathrm{lock}}=\frac{\mathrm{Occ}_{724}^{\mathrm{LOCK}}}{\mathrm{Occ}_{724}^{\mathrm{LISTEN}}}\ \ge\ R_{\min},
+\]
+where $R_{\min}$ is preregistered from sensitivity calibration.
+\item \textbf{Phase--dependent line shapes.} The measured spectrum is the convolution of the intrinsic line with the window envelope. $C^1$ (raised--cosine) windows suppress side lobes; hard edges introduce sidelobes at multiples of $2\pi/|W_{\mathrm{LOCK}}|$, degrading $\eta$ (observable as broadened shoulders).
+\item \textbf{Isotopic scaling (D$_2$O, deuterated tokens).} For a mode approximated as a harmonic oscillator,
+\[
+\tilde\nu'\ \approx\ \tilde\nu\,\sqrt{\frac{\mu}{\mu'}},
+\]
+with reduced mass $\mu$ ($\mu'$ after isotopic substitution). Predictions: a redshift of the lock band under D substitution with magnitude fixed by the local reduced--mass change; the lock spike persists if timing and dose are unchanged.
+\item \textbf{Temperature scaling.} Mild, approximately linear anharmonic redshift
+\[
+\frac{d\tilde\nu}{dT}\ \approx\ \alpha_T<0\quad(\text{small}),\qquad
+\frac{d\,\mathrm{Occ}_{724}}{dT}\ \approx\ \beta_T,
+\]
+with $\alpha_T,\beta_T$ preregistered from calibration runs; the spike amplitude decreases outside the optimal window due to broadened occupancy.
+\end{enumerate}
+
+\subsection{Falsifier}
+If \emph{either} (i) the drive is moved off--band by a preregistered margin or (ii) the φ schedule is scrambled to equal--spaced/co--phased updates at equal duty, then both
+\[
+\mathcal{R}_{\mathrm{lock}}<R_{\min}
+\quad\text{and}\quad
+\Delta\mathcal{L}<\Delta\mathcal{L}_{\min}
+\]
+must be observed; failure of this negative control falsifies the claimed timing/energetics advantage. Conversely, under the declared instrument, absence of a lock spike and ledger drop above thresholds falsifies the gate itself. All thresholds $(R_{\min},\Delta\mathcal{L}_{\min})$ are preregistered; outcomes are decided by pass/fail audits, not post hoc interpretation.
+
+\section{Replication as a Fixed Point}\label{sec:fixedpoint}
+
+\subsection{Recognition map}\label{sec:recmap}
+Let $s$ denote the local state (two facing sites, backbone frames, solvent microstate, and contact register $\sigma\in\{\textsf{free},\textsf{bind-ready},\textsf{locked}\}$). One $\varphi$–timed cycle (LISTEN/LOCK/BALANCE) induces a \emph{gate kernel}
+\[
+K_\varphi(s'\mid s)\,,
+\]
+a Markov transition law whose control dependence enters only through the \emph{timing envelope} and dose (Sec.~\ref{sec:energetics}), not through sequence. Let $\mathcal{R}$ be the recognition operator acting on observables $f$ by $(\mathcal{R}f)(s)=\mathbb{E}[f(s')\mid s]$ with $s'\sim K_\varphi(\cdot\mid s)$. We will use coarse \emph{recognition ratios} $r=(r_i)_i$ (dimensionless proxies of correct vs.\ incorrect microstates) and write the induced map on ratios as
+\[
+r^{+}\;=\;\mathcal{R}(r)\,.
+\]
+Under the RS \emph{no–knob} policy, $K_\varphi$ is sequence–indifferent at the gate; complement identity enters only \emph{through geometry} (Sec.~4), so $\mathcal{R}$ is the same map for all sequences that respect the duplex constraints.
+
+\subsection{Contraction metric}\label{sec:contraction}
+Let $u=\ln r$ be log–ratio coordinates and equip the space with the weighted quadratic metric
+\[
+d_W(u,v)^2\;=\;\sum_i w_i\,(u_i-v_i)^2,
+\]
+where $w_i>0$ are the transport–sensitivity weights (Sec.~2). Denote by $u^\star$ the \emph{complement fixed point} ($r^\star\!=\!1$). 
+
+\paragraph{Lemma 6.1 (local contraction).}
+\emph{There exist $\rho\in(0,1)$ and a neighborhood $\mathcal{N}$ of $u^\star$ such that for all $u\in\mathcal{N}$, one $\varphi$–timed gate yields}
+\[
+\mathbb{E}\big[\,d_W\big(\,u^{+},u^\star\,\big)^2\ \big|\ u\,\big]\ \le\ \rho\; d_W\big(u,u^\star\big)^2\,.
+\]
+\emph{Sketch.} In log–ratios, the ledger $J(r_i)=\cosh(u_i)-1$ is quadratic to second order ($J\approx \tfrac12 u_i^2$). The gate kernel is a small, smooth perturbation of the identity with drift aligned to $-\nabla_u \sum_i w_i J(r_i)$ (ledger descent during LOCK). Linearization and the φ–phase interference bound (which suppresses cross–terms) give a Jacobian with spectral radius $<1$ in the $W$–metric. \hfill$\square$
+
+\paragraph{Corollary 6.2 (Banach fixed point $\Rightarrow$ templating).}
+\emph{On $\mathcal{N}$, $\mathcal{R}$ admits a unique fixed point $u^\star$ and $u\mapsto \mathcal{R}(u)$ is a contraction; iterates converge geometrically to $u^\star$. Interpreting $u^\star$ as complement alignment, the cycle implements \emph{templated copying}.}
+
+\subsection{Error bounds}\label{sec:errorbounds}
+Let $\epsilon$ be the per–site copying error (mismatch probability) over one cycle, and let $\delta t$ be the timing mismatch from the optimal LOCK centroid within its window.
+
+\paragraph{Proposition 6.3 (quadratic timing sensitivity).}
+\emph{For smooth (at least $C^1$) window edges and band–limited response, there exist $\epsilon_0\ge 0$ and $c>0$ such that for sufficiently small timing offsets}
+\[
+\epsilon\ \le\ \epsilon_0\ +\ c\,\delta t^2\,.
+\]
+\emph{Sketch.} The correct–lock transition probability attains a maximum at the optimal phase; smoothness implies a vanishing first derivative and negative second derivative there. Expanding to second order and normalizing by total attempts yields a quadratic loss; φ–separation prevents first–order contamination from other actuators. \hfill$\square$
+
+\paragraph{Speed–fidelity trade.}
+Let $|W_{\mathrm{LOCK}}|=\tau_L$ and cycle time $T$ (throughput $\nu=1/T$). The ledger drop $\Delta\mathcal{L}(\tau_L)$ is increasing, concave in $\tau_L$ (diminishing returns under dose caps); fidelity improves with $\Delta\mathcal{L}$ (next subsection), while throughput improves as $T$ shrinks. Thus, for declared caps,
+\[
+\frac{d(1-\epsilon)}{d\nu}\ \le\ -\,\alpha\,\frac{d\,\Delta\mathcal{L}}{d\nu}\,,
+\]
+with $\alpha>0$ a calibration constant: higher speed (larger $\nu$) generally reduces ledger drop per cycle and hence the achievable fidelity.
+
+\subsection{Fidelity floor}\label{sec:fidelityfloor}
+We now link the \emph{measured} LOCK–phase ledger drop to a guaranteed accuracy.
+
+\paragraph{Theorem 6.4 (accuracy from ledger drop).}
+\emph{There exist calibration constants $\kappa_f>0$ and $\varepsilon_f\ge 0$ such that for any cycle with declared LOCK–phase ledger descent $\Delta\mathcal{L}$, the per–site copying accuracy obeys}
+\[
+1-\epsilon\ \ge\ (1-\epsilon_0)\ +\ \kappa_f\,\Delta\mathcal{L}\ -\ \varepsilon_f\,.
+\]
+\emph{Sketch.} The gate increases the odds ratio of correct over incorrect binding by a factor that is exponential in the log–ratio drift; near the fixed point this increment is linear in $u$ and hence in $J$ (quadratic norm). Using the local descent lemma ($\Delta Q \propto -\Delta\mathcal{L}$ analogue) and a monotone link between odds ratio and accuracy yields the inequality with $\kappa_f$ from sensitivity calibration and $\varepsilon_f$ absorbing higher–order and tube–robustness terms. \hfill$\square$
+
+\paragraph{Calibration.}
+Estimate $\kappa_f$ by measuring $(\Delta\mathcal{L},\,\epsilon)$ over short episodes under φ–phased probes; fit a robust slope for $1-\epsilon$ vs.\ $\Delta\mathcal{L}$ near operating points; set $\varepsilon_f$ to the lower one–sided confidence margin. Preregister $(\kappa_f,\varepsilon_f,\epsilon_0)$.
+
+\subsection{Falsifier}\label{sec:fp-falsifier}
+Under the declared instrument (φ–timed drive, coherence band, fixed thresholds), if complement copying \emph{does not} exceed matched controls (off–band or scrambled timing) by at least the preregistered ledger margin—i.e.,
+\[
+\big[(1-\epsilon)_{\varphi}- (1-\epsilon)_{\text{control}}\big]\ <\ \kappa_f\,\Delta\mathcal{L} - \varepsilon_f\,,
+\]
+then the fixed–point templating claim fails. This falsifier is local, quantitative, and sequence–indifferent; it terminates the claim without recourse to recipe–specific narratives.
+
+\section{Evolvability Window}\label{sec:evolvability}
+
+\subsection{Timing jitter $\;\Rightarrow\;$ mutation}\label{sec:jitter-mutation}
+Let $\delta t$ denote the deviation of the LOCK centroid from its preregistered optimal phase within the active window. For small offsets, Proposition~6.3 gives a quadratic penalty on per–site error
+\[
+\epsilon\;\le\;\epsilon_0\;+\;c\,\delta t^2\quad(+\ \text{higher order}).
+\]
+Assume phase timing jitter is exogenous and zero–mean with variance $\sigma_t^2$ and finite fourth moment $\mu_4=\mathbb{E}[\delta t^4]$. Then, to leading order (delta method),
+\begin{align*}
+\mathbb{E}[\epsilon]
+&\;\approx\;\epsilon_0\;+\;c\,\mathbb{E}[\delta t^2]
+\;=\;\epsilon_0\;+\;c\,\sigma_t^2,\\
+\mathrm{Var}[\epsilon]
+&\;\approx\;c^2\,\mathrm{Var}[\delta t^2]
+\;=\;c^2\,(\mu_4-\sigma_t^4)
+\;\begin{cases}
+2c^2\sigma_t^4 & \text{if }\delta t\sim\mathcal{N}(0,\sigma_t^2),\\
+\text{use }\mu_4\text{ otherwise.}
+\end{cases}
+\end{align*}
+\paragraph{Bias structure (transition vs.\ transversion analogues).}
+Let the docking tolerance be anisotropic: acceptance volumes differ for “in–class” vs.\ “cross–class” mismatches. Writing angular/distance windows as $(\Delta\alpha,\Delta\beta,\Delta\delta)$, the ratio of class–conditional error propensities is predicted by acceptance–volume ratios,
+\[
+\frac{p_{\mathrm{in}}}{p_{\mathrm{cross}}}\ \approx\
+\frac{\Delta\alpha_{\mathrm{in}}\Delta\beta_{\mathrm{in}}\Delta\delta_{\mathrm{in}}}%
+{\Delta\alpha_{\mathrm{cross}}\Delta\beta_{\mathrm{cross}}\Delta\delta_{\mathrm{cross}}}\,,
+\]
+hence a \emph{bias} toward the class with looser geometric tolerances under identical timing jitter. For canonical nucleotides this predicts a “transition $>$ transversion” tendency; for other chemistries compute from the measured docking anisotropy.
+
+\subsection{Selection}\label{sec:selection}
+Environmental changes (solvent, temperature, cofactors) perturb sensitivities and thus the weights $w_i$ and/or targets $y_i^\star$, yielding variant–specific ledger drops $\Delta\mathcal{L}_g$ and error rates $\epsilon_g$. Define a fitness proxy per cycle
+\[
+f_g\;=\;\kappa_{\mathrm{sel}}\,\Delta\mathcal{L}_g\;-\;\lambda_{\mathrm{err}}\,\epsilon_g,
+\]
+with positive calibration constants $(\kappa_{\mathrm{sel}},\lambda_{\mathrm{err}})$ (declared). Variant frequencies $x_g$ then follow a replicator equation
+\[
+x_g^{(t+1)}\;=\;\frac{x_g^{(t)}\,e^{\,f_g}}{\sum_h x_h^{(t)}\,e^{\,f_h}}
+\quad\Longrightarrow\quad
+\Delta x_g \approx x_g\,(f_g-\bar f)\quad\text{for small }f,
+\]
+so \emph{differential ledger descent} acts as selection strength modulated by fidelity costs. This makes $\Delta\mathcal{L}$ both a control objective and an evolutionary proxy.
+
+\subsection{Phase diagram}\label{sec:phasediagram}
+Let $D$ be a dimensionless drive parameter (e.g., normalized energy per cycle $E_{\mathrm{in}}/E_0$ or duty–adjusted lock dose) and let $\rho_L=|W_{\mathrm{LOCK}}|/T$ be the lock duty. Using Secs.~\ref{sec:energetics}–\ref{sec:fixedpoint}, the regime boundaries are:
+\begin{align*}
+\textbf{No replication:}&\quad \mathrm{Occ}_{724}<\Theta_{\mathrm{spec}}\ \ \text{or}\ \ \Delta\mathcal{L}<\Lambda
+\quad(\text{gate fails; below dose/geometry thresholds}).\\[2pt]
+\textbf{Life–like:}&\quad \mathrm{Occ}_{724}\ge\Theta_{\mathrm{spec}},\ \Delta\mathcal{L}\ge\Lambda,\ \epsilon\le \epsilon_c(L,\sigma)
+\quad(\text{fixed point holds; bounded errors}).\\[2pt]
+\textbf{Error catastrophe:}&\quad \epsilon>\epsilon_c(L,\sigma)\ \ \text{or}\ \ \text{certificate fails (overdrive broadening)}.
+\end{align*}
+Here $\epsilon_c$ is a quasispecies–style threshold depending on effective genome length $L$ and selective superiority $\sigma$:
+\[
+(1-\epsilon)^L\;>\;\sigma^{-1}\quad\Longleftrightarrow\quad
+\epsilon\;<\;\epsilon_c(L,\sigma)\ :=\ 1-\sigma^{-1/L}.
+\]
+Using the fidelity floor (Theorem~6.4) and jitter model (Sec.~\ref{sec:jitter-mutation}), an operational approximation is
+\[
+\epsilon(D,\sigma_t^2)\ \lesssim\ \epsilon_0\;+\;c\,\sigma_t^2\;-\;\kappa_f\,\Delta\mathcal{L}(D,\rho_L)\;+\;\varepsilon_f,
+\]
+so the life–like band is the locus where the right–hand side stays below $\epsilon_c$ while certificate thresholds are met. Empirically, $\Delta\mathcal{L}$ increases then saturates with $D$ (dose capped), while excessive $D$ broadens line shapes and can raise $\epsilon$ (off–target stabilization), shrinking the safe band—hence a \emph{dome–shaped} feasible region in $(D,\rho_L)$.
+
+\subsection{Falsifier}\label{sec:evo-falsifier}
+With jitter statistics preregistered (distribution and $\sigma_t^2$) and sensitivity $c$ calibrated, the model predicts
+\[
+\mathrm{Var}[\epsilon]\ \approx\ c^2\,(\mu_4-\sigma_t^4)\quad(\text{Gaussian: }2c^2\sigma_t^4).
+\]
+If measured mutation \emph{variance} lies outside the predicted band, or if the mean error fails the bound $\mathbb{E}[\epsilon]\le \epsilon_0+c\sigma_t^2$ under declared conditions, the evolvability–window claim fails. Likewise, if the phase diagram’s life–like region is not reproducible under fixed $(\Theta_{\mathrm{spec}},\Lambda,\kappa_f,\varepsilon_f)$ and $(D,\rho_L,\sigma_t^2)$, the window is rejected. All outcomes are decided by the preregistered audits and confidence bands.
+
+\section{Minimal Metabolic Closure}\label{sec:closure}
+
+\subsection{Gradient coupling}\label{sec:gradient}
+We couple the recognition gate to a minimal energy supply composed of a synchronized proton/electron flow. Let the electrochemical potentials be
+\[
+\Delta \mu_{\mathrm{H}^+}\;=\;F\,\Delta\Psi\;-\;RT\ln(10)\,\Delta\mathrm{pH},\qquad
+\Delta \mu_{e^-}\;=\;F\,\Delta\Psi_e,
+\]
+with Faraday constant $F$, membrane (or interfacial) potentials $\Delta\Psi$ and $\Delta\Psi_e$, temperature $T$. The \emph{φ–timed} drive gates these gradients over the eight windows:
+\[
+\textsf{LISTEN: } \text{baseline bias (leak compensation)};\quad
+\textsf{LOCK: } \text{brief redox push to favor correct ligation};\quad
+\textsf{BALANCE: } \text{proton motive export of waste}.
+\]
+Denote the per–cycle particle counts admitted by the certificate as $n_{\mathrm{H}^+}$, $n_{e^-}$, and the coupling efficiency (chemistry to ledger–relevant work) as $\eta_{\mathrm{coup}}\in(0,1]$. The \emph{available gradient work per cycle} is
+\begin{equation}\label{eq:grad-work}
+W_{\mathrm{grad}}\;=\;\eta_{\mathrm{coup}}\Big(n_{\mathrm{H}^+}\,\Delta \mu_{\mathrm{H}^+}\;+\;n_{e^-}\,\Delta \mu_{e^-}\Big).
+\end{equation}
+
+\subsection{Viability inequality}\label{sec:viability}
+Let the per–cycle recognition/templating ledger drop be $\Delta \mathcal{L}$ and the calibrated energy quantum for lock events be $E_{\mathrm{coh}}\approx 0.09~\mathrm{eV}$ (Sec.~2). Write the \emph{required work per cycle} as
+\[
+W_{\mathrm{req}}\;=\;W_{\mathrm{rec}}\;+\;W_{\mathrm{lig}}\;+\;W_{\mathrm{exp}},
+\]
+where $W_{\mathrm{rec}}\approx N_{\mathrm{lock}}\,E_{\mathrm{coh}}$ (number of lock events $N_{\mathrm{lock}}$), $W_{\mathrm{lig}}$ covers activation for covalent joins (reduced by catalysis), and $W_{\mathrm{exp}}$ is waste export (osmotic/entropic). A conservative proxy uses the measured ledger drop with a calibration factor $\chi_E>0$:
+\[
+W_{\mathrm{rec}}\ \ge\ \chi_E\,\Delta \mathcal{L}\,.
+\]
+\textbf{Viability inequality (closure):}
+\begin{equation}\label{eq:closure}
+W_{\mathrm{grad}}\ \ge\ W_{\mathrm{req}}
+\quad\Longleftrightarrow\quad
+\eta_{\mathrm{coup}}\Big(n_{\mathrm{H}^+}\,\Delta \mu_{\mathrm{H}^+}+n_{e^-}\,\Delta \mu_{e^-}\Big)
+\ \ge\ 
+\chi_E\,\Delta \mathcal{L}\;+\;W_{\mathrm{lig}}\;+\;W_{\mathrm{exp}}\,.
+\end{equation}
+All terms are phase–gated: redox bias aligns to \textsf{LOCK} (favor correct ligation); proton motive force aligns to \textsf{BALANCE} (drive export), with per–phase caps enforced by the certificate (dose, temperature, safety).
+
+\subsection{Sustained operation}\label{sec:sustained}
+We declare \emph{autonomous copying} when, under steady φ–timed IR and steady gradients:
+\begin{enumerate}
+\item \textbf{Throughput:} copy rate $\nu\ge \nu_{\min}$ sustained for $T_{\mathrm{sustain}}\ge T_{\min}$ without external reagent pulsing beyond the scheduled drives.
+\item \textbf{Certificate:} pass rate $\ge p_{\min}$ over $M$–window aggregations; lock–band spike and ledger margin remain above thresholds.
+\item \textbf{Fidelity:} per–site error obeys the fidelity floor (Thm.~6.4) with declared $(\kappa_f,\varepsilon_f)$; no drift beyond bands.
+\item \textbf{Waste:} concentrations of declared byproducts remain $\le C_{\max}$ with bounded variance; export events occur in \textsf{BALANCE} windows as scheduled.
+\item \textbf{Gradient health:} $\Delta\mu_{\mathrm{H}^+},\Delta\mu_{e^-}$ stay within preregistered bands; no cumulative depletion beyond tolerance.
+\end{enumerate}
+Benchmarks report $(\nu,\ \textsf{Pass},\ 1-\epsilon,\ C_{\mathrm{waste}},\ \Delta\mu)$ as window–level signed metrics; sustained operation is a pass only if all five criteria hold simultaneously for the full $T_{\min}$.
+
+\subsection{Falsifier}\label{sec:closure-falsifier}
+With gradients fixed to preregistered bands and recognition success established (lock spike and $\Delta\mathcal{L}\ge\Lambda$), \emph{failure} to satisfy \eqref{eq:closure}—manifested as any of:
+\[
+\nu<\nu_{\min}\quad\text{(stall)},\qquad
+\textsf{Pass}<p_{\min}\quad\text{(gate collapse)},\qquad
+C_{\mathrm{waste}}>C_{\max}\quad\text{(export failure)},\qquad
+\Delta\mu\ \text{drift}\ \notin\text{bands},
+\]
+over the preregistered horizon $T_{\min}$—falsifies \emph{metabolic closure} under the declared instrument. The verdict is audit–based and local: it does not depend on environmental recipes; only on φ–timed coupling, measured gradients, and the signed certificate logs.
+
+\section{Cross–Chemistry Universality}\label{sec:universality}
+
+\subsection{Class definition}\label{sec:class-def}
+A polymer class $\mathcal{C}$ is \emph{eligible} for RS–instrument universality if its monomers/backbone satisfy three structural criteria:
+
+\paragraph{Backbone stiffness.}
+There exist mesoscopic moduli $(A_{\mathcal{C}},C_{\mathcal{C}})$ (bend/twist) that admit a constant–curvature/constant–torsion helix within the steric window (Sec.~\ref{sec:geometry}). Operationally: the class supports a circular–helix solution with radius $R$ and pitch $P$ that respect excluded volume and docking distance.
+
+\paragraph{Complementary faces.}
+Each monomer presents a directed face (or face pair) with angular/distance tolerances $(\Delta\alpha,\Delta\beta,\Delta\delta)$ enabling antiparallel docking; the acceptance volume is nonzero and sequence–indifferent at the \textsf{LOCK} gate.
+
+\paragraph{IR coupling.}
+There is a vibrational mode (or narrow cluster) with appreciable absorption cross–section in the mid–IR near the recognition band. We declare a universal acceptance window
+\[
+\tilde\nu_{\mathrm{coh}}\in[720,730]~\mathrm{cm^{-1}}
+\]
+and accept isotopic/chemical shifts predicted by reduced–mass scaling (Sec.~\ref{sec:energetics}).
+
+\subsection{Cases}\label{sec:cases}
+\paragraph{Canonical nucleotides (DNA/RNA).}
+Pass expected. B–like duplex satisfies $(A,C)$ and face constraints; lock band present; $\varphi$ geometry bands predicted (Sec.~\ref{sec:geometry}). RNA may prefer A–form under given solvent; still duplex with major/minor ratio within tolerance.
+
+\paragraph{PNA/TNA/GNA.}
+PNA (peptide backbone, neutral): higher stiffness; strong face complementarity; predicted tighter tolerance bands and modest blueshift/narrowing of the lock line; duplex passes with slightly altered $R,P$ but $\rho_{\maj/\min}\!\approx\!\varphi$ remains. TNA/GNA (alternative sugars): reduced helical radius with pitch scaling that keeps $P/(\varphi^2 G_{\min})$ within bands if faces are preserved.
+
+\paragraph{Peptide–nucleic hybrids.}
+Mixed backbones with nucleotide–like faces: pass if hybrid maintains antiparallel face registry; expect broader BALANCE dispersion (higher $W_{\mathrm{exp}}$), but geometry bands hold; lock spike smaller than PNA/DNA at equal dose.
+
+\paragraph{Mineral–templated polymers.}
+Surface–assisted assembly (mica/silicate): \emph{conditional}. If the surface enforces 2D ladders (no counter–winding), the no–go (Sec.~\ref{sec:geometry}) predicts failure; if the surface serves only as a weak anisotropic scaffold (allows out–of–plane twist), duplex remains optimal and passes. Expect attenuated lock spike due to substrate damping.
+
+\subsection{Universality test}\label{sec:uni-test}
+\textbf{Protocol (same gate, same audits, no knobs).}
+\begin{enumerate}
+\item \textbf{Gate:} identical eight–beat $\varphi$ schedule, identical mid–IR envelopes (intensity/duty), identical LISTEN/LOCK/BALANCE timing; jitter budgets fixed.
+\item \textbf{Audits:} same certificate thresholds: geometry bands $(P,G_{\min},G_{\maj},\rho_{\maj/\min})$, lock occupancy $\mathrm{Occ}_{724}\ge \Theta_{\mathrm{spec}}$, ledger margin $\Delta\mathcal{L}\ge \Lambda$, and safety bounds (dose/$T$).
+\item \textbf{No knobs:} no per–sequence/per–species tuning of timing, thresholds, or objective; only \emph{global} safety limits (e.g., dose cap) may differ across classes if mandated by materials constraints (declared a priori).
+\item \textbf{Outcomes:}
+\begin{itemize}
+\item \emph{Pass (universality affirmed):} duplex geometry within $\varphi$ bands; lock spike; $\Delta\mathcal{L}\ge\Lambda$; templating with fidelity floor (Thm.~6.4).
+\item \emph{Fail (class–specific deficiency):} absence of any audit criterion \emph{without} violating safety caps.
+\end{itemize}
+\end{enumerate}
+
+\paragraph{Predictions per class (under identical gate).}
+\begin{itemize}
+\item DNA/RNA: Pass; $\mathcal{R}_{\mathrm{lock}}$ large; $\Delta\mathcal{L}$ saturates smoothly with dose; geometry within $\pm$ few \%.
+\item PNA: Pass; stronger lock (higher $\mathcal{R}_{\mathrm{lock}}$) at equal dose; narrower tolerance bands; slightly shifted line shape.
+\item TNA/GNA: Pass if faces preserved; smaller $R$, adjusted $P$; ratios within bands; moderate lock amplitude.
+\item Peptide–nucleic hybrids: Pass with increased $W_{\mathrm{exp}}$; certificate still satisfied; modestly lower throughput $\nu$ at equal dose.
+\item Mineral–templated 2D ladders: Fail (no duplex); ledger penalty rises during BALANCE; geometry outside bands.
+\end{itemize}
+
+\subsection{Falsifier}\label{sec:uni-falsifier}
+If \emph{any} non–duplex class, driven under the declared instrument (same gate, same audits, no knobs), (i) \emph{wins the ledger} (achieves $\Delta\mathcal{L}\ge\Lambda$ with certificate pass) \emph{or} (ii) achieves sustained templating \emph{without} complementary faces, then the RS \emph{exclusivity} claim fails. Conversely, if a duplex–capable class systematically \emph{cannot} meet the geometry bands and lock/ledger thresholds despite safety–compliant dose and timing, universality is rejected for that class. Decisions are made by the preregistered certificate, not post hoc interpretation.
+
+\section{Chirality Emergence}\label{sec:chirality}
+
+\subsection{Mechanism}\label{sec:chi-mech}
+We consider achiral (or racemic) precursors on a weakly anisotropic surface (or field) that breaks mirror symmetry through a small, signed parameter $\Delta_{\chi}$ (e.g., handed step edges, screw dislocations, circularly–polarized near–field). The eight–beat $\varphi$–timed gate modulates docking/undocking so that the signed anisotropy \emph{coherently} accumulates during \textsf{LOCK} while dissipating during \textsf{BALANCE}. Let $p_L, p_D$ be the per–cycle probabilities that a nascent contact proceeds to a \emph{correct} locked state for the left– and right–handed enantiomers. The surface anisotropy adds a small energetic skew $\delta E_\chi=\Delta_{\chi}\,\Xi$ to the lock channel (with $\Xi>0$ a declared coupling), so that
+\[
+p_L\;=\;p_0\,e^{+\delta E_\chi/k_BT}\,,\qquad
+p_D\;=\;p_0\,e^{-\delta E_\chi/k_BT}\,,
+\]
+up to higher–order corrections suppressed by the φ–phase interference bound. Because the gating is periodic and phase–coherent, the small bias does not average to zero; it compounds geometrically across cycles.
+
+\subsection{Theorem (lower bound on enantiomeric excess growth)}\label{sec:chi-theorem}
+Let $n_L^{(t)},n_D^{(t)}$ be the counts of correctly locked left/right products after cycle $t$, and define enantiomeric excess
+\[
+\mathrm{ee}^{(t)}\;=\;\frac{n_L^{(t)}-n_D^{(t)}}{n_L^{(t)}+n_D^{(t)}}\,.
+\]
+Assume: (i) the \textsf{LOCK} window and dose satisfy the certificate (Sec.~\ref{sec:energetics}); (ii) per–cycle attempts $N^{(t)}$ are $\phi$–gated and bounded away from $0$; (iii) the anisotropy is small, so $\sinh(x)\approx x$ to first order at $x=\delta E_\chi/k_BT$. Then there exists a calibration constant $\gamma_\chi>0$ depending on $N^{(t)}$ and the lock acceptance, such that for all cycles with certificate \textsf{Pass}
+\begin{equation}\label{eq:ee-growth}
+\mathrm{ee}^{(t+1)}\;-\;\mathrm{ee}^{(t)}
+\;\ge\;
+\gamma_\chi\,\frac{\delta E_\chi}{k_BT}\;-\;\varepsilon_\chi
+\;=\;
+\gamma_\chi\,\frac{\Delta_{\chi}\,\Xi}{k_BT}\;-\;\varepsilon_\chi\,,
+\end{equation}
+where $\varepsilon_\chi\ge 0$ absorbs higher–order, jitter, and counting–noise terms (preregistered as a slack). Consequently, over $m$ certified cycles,
+\[
+\mathrm{ee}^{(t+m)}\;\ge\;\mathrm{ee}^{(t)}\;+\;m\Big(\gamma_\chi\,\frac{\Delta_{\chi}\,\Xi}{k_BT}-\varepsilon_\chi\Big)\,.
+\]
+\emph{Sketch.} Under φ–gating, cross–interference terms that would mix the chiral channels are suppressed (Theorem~A.1). With $N^{(t)}$ attempts per cycle, the expected increments satisfy
+\(
+\mathbb{E}[\Delta n_{L,D}] = N^{(t)} p_{L,D}
+\)
+and thus
+\(
+\mathbb{E}[\Delta \mathrm{ee}] \approx \tfrac{N^{(t)}(p_L-p_D)}{N^{(t)}(p_L+p_D)} \approx \tfrac{\sinh(\delta E_\chi/k_BT)}{\cosh(\delta E_\chi/k_BT)} \approx \delta E_\chi/k_BT
+\)
+to first order. The prefactor $\gamma_\chi$ collects acceptance and duty; robustness slack $\varepsilon_\chi$ comes from finite–sample and higher–order terms. \hfill$\square$
+
+\subsection{Proxies}\label{sec:chi-proxies}
+\paragraph{Circular dichroism (CD) vs.\ phase.}
+Measure CD at diagnostic wavelengths (or Raman optical activity) phase–resolved over the eight windows. Prediction: a \emph{locked} phase lead/lag between CD and the lock–band occupancy that tracks $\Delta_{\chi}$; the CD amplitude grows linearly with cycle count in the small–bias regime consistent with \eqref{eq:ee-growth}.
+
+\paragraph{Geometry shifts.}
+Minor adjustments in groove asymmetry and helical twist (sub–percent) correlate with the sign of $\Delta_{\chi}$ due to surface–induced torque; these appear as systematic shifts in fitted $(P,G_{\maj},G_{\min})$ within the tolerance bands of Sec.~\ref{sec:geometry}.
+
+\paragraph{Ledger asymmetry.}
+A small, signed difference in LOCK–phase ledger drop between mirror preparations,
+\(
+\Delta\mathcal{L}_L-\Delta\mathcal{L}_D \propto \delta E_\chi
+\),
+serves as a controller–level proxy even before bulk composition noticeably drifts.
+
+\subsection{Falsifier}\label{sec:chi-falsifier}
+Preregister $(\Delta_{\chi},\Xi,k_BT,\gamma_\chi,\varepsilon_\chi)$ and the φ–timed gate. If, under certified operation,
+\[
+\mathrm{ee}^{(t+m)}-\mathrm{ee}^{(t)}\ <\ m\Big(\gamma_\chi\,\tfrac{\Delta_{\chi}\,\Xi}{k_BT}-\varepsilon_\chi\Big)
+\quad \text{for multiple }m\ \text{in a planned range,}
+\]
+\emph{or} the phase–resolved CD and ledger asymmetry show no signed response to $\Delta_{\chi}$ within bands, then the chirality–emergence mechanism is rejected under the RS instrument. Negative controls (off–band drive; scrambled timing) must also erase any apparent bias; failure to do so falsifies the instrument specificity.
+
+\section{Instrument Engineering (safe and reproducible)}\label{sec:engineering}
+
+\subsection{$\boldsymbol{\varphi}$--timed IR driver}\label{sec:driver}
+\paragraph{Source and modulation.}
+A mid–IR source (QCL or OPO; linewidth $<\!2~\mathrm{cm^{-1}}$) centered in the coherence window $\tilde\nu_{\mathrm{coh}}\in[720,730]~\mathrm{cm^{-1}}$ is amplitude–modulated by an AOM/EOM under FPGA timing. Window envelopes on $W_\ell$ are $C^1$ raised–cosine by default,
+\[
+a_\ell(t)\;=\;A_\ell\,
+\begin{cases}
+\frac12\!\Big[1-\cos\!\big(\pi (t-t_\ell)/\tau_{\rm ramp}\big)\Big], & t\in[t_\ell,\,t_\ell+\tau_{\rm ramp}],\\[2pt]
+1, & t\in[t_\ell+\tau_{\rm ramp},\,t_{\ell+1}-\tau_{\rm ramp}],\\[2pt]
+\frac12\!\Big[1-\cos\!\big(\pi (t_{\ell+1}-t)/\tau_{\rm ramp}\big)\Big], & t\in[t_{\ell+1}-\tau_{\rm ramp},\,t_{\ell+1}],
+\end{cases}
+\]
+with $\tau_{\rm ramp}\ll \Delta t_\ell$. Spectral centering uses a narrowband etalon or software–locked FTIR feedback.
+
+\paragraph{Accuracy and jitter budgets.}
+Edge timestamps $(t_\ell)$ satisfy
+\[
+|t_\ell-\hat t_\ell|\ \le\ \varepsilon_j,\qquad \varepsilon_j/T\ \le\ \varepsilon_{\rm rel}\ (\text{e.g. }10^{-3}),
+\]
+verified by a fast photodiode at the sample. Inter–window ratios obey $\Delta t_{\ell+1}/\Delta t_\ell\in\{\varphi,\varphi^{-1}\}\pm \varepsilon_\varphi$ with $\varepsilon_\varphi\ll 10^{-3}$.
+
+\paragraph{Dose control and envelopes.}
+Per–cycle energy
+\[
+E_{\mathrm{in}}=\int_{0}^{T}\! I_0\,a_{\ell(t)}(t)\,dt
+\]
+is held within $\pm2\%$ by inline power metering (thermopile + MCT feedback). LISTEN/LOCK/BALANCE duty $(\rho_{\rm LSN},\rho_{\rm LCK},\rho_{\rm BAL})$ is fixed a priori and hash–committed.
+
+\paragraph{Calibration logs.}
+Each run emits a signed record: wavelength setpoint, instantaneous spectrum, $E_{\mathrm{in}}$, $(t_\ell)$, $(\Delta t_\ell)$, jitter $\varepsilon_j$, and envelope parameters $(A_\ell,\tau_{\rm ramp})$. Records are hash–chained and cross–checked against the compliance log (Sec.~\ref{sec:certificate} analogue).
+
+\subsection{Compartments and surfaces}\label{sec:compartments}
+\paragraph{Emulsions and vesicles.}
+Water–in–oil emulsions ($R\sim 10$–$100~\mu$m) or lipid vesicles ($R\sim 1$–$20~\mu$m) provide isolated reaction volumes. Residence–time distributions $\mathcal{R}(\tau)$ are tuned by flow and geometry so that most encounters align with $W_{\mathrm{LOCK}}$ and export aligns with $W_{\mathrm{BALANCE}}$.
+
+\paragraph{Residence–time control.}
+Microfluidic serpentine channels (Péclet $Pe\gg 1$) and constrictions create deterministic spacing; valve timing is slaved to the φ–scheduler to enforce arrival windows with spread $\sigma_\tau\ll \min_\ell \Delta t_\ell$.
+
+\paragraph{Mineral films and anisotropy.}
+Mica/silicate films or chiral step–edge surfaces can be introduced for templating or chirality experiments (Sec.~\ref{sec:chirality}). Surface coverage is kept in the dilute regime to avoid collective heating; near–field enhancement (optional metasurface) is power–limited and phase–locked to $W_{\mathrm{LOCK}}$.
+
+\subsection{Measurement stack}\label{sec:measurement}
+\paragraph{Time–resolved IR.}
+MCT detector + step–scan FTIR (or QCL–photothermal) provides $\mathrm{Occ}_{724}(t)$. Acquisition is window–triggered; integration over $W_{\mathrm{LOCK}}$ yields the lock metric.
+
+\paragraph{Geometry: AFM/cryo–EM.}
+Fixed samples (glutaraldehyde–safe variants for analog chemistries) are imaged to extract pitch $P$, groove widths $(G_{\min},G_{\maj})$, and ratio $\rho_{\maj/\min}$; fits are registered with window–level logs.
+
+\paragraph{Sequencing / mass spec.}
+For chemistries supporting it, short–read sequencing or high–resolution MS validates copying outcomes and error spectra; results are linked to window indices.
+
+\paragraph{Minimal signed metrics.}
+Per window: $\{\text{phase }\ell,\ t_{\rm begin/end},\ \phi\text{–ratio ok},\ E_{\mathrm{in}},\ \mathrm{Occ}_{724},\ \mathcal{L},\ \mathcal{A},\ \textsf{Pass/Modify/Reject}\}$ with signature and previous–hash. Raw waveforms stay local; summaries suffice for conformance.
+
+\subsection{Safety}\label{sec:safety}
+\paragraph{Containment.}
+Operate in enclosed microfluidic systems with HEPA–filtered exhaust; all effluent passes through UV/heat–kill and chemical quench. No live organisms or pathogenic agents are used; polymers are non–coding analogs unless explicitly approved.
+
+\paragraph{Nutritional dependencies and kill switches.}
+Replicators require external φ–timed IR and gated redox; without the driver they stall. Additional dependencies (labile linkers cleaved by visible/UV, cofactor starvation) provide orthogonal kills.
+
+\paragraph{Reagent choices.}
+Prefer non–toxic monomers/backbones and inert oils/surfactants; avoid volatile organics at IR bands. Waste streams are characterized and neutralized (pH, redox).
+
+\paragraph{Governance and logging.}
+Certificate thresholds, masks, and timing are hash–committed; all hardware interlocks (over–dose, over–temp, valve faults) trip to \textsf{Reject} and log signed events. A safety checklist (materials, containment, disposal) is completed and archived with every campaign.
+
+\section{Experimental Program (pre--registered)}\label{sec:program}
+
+\subsection{Stage I: Recognition}\label{sec:stage1}
+\textbf{Goal.} Demonstrate the \emph{instrument signature} absent templating: a lock--band spike and duplex $\varphi$--geometry under the declared gate.\\
+\textbf{Protocol.} Drive samples with the eight--beat $\varphi$ schedule and mid--IR envelopes (Sec.~\ref{sec:energetics}); enforce \textsf{LISTEN/LOCK/BALANCE} timing and dose caps; \emph{disable ligation} (e.g., omit activators or use nonreactive linkers).\\
+\textbf{Audits.} (i) Lock occupancy $\mathrm{Occ}_{724}\ge \Theta_{\mathrm{spec}}$ during \textsf{LOCK} with ratio $\mathcal{R}_{\mathrm{lock}}\ge R_{\min}$; (ii) fitted duplex geometry in $\varphi$ bands (Sec.~\ref{sec:geometry}); (iii) certificate \textsf{Pass} rate $\ge p_{\min}$; (iv) no templated products above noise (sequencing/MS).
+
+\subsection{Stage II: Templating}\label{sec:stage2}
+\textbf{Goal.} Establish templated copying on short templates with a \emph{ledger margin} versus baselines and quantify the error spectrum.\\
+\textbf{Protocol.} Enable ligation/extension chemistry under the same gate. Use short templates (few tens of sites) to simplify analysis.\\
+\textbf{Audits.} (i) $\Delta\mathcal{L}\ge \Lambda$ aggregated over $M$ windows; (ii) fidelity obeys the \emph{fidelity floor} $1-\epsilon\ge(1-\epsilon_0)+\kappa_f\Delta\mathcal{L}-\varepsilon_f$; (iii) error spectrum within predicted bias bands (Sec.~\ref{sec:evolvability}); (iv) negative controls (off--band, scrambled timing) fail to meet thresholds.
+
+\subsection{Stage III: Autocatalysis}\label{sec:stage3}
+\textbf{Goal.} Close a minimal metabolism loop and achieve \emph{sustained} autonomous copying with adaptation under gentle drift.\\
+\textbf{Protocol.} Add synchronized proton/electron gradients per Sec.~\ref{sec:closure}; run for $T_{\min}$ under steady gate. Introduce preregistered drifts (temperature or solvent) within safety bands.\\
+\textbf{Audits.} (i) Viability inequality \eqref{eq:closure} holds over the run; (ii) throughput $\nu\ge \nu_{\min}$, certificate \textsf{Pass}$\ge p_{\min}$; (iii) fidelity remains above floor; (iv) waste below $C_{\max}$; (v) adaptation: variant frequencies shift per fitness proxy (Sec.~\ref{sec:selection}) without exceeding error catastrophe.
+
+\subsection{Stage IV: Universality}\label{sec:stage4}
+\textbf{Goal.} Test the \emph{same} instrument and audits across polymer classes (Sec.~\ref{sec:universality}).\\
+\textbf{Protocol.} Repeat Stages I–III for: canonical nucleotides; PNA/TNA/GNA analogs; peptide–nucleic hybrids; mineral–templated polymers (where applicable). \emph{No knobs:} timing, thresholds, and objectives unchanged; only materials safety caps differ if mandated (declared a priori).\\
+\textbf{Audits.} Verdict per class: \textsf{Pass} if geometry in $\varphi$ bands, lock spike present, ledger margin met, and templating/fidelity floor achieved; \textsf{Fail} otherwise.
+
+\subsection{Design}\label{sec:design}
+\textbf{Block structure.} AB/BA randomized blocks where \textbf{A}=\,$\varphi$--gated instrument and \textbf{B}=\,(baseline): (i) off--band envelopes; (ii) scrambled timing (equal--spaced/co--phased); (iii) MSE objective (same constraints). Blocks are sufficiently long to stabilize window--level metrics; invalidated blocks (trips) are replaced from a preregistered list.\\
+\textbf{Fixed masks \& error models.} One set of time masks per diagnostic family; robust filters (Huber/biweight) and uncertainty models are \emph{fixed} for all arms.\\
+\textbf{Actuation parity.} Total dose and duty matched within $\pm 2\%$ between A and B; identical LISTEN/BALANCE durations; identical dwell/slew and jitter budgets.
+
+\subsection{Endpoints}\label{sec:endpoints}
+\textbf{Primary (per stage).}
+\begin{itemize}
+\item \textbf{Stage I:} $\mathcal{R}_{\mathrm{lock}}\ge R_{\min}$ and geometry ratios in band with one--sided 95\% CI above thresholds.
+\item \textbf{Stage II:} $\Delta\mathcal{L}\ge\Lambda$ and $1-\epsilon\ge(1-\epsilon_0)+\kappa_f\Delta\mathcal{L}-\varepsilon_f$; superiority over baselines.
+\item \textbf{Stage III:} closure (\eqref{eq:closure}) and sustained throughput $\nu\ge\nu_{\min}$ with \textsf{Pass}$\ge p_{\min}$.
+\item \textbf{Stage IV:} universality verdict per class per Sec.~\ref{sec:universality}.
+\end{itemize}
+\textbf{Secondary.} Certificate \textsf{Pass/Modify/Reject} rates; filter interventions; waste metrics; mutation variance vs.\ jitter prediction; adaptation slopes.\\
+\textbf{Acceptance bands.} Thresholds $(\Theta_{\mathrm{spec}},\ R_{\min},\ \Lambda,\ \kappa_f,\ \varepsilon_f,\ \nu_{\min},\ p_{\min})$ and CI methods (percentile bootstrap) are preregistered.\\
+\textbf{Power/duration.} Effect sizes and CI widths are computed from pilot/surrogate data and hash--committed before execution to set block counts $N_{\mathrm{blocks}}$, windows per block, and total runtime.
+
+\subsection{Data policy}\label{sec:datapolicy}
+\textbf{Preregistration.} Instrument parameters, thresholds, masks, analysis code, and acceptance bands are versioned and hash--committed; any change spawns a new version and cool--down period.\\
+\textbf{Signed compliance logs.} Each window produces a cryptographically signed record (φ–adherence, dwell/slew/jitter flags, dose, $\mathrm{Occ}_{724}$, $\mathcal{L}$, certificate vector $\mathcal{A}$, decision). Logs are hash--chained and verified by an open validator.\\
+\textbf{Open analysis code.} Deterministic scripts regenerate figures and endpoint reports from the signed logs and downsampled ratio streams; reruns must match file hashes.\\
+\textbf{Privacy--preserving releases.} Raw high--rate signals remain onsite; released artifacts include: (i) signed logs, (ii) downsampled ratio summaries, (iii) endpoint values with CIs, (iv) preregistration bundle, and (v) validator outputs. Independent labs can reproduce verdicts without access to sensitive waveforms.
+
+\section{LNAL: Ledger–Native AI Co–Design}\label{sec:lnal}
+
+\subsection{Model}\label{sec:lnal-model}
+\paragraph{Goal.}
+Co–design \emph{materials} (monomers/backbones, faces) and \emph{instrument schedules} (mid–IR envelopes, φ–timed phases) that \emph{pass the certificate on first try}. Designs must satisfy the physics: ledger descent, φ–timing, and audit constraints.
+
+\paragraph{Design variables.}
+Let $z=(\theta_{\mathrm{chem}},\ \theta_{\mathrm{sched}},\ \theta_{\mathrm{env}})$ collect:
+(i) \emph{chemistry}: token/backbone descriptors (graphs with face normals, stiffness $(A,C)$ proxies, IR mode parameters); 
+(ii) \emph{schedule}: sub–pulse amplitudes and times $\{A_k,t_k\}_{k=1}^{K}$ with $\Delta t_{k+1}/\Delta t_k\in\{\varphi,\varphi^{-1}\}$ and window ramps; 
+(iii) \emph{environment}: compartment sizes/residence times within bounds. A differentiable surrogate $\mathcal{S}(z)$ predicts window–level observables $\hat r_i$, spectrum $\hat S(\tilde\nu,t)$, and geometry $\hat{\mathcal{G}}$.
+
+\paragraph{Physics–regularized objective.}
+The \emph{ledger–native} loss blends the RS objective with φ–timing and certificate terms:
+\[
+\mathcal{L}_{\mathrm{LNAL}}(z)\;=\;
+\underbrace{\mathbb{E}\!\left[\sum_i w_i\,J\!\big(\hat r_i(z)\big)\right]}_{\text{ledger}}
+\;+\;
+\lambda_{\varphi}\,\underbrace{\sum_k \psi\!\Big(\tfrac{\Delta t_{k+1}}{\Delta t_k}\Big)}_{\substack{\text{φ–commensurability}\\\text{penalty}}}
+\;+\;
+\lambda_{\mathrm{cert}}\,\underbrace{\Phi_{\mathrm{cert}}\!\big(\hat{\mathcal{G}},\ \widehat{\mathrm{Occ}}_{724},\ \Delta\widehat{\mathcal{L}}\big)}_{\text{soft certificate hinge}}
+\;+\;
+\lambda_{\mathrm{smooth}}\ \|\nabla a(t)\|_2^2
+\;+\;
+\lambda_{\mathrm{dose}}\ \big|E_{\mathrm{in}}-E_{\mathrm{target}}\big|.
+\]
+Here $J(x)=\tfrac12(x+1/x)-1$; $\psi(\rho)$ penalizes deviations from $\{\varphi,\varphi^{-1}\}$ (e.g., $\psi(\rho)=\min\{(\rho-\varphi)^2,(\rho-\varphi^{-1})^2\}$); $\Phi_{\mathrm{cert}}$ is a differentiable hinge that is $0$ when geometry, lock–band occupancy, and ledger margin meet thresholds and positive otherwise; $a(t)$ is the envelope; $E_{\mathrm{in}}$ the per–cycle dose. Hard bounds (safety, dwell/slew) are enforced via differentiable barriers or projection layers.
+
+\paragraph{Feasibility prior (KKT guidance).}
+For schedule subproblems, add a Karush–Kuhn–Tucker residual penalty
+\[
+\mathcal{R}_{\mathrm{KKT}}=\big\|\nabla_{\theta_{\mathrm{sched}}}\mathcal{L}_{\mathrm{stage}}+\nabla c^\top\lambda\big\|_2^2
++\|\min(0,\lambda)\|_2^2+\|\max(0,c)\|_2^2,
+\]
+with $c$ the constraint vector (φ–gating, dwell/slew, dose), steering solutions toward certificate–feasible optima.
+
+\subsection{Offline training}\label{sec:lnal-offline}
+\paragraph{Data.}
+Train on \emph{certified runs only}: window–level signed logs (φ–adherence, dose, $\mathrm{Occ}_{724}$, $\mathcal{L}$, decisions), geometry fits $(P,G_{\min},G_{\maj})$, and sequencing/MS summaries. Split by \emph{chemistry class} to test cross–class generalization.
+
+\paragraph{Surrogates and augmentation.}
+Fit $\mathcal{S}(z)$ with physics priors: (i) geometry head constrained to helical identities (Sec.~\ref{sec:geometry}); (ii) spectrum head with band–limited kernels near $724~\mathrm{cm^{-1}}$; (iii) ledger head with $J$ built–in. Augment by \emph{instrument–consistent} noise: timing jitter $\delta t\sim\mathcal{N}(0,\sigma_t^2)$, dose drift $\pm 2\%$, and window–edge smoothing variations; \emph{disallow} off–band or schedule–violating augmentations.
+
+\paragraph{Optimization.}
+Minimize $\mathcal{L}_{\mathrm{LNAL}}+\beta\,\mathcal{R}_{\mathrm{KKT}}$ with Adam; gradients flow through $\mathcal{S}(z)$. Discrete elements (e.g., monomer choices) use Gumbel–softmax or straight–through estimators; schedule times use reparameterizations $t_k=t_1+\sum_{j<k}\Delta t_j$ with $\Delta t_{j+1}/\Delta t_j=\varphi^{\sigma_j}$, $\sigma_j\in\{-1,+1\}$ relaxed during training and snapped at inference.
+
+\paragraph{Safety filter at deployment.}
+Before lab execution, a \emph{one–step safety QP/NLP} projects the proposed schedule to the certificate–feasible set (φ–gated, dwell/slew, dose); infeasible designs are rejected offline.
+
+\subsection{First–try benchmarks}\label{sec:lnal-bench}
+\paragraph{Metrics.}
+\emph{FTSR} (first–try success rate): fraction of novel designs that \emph{pass the certificate} on their first lab run. Secondary: lock–ratio $\mathcal{R}_{\mathrm{lock}}$, ledger margin $\Delta\mathcal{L}$, fidelity $(1-\epsilon)$ vs.\ floor, geometry–in–band rate, and safety violations (target: $0$).
+
+\paragraph{Baselines.}
+(i) Heuristic/MSE schedule design (no ledger, equal–spaced timing). (ii) Black–box RL without physics priors (filtered for safety). (iii) Human expert schedules with matched dose.
+
+\paragraph{Ablations.}
+Remove one component at a time:
+\begin{itemize}
+\item \textbf{–$J$}: replace ledger head with MSE on raw diagnostics $\Rightarrow$ drop in FTSR; increased cases where $\Delta\mathcal{L}$ decreases despite “good” MSE.
+\item \textbf{–φ prior}: replace $\psi(\rho)$ with L2 on times $\Rightarrow$ degraded $\mathcal{R}_{\mathrm{lock}}$ and higher cross–term leakage; FTSR down.
+\item \textbf{–certificate hinge}: optimize without $\Phi_{\mathrm{cert}}$ $\Rightarrow$ more schedule–violating proposals; higher offline rejection.
+\end{itemize}
+
+\paragraph{Reporting.}
+For each chemistry class and a held–out facility configuration, report FTSR with one–sided 95\% CIs, median $\Delta\mathcal{L}$, median $(1-\epsilon)$ above floor, and violation counts. Release seeds, \texttt{configs/}, and validators so figures are exactly reproducible from signed logs.
+
+\paragraph{Target.}
+LNAL should exceed baselines on FTSR by a preregistered margin (e.g., $+15$–$25$\,pp) while reducing offline rejections. Success means \emph{fewer shots to science}: designs that meet audits with no per–trial tuning, across chemistries, under the same instrument.
+
+\section{Geophysical \& Astrobiological Implications}\label{sec:geo-astro}
+
+\subsection{Earth mapping}\label{sec:earth-mapping}
+\paragraph{Natural $\varphi$--like duty cycles.}
+Several terrestrial cycles approximate multi–scale duty patterns that can be segmented into $\varphi$--commensurate windows: (i) diurnal heating/cooling in arid zones (strong, repeatable low–cloud regimes); (ii) intertidal wet–dry pulses (spring/neap beats superposed on tides); (iii) convective oscillations in geothermal outflows (minutes–hours); (iv) wave–wash in supratidal zones with beat patterns set by swell and surf. These cyclicities provide LISTEN/LOCK/BALANCE–like windows without high technology; the test is whether recognition metrics (lock–band occupancy; ledger drops) rise at consistent phases.
+
+\paragraph{Mid–IR windows.}
+The lock band at $\tilde\nu_{\mathrm{coh}}\approx724~\mathrm{cm^{-1}}$ corresponds to $\lambda\approx 13.8~\mu$m, inside the terrestrial $8$–$14~\mu$m atmospheric window. Ground access requires \emph{dry air} (low precipitable water) and low cloud; near–surface transmission is best in deserts, polar plateaus, and high mountain basins. Subsurface/near–field coupling can be achieved on mineral surfaces with evanescent–field probes (ATR) or metasurface concentrators tuned to the band.
+
+\paragraph{Mineral scaffolds.}
+Layered silicates (mica, montmorillonite) offer flat, low–defect terraces for duplex alignment; iron sulfides (greigite/pyrite) provide redox microenvironments; chiral quartz ($\alpha$–SiO$_2$) and step–edge calcite furnish anisotropy for chirality experiments (\S\ref{sec:chirality}). For each site, we pre–survey: (i) IR background; (ii) residence–time distributions (wet/dry); (iii) ionic strength and pH stability; and (iv) surface roughness/defect densities. Sites are ranked by an ``instrument score'' combining duty fidelity, IR access, and safety logistics.
+
+\subsection{Exoplanet predictions}\label{sec:exo}
+\paragraph{Surface/atmosphere conditions.}
+RS instrument viability favors: (i) temperature ranges allowing hydrogen–bond recognition while avoiding thermal erasure (broadly $240$–$330$~K), (ii) mid–IR transparency windows in the $8$–$14~\mu$m band (low continuum opacity from water and CO$_2$ near the lock line), (iii) cyclic drivers (tides, diurnal beats, seasonal desiccation) that can approximate LISTEN/LOCK/BALANCE duty. Dry, temperate desert worlds and tide–modulated littoral zones are prime.
+
+\paragraph{Biosignature spectra (instrument fingerprints).}
+Remote detection of a \emph{narrow} feature near $13.8~\mu$m is implausible globally, but \emph{in situ} or close–flyby instruments can look for active responses: a phase–locked increase in local emissivity/absorption near $\sim 724~\mathrm{cm^{-1}}$ when a controlled envelope is applied (lander–borne IR source), plus ledger–aligned proxies (e.g., humidity/ion gradients) shifting at the gate. Macro–biosignatures remain classical (O$_2$/CH$_4$ disequilibria), but our instrument adds an \emph{active} life test: does the chemistry \emph{respond correctly} to a known recognition drive?
+
+\section{Related Work (surgical)}\label{sec:related-works}
+\paragraph{RNA world.}
+Templating by ribonucleotides is central, but most accounts are recipe–centric and lack a unifying instrument. We differ by deriving duplex geometry and templating from a \emph{single} ledger and timing scheme, with pass/fail audits that do not depend on specific monomers.
+
+\paragraph{Metabolism–first.}
+Autocatalytic cycles plausibly precede templating. Our closure (\S\ref{sec:closure}) shows when a minimal redox/proton gradient \emph{must} be sufficient \emph{once} recognition succeeds; viability is an inequality tied to measured ledger drops rather than a narrative.
+
+\paragraph{Lipid–world.}
+Compartmentalization aids selection and stability, but membranes alone do not provide a recognition instrument. Here, vesicles/emulsions are engineered for residence–time control to \emph{implement} LISTEN/LOCK/BALANCE.
+
+\paragraph{Mineral templates.}
+Clays, micas, and sulfides can align or energize chemistry; without duplex inevitability and certificate gates they are uncontrolled. We quantify when surfaces help (allow twist; light coupling) vs.\ hinder (force planar ladders; \S\ref{sec:geometry} no–go).
+
+\paragraph{Autocatalytic sets \& kinetic proofreading.}
+We share the emphasis on error control and network effects, but replace bespoke kinetics with a universal ledger and timing. Proofreading here emerges as a natural consequence of the LOCK/BALANCE split and $J$–symmetry, with a fidelity floor (\S\ref{sec:fidelityfloor}) tied to measured ledger drops.
+
+\paragraph{Contrast in one line.}
+Instrument unification, quantitative audits, and preregistered falsifiers distinguish this work from recipe–driven accounts.
+
+\section{Discussion}\label{sec:discussion}
+\paragraph{What success means.}
+Stage I–IV passes (lock spike, $\varphi$ geometry, templating with a fidelity floor, minimal metabolic closure, and cross–chemistry success without knobs) would demonstrate that life’s core loop is a \emph{phase of matter under a recognition instrument}. It would move abiogenesis from “lucky recipe” to “controlled physics.”
+
+\paragraph{What failure means.}
+Crisp failure modes map to assumptions: (i) no lock spike $\Rightarrow$ wrong band/timing; (ii) geometry out of $\varphi$ bands $\Rightarrow$ duplex inevitability false; (iii) templating without ledger margin $\Rightarrow$ fixed–point claim fails; (iv) no closure at declared gradients $\Rightarrow$ energy model wrong; (v) a non–duplex class wins the ledger $\Rightarrow$ exclusivity fails. Each failure is informative and narrows theory.
+
+\paragraph{Limits.}
+We do not claim organismal complexity or planetary histories. The fidelity floor is local and calibrated; large excursions or exotic chemistries may demand re–linearization. Remote biosignatures remain challenging; active tests are most compelling \emph{in situ}.
+
+\paragraph{Next questions.}
+(1) Tighten the no–go theorem for non–duplex codes. (2) Quantify chirality growth across substrates and temperatures. (3) Map the full speed–fidelity–dose surface and its universality across chemistries. (4) Demonstrate on–chip metabolic closure with feedback control of gradients.
+
+\paragraph{Path to a standard.}
+Publish the open instrument spec (gate, ledger, thresholds), the validator, and round–robin protocols. Require signed compliance logs for any claim. Maintain a living registry of successful Stages I–IV by chemistry class, with independent reproductions. The field advances when claims are \emph{portable, audited, and falsifiable}—and this instrument makes that the default.
+
+\appendix
+
+\section*{Appendix A — No–Go Theorem: Duplex is Necessary (Stronger Necessity)}\label{app:nogo}
+
+\subsection*{A.0 Setting and assumptions}
+We work under the RS instrument of this paper: the convex symmetric ledger
+\[
+J(x)=\tfrac12(x+1/x)-1,\qquad x>0,
+\]
+the eight–beat $\varphi$–timed schedule with band–limited couplings (Theorem~A.1), the coherence quantum $E_{\mathrm{coh}}\approx 0.09~\mathrm{eV}$, and dose/duty caps declared in the certificate. Geometry constraints are those of Sec.~3: locality, sterics, torsion/curvature bounds, and sequence–indifferent gating. The geometric action per turn is
+\begin{equation}\label{eq:geoA}
+\mathcal{A}[\gamma_1,\gamma_2,\mathbf{f}_1,\mathbf{f}_2]
+=
+\int_0^\Lambda\!\Big(
+w_{\mathrm{dock}}\,J(r_{\mathrm{dock}})
++A\sum_{k=1}^2\kappa_k^2
++C\sum_{k=1}^2\tau_k^2
++w_{\mathrm{face}}\,J(r_{\mathrm{face}})
+\Big)\,ds,
+\end{equation}
+with symbols as in Sec.~4. The duplex benchmark $(\star)$ is the counter–wound helix minimizing \eqref{eq:geoA} subject to docking windows (Theorem~4.1), achieving ledger drop $\Delta\mathcal{L}_\star$ and contraction constant $\rho_\star<1$ (Lemma~6.1).
+
+\paragraph{Non–duplex code classes.}
+We call \emph{non–duplex} any code lacking two antiparallel, counter–wound strands with constant $(\kappa,\tau)$ and global face lock. Model classes:
+\begin{itemize}
+\item \textbf{Ladder/plane}: two parallel strands with $\tau\equiv 0$ and planar rungs (no counter–winding).
+\item \textbf{Ribbon/parallel helix}: co–wound or parallel helices without antiparallel face locking along the full length.
+\item \textbf{Multistrand bundles}: $N\ge 3$ strands with frustrated face alignment (no global antiparallel registry).
+\item \textbf{Surface–forced 2D}: mineral lattices pinning a 2D register precluding out–of–plane twist needed for antiparallel lock.
+\end{itemize}
+
+\subsection*{A.1 Transport lower bound for non–duplex codes}
+\begin{lemma}[Transport penalty]\label{lem:transport}
+Let $\mathcal{C}$ be any non–duplex class as above. For any admissible configuration in $\mathcal{C}$ that satisfies the docking distance/angle window on a set of positive measure, we have the strict lower bound
+\[
+\int_0^\Lambda \!\Big(A\sum_k \kappa_k^2 + C\sum_k \tau_k^2\Big)\,ds
+\;\ge\;
+\int_0^\Lambda \!\Big(A\,\kappa_\star^2 + C\,\tau_\star^2\Big)\,ds
+\;+\; \Delta_{\mathrm{trans}}(\mathcal{C})\,,
+\]
+with $\Delta_{\mathrm{trans}}(\mathcal{C})>0$ depending only on steric/torsion windows and the class $\mathcal{C}$.
+\end{lemma}
+
+\emph{Sketch.} For the benchmark duplex, constant $(\kappa_\star,\tau_\star)$ minimize the quadratic transport term under sterics. In ladders ($\tau\equiv 0$), docking windows force alternating curvature segments or localized kinks to maintain distances, strictly increasing the integral. In parallel/ribbon and multistrand bundles, global antiparallel lock is impossible; satisfying local docking requires piecewise–varying $(\kappa,\tau)$ or out–of–phase registry, again increasing the integral by convexity. The gap is uniform because constraints are uniform and the helical elastica is the unique constant–coefficient minimizer. \hfill$\square$
+
+\subsection*{A.2 Docking frustration lower bound}
+\begin{lemma}[Face/docking frustration]\label{lem:dock}
+For any non–duplex class $\mathcal{C}$, the ledger terms obey
+\[
+\int_0^\Lambda \!\big(w_{\mathrm{dock}}\,J(r_{\mathrm{dock}})+w_{\mathrm{face}}\,J(r_{\mathrm{face}})\big)\,ds
+\;\ge\;
+\int_0^\Lambda \!\big(w_{\mathrm{dock}}\,J(r_{\mathrm{dock}}^\star)+w_{\mathrm{face}}\,J(r_{\mathrm{face}}^\star)\big)\,ds
+\;+\; \Delta_{\mathrm{dock}}(\mathcal{C})\,,
+\]
+with $\Delta_{\mathrm{dock}}(\mathcal{C})>0$ uniform on the admissible set under the same windows and no–knob policy.
+\end{lemma}
+
+\emph{Sketch.} The duplex realizes global antiparallel face lock with constant phase offset, saturating the docking window across a turn. In non–duplex classes, either faces cannot be antiparallel globally (bundles/parallel helix), or geometry forbids simultaneous tangential and face alignment (ladder/2D). Because $J$ is strictly convex and symmetric, any deviation from $r^\star$ on a set of positive measure raises the integral by a uniform margin determined by the window widths and face–angle tolerances. \hfill$\square$
+
+\subsection*{A.3 Energetic and timing constraints}
+Let $E_{\mathrm{in}}$ be the per–cycle energy and $\rho_{\mathrm{LOCK}}$ the lock duty. Certificate caps fix $E_{\mathrm{in}}\le E_{\max}$ and $\rho_{\mathrm{LOCK}}\le \rho_{\max}$. The φ–phase interference bound (Theorem~A.1) gives a schedule–intrinsic leakage factor $\kappa\in(0,1)$. For any class $\mathcal{C}$ driven at the same $(E_{\mathrm{in}},\rho_{\mathrm{LOCK}})$, the net ledger drop satisfies
+\begin{equation}\label{eq:DLbound}
+\Delta\mathcal{L}(\mathcal{C})
+\;\le\;
+\Delta\mathcal{L}_\star \;-\; \underbrace{\alpha\,\Delta_{\mathrm{dock}}(\mathcal{C})}_{\text{lost alignment}}
+\;-\; \underbrace{\beta\,\Delta_{\mathrm{trans}}(\mathcal{C})}_{\text{transport penalty}}
+\;-\; \underbrace{\gamma\,(1-\kappa)}_{\text{extra leakage}}\,,
+\end{equation}
+for positive calibration constants $(\alpha,\beta,\gamma)$ tying integrals to window–level ledger changes. Equality requires the duplex benchmark and zero leakage gap.
+
+\subsection*{A.4 Contraction and evolvability}
+Recall the contraction lemma (Lemma~6.1): $u\mapsto \mathcal{R}(u)$ is a contraction near the gate with factor $\rho_\star<1$ for the duplex. For non–duplex $\mathcal{C}$, docking frustration injects phase–dependent mixing terms in the Jacobian; the φ–bound suppresses but cannot eliminate them.
+
+\begin{lemma}[Contraction degradation]\label{lem:rho}
+For any non–duplex class $\mathcal{C}$ under the same $(E_{\mathrm{in}},\rho_{\mathrm{LOCK}})$, the recognition map contraction factor obeys
+\[
+\rho(\mathcal{C})\ \ge\ \rho_\star\ +\ \delta_\rho(\mathcal{C})\,,\qquad \delta_\rho(\mathcal{C})>0,
+\]
+with $\delta_\rho$ determined by the same frustration gaps in Lemmas~\ref{lem:transport}–\ref{lem:dock} and the leakage factor $1-\kappa$.
+\end{lemma}
+
+\emph{Sketch.} Linearize $\mathcal{R}$ near the gate: the Jacobian inherits negative curvature (contraction) from ledger descent along the duplex direction, and cross–terms from misaligned faces/geometry. The latter increase the spectral radius in the $W$–metric by a margin controlled by frustration and un–suppressed leakage. \hfill$\square$
+
+\subsection*{A.5 Main no–go theorem}
+\begin{theorem}[Duplex necessity]\label{thm:nogo}
+Under fixed $E_{\mathrm{coh}}$, fixed duty $\rho_{\mathrm{LOCK}}$, φ–timed gating, and certificate caps, \emph{no} non–duplex class $\mathcal{C}$ can simultaneously:
+\begin{enumerate}
+\item minimize the ledger/transport action \eqref{eq:geoA} (equivalently, match $\Delta\mathcal{L}_\star$ at equal dose/duty), \emph{and}
+\item sustain an evolvability window (contraction $\rho(\mathcal{C})<1$ with bounded mutation variance under declared jitter) that meets the fidelity floor and avoids error catastrophe.
+\end{enumerate}
+Precisely, for all $\mathcal{C}$ non–duplex,
+\[
+\big(\Delta\mathcal{L}(\mathcal{C})\ge \Delta\mathcal{L}_\star\big)\ \Longrightarrow\ \rho(\mathcal{C})\ \ge\ 1\ \ \text{or}\ \ \mathbb{E}[\epsilon]>\epsilon_c,
+\]
+and, conversely,
+\[
+\big(\rho(\mathcal{C})<1,\ \mathbb{E}[\epsilon]\le \epsilon_c\big)\ \Longrightarrow\ \Delta\mathcal{L}(\mathcal{C})\ <\ \Delta\mathcal{L}_\star-\Delta_{\min},
+\]
+for some class–uniform margin $\Delta_{\min}>0$.
+\end{theorem}
+
+\emph{Proof.}
+From Lemmas~\ref{lem:transport}–\ref{lem:dock} and \eqref{eq:DLbound}, any non–duplex $\mathcal{C}$ has a strict ledger deficit $\Delta\mathcal{L}_\star-\Delta\mathcal{L}(\mathcal{C})\ge \alpha\Delta_{\mathrm{dock}}+\beta\Delta_{\mathrm{trans}}+\gamma(1-\kappa)=:\Delta_{\min}>0$ at equal dose/duty. To close this gap one must increase dose or duty, violating caps. If caps are respected, attempting to compensate by more aggressive timing increases leakage and cross–terms, degrading contraction (Lemma~\ref{lem:rho}): either $\rho(\mathcal{C})\ge 1$ (no fixed point), or, under declared jitter, the mean/variance of $\epsilon$ exceed the phase–diagram bound $\epsilon_c$ (Sec.~\ref{sec:evolvability}). Conversely, if one tunes (within caps) to achieve $\rho(\mathcal{C})<1$ and $\epsilon\le \epsilon_c$, the same gaps force a positive shortfall in $\Delta\mathcal{L}$ relative to the duplex benchmark, so the action is not minimized. Hence the two targets cannot be achieved simultaneously by any non–duplex class under the same $E_{\mathrm{coh}}$ and duty caps. \hfill$\square$
+
+\subsection*{A.6 Corollaries and practical test}
+\paragraph{Corollary (surface–forced 2D no–go).}
+Any surface that enforces planar laddering (no out–of–plane twist) cannot satisfy both ledger minimization and evolvability; at best it yields local recognition without a contraction fixed point.
+
+\paragraph{Corollary (bundle frustration).}
+Multistrand bundles with incompatible face registries necessarily fail contraction or require off–cap energy/duty, leading to certificate failure.
+
+\paragraph{Practical acceptance test.}
+Run Stage II under identical gate/caps for a duplex–capable class and a non–duplex candidate (e.g., surface–forced ladder). Measure $(\Delta\mathcal{L},\rho,\epsilon)$:
+\[
+\big[\Delta\mathcal{L}_{\mathrm{ladder}}\ge \Delta\mathcal{L}_\star\big]\ \Rightarrow\ \text{expect } \rho\ge 1\ \text{or}\ \epsilon>\epsilon_c;\quad
+\big[\rho<1,\ \epsilon\le \epsilon_c\big]\ \Rightarrow\ \Delta\mathcal{L}_{\mathrm{ladder}}<\Delta\mathcal{L}_\star-\Delta_{\min}.
+\]
+Either outcome satisfies the no–go. Failure of this dichotomy falsifies Theorem~\ref{thm:nogo}.
+
+\section*{Appendix B — Quantitative Fidelity Floor}\label{app:fidelity-floor}
+
+\subsection*{B.0 Goal and statement}
+We derive an \emph{auditable lower bound} that links the \textsf{LOCK}–phase ledger drop $\Delta\mathcal{L}$ to the per–site copying \emph{accuracy} $1-\epsilon$:
+\begin{equation}\label{eq:floor-form}
+1-\epsilon \;\;\ge\;\; 1-\epsilon_0 \;+\; \alpha\,\Delta\mathcal{L} \;-\; \varepsilon_f\,,
+\end{equation}
+for calibration constants $\epsilon_0\!\in[0,1)$, $\alpha\!>\!0$, and a robustness slack $\varepsilon_f\!\ge\!0$ that are \emph{fixed pre–campaign}.  
+(Equivalently, in the user–requested template $1-\epsilon \ge 1-\epsilon_0 - \tilde\alpha\,\Delta\mathcal{L}$, take $\tilde\alpha=-\alpha\le 0$ so that accuracy \emph{improves} with larger $\Delta\mathcal{L}$.)
+
+\subsection*{B.1 Log–odds model near the gate}
+Let $p$ be the probability that a site is copied correctly in one cycle, and $\ell=\log\!\big(\frac{p}{1-p}\big)$ its log–odds. The \textsf{LOCK} gate increases $\ell$ by a small positive increment $\Delta \ell$ aligned with ledger descent. In a neighborhood of the fixed point (Sec.~\ref{sec:fixedpoint}), the following holds.
+
+\begin{lemma}[Log–odds gain from ledger drop]\label{lem:logodds}
+There exist $\kappa_L>0$, $\eta\ge 0$, and a neighborhood $\mathcal{U}$ of operation such that, for all cycles operating in $\mathcal{U}$ under φ–gated schedules and dose caps,
+\begin{equation}\label{eq:logodds}
+\Delta \ell \;\;\ge\;\; \kappa_L\,\Delta\mathcal{L} \;-\; \eta\,.
+\end{equation}
+\end{lemma}
+
+\emph{Sketch.} The gate kernel increases the log–ratio coordinates $u=\ln r$ along $-\nabla \sum_i w_i J(r_i)$, and $\Delta\mathcal{L}\approx \tfrac12\sum_i w_i u_i^2$ locally. The correct/incorrect channel odds respond as $\Delta \ell = \nabla \ell \cdot \Delta u + O(\|\Delta u\|^2)$ with $\nabla \ell$ aligned to the same descent direction; by Cauchy–Schwarz and the φ–interference suppression (Theorem~A.1), the projection is bounded below by a constant $\kappa_L>0$ up to a small remainder $\eta$ absorbing higher–order terms and prediction mismatch. \hfill$\square$
+
+\subsection*{B.2 From log–odds to accuracy}
+Accuracy is $1-\epsilon = p = \sigma(\ell)$ with $\sigma(x)=1/(1+e^{-x})$. On a compact calibration band $\ell\in[\ell_{\min},\ell_{\max}]$, $\sigma$ is Lipschitz with slope bounded below:
+\[
+\sigma'_{\min}\ :=\ \min_{x\in[\ell_{\min},\ell_{\max}]}\sigma'(x)\ =\ \min_{x}\frac{e^{-x}}{(1+e^{-x})^2}\ \in\ \Big(0,\tfrac14\Big].
+\]
+Then
+\[
+p^+\;=\;\sigma(\ell+\Delta \ell)\ \ge\ \sigma(\ell)+\sigma'_{\min}\,\Delta \ell\ \ge\ p\;+\;\sigma'_{\min}\big(\kappa_L\,\Delta\mathcal{L}-\eta\big).
+\]
+T
+
+\section*{Appendix C — Isotopic / Thermal Scalings as Fingerprint}\label{app:isotope-thermal}
+
+\subsection*{C.0 Purpose}
+Provide a rapid, cross–lab \emph{identity check} for the RS instrument: the \textsf{LOCK}–band must shift in a quantitatively predicted way (i) under H$\!\to\!$D substitution (D$_2$O or site–specific deuteration) and (ii) under $\pm 10$~K temperature steps, while the φ–timed signature (lock spike ratio $\mathcal{R}_{\mathrm{lock}}$ and ledger descent $\Delta\mathcal{L}$) persists.
+
+\subsection*{C.1 Mode model and isotope shift}
+Let the \textsf{LOCK} mode be locally harmonic with effective stiffness $k_{\mathrm{eff}}$ and \emph{effective} reduced mass $\mu_{\mathrm{eff}}$ (the participating mass of the H–bond frame). Then
+\[
+\tilde\nu \;=\; \frac{1}{2\pi c}\sqrt{\frac{k_{\mathrm{eff}}}{\mu_{\mathrm{eff}}}}\,,\qquad
+\Delta\tilde\nu\;\approx\;-\frac{\tilde\nu}{2}\,\frac{\Delta \mu_{\mathrm{eff}}}{\mu_{\mathrm{eff}}}\,.
+\]
+For H$\!\to\!$D substitution at exchangeable sites, write
+\[
+\mu_{\mathrm{eff}}^{\mathrm{(D)}} \;=\; \mu_{\mathrm{eff}}^{\mathrm{(H)}}\,+\,\phi_H\,(\,m_D-m_H\,),\qquad \phi_H\in(0,1)
+\]
+where $\phi_H$ is the \emph{participation factor} of protonic mass in the mode. The predicted \emph{exact} shift is
+\begin{equation}\label{eq:isotope-shift}
+\tilde\nu_{\mathrm{D}} \;=\; \tilde\nu_{\mathrm{H}}\,\sqrt{\frac{\mu_{\mathrm{eff}}^{\mathrm{(H)}}}{\mu_{\mathrm{eff}}^{\mathrm{(D)}}}}
+\;=\; \tilde\nu_{\mathrm{H}}\Bigg(1 \;-\; \frac{1}{2}\,\frac{\phi_H\,(m_D-m_H)}{\mu_{\mathrm{eff}}^{\mathrm{(H)}}}\;+\;O\!\big(\phi_H^2\big)\Bigg).
+\end{equation}
+
+\paragraph{Two–point calibration for $\phi_H/\mu_{\mathrm{eff}}^{\mathrm{(H)}}$.}
+Measure $\tilde\nu$ in H$_2$O and after full H/D exchange in D$_2$O (controls: off–band timing, equal dose). Then
+\[
+\frac{\tilde\nu_{\mathrm{D}}}{\tilde\nu_{\mathrm{H}}}\;=\; \sqrt{\frac{1}{1+\phi_H\,(m_D-m_H)/\mu_{\mathrm{eff}}^{\mathrm{(H)}}}}\ \ \Longrightarrow\ \
+\frac{\phi_H}{\mu_{\mathrm{eff}}^{\mathrm{(H)}}}\;=\;\frac{1}{m_D-m_H}\,\Big(\frac{1}{(\tilde\nu_{\mathrm{D}}/\tilde\nu_{\mathrm{H}})^2}-1\Big).
+\]
+Lock this ratio in the preregistration; \eqref{eq:isotope-shift} then predicts \emph{exact} shifts for any partial deuteration fraction $f_D$:
+\[
+\tilde\nu(f_D)\;=\;\tilde\nu_{\mathrm{H}}\,\sqrt{\frac{1}{1+f_D\,\phi_H\,(m_D-m_H)/\mu_{\mathrm{eff}}^{\mathrm{(H)}}}}.
+\]
+
+\subsection*{C.2 Thermal coefficient}
+Within $\pm 10$~K around the operating point, treat anharmonic softening as linear:
+\[
+\tilde\nu(T)\;\approx\;\tilde\nu(T_0)\;+\;\alpha_T\,(T-T_0),\qquad \alpha_T=\Big(\frac{\partial \tilde\nu}{\partial T}\Big)_{T_0}.
+\]
+\paragraph{Calibration.} Sweep $T$ over $\pm 5$~K at fixed gate/dose; fit $\alpha_T$ by robust linear regression. Declare $\alpha_T$ (with CI) in the preregistration. Then the predicted \emph{exact} $\pm 10$~K shifts are $\Delta\tilde\nu=\alpha_T(\pm 10$~K).
+
+\subsection*{C.3 Fingerprint protocol and acceptance}
+\textbf{Protocol.} (i) Acquire $\tilde\nu_{\mathrm{H}}$, $\mathcal{R}_{\mathrm{lock}}$, $\Delta\mathcal{L}$ at $T_0$ in H$_2$O; (ii) replace with D$_2$O, confirm exchange (IR water signatures), acquire $\tilde\nu_{\mathrm{D}}$, $\mathcal{R}_{\mathrm{lock}}$, $\Delta\mathcal{L}$; (iii) step $T$ by $\pm 10$~K in H$_2$O, measure $\tilde\nu(T_0\pm 10\,\mathrm{K})$.  
+\textbf{Acceptance.}
+\[
+\Big|\tilde\nu_{\mathrm{D}}-\tilde\nu_{\mathrm{H}}^{\ \mathrm{pred}}\Big|\ \le\ \delta_{\nu,\mathrm{iso}},\qquad
+\Big|\tilde\nu(T_0\!\pm\!10)-(\tilde\nu(T_0)\!+\!\alpha_T\,\pm 10)\Big|\ \le\ \delta_{\nu,\mathrm{th}},
+\]
+with $\tilde\nu_{\mathrm{H}}^{\ \mathrm{pred}}$ from \eqref{eq:isotope-shift} and declared tolerances $(\delta_{\nu,\mathrm{iso}},\delta_{\nu,\mathrm{th}})$ (e.g., $\le 0.5$--$1.0~\mathrm{cm^{-1}}$ depending on spectrometer). In all cases $\mathcal{R}_{\mathrm{lock}}$ and $\Delta\mathcal{L}$ must remain above thresholds. Failure of either check falsifies the instrument fingerprint.
+
+\subsection*{C.4 Notes}
+Partial deuteration ($0<f_D<1$) and site–specific labeling refine $\phi_H$; a three–point fit (H$_2$O, 50\% H/D, D$_2$O) over–determines the model and tightens CIs. Temperature steps must respect safety limits (dose, $\dot T$).
+
+
+\section*{Appendix D — Cross–Chemistry Demonstrations}\label{app:cross-chem}
+
+\subsection*{D.0 Goal}
+Convert universality from theory to evidence by executing Stage~II (templating) on two \emph{orthogonal} analog families—e.g., PNA and TNA—under the \emph{same} instrument (φ–schedule, envelopes, thresholds), without per–sequence knobs.
+
+\subsection*{D.1 Materials and expectations}
+\paragraph{PNA (peptide nucleic acid).}
+Neutral backbone, higher stiffness $(A,C)$, strong complementary faces. Expect \emph{tighter} geometry tolerances, slightly shifted line shape, and a \emph{larger} lock ratio at equal dose.
+
+\paragraph{TNA (threose nucleic acid).}
+Alternative sugar; smaller helical radius and adjusted pitch; faces preserved. Expect geometry ratios within $\varphi$ bands; moderate lock amplitude.
+
+\subsection*{D.2 Protocol (same gate, same audits)}
+\begin{itemize}
+\item \textbf{Gate \& safety.} Identical eight–beat schedule, identical dose caps, identical LISTEN/LOCK/BALANCE partitions. Jitter budgets and ramps fixed.
+\item \textbf{Audits.} Same certificate thresholds: geometry bands $(P,G_{\min},G_{\maj},\rho_{\maj/\min})$, $\mathrm{Occ}_{724}\ge \Theta_{\mathrm{spec}}$, $\Delta\mathcal{L}\ge \Lambda$, fidelity floor (Appendix~\ref{app:fidelity-floor}).
+\item \textbf{No knobs.} No tuning of timing or thresholds per class; only material–mandated safety caps may differ (declared ex ante).
+\end{itemize}
+
+\subsection*{D.3 Outcomes and acceptance}
+\textbf{Primary.} For each class: (i) geometry in $\varphi$ bands; (ii) lock spike $\mathcal{R}_{\mathrm{lock}}\ge R_{\min}$; (iii) ledger margin $\Delta\mathcal{L}\ge \Lambda$; (iv) fidelity at or above floor.  
+\textbf{Secondary.} Error–spectrum bias vs.\ Sec.~\ref{sec:evolvability}; $\Delta\mathcal{L}$–vs–dose curve shape.  
+\textbf{Acceptance.} \emph{Both} classes must pass all primary audits under the same instrument. Negative controls (off–band, scrambled timing) must \emph{fail} in both classes.
+
+\subsection*{D.4 Transfer calibration}
+Report $(1-\epsilon_0,\alpha,\varepsilon_f)$ per class (Appendix~\ref{app:fidelity-floor}); declare non–inferiority margins for $\alpha$ between classes. If PNA/TNA both pass with overlapping $\alpha$–bands, it strengthens universality; if they require different $\alpha$, universality still holds provided all audits pass without timing/threshold knobs.
+
+\subsection*{D.5 Falsifier}
+If either class cannot meet \emph{any} primary audit under the same instrument (with safety–compliant dose), universality is rejected for that class. If a non–duplex arrangement under the same gate \emph{wins the ledger} or templates without complement faces, exclusivity fails (Sec.~\ref{sec:universality}).
+
+
+\section*{Appendix E — On–Chip Metabolic Closure}\label{app:onchip-closure}
+
+\subsection*{E.0 Goal}
+Design and validate a microfluidic device that sustains replication \emph{without} manual reagent pulsing by coupling the φ–timed \textsf{LOCK}/\textsf{BALANCE} gates to a synchronized redox loop (photocatalytic or mineral). This is the decisive step from templating to \emph{living chemistry}.
+
+\subsection*{E.1 Architecture (textual block diagram)}
+\paragraph{Reactor core.}
+A serpentine microchannel ($\mathrm{Pe}\gg 1$) with reaction chambers (tens of nL) where recognition and ligation occur. Mid–IR ingress (ZnSe window) is amplitude–modulated by the φ–scheduler.
+
+\paragraph{Redox loop.}
+Two options, both φ–timed:
+\begin{itemize}
+\item \emph{Photocatalytic:} thin–film photoanode (e.g., $\alpha$–Fe$_2$O$_3$) and cathode (Pt/C) under visible/near–IR illumination gated in \textsf{LOCK}; proton–exchange membrane (Nafion) separates half–cells. Bias pulses synchronized to \textsf{LOCK}; waste export assisted in \textsf{BALANCE}.
+\item \emph{Mineral:} packed microbed of greigite/pyrite with gate–driven potential via interdigitated microelectrodes; pH micro–valves deliver φ–timed proton bursts; \textsf{BALANCE} vents promote byproduct removal.
+\end{itemize}
+
+\paragraph{Sensing \& control.}
+On–chip pH (ISFETs), micro–reference electrodes for $\Delta\Psi$, thermistors for $T$, and an inline MCT for $\mathrm{Occ}_{724}$. FPGA enforces φ–timing, logs events, and gates redox/IR according to the certificate.
+
+\subsection*{E.2 Work budget and certificate hook}
+Per–cycle gradient work is
+\[
+W_{\mathrm{grad}}=\eta_{\mathrm{coup}}\Big(n_{\mathrm{H}^+}\,\Delta \mu_{\mathrm{H}^+}+n_{e^-}\,\Delta \mu_{e^-}\Big)
+\]
+(see Eq.~\eqref{eq:grad-work}). The certificate enforces \emph{closure} by requiring
+\[
+W_{\mathrm{grad}}\ \ge\ \chi_E\,\Delta \mathcal{L}\;+\;W_{\mathrm{lig}}\;+\;W_{\mathrm{exp}}
+\]
+(inequality \eqref{eq:closure}) on $M$–window aggregates, with $(\eta_{\mathrm{coup}},\chi_E)$ calibrated on–chip.
+
+\subsection*{E.3 φ–timed gating}
+\textsf{LOCK}: IR envelope on; redox bias pulses ($\mu$s–ms) admitted; ligation favored.  
+\textsf{BALANCE}: IR off; reverse–bias or flow vent open to export byproducts; pH adjusted.  
+\textsf{LISTEN}: low IR probe only; gradients at baseline. All pulses are $C^1$–ramped to reduce spectral leakage.
+
+\subsection*{E.4 Acceptance (sustained operation)}
+Under steady φ–timed IR and redox:
+\begin{enumerate}
+\item Copy rate $\nu\ge \nu_{\min}$ maintained for $T_{\min}$ (hours) without manual reagent pulses.
+\item Certificate \textsf{Pass} rate $\ge p_{\min}$; lock ratio and $\Delta\mathcal{L}$ stay above thresholds.
+\item Fidelity obeys the floor (Appendix~\ref{app:fidelity-floor}) for the entire run.
+\item Waste concentrations remain $\le C_{\max}$; export events are phase–aligned.
+\item Gradients remain in preregistered bands; no cumulative drift exceeding declared tolerances.
+\end{enumerate}
+
+\subsection*{E.5 Calibration \& stress}
+\emph{Calibration:} determine $(\eta_{\mathrm{coup}},\chi_E)$ via short–run titrations of bias amplitude; fit linear region; hash–commit values.  
+\emph{Stress:} step bias $\pm 10\%$, jitter $\times 2$, or reduce \textsf{BALANCE} duty; report how close the system runs to the closure boundary (Eq.~\eqref{eq:closure}).
+
+\subsection*{E.6 Safety}
+Enclose effluent; inline UV/thermal kill; chemical quench of redox efflux. No live organisms; kill–switch chemistry (e.g., labile linkers) enabled. All φ–timed pulses hard–limited by hardware.
+
+\subsection*{E.7 Falsifier}
+If, despite recognition success (lock spike and $\Delta\mathcal{L}\ge\Lambda$), the on–chip system fails the closure inequality or cannot sustain $\nu\ge \nu_{\min}$ and \textsf{Pass}$\ge p_{\min}$ over $T_{\min}$, \emph{metabolic closure} is rejected for the declared instrument. Logs must show whether failure is due to insufficient $W_{\mathrm{grad}}$, excess $W_{\mathrm{lig}}/W_{\mathrm{exp}}$, timing errors, or leakage from φ–gating.
+
+
+\section*{Appendix F — Stage I Wet–Lab Protocol: Recognition Signature}\label{app:stage1-protocol}
+
+\subsection*{F.0 Goal and overview}
+Demonstrate the \emph{instrument signature} absent templating: a lock–band spike at $\tilde\nu_{\mathrm{coh}}\approx 724~\mathrm{cm^{-1}}$ and duplex φ–geometry under the declared eight–beat φ–timed gate, without ligation chemistry. This validates the recognition instrument (Sections~\ref{sec:energetics} and~\ref{sec:geometry}) and establishes baseline metrics for both DNA and PNA chemistries. Success provides the first falsifiable signature of RS–guided abiogenesis and is publishable as a standalone discovery.
+
+\subsection*{F.1 Materials and equipment}
+
+\paragraph{Mid–IR source.}
+\begin{itemize}
+\item \textbf{Type:} Quantum cascade laser (QCL) or optical parametric oscillator (OPO).
+\item \textbf{Wavelength:} $\lambda_0=13.8~\mu$m $\pm 0.1~\mu$m (corresponding to $\tilde\nu_{\mathrm{coh}}=724~\mathrm{cm^{-1}}$).
+\item \textbf{Linewidth:} $<2~\mathrm{cm^{-1}}$ (FWHM).
+\item \textbf{Power:} Tunable 1–100~mW incident on sample; dose control via inline thermopile.
+\item \textbf{Modulation:} Acousto–optic modulator (AOM) or electro–optic modulator (EOM) with $>10$~kHz bandwidth.
+\item \textbf{Suggested supplier:} Daylight Solutions (QCL, model TBD based on budget), Block Engineering (tunable QCL), or custom OPO build.
+\item \textbf{Budget:} \$35K–\$45K.
+\end{itemize}
+
+\paragraph{Timing controller.}
+\begin{itemize}
+\item \textbf{Type:} FPGA (e.g., Xilinx Artix-7 or similar) with custom firmware.
+\item \textbf{Specification:} Programmable eight–window schedule with $\Delta t_{\ell+1}/\Delta t_\ell\in\{\varphi,\varphi^{-1}\}$; edge jitter $\varepsilon_j<1$~ns.
+\item \textbf{Features:} Digital triggers for IR modulator, phase–resolved data acquisition, real–time compliance checking.
+\item \textbf{Firmware:} Implement raised–cosine window envelopes (Eq.~\eqref{eq:envelope} in manuscript Section~9.1); hash–commit timing parameters.
+\item \textbf{Budget:} \$3K–\$5K (development board + peripherals).
+\end{itemize}
+
+\paragraph{Detector and spectrometer.}
+\begin{itemize}
+\item \textbf{Detector:} Mercury cadmium telluride (MCT) with thermoelectric cooling, response time $<1~\mu$s.
+\item \textbf{Spectrometer:} Step–scan FTIR (e.g., Bruker Vertex 80v) or fast-scan FTIR with resolution $\le 1~\mathrm{cm^{-1}}$.
+\item \textbf{Measurement:} Phase–resolved acquisition triggered by FPGA; integration over \textsf{LOCK} and \textsf{LISTEN} windows to compute $\mathrm{Occ}_{724}$.
+\item \textbf{Budget:} \$20K–\$30K (MCT detector \$8K–\$12K, FTIR access via core facility or \$150K purchase if unavailable).
+\end{itemize}
+
+\paragraph{Sample preparation and compartments.}
+\begin{itemize}
+\item \textbf{DNA oligomers:} 10–20 base pairs, equimolar complementary strands (e.g., self–complementary palindromic sequences or two strands with Watson–Crick pairing). Synthesize via standard phosphoramidite chemistry or purchase from IDT, Sigma.
+\item \textbf{PNA oligomers:} 10–20 units with complementary nucleobases. Synthesize via Boc or Fmoc solid–phase peptide synthesis, or purchase from PNA Bio, PolyOrg.
+\item \textbf{Concentrations:} 10–100~$\mu$M in aqueous buffer (10~mM Tris–HCl, pH~7.5, 50~mM NaCl for DNA; adjust ionic strength for PNA as needed).
+\item \textbf{Compartments:} Microfluidic chambers with ZnSe or CaF$_2$ IR windows, volume 10–100~nL. Custom fabrication (soft lithography + hard-sealed caps) or commercial (e.g., Dolomite microfluidics, \$5K–\$10K for initial chips).
+\item \textbf{Budget:} DNA \$2K, PNA \$8K–\$12K (synthesis or purchase), microfluidics \$5K–\$8K.
+\end{itemize}
+
+\paragraph{Geometry characterization.}
+\begin{itemize}
+\item \textbf{AFM:} Atomic force microscopy in tapping mode for fixed samples (glutaraldehyde cross-linking). Access via core facility or Bruker/Asylum systems (\$200K if purchasing).
+\item \textbf{Cryo–EM (optional):} For higher-resolution structural validation. Access via institutional cryo–EM center.
+\item \textbf{Measurements:} Pitch $P$, minor/major groove widths $(G_{\min},G_{\maj})$, ratio $\rho_{\maj/\min}$. Fit via image analysis (ImageJ, custom scripts).
+\item \textbf{Budget:} AFM access \$2K–\$5K (per-sample fees if using core facility).
+\end{itemize}
+
+\paragraph{Ancillary instrumentation.}
+\begin{itemize}
+\item Temperature control: Peltier stage or water bath, stability $\pm 0.1$~K (\$1K–\$2K).
+\item Fast photodiode: For real–time jitter verification (\$500).
+\item Data acquisition: National Instruments DAQ or similar, 16-bit resolution, $>100$~kS/s (\$2K).
+\end{itemize}
+
+\paragraph{Total Stage I budget:} \textbf{\$75K–\$85K}.
+
+\subsection*{F.2 Procedure}
+
+\paragraph{Protocol F.1: Calibrate φ–timed schedule.}
+\begin{enumerate}
+\item Program FPGA firmware to generate eight windows $W_0,\dots,W_7$ with total period $T$ (e.g., $T=1$~ms for initial tests).
+\item Set window durations $\Delta t_\ell$ such that $\Delta t_{\ell+1}/\Delta t_\ell\in\{\varphi,\varphi^{-1}\}$ (indices mod 8). Example sequence:
+\[
+(\Delta t_0,\dots,\Delta t_7)=\Delta t_{\min}\cdot(1,\varphi,1,\varphi^{-1},\varphi,1,\varphi^{-1},1),\quad \sum_\ell \Delta t_\ell=T.
+\]
+\item Assign phases: \textsf{LISTEN}=$W_0,W_1,W_2$; \textsf{LOCK}=$W_3,W_4$; \textsf{BALANCE}=$W_5,W_6,W_7$ (adjust as needed for duty optimization).
+\item Verify timing with fast photodiode: measure edge timestamps $(t_\ell)$, confirm $|t_\ell-\hat t_\ell|\le \varepsilon_j=1$~ns and φ–ratio adherence within $\pm 0.1\%$.
+\item Hash–commit timing parameters and log firmware version.
+\end{enumerate}
+
+\paragraph{Protocol F.2: Prepare samples (no ligation).}
+\begin{enumerate}
+\item Anneal complementary strands: Heat DNA or PNA solutions to $90^\circ$C (DNA) or $70^\circ$C (PNA) for 5~min, then cool slowly to room temperature over 1–2~hours to form duplexes.
+\item Confirm duplex formation via native PAGE or UV melting curves (optional quality check).
+\item Dilute to working concentration (e.g., 50~$\mu$M) in buffer.
+\item \emph{Omit all ligase or chemical activators} (EDC, T4 ligase) to disable ligation—this stage tests recognition only.
+\item Load 10–50~nL into microfluidic chamber; seal with IR-transparent window.
+\end{enumerate}
+
+\paragraph{Protocol F.3: Execute LISTEN/LOCK/BALANCE cycles.}
+\begin{enumerate}
+\item Set IR source to $\lambda_0=13.8~\mu$m, initial power $P_0\approx 10$~mW.
+\item Set envelope amplitudes: \textsf{LISTEN} low (diagnostic, e.g., $0.1\,P_0$), \textsf{LOCK} high (e.g., $P_0$), \textsf{BALANCE} off or low.
+\item Program raised–cosine ramps (Eq.~9.1 in manuscript) with ramp time $\tau_{\mathrm{ramp}}\ll \Delta t_\ell$ (e.g., 10\% of window duration).
+\item Run 100–200 cycles while recording phase–resolved IR transmission/absorption spectra via MCT + FTIR.
+\item Monitor sample temperature continuously; ensure $T\le T_{\max}$ (e.g., 40$^\circ$C) and dose $E_{\mathrm{in}}\le D_{\max}$ (preregister, e.g., 1~J/cm$^2$ cumulative).
+\end{enumerate}
+
+\paragraph{Protocol F.4: Measure lock–band occupancy.}
+\begin{enumerate}
+\item For each cycle, integrate spectral power density $S(\tilde\nu,t)$ near $724~\mathrm{cm^{-1}}$ (e.g., $\pm 5~\mathrm{cm^{-1}}$ window).
+\item Compute phase–resolved occupancies:
+\[
+\mathrm{Occ}_{724}^{\mathrm{LISTEN}}=\frac{1}{|W_{\mathrm{LISTEN}}|}\int_{W_{\mathrm{LISTEN}}}\!\!\!S(724,t)\,dt,\quad
+\mathrm{Occ}_{724}^{\mathrm{LOCK}}=\frac{1}{|W_{\mathrm{LOCK}}|}\int_{W_{\mathrm{LOCK}}}\!\!\!S(724,t)\,dt.
+\]
+\item Extract lock ratio $\mathcal{R}_{\mathrm{lock}}=\mathrm{Occ}_{724}^{\mathrm{LOCK}}/\mathrm{Occ}_{724}^{\mathrm{LISTEN}}$.
+\item Average over cycles; compute 95\% confidence intervals via bootstrap.
+\end{enumerate}
+
+\paragraph{Protocol F.5: Fix samples for geometry analysis.}
+\begin{enumerate}
+\item After cycling, flush chamber and extract sample.
+\item (For AFM) Fix with 0.5\% glutaraldehyde for 10~min at room temperature; deposit on mica substrate; wash; air-dry or critical-point dry.
+\item (For cryo–EM, optional) Vitrify on holey carbon grids; image at liquid-nitrogen temperature.
+\item Image multiple fields ($n\ge 20$ per sample) to gather statistics.
+\end{enumerate}
+
+\paragraph{Protocol F.6: Fit duplex geometry.}
+\begin{enumerate}
+\item Measure pitch $P$, minor groove $G_{\min}$, major groove $G_{\maj}$ from AFM/cryo–EM images using line profiles and autocorrelation.
+\item Compute ratio $\rho_{\maj/\min}=G_{\maj}/G_{\min}$.
+\item Fit uncertainties via repeat measurements and image noise analysis.
+\item Compare to φ–bands (Theorem~4.1): $P\in[P_-,P_+]$, $\rho_{\maj/\min}\in[\varphi(1-\epsilon_G),\varphi(1+\epsilon_G)]$ with $\epsilon_G\approx 0.03$.
+\end{enumerate}
+
+\subsection*{F.3 Data collection and logging}
+
+\paragraph{Time–series data (per cycle).}
+\begin{itemize}
+\item IR source power $I(t)$ (thermopile, 10~Hz sampling).
+\item Spectral power density $S(\tilde\nu,t)$ (FTIR, phase–triggered).
+\item Sample temperature $T(t)$ (thermistor, 10~Hz).
+\item FPGA timing logs: window index $\ell(t)$, edge timestamps $(t_\ell)$, φ–ratio compliance flags.
+\end{itemize}
+
+\paragraph{Window–level aggregates.}
+For each cycle $n$ and window $\ell$:
+\[
+\big\{\text{cycle }n,\ \text{phase }\ell,\ t_{\mathrm{begin}},\ t_{\mathrm{end}},\ \phi\text{–ratio ok},\ E_{\mathrm{in}},\ \mathrm{Occ}_{724},\ \mathcal{L},\ \textsf{Pass/Modify/Reject}\big\}.
+\]
+Hash–chain these records (Section~10.6); sign with lab key.
+
+\paragraph{Geometry measurements.}
+Table: sample ID, chemistry (DNA/PNA), cycle count, $P$, $G_{\min}$, $G_{\maj}$, $\rho_{\maj/\min}$, uncertainties (standard errors), φ–band pass/fail.
+
+\paragraph{Signed compliance log.}
+Export JSON or HDF5 with:
+\begin{itemize}
+\item Preregistration hash (timing parameters, thresholds).
+\item Raw window–level summaries (downsampled; full waveforms stay local).
+\item Certificate decisions and flags.
+\item Equipment metadata (IR source S/N, FPGA firmware version).
+\end{itemize}
+
+\subsection*{F.4 Acceptance criteria}
+
+\paragraph{Primary endpoints (preregistered).}
+\begin{enumerate}
+\item \textbf{Lock spike:} $\mathcal{R}_{\mathrm{lock}}\ge R_{\min}$ with one–sided 95\% CI above threshold (e.g., $R_{\min}=1.5$).
+\item \textbf{Geometry in φ–bands:}
+\begin{align*}
+P&\in[P_-,P_+],\\
+G_{\min}&\in[G_{\min,-},G_{\min,+}],\\
+\rho_{\maj/\min}&\in[\varphi(1-\epsilon_G),\,\varphi(1+\epsilon_G)],\quad \epsilon_G\approx 0.03.
+\end{align*}
+Acceptance requires $\ge 80\%$ of imaged duplexes within bands.
+\item \textbf{Certificate pass rate:} Fraction of cycles with \textsf{Pass} verdict $\ge p_{\min}$ (e.g., 85\%).
+\item \textbf{No templating:} Sequencing or mass spectrometry confirms no extended products beyond starting oligomers (control to verify ligation is disabled).
+\end{enumerate}
+
+\paragraph{Secondary metrics.}
+\begin{itemize}
+\item Phase–resolved line shapes: LOCK phase spectrum should show transient narrowing or intensity increase at $724~\mathrm{cm^{-1}}$.
+\item Dose efficiency: $\eta=\Delta\mathcal{L}/E_{\mathrm{in}}$ (though $\Delta\mathcal{L}$ small without templating; track as baseline).
+\item Timing jitter: measured $\varepsilon_j/T$ vs.\ budget $\le 10^{-3}$.
+\end{itemize}
+
+\subsection*{F.5 Falsifiers and controls}
+
+\paragraph{Negative control 1: Off–band drive.}
+Shift IR source to $650~\mathrm{cm^{-1}}$ (outside coherence band) at same power and timing.
+\begin{itemize}
+\item \textbf{Prediction:} $\mathcal{R}_{\mathrm{lock}}<R_{\min}$ (no spike); geometry may form but without lock signature.
+\item \textbf{Falsifier:} If off–band yields $\mathcal{R}_{\mathrm{lock}}\ge R_{\min}$, the lock–band specificity claim fails.
+\end{itemize}
+
+\paragraph{Negative control 2: Scrambled timing.}
+Replace φ–schedule with equal–spaced windows ($\Delta t_\ell=T/8$) or co–phased updates, same total dose.
+\begin{itemize}
+\item \textbf{Prediction:} Geometry outside φ–bands or reduced $\mathcal{R}_{\mathrm{lock}}$ due to modal cross–interference (Lemma~5.1).
+\item \textbf{Falsifier:} If scrambled timing matches φ–gating on both spike and geometry, the timing advantage is rejected.
+\end{itemize}
+
+\paragraph{Chemistry comparison: DNA vs.\ PNA.}
+Run identical protocols on both.
+\begin{itemize}
+\item \textbf{Prediction (from Section~8.2):} PNA shows tighter geometry tolerance bands, higher $\mathcal{R}_{\mathrm{lock}}$ at equal dose (stronger complementarity), possible blueshift in lock line.
+\item \textbf{Acceptance:} Both must pass primary endpoints; side–by–side table documents differences.
+\item \textbf{Falsifier:} If either fails under the same instrument (with safety–compliant dose), universality is questioned for that class.
+\end{itemize}
+
+\subsection*{F.6 Timeline and milestones}
+
+\paragraph{Week 0–1:} Equipment procurement and setup; FPGA firmware development; test IR source alignment.
+
+\paragraph{Week 2:} Calibrate φ–schedule (Protocol F.1); verify jitter budgets with photodiode.
+
+\paragraph{Week 3:} Prepare DNA samples (Protocol F.2); run pilot cycles to optimize dose and temperature.
+
+\paragraph{Week 4:} Full DNA Stage I run (100+ cycles); collect time–series and geometry data.
+
+\paragraph{Week 5:} Prepare PNA samples; repeat Stage I with PNA.
+
+\paragraph{Week 6:} Run negative controls (off–band, scrambled); analyze all data; generate signed logs.
+
+\paragraph{Milestone M1:} Lock spike observed ($\mathcal{R}_{\mathrm{lock}}\ge R_{\min}$) in at least one chemistry.
+
+\paragraph{Milestone M2:} Geometry fits within φ–bands for at least one chemistry.
+
+\paragraph{Milestone M3:} Negative controls show expected degradation; falsifiers not triggered.
+
+\paragraph{Deliverable:} Manuscript draft for \emph{Nature} or \emph{Science}: ``Recognition Signature of RS Abiogenesis Instrument Observed in DNA and PNA Duplexes.''
+
+\subsection*{F.7 Safety and compliance}
+
+\paragraph{Lab biosafety level:} BSL-1 (no live organisms, no infectious agents).
+
+\paragraph{Chemical hazards:}
+\begin{itemize}
+\item Glutaraldehyde: fume hood, gloves, eye protection.
+\item Organic solvents (if used in microfluidics fabrication): proper ventilation and disposal.
+\end{itemize}
+
+\paragraph{Laser safety:}
+\begin{itemize}
+\item Mid–IR QCL: Class 3B or 4 (depending on power). Enclose beam path; post warnings; use IR-blocking curtains.
+\item Personnel training: laser safety certification required.
+\end{itemize}
+
+\paragraph{Waste:}
+\begin{itemize}
+\item DNA/PNA solutions: autoclave or bleach before disposal (standard molecular biology protocol).
+\item Microfluidic chips: decontaminate (UV or chemical) before disposal.
+\end{itemize}
+
+\paragraph{Preregistration:}
+Hash–commit all thresholds ($R_{\min}$, φ–bands, $p_{\min}$), timing parameters, and analysis scripts before data collection. Deposit hash on public registry (e.g., OSF, Zenodo).
+
+\paragraph{Data integrity:}
+Signed logs (cryptographic hash chains); open validator script for independent verification.
+
+
+\section*{Appendix G — Stage II Wet–Lab Protocol: Templating with Fidelity Floor}\label{app:stage2-protocol}
+
+\subsection*{G.0 Goal and overview}
+Enable ligation chemistry under the same φ–timed instrument and demonstrate \emph{templated copying} on short templates (20–40 bp/units) with a quantitative \emph{fidelity floor} (Theorem~6.4). Validate the ledger margin $\Delta\mathcal{L}\ge\Lambda$, measure per–site error rates $\epsilon$, test the error–spectrum bias predicted by docking anisotropy (Section~7.1), and confirm the quadratic timing sensitivity (Proposition~6.3). Success establishes RS templating as superior to baselines and falsifies alternative non–ledger mechanisms.
+
+\subsection*{G.1 Materials and equipment (extends Stage I)}
+
+\paragraph{Ligation chemistry.}
+\begin{itemize}
+\item \textbf{For DNA:} T4 DNA ligase (New England Biolabs, \$200/500 units) or T4 RNA ligase for RNA variants. Requires ATP and compatible buffer.
+\item \textbf{For PNA:} Chemical activators such as EDC (1-ethyl-3-(3-dimethylaminopropyl)carbodiimide) or peptide coupling reagents (HBTU, HATU). PNA ligation is slower; optimize concentration and incubation time.
+\item \textbf{Templates and primers:} Design 20–40 bp/unit templates with defined sequences (avoid strong secondary structure). Primers complementary to template 3$'$ end (DNA) or equivalent PNA terminus. Monomers: activated dNTPs (DNA) or PNA monomers with leaving groups.
+\item \textbf{Ratios:} Template:primer:monomer = 4:2:1 (molar); adjust based on pilot studies.
+\item \textbf{Budget:} Ligase/activators \$2K–\$3K, additional oligomer synthesis \$3K–\$5K.
+\end{itemize}
+
+\paragraph{Sequencing capability.}
+\begin{itemize}
+\item \textbf{Method:} Sanger sequencing for short products (<100 nt), or next–generation sequencing (NGS, e.g., Illumina MiSeq) for error–spectrum analysis with high depth ($>10^4$ reads per position).
+\item \textbf{Access:} Core facility or commercial service (Genewiz, Azenta).
+\item \textbf{Budget:} \$10K–\$15K for 20–50 samples (Sanger \$5–\$15/sample; NGS \$500–\$1K/run).
+\end{itemize}
+
+\paragraph{Ledger computation.}
+\begin{itemize}
+\item \textbf{Software:} Custom scripts (Python/Julia) to compute recognition ratios $r_i=y_i/y_i^\star$ from diagnostics (e.g., lock–band occupancy, geometry residuals), then ledger $\mathcal{L}=\sum_i w_i J(r_i)$ with $J(x)=\tfrac12(x+1/x)-1$.
+\item \textbf{Inputs:} Phase–resolved spectra, certificate flags from Stage I instrumentation.
+\item \textbf{Calibration:} Preregister weights $w_i$ based on sensitivity analysis (Stage I data).
+\end{itemize}
+
+\paragraph{Total Stage II incremental budget:} \textbf{+\$25K–\$35K} (cumulative: \$100K–\$120K).
+
+\subsection*{G.2 Procedure}
+
+\paragraph{Protocol G.1: Template and primer preparation.}
+\begin{enumerate}
+\item Design templates avoiding strong hairpins (use mfold or NUPACK to check secondary structure).
+\item Synthesize or purchase templates and primers; HPLC–purify for consistency.
+\item Anneal template:primer complexes: mix at 4:2 ratio, heat to $90^\circ$C (DNA) or $70^\circ$C (PNA), cool slowly.
+\item Confirm annealing via native PAGE (expect single retarded band).
+\end{enumerate}
+
+\paragraph{Protocol G.2: Enable ligation under φ–gate.}
+\begin{enumerate}
+\item Add ligase (DNA) or activators (PNA) to annealed template:primer mix along with monomers (dNTPs or activated PNA units).
+\item Load into microfluidic chamber (same as Stage I).
+\item Set IR source and φ–schedule identically to Stage I (same $\lambda_0$, timing, envelopes).
+\item Run 50–100 templating cycles under \textsf{LISTEN/LOCK/BALANCE}; ligation events occur preferentially during \textsf{LOCK} when correct base pairing is stabilized.
+\item Monitor temperature and dose as before; ensure $T\le T_{\max}$, $E_{\mathrm{in}}\le D_{\max}$.
+\end{enumerate}
+
+\paragraph{Protocol G.3: Measure ledger drop $\Delta\mathcal{L}$.}
+\begin{enumerate}
+\item For each cycle, compute pre–LOCK ledger $\mathcal{L}_{\mathrm{pre}}$ (averaged over \textsf{LISTEN}) and post–LOCK ledger $\mathcal{L}_{\mathrm{post}}$ (end of \textsf{LOCK} or start of \textsf{BALANCE}).
+\item Compute descent:
+\[
+\Delta\mathcal{L}=\mathcal{L}_{\mathrm{pre}}-\mathcal{L}_{\mathrm{post}}.
+\]
+\item Aggregate over $M$ windows (e.g., $M=8$ cycles) as in Section~10 to reduce noise.
+\item Preregister threshold $\Lambda$ (e.g., $\Lambda=0.1$ in normalized ledger units); test $\Delta\mathcal{L}\ge\Lambda$.
+\end{enumerate}
+
+\paragraph{Protocol G.4: Extract and sequence products.}
+\begin{enumerate}
+\item After cycling, quench reactions (add EDTA for DNA to stop ligase; dilute or purify for PNA).
+\item Purify extended products (PCR cleanup kit, gel extraction, or HPLC).
+\item Sequence products:
+\begin{itemize}
+\item Sanger: clone into plasmid or direct sequencing of long enough products.
+\item NGS: ligate adapters, amplify, sequence with high depth.
+\end{itemize}
+\item Align sequences to template; count errors (mismatches, insertions, deletions).
+\end{enumerate}
+
+\paragraph{Protocol G.5: Compute fidelity and test floor.}
+\begin{enumerate}
+\item Define per–site error rate:
+\[
+\epsilon=\frac{\text{total errors}}{\text{total sites sequenced}}.
+\]
+\item Measure fidelity $1-\epsilon$.
+\item Test fidelity floor (Theorem~6.4):
+\[
+1-\epsilon\ \ge\ (1-\epsilon_0)+\kappa_f\,\Delta\mathcal{L}-\varepsilon_f.
+\]
+\item Calibrate $(\epsilon_0,\kappa_f,\varepsilon_f)$ by fitting $(1-\epsilon)$ vs.\ $\Delta\mathcal{L}$ across multiple runs (vary dose, timing slightly within safe bands). Use robust regression (Huber loss).
+\item Preregister calibrated constants; validate on held–out cycles.
+\end{enumerate}
+
+\paragraph{Protocol G.6: Analyze error spectrum.}
+\begin{enumerate}
+\item Classify errors: transitions (purine$\leftrightarrow$purine, pyrimidine$\leftrightarrow$pyrimidine) vs.\ transversions (purine$\leftrightarrow$pyrimidine).
+\item Compute bias ratio (Section~7.1):
+\[
+\frac{p_{\mathrm{transition}}}{p_{\mathrm{transversion}}}\ \approx\ \frac{\Delta\alpha_{\mathrm{trans}}\Delta\beta_{\mathrm{trans}}\Delta\delta_{\mathrm{trans}}}{\Delta\alpha_{\mathrm{transv}}\Delta\beta_{\mathrm{transv}}\Delta\delta_{\mathrm{transv}}}.
+\]
+\item Compare to docking acceptance–volume predictions from Stage I geometry (measure angular tolerances from AFM/cryo–EM distributions).
+\end{enumerate}
+
+\paragraph{Protocol G.7: Timing jitter variation (test Proposition 6.3).}
+\begin{enumerate}
+\item Introduce controlled timing jitter $\delta t$ by adding Gaussian noise to \textsf{LOCK} centroid (FPGA firmware).
+\item Run replicates at $\sigma_t^2\in\{0,\,0.01\,(\Delta t_{\mathrm{LOCK}})^2,\,0.04\,(\Delta t_{\mathrm{LOCK}})^2\}$ (e.g., 0\%, 10\%, 20\% jitter).
+\item Measure $\epsilon(\sigma_t^2)$; fit quadratic model:
+\[
+\epsilon\approx \epsilon_0+c\,\sigma_t^2.
+\]
+\item Compare fitted $c$ to sensitivity calibration; test predicted variance $\mathrm{Var}[\epsilon]\approx c^2(\mu_4-\sigma_t^4)$ (collect $\ge 20$ replicates per jitter level).
+\end{enumerate}
+
+\subsection*{G.3 Data collection and logging}
+
+\paragraph{Per–cycle records (extends Stage I).}
+Add to window–level logs:
+\begin{itemize}
+\item Ledger: $\mathcal{L}_{\mathrm{pre}}$, $\mathcal{L}_{\mathrm{post}}$, $\Delta\mathcal{L}$, threshold pass/fail ($\Delta\mathcal{L}\ge\Lambda$).
+\item Certificate: aggregate over $M$ windows; binary \textsf{Pass/Fail}.
+\item Jitter: realized $\delta t$ per cycle (if varying).
+\end{itemize}
+
+\paragraph{Sequencing data.}
+\begin{itemize}
+\item Per–sample: template ID, cycle count, chemistry (DNA/PNA), number of sequences, alignment statistics.
+\item Error table: position, reference base, called base, error type (transition/transversion/indel), frequency.
+\item Summary: total $\epsilon$, $1-\epsilon$, error–spectrum bias ratio, 95\% CI (bootstrap over reads).
+\end{itemize}
+
+\paragraph{Fidelity calibration dataset.}
+Table linking $(\Delta\mathcal{L},\,1-\epsilon)$ across runs; include dose $E_{\mathrm{in}}$, jitter $\sigma_t^2$, chemistry. Use for fitting $(\epsilon_0,\kappa_f,\varepsilon_f)$.
+
+\subsection*{G.4 Acceptance criteria}
+
+\paragraph{Primary endpoints.}
+\begin{enumerate}
+\item \textbf{Ledger margin:} $\Delta\mathcal{L}\ge\Lambda$ (preregistered, e.g., $\Lambda=0.1$) with one–sided 95\% CI.
+\item \textbf{Fidelity floor:} $1-\epsilon\ge (1-\epsilon_0)+\kappa_f\Delta\mathcal{L}-\varepsilon_f$ holds across validation runs. Acceptance: residuals within $\pm 2\,\varepsilon_f$.
+\item \textbf{Superiority over controls:} $(1-\epsilon)_\varphi-(1-\epsilon)_{\mathrm{control}}\ge \kappa_f\Delta\mathcal{L}-\varepsilon_f$ where control = off–band or scrambled timing (expect $\Delta\mathcal{L}_{\mathrm{control}}<\Lambda$).
+\end{enumerate}
+
+\paragraph{Secondary metrics.}
+\begin{itemize}
+\item Error–spectrum bias consistent with docking anisotropy (ratio within factor of 2 of prediction).
+\item Timing jitter sensitivity: quadratic fit $R^2>0.8$; variance test within 95\% CI.
+\item Certificate pass rate $\ge p_{\min}$ (e.g., 80\%).
+\end{itemize}
+
+\subsection*{G.5 Falsifiers and controls}
+
+\paragraph{Falsifier 1: Ledger margin absent under φ–gating.}
+If $\Delta\mathcal{L}<\Lambda$ despite certificate \textsf{Pass} and lock spike (Stage I met), the ledger–templating link (Theorem~6.4) is rejected.
+
+\paragraph{Falsifier 2: Fidelity floor violated.}
+If measured $(1-\epsilon)$ systematically falls below $(1-\epsilon_0)+\kappa_f\Delta\mathcal{L}-\varepsilon_f$ across multiple runs (after calibration), the fixed–point contraction claim (Lemma~6.1) fails.
+
+\paragraph{Falsifier 3: No superiority over controls.}
+If off–band or scrambled timing yields $(1-\epsilon)_{\mathrm{control}}\ge (1-\epsilon)_\varphi$ within error bars, the φ–timed advantage is rejected.
+
+\paragraph{Negative control: Off–band/scrambled (from Stage I).}
+Repeat ligation under off–band ($650~\mathrm{cm^{-1}}$) or scrambled timing. Predict: $\Delta\mathcal{L}<\Lambda$, lower fidelity, no certificate pass.
+
+\paragraph{Chemistry comparison: DNA vs.\ PNA.}
+Both must achieve $\Delta\mathcal{L}\ge\Lambda$ and pass fidelity floor. Compare $\kappa_f$ values; if confidence intervals overlap, universality is supported. Document any chemistry–specific $\epsilon_0$ or $\varepsilon_f$.
+
+\subsection*{G.6 Timeline and milestones}
+
+\paragraph{Week 0–2:} Design and synthesize templates/primers; optimize ligation conditions in bulk (non–gated) as positive control.
+
+\paragraph{Week 3–4:} Integrate ligation into φ–gated setup (Protocol G.2); run pilot cycles with DNA.
+
+\paragraph{Week 5:} Full DNA Stage II run (50–100 cycles); measure $\Delta\mathcal{L}$, sequence products.
+
+\paragraph{Week 6–7:} Repeat with PNA; run negative controls (off–band, scrambled).
+
+\paragraph{Week 8:} Jitter variation experiments (Protocol G.7); collect replicates.
+
+\paragraph{Week 9–10:} Data analysis: fit fidelity floor, error spectra, jitter sensitivity; generate signed logs.
+
+\paragraph{Milestone M4:} Ledger margin $\Delta\mathcal{L}\ge\Lambda$ observed in at least one chemistry.
+
+\paragraph{Milestone M5:} Fidelity floor holds with calibrated constants.
+
+\paragraph{Milestone M6:} Negative controls fail as predicted.
+
+\paragraph{Deliverable:} Manuscript: ``Templated Replication with Fidelity Floor Validated under RS Instrument'' (suitable for \emph{Science} or \emph{PNAS}).
+
+\subsection*{G.7 Safety and compliance}
+
+Extends Stage I safety protocols. Additional considerations:
+\begin{itemize}
+\item \textbf{Enzymatic activity:} T4 ligase is non–hazardous but requires proper inactivation (heat to $65^\circ$C for 10~min or EDTA quench).
+\item \textbf{Chemical activators (PNA):} EDC, HBTU are irritants; use fume hood and PPE.
+\item \textbf{Sequencing waste:} Follow institutional guidelines for biological waste (autoclaving or bleach).
+\end{itemize}
+Preregister fidelity floor parameters $(\epsilon_0,\kappa_f,\varepsilon_f,\Lambda)$ and jitter protocols before data collection.
+
+
+\section*{Appendix H — Stage III Wet–Lab Protocol: Autocatalysis \& Metabolic Closure}\label{app:stage3-protocol}
+
+\subsection*{H.0 Goal and overview}
+Integrate a minimal energy supply—synchronized proton/electron gradients—with the φ–timed recognition gate to achieve \emph{sustained autonomous copying} without manual reagent pulsing. Validate the viability inequality (Eq.~\ref{eq:closure}): available gradient work $W_{\mathrm{grad}}$ must exceed required work $W_{\mathrm{req}}=\chi_E\Delta\mathcal{L}+W_{\mathrm{lig}}+W_{\mathrm{exp}}$. Demonstrate throughput $\nu\ge\nu_{\min}$ over $T_{\min}$ (e.g., 6–12 hours), maintain certificate \textsf{Pass} rate, and track fidelity. Success proves metabolic closure and represents a paradigm–shifting achievement: "life in a bottle" under RS control.
+
+\subsection*{H.1 Materials and equipment (extends Stage II)}
+
+\paragraph{Microfluidic redox loop.}
+Two implementation options; choose one based on lab capabilities and chemistry compatibility.
+
+\paragraph{Option A: Photocatalytic redox.}
+\begin{itemize}
+\item \textbf{Photoanode:} Thin–film $\alpha$-Fe$_2$O$_3$ (hematite) deposited on FTO (fluorine–doped tin oxide) glass via spray pyrolysis or ALD. Thickness 50–200~nm. Alternative: TiO$_2$ or BiVO$_4$.
+\item \textbf{Cathode:} Platinum on carbon (Pt/C, 20\% loading) or graphite felt. Surface area $\sim 1$~cm$^2$.
+\item \textbf{Membrane:} Nafion 117 proton–exchange membrane (Sigma, \$200–\$500 per sheet) separating anodic and cathodic chambers.
+\item \textbf{Visible/near–IR illumination:} White LED or solar simulator, power density 100–500~mW/cm$^2$, gated by FPGA to align with \textsf{LOCK} phase.
+\item \textbf{Bias:} Apply small external bias ($\sim 0.5$–$1.0$~V) via potentiostat (e.g., Gamry Reference 600, \$15K; or BioLogic SP-200, \$20K) under φ–schedule control.
+\item \textbf{Budget:} Photoelectrode materials \$2K–\$5K, potentiostat \$15K–\$20K (or access via core facility), membrane \$500.
+\end{itemize}
+
+\paragraph{Option B: Mineral–based redox.}
+\begin{itemize}
+\item \textbf{Microbed:} Packed column of greigite (Fe$_3$S$_4$) or pyrite (FeS$_2$) particles ($\sim 10$–$50~\mu$m diameter) in serpentine microchannel.
+\item \textbf{Electrodes:} Interdigitated gold or platinum electrodes (e–beam lithography or commercial, e.g., DropSens, \$500–\$1K).
+\item \textbf{Gate–driven potential:} Apply φ–timed voltage pulses ($\pm 0.5$~V) via FPGA–controlled DAC and amplifier.
+\item \textbf{pH control:} Micro–valves (Lee Company or Dolomite) deliver acid/base pulses aligned to \textsf{LOCK}/\textsf{BALANCE}.
+\item \textbf{Budget:} Mineral particles \$500, electrodes \$1K–\$2K, micro–valves \$3K–\$5K, amplifiers \$2K.
+\end{itemize}
+
+\paragraph{Sensors and monitoring.}
+\begin{itemize}
+\item \textbf{pH sensors:} Ion–sensitive FETs (ISFETs, e.g., Sentron SI-6xx series, \$500–\$1K each) with response time $<1$~s; place in both anodic and cathodic chambers or at chamber exits.
+\item \textbf{Micro–reference electrodes:} Ag/AgCl wire or commercial micro–RE (Warner Instruments, \$200–\$500) to measure electrochemical potentials $\Delta\Psi$.
+\item \textbf{Inline MCT detector:} Continuous mid–IR monitoring of $\mathrm{Occ}_{724}(t)$ (same as Stages I–II).
+\item \textbf{Thermistors:} Monitor sample temperature; ensure $T\le T_{\max}$.
+\item \textbf{Flow control:} Syringe pumps (Harvard Apparatus, \$2K each) or pressure–driven flow (Fluigent, \$5K) with serpentine channels (Péclet $\gg 1$) to match residence time $\tau_{\mathrm{res}}\approx T$ (cycle period).
+\item \textbf{Budget:} Sensors \$5K–\$8K, flow control \$5K–\$10K, additional tubing/fittings \$2K.
+\end{itemize}
+
+\paragraph{Microfluidic fabrication.}
+\begin{itemize}
+\item \textbf{Design:} Serpentine channel (length $\sim 10$–50~cm, width 100–500~$\mu$m, height 50–200~$\mu$m) with reaction chamber ($\sim 1$–10~$\mu$L volume) interfaced to redox loop.
+\item \textbf{Materials:} PDMS (polydimethylsiloxane) soft lithography bonded to glass with embedded ZnSe/CaF$_2$ windows for IR access, or all–glass/quartz channels (laser–micromachined or wet–etched).
+\item \textbf{Ports:} Inlet/outlet for sample, electrolyte circulation, waste collection.
+\item \textbf{Fabrication:} In–house cleanroom or commercial vendor (e.g., microLIQUID, uFluidix, \$10K–\$20K for custom design + 10 chips).
+\item \textbf{Budget:} \$15K–\$25K (design, masks, fabrication runs).
+\end{itemize}
+
+\paragraph{Total Stage III incremental budget:} \textbf{+\$100K–\$130K} (cumulative: \$200K–\$250K).
+
+\subsection*{H.2 Procedure}
+
+\paragraph{Protocol H.1: Integrate gradient coupling with φ–schedule.}
+\begin{enumerate}
+\item Fabricate or assemble microfluidic device with redox loop (Option A or B).
+\item Load template:primer:monomer:ligase system (same as Stage II) into reaction chamber.
+\item Circulate electrolyte (e.g., 0.1~M phosphate buffer, pH~7) through redox chambers; establish baseline proton/electron gradients.
+\item Program FPGA to gate redox bias or illumination to \textsf{LOCK} windows: apply positive bias (oxidation) or light pulse during \textsf{LOCK} to favor correct ligation via local energetics.
+\item Program \textsf{BALANCE} phase to reverse bias or open flow vent for waste export (dissociation of incorrect contacts, byproduct removal).
+\item \textsf{LISTEN}: maintain baseline (leak compensation only); no active redox drive.
+\item Verify phase alignment with oscilloscope: bias/light pulses synchronized to IR envelopes within $\pm 1~\mu$s.
+\end{enumerate}
+
+\paragraph{Protocol H.2: Calibrate coupling efficiency $\eta_{\mathrm{coup}}$.}
+\begin{enumerate}
+\item Run short episodes (10–20 cycles) with varying bias amplitude or light intensity.
+\item Measure per–cycle particle counts: proton flux $n_{\mathrm{H}^+}$ (integrate pH sensor current or compute from pH change), electron count $n_{e^-}$ (integrate current at electrodes).
+\item Measure electrochemical potentials: $\Delta\mu_{\mathrm{H}^+}=F\Delta\Psi-RT\ln(10)\,\Delta\mathrm{pH}$ (Faraday constant $F$, gas constant $R$, temperature $T$); $\Delta\mu_{e^-}=F\Delta\Psi_e$.
+\item Compute available work per cycle:
+\[
+W_{\mathrm{grad}}=\eta_{\mathrm{coup}}\big(n_{\mathrm{H}^+}\Delta\mu_{\mathrm{H}^+}+n_{e^-}\Delta\mu_{e^-}\big).
+\]
+\item Estimate $\eta_{\mathrm{coup}}$ by comparing $W_{\mathrm{grad}}$ to ledger drop $\Delta\mathcal{L}$ (assume $W_{\mathrm{grad}}\approx \chi_E\Delta\mathcal{L}$ in first approximation; refine with ligation/export estimates).
+\item Fit $\eta_{\mathrm{coup}}$ via linear regression over multiple bias/intensity levels; preregister calibrated value with 95\% CI.
+\end{enumerate}
+
+\paragraph{Protocol H.3: Sustained operation run.}
+\begin{enumerate}
+\item Set target throughput $\nu_{\min}$ (e.g., 1 copy per 10 cycles; depends on template length and ligation kinetics).
+\item Set run duration $T_{\min}$ (e.g., 6–12 hours; corresponds to $\sim 10^4$–$10^5$ cycles at $T\sim 1$~ms per cycle, or longer $T$ if needed).
+\item Start φ–timed IR + redox gating; monitor continuously:
+\begin{itemize}
+\item IR: $\mathrm{Occ}_{724}(t)$, certificate \textsf{Pass/Fail} per $M$–window aggregate.
+\item Redox: pH(t), $\Delta\Psi(t)$, bias current or light intensity.
+\item Temperature: $T(t)$; ensure within bounds.
+\item Flow: residence time $\tau_{\mathrm{res}}$; adjust pump speed if drifting.
+\end{itemize}
+\item Sample reaction products at intervals: $t=0$, $T_{\min}/4$, $T_{\min}/2$, $3T_{\min}/4$, $T_{\min}$. Purify and sequence to track fidelity over time.
+\item Measure waste concentration $C_{\mathrm{waste}}$ (e.g., via UV absorbance of byproducts, or mass spec): ensure $C_{\mathrm{waste}}\le C_{\max}$ (preregister threshold).
+\item Log all window–level records (hash–chained) for the entire run.
+\end{enumerate}
+
+\paragraph{Protocol H.4: Test viability inequality.}
+\begin{enumerate}
+\item For each $M$–window block, compute:
+\begin{itemize}
+\item $W_{\mathrm{grad}}$ from measured gradients (Protocol H.2).
+\item $\Delta\mathcal{L}$ from ledger computation (Protocol G.3).
+\item Estimate $W_{\mathrm{lig}}$ from ligation stoichiometry (e.g., ATP hydrolysis $\sim 0.5$~eV per bond for DNA; chemical activation energy for PNA).
+\item Estimate $W_{\mathrm{exp}}$ from waste export (osmotic work $\sim k_BT\ln(C_{\mathrm{waste}}/C_0)$ per molecule).
+\end{itemize}
+\item Test inequality:
+\[
+W_{\mathrm{grad}}\ge \chi_E\Delta\mathcal{L}+W_{\mathrm{lig}}+W_{\mathrm{exp}}.
+\]
+\item Acceptance: inequality holds for $\ge 80\%$ of blocks over $T_{\min}$.
+\item If violated, diagnose: insufficient $W_{\mathrm{grad}}$ (increase bias/light), excessive $W_{\mathrm{lig}}$ (optimize ligation), or export failure (increase \textsf{BALANCE} duty or flow).
+\end{enumerate}
+
+\subsection*{H.3 Data collection and logging}
+
+\paragraph{Continuous streams (high–rate, local storage).}
+\begin{itemize}
+\item IR: $\mathrm{Occ}_{724}(t)$ at 10–100~Hz.
+\item pH: pH(t) at 10~Hz from ISFETs.
+\item Electrochemistry: $\Delta\Psi(t)$, bias current $I_{\mathrm{bias}}(t)$ at 10~Hz.
+\item Temperature: $T(t)$ at 10~Hz.
+\item Flow: volumetric flow rate or residence time $\tau_{\mathrm{res}}(t)$.
+\end{itemize}
+
+\paragraph{Window–level aggregates (extends Stages I–II).}
+Per $M$–window block:
+\begin{itemize}
+\item Recognition: $\mathrm{Occ}_{724}$, $\Delta\mathcal{L}$, certificate \textsf{Pass/Fail}.
+\item Redox: $n_{\mathrm{H}^+}$, $n_{e^-}$, $\Delta\mu_{\mathrm{H}^+}$, $\Delta\mu_{e^-}$, $W_{\mathrm{grad}}$.
+\item Viability: $W_{\mathrm{lig}}$, $W_{\mathrm{exp}}$, inequality pass/fail.
+\item Waste: $C_{\mathrm{waste}}$ (sampled or inline sensor).
+\item Throughput: number of completed copies (from sequencing samples).
+\end{itemize}
+
+\paragraph{Sequencing time–series.}
+Samples at $t=0,\ T_{\min}/4,\ T_{\min}/2,\ 3T_{\min}/4,\ T_{\min}$: measure $(1-\epsilon)(t)$; test fidelity floor drift.
+
+\paragraph{Signed compliance log.}
+Extends Stage II format; include redox parameters, viability test results, sustained–operation verdict.
+
+\subsection*{H.4 Acceptance criteria}
+
+\paragraph{Primary endpoints (Section~7.3).}
+\begin{enumerate}
+\item \textbf{Throughput:} $\nu\ge\nu_{\min}$ sustained for full $T_{\min}$ without manual reagent pulsing (preregister $\nu_{\min}$, e.g., 0.1 copies/cycle).
+\item \textbf{Certificate pass rate:} $\ge p_{\min}$ (e.g., 75\%) over all $M$–window blocks.
+\item \textbf{Fidelity:} $(1-\epsilon)(t)$ remains above floor $(1-\epsilon_0)+\kappa_f\Delta\mathcal{L}-\varepsilon_f$ at all sampled time points.
+\item \textbf{Waste:} $C_{\mathrm{waste}}\le C_{\max}$ throughout run.
+\item \textbf{Gradient health:} $\Delta\mu_{\mathrm{H}^+}$, $\Delta\mu_{e^-}$ stay within preregistered bands; cumulative drift $<10\%$.
+\item \textbf{Viability inequality:} $W_{\mathrm{grad}}\ge W_{\mathrm{req}}$ for $\ge 80\%$ of blocks.
+\end{enumerate}
+
+\paragraph{Secondary metrics.}
+\begin{itemize}
+\item Stability: variance in $\nu$ over time (should be low; coefficient of variation $<20\%$).
+\item Efficiency: $\eta=\Delta\mathcal{L}/E_{\mathrm{in}}$ vs.\ Stage I/II baselines.
+\item Adaptation (optional): Introduce preregistered drifts (temperature $\pm 5$~K, pH $\pm 0.5$) and observe if system compensates (variant frequencies shift per fitness proxy, Section~7.2).
+\end{itemize}
+
+\subsection*{H.5 Falsifiers and controls}
+
+\paragraph{Falsifier 1: Stall.}
+If $\nu<\nu_{\min}$ persists for $>T_{\min}/4$ despite recognition success (lock spike, $\Delta\mathcal{L}\ge\Lambda$), metabolic closure fails. Diagnose: $W_{\mathrm{grad}}$ insufficient, ligation kinetics too slow, or export clogged.
+
+\paragraph{Falsifier 2: Gate collapse.}
+If certificate \textsf{Pass} rate drops below $p_{\min}$ over $T_{\min}$, the sustained–operation claim is rejected. Potential causes: dose accumulation (exceeding $D_{\max}$), timing drift, or redox interference with IR lock.
+
+\paragraph{Falsifier 3: Export failure.}
+If $C_{\mathrm{waste}}>C_{\max}$ or accumulates over time, waste export via \textsf{BALANCE} phase is inadequate. Adjust: increase \textsf{BALANCE} duty, enhance flow, or add chemical quench.
+
+\paragraph{Falsifier 4: Gradient drift.}
+If $\Delta\mu_{\mathrm{H}^+}$ or $\Delta\mu_{e^-}$ deviates beyond bands, the redox loop is not sustainable (e.g., electrode fouling, membrane degradation). Replace components and re–run.
+
+\paragraph{Negative control: Recognition without redox.}
+Disable redox loop (no bias, no light); run under same IR schedule. Predict: templating may occur initially (Stage II) but stalls within $\ll T_{\min}$ due to reagent depletion. If sustained operation occurs without redox, the metabolic coupling claim fails.
+
+\paragraph{Chemistry comparison: DNA vs.\ PNA.}
+Both chemistries must satisfy viability inequality and primary endpoints under the same φ–schedule and thresholds. Document chemistry–specific $W_{\mathrm{lig}}$, $W_{\mathrm{exp}}$ (expect PNA higher $W_{\mathrm{exp}}$ due to neutral backbone osmotic pressure). Both pass $\Rightarrow$ universality affirmed; either fail $\Rightarrow$ chemistry–specific limitation identified.
+
+\subsection*{H.6 Timeline and milestones}
+
+\paragraph{Week 0–4:} Design and fabricate microfluidic device with redox loop; test redox subsystem independently (cyclic voltammetry, pH response).
+
+\paragraph{Week 5–6:} Integrate IR source, timing controller, and redox gating; verify phase synchronization.
+
+\paragraph{Week 7:} Calibrate $\eta_{\mathrm{coup}}$ (Protocol H.2); short episodes with DNA.
+
+\paragraph{Week 8–10:} Full DNA Stage III sustained run ($T_{\min}=6$–12 hours); sample and sequence at intervals.
+
+\paragraph{Week 11–13:} Repeat with PNA; run negative control (no redox).
+
+\paragraph{Week 14–16:} Data analysis: viability inequality, throughput stability, fidelity tracking; generate signed logs.
+
+\paragraph{Milestone M7:} Sustained operation for $T_{\min}$ achieved in at least one chemistry.
+
+\paragraph{Milestone M8:} Viability inequality holds across run.
+
+\paragraph{Milestone M9:} Negative control fails as predicted (stall or incomplete run).
+
+\paragraph{Deliverable:} Manuscript: ``Autonomous Synthetic Replication via RS Metabolic Closure'' (target \emph{Nature}, \emph{Science}, or \emph{Cell}).
+
+\subsection*{H.7 Safety and compliance}
+
+Extends Stages I–II. Additional considerations:
+
+\paragraph{Electrochemistry hazards.}
+\begin{itemize}
+\item Electrolysis can generate H$_2$ and O$_2$ gases; ensure ventilation or gas venting (bubbler).
+\item High current densities may cause heating; monitor temperature continuously.
+\item Electrode materials (Pt, Fe) are generally safe but handle with care (skin contact with mineral particles or metal salts: use gloves).
+\end{itemize}
+
+\paragraph{Microfluidic containment.}
+\begin{itemize}
+\item Enclose device in secondary containment (e.g., Petri dish or tray) to catch leaks.
+\item Effluent passes through inline UV kill (254~nm lamp, \$500) or heat exchanger ($>90^\circ$C for 10~min) before waste collection.
+\item Chemical quench: add bleach (0.5\% final hypochlorite) or autoclave waste before disposal.
+\end{itemize}
+
+\paragraph{Kill switches (per Section~9.4).}
+\begin{itemize}
+\item Nutritional: Replicators require φ–timed IR + redox; without driver they stall within minutes.
+\item Labile linkers (optional): Include photocleavable or thermally labile groups in monomers; exposure to visible light or heat ($>50^\circ$C) degrades products.
+\item Cofactor starvation: Use non–natural cofactors (e.g., modified nucleotides unavailable in environment).
+\end{itemize}
+
+\paragraph{Governance.}
+\begin{itemize}
+\item Institutional biosafety committee (IBC) review required before Stage III (even though no live organisms, synthetic biology protocols apply).
+\item Preregister all parameters ($\nu_{\min}$, $T_{\min}$, thresholds, calibration constants) and hash–commit.
+\item Emergency shutdown: FPGA firmware includes watchdog timer; if certificate failures exceed threshold or temperature/$C_{\mathrm{waste}}$ alarms trip, system halts and logs event.
+\end{itemize}
+
+
+\section*{Appendix I — Stage IV Wet–Lab Protocol: Cross–Chemistry Universality}\label{app:stage4-protocol}
+
+\subsection*{I.0 Goal and overview}
+Test the RS instrument's \emph{universality} by repeating Stages I–III for both DNA and PNA under \emph{identical} φ–schedule, envelopes, thresholds, and dose caps—\emph{no knob–tuning}. Compare primary endpoints (geometry, lock spike, ledger margin, fidelity floor, metabolic closure) and validate that both chemistries pass audits or document class–specific deficiencies. Success confirms the RS instrument as chemistry–agnostic, elevating abiogenesis from a recipe–driven puzzle to a universal recognition phase of matter. Failure of either chemistry (or success of a non–duplex code) falsifies universality or exclusivity claims (Section~\ref{sec:universality}).
+
+\subsection*{I.1 Experimental design}
+
+\paragraph{Same gate, same audits (Section~8.3).}
+\begin{enumerate}
+\item \textbf{φ–schedule:} Identical eight–beat timing ($\Delta t_{\ell+1}/\Delta t_\ell\in\{\varphi,\varphi^{-1}\}$), same total period $T$, same duty cycles $(\rho_{\mathrm{LSN}},\rho_{\mathrm{LCK}},\rho_{\mathrm{BAL}})$.
+\item \textbf{IR envelopes:} Same wavelength $\lambda_0=13.8~\mu$m, same raised–cosine ramp parameters, same dose cap $E_{\mathrm{in}}\le D_{\max}$.
+\item \textbf{Thresholds:} Identical preregistered values for $\Theta_{\mathrm{spec}}$ (lock occupancy), $\Lambda$ (ledger margin), $R_{\min}$ (lock ratio), $\kappa_f,\varepsilon_f,\epsilon_0$ (fidelity floor), $\nu_{\min}$ (throughput), $p_{\min}$ (certificate pass rate).
+\item \textbf{Safety caps:} Only material–mandated limits (e.g., PNA may tolerate higher temperature due to neutral backbone; DNA subject to standard phosphodiester stability) may differ; these must be \emph{declared ex ante} and justified by chemistry, not tuned per trial.
+\item \textbf{No knobs:} Timing, objective, and acceptance tests are \emph{fixed}; no per–sequence or per–species adjustments allowed.
+\end{enumerate}
+
+\subsection*{I.2 Procedure}
+
+\paragraph{Protocol I.1: Establish DNA baseline (Stages I–III).}
+\begin{enumerate}
+\item Execute Stages I–III with DNA as described in Appendices F–H.
+\item Record all primary endpoints in a master table (Table~I.1, see below).
+\item Archive signed logs and calibration constants (DNA–specific $\epsilon_0$, $\kappa_f$, $\eta_{\mathrm{coup}}$, etc.).
+\end{enumerate}
+
+\paragraph{Protocol I.2: Switch to PNA chemistry.}
+\begin{enumerate}
+\item Synthesize or purchase PNA oligomers (templates, primers, monomers) matching DNA sequences in length (20–40 units).
+\item Replace DNA buffers/ligase with PNA–compatible equivalents: adjust ionic strength if needed (PNA less sensitive to salt), use EDC or peptide coupling instead of T4 ligase.
+\item \emph{Do not} alter φ–schedule, IR parameters, or thresholds.
+\item Load PNA samples into same microfluidic device (clean and sterilize between runs).
+\end{enumerate}
+
+\paragraph{Protocol I.3: Repeat Stages I–III with PNA.}
+\begin{enumerate}
+\item \textbf{Stage I:} Execute Protocol F with PNA; measure lock ratio $\mathcal{R}_{\mathrm{lock}}$, geometry $(P,G_{\min},G_{\maj},\rho_{\maj/\min})$.
+\item \textbf{Stage II:} Execute Protocol G with PNA; measure ledger margin $\Delta\mathcal{L}$, fidelity $(1-\epsilon)$, error spectrum.
+\item \textbf{Stage III:} Execute Protocol H with PNA; test viability inequality, sustained operation.
+\item Use identical analysis scripts, masks, and validators as DNA runs (version–controlled, hash–committed).
+\end{enumerate}
+
+\paragraph{Protocol I.4: Compare primary endpoints.}
+Construct side–by–side comparison table (Table~I.1) with 95\% confidence intervals:
+
+\begin{center}
+\small
+\begin{tabular}{l|cc|c}
+\hline
+\textbf{Metric} & \textbf{DNA} & \textbf{PNA} & \textbf{Threshold/Band}\\
+\hline
+\multicolumn{4}{c}{\emph{Stage I: Recognition}}\\
+$\mathcal{R}_{\mathrm{lock}}$ & \rule{1cm}{0.4pt} & \rule{1cm}{0.4pt} & $\ge R_{\min}$\\
+$P$ (\AA) & \rule{1cm}{0.4pt} & \rule{1cm}{0.4pt} & $[P_-,P_+]$\\
+$G_{\min}$ (\AA) & \rule{1cm}{0.4pt} & \rule{1cm}{0.4pt} & $[G_{\min,-},G_{\min,+}]$\\
+$\rho_{\maj/\min}$ & \rule{1cm}{0.4pt} & \rule{1cm}{0.4pt} & $[\varphi(1-\epsilon_G),\varphi(1+\epsilon_G)]$\\
+Cert.\ Pass rate (\%) & \rule{1cm}{0.4pt} & \rule{1cm}{0.4pt} & $\ge p_{\min}$\\
+\hline
+\multicolumn{4}{c}{\emph{Stage II: Templating}}\\
+$\Delta\mathcal{L}$ & \rule{1cm}{0.4pt} & \rule{1cm}{0.4pt} & $\ge\Lambda$\\
+$(1-\epsilon)$ & \rule{1cm}{0.4pt} & \rule{1cm}{0.4pt} & $\ge(1-\epsilon_0)+\kappa_f\Delta\mathcal{L}-\varepsilon_f$\\
+$\kappa_f$ & \rule{1cm}{0.4pt} & \rule{1cm}{0.4pt} & (calibrated)\\
+Error bias ratio & \rule{1cm}{0.4pt} & \rule{1cm}{0.4pt} & $\sim$ docking prediction\\
+\hline
+\multicolumn{4}{c}{\emph{Stage III: Autocatalysis}}\\
+$\nu$ (copies/cycle) & \rule{1cm}{0.4pt} & \rule{1cm}{0.4pt} & $\ge\nu_{\min}$\\
+$T_{\mathrm{sustain}}$ (hours) & \rule{1cm}{0.4pt} & \rule{1cm}{0.4pt} & $\ge T_{\min}$\\
+Viability ineq.\ pass (\%) & \rule{1cm}{0.4pt} & \rule{1cm}{0.4pt} & $\ge 80\%$\\
+$W_{\mathrm{lig}}$ (eV/bond) & \rule{1cm}{0.4pt} & \rule{1cm}{0.4pt} & (chemistry–specific)\\
+\hline
+\end{tabular}
+\end{center}
+
+\paragraph{Protocol I.5: Test negative controls for both chemistries.}
+\begin{enumerate}
+\item Run off–band drive ($650~\mathrm{cm^{-1}}$) and scrambled timing for DNA and PNA.
+\item Predict: both controls fail primary endpoints ($\mathcal{R}_{\mathrm{lock}}<R_{\min}$, $\Delta\mathcal{L}<\Lambda$).
+\item Acceptance: negative controls for both chemistries inflate metrics or fail audits.
+\end{enumerate}
+
+\subsection*{I.3 Data collection and logging}
+
+Extends Stages I–III signed logs with chemistry identifier (DNA/PNA) in metadata. Generate unified dataset with:
+\begin{itemize}
+\item Per–chemistry signed compliance logs (hash–chained).
+\item Comparison table (Table~I.1) with CIs.
+\item Universality verdict: \textsf{Pass} if both chemistries meet all primary endpoints; \textsf{Fail} with documented cause if either fails.
+\end{itemize}
+
+\subsection*{I.4 Acceptance criteria}
+
+\paragraph{Primary universality endpoints (Section~10.4).}
+Both DNA and PNA must:
+\begin{enumerate}
+\item Pass Stage I: $\mathcal{R}_{\mathrm{lock}}\ge R_{\min}$, geometry in φ–bands, certificate $\ge p_{\min}$.
+\item Pass Stage II: $\Delta\mathcal{L}\ge\Lambda$, fidelity floor holds.
+\item Pass Stage III: $\nu\ge\nu_{\min}$ sustained for $T_{\min}$, viability inequality satisfied.
+\item Fail negative controls (off–band, scrambled) as predicted.
+\end{enumerate}
+If \emph{any} criterion fails for either chemistry under the same instrument (with safety–compliant dose), universality is \emph{rejected for that class}.
+
+\paragraph{Secondary metrics.}
+\begin{itemize}
+\item Overlapping $\kappa_f$ confidence intervals (supports universality of fidelity floor mechanism).
+\item Chemistry–specific predictions validated: PNA tighter geometry, higher $\mathcal{R}_{\mathrm{lock}}$, different $W_{\mathrm{lig}}$ (Section~8.3).
+\item DNA vs.\ PNA error–spectrum bias ratios consistent with respective docking anisotropies.
+\end{itemize}
+
+\subsection*{I.5 Falsifiers}
+
+\paragraph{Falsifier 1: Chemistry fails audits under same instrument.}
+If DNA passes all stages but PNA fails (or vice versa) despite identical gate and safety–compliant dose, the universality claim is rejected for the failing class. Diagnose: class–specific deficiency (e.g., PNA backbone incompatibility with φ–timing, or DNA instability at required dose).
+
+\paragraph{Falsifier 2: Non–duplex code wins ledger.}
+If a non–duplex arrangement (e.g., planar ladder, parallel helix without counter–winding, surface–forced 2D code) achieves $\Delta\mathcal{L}\ge\Lambda$ and templates under the same gate, the RS \emph{exclusivity} claim (Section~4 no–go theorem) fails.
+
+\paragraph{Falsifier 3: Negative controls do not inflate.}
+If off–band or scrambled timing yields performance indistinguishable from φ–gated runs (within error bars) for either chemistry, the instrument specificity is rejected.
+
+\subsection*{I.6 Predictions per chemistry (Section~8.3)}
+
+\paragraph{DNA (canonical B–form).}
+\begin{itemize}
+\item Geometry: $P\approx 34$–35~\AA, $G_{\min}\approx 12$~\AA, $\rho_{\maj/\min}\approx 1.6$–1.7 (within φ bands: $\varphi\approx 1.618$).
+\item Lock ratio: moderate $\mathcal{R}_{\mathrm{lock}}$ (baseline); line shape smooth.
+\item Ledger: $\Delta\mathcal{L}$ saturates with dose (diminishing returns).
+\item Ligation: T4 ligase–mediated, $W_{\mathrm{lig}}\sim 0.5$~eV/bond (ATP hydrolysis).
+\item Error bias: transition $>$ transversion (canonical purine/pyrimidine docking tolerances).
+\end{itemize}
+
+\paragraph{PNA (peptide backbone).}
+\begin{itemize}
+\item Geometry: tighter tolerance bands (higher stiffness $A,C$), slightly smaller helical radius $R$, pitch adjusted but $\rho_{\maj/\min}\approx\varphi$ maintained.
+\item Lock ratio: higher $\mathcal{R}_{\mathrm{lock}}$ at equal dose (stronger face complementarity, better alignment).
+\item Spectral: modest blueshift or narrowing of lock line (different reduced mass $\mu_{\mathrm{eff}}$).
+\item Ledger: potentially larger $\Delta\mathcal{L}$ per cycle (less slippage).
+\item Ligation: EDC or peptide coupling, $W_{\mathrm{lig}}\sim 0.3$–0.5~eV/bond (chemical activation).
+\item Export: higher $W_{\mathrm{exp}}$ (neutral backbone, different osmotic pressure); may require increased \textsf{BALANCE} duty.
+\item Error bias: similar transition/transversion ratio if face geometry preserved; confirm with docking measurements.
+\end{itemize}
+
+\subsection*{I.7 Timeline and milestones}
+
+\paragraph{Week 0–8:} Complete DNA Stages I–III (per Appendices F–H); archive results.
+
+\paragraph{Week 9–10:} Synthesize/purchase PNA materials; adapt buffers and ligation chemistry.
+
+\paragraph{Week 11–13:} PNA Stage I (recognition).
+
+\paragraph{Week 14–16:} PNA Stage II (templating).
+
+\paragraph{Week 17–20:} PNA Stage III (autocatalysis).
+
+\paragraph{Week 21–22:} Run negative controls (off–band, scrambled) for both DNA and PNA.
+
+\paragraph{Week 23–24:} Data analysis, universality comparison table, signed logs, manuscript preparation.
+
+\paragraph{Milestone M10:} Both DNA and PNA pass Stage I.
+
+\paragraph{Milestone M11:} Both DNA and PNA pass Stage II with overlapping $\kappa_f$.
+
+\paragraph{Milestone M12:} Both DNA and PNA pass Stage III (sustained operation).
+
+\paragraph{Milestone M13:} Negative controls fail for both chemistries.
+
+\paragraph{Deliverable:} Manuscript: ``Chemistry–Agnostic Life Instrument Confirmed: RS Universality across DNA and PNA'' (target \emph{Nature}, \emph{Science}, or \emph{Cell}).
+
+\subsection*{I.8 Safety and compliance}
+
+Combines all safety protocols from Stages I–III. Key points:
+\begin{itemize}
+\item PNA is non–toxic, non–immunogenic; handle as standard peptides (gloves, lab coat).
+\item Clean microfluidic device thoroughly between DNA and PNA runs (bleach soak, UV sterilization, DI water rinse) to avoid cross–contamination.
+\item Preregister universality test plan: declare ex ante which safety caps differ (if any) and justify by chemistry (e.g., PNA thermal stability vs.\ DNA).
+\item Institutional biosafety review covers both chemistries; synthetic biology protocols apply.
+\item Emergency shutdown and kill switches (UV, heat, cofactor starvation) remain active for both chemistries.
+\end{itemize}
+
+Preregister comparison table structure, thresholds, and negative–control protocols before executing Stage IV. Hash–commit all parameters and analysis scripts; deposit on public registry (OSF, Zenodo).
+
+
+\end{document}
