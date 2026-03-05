@@ -1,0 +1,533 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Bell Inequality Violation from Recognition Science:\\
+Shared Ledger Entries and the Tsirelson Bound}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We derive the Bell inequality violation and the Tsirelson bound
+from Recognition Science (RS).  Entanglement is the sharing of a
+single ledger entry between two particles---a global constraint,
+not two separate local states.  The classical Bell--CHSH bound
+$|S| \leq 2$ holds when correlations arise from local hidden
+variables (independent ledger entries).  The shared ledger
+produces the singlet correlation
+$E(\hat{a}, \hat{b}) = -\cos\theta_{ab}$.  The CHSH parameter
+achieves its maximum $|S| = 2\sqrt{2}$ at optimal angles
+separated by $\pi/4$, saturating the Tsirelson bound.  The
+angular spacing $\pi/4 = 2\pi/(2^D)$ is one tick of the 8-tick
+epoch, and the numerical identity
+$2\sqrt{2} = \sqrt{2^3} = \sqrt{8}$ suggests a structural link
+between the Tsirelson bound and $D = 3$.  The no-signaling property
+follows from the RS causal structure: ledger updates propagate
+at $c = \ell_0/\tau_0$.  All structural results follow from the RS axioms~\cite{RS_Axioms}.
+\end{abstract}
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+Bell's theorem~\cite{Bell1964} is one of the deepest results in
+physics: no local hidden-variable (LHV) theory can reproduce all
+predictions of quantum mechanics.  The CHSH
+inequality~\cite{CHSH1969} provides a quantitative test: for any
+LHV theory, $|S| \leq 2$, while quantum mechanics allows
+$|S|$ up to the Tsirelson bound
+$2\sqrt{2}$~\cite{Tsirelson1980}.  Loophole-free experiments
+confirm $|S| > 2$~\cite{Hensen2015, Giustina2015, Shalm2015}.
+
+Standard quantum mechanics describes the violation but does not
+explain its physical origin.  RS~\cite{RS_Axioms} provides the mechanism:
+entangled particles share one global ledger entry.  The
+classical bound fails because LHV theories assume each particle
+has its own independent state---its own ledger entry.  In RS,
+there is only one entry, and the correlations it generates are
+inherently non-local.
+
+%% ============================================================
+\section{Recognition Science Framework}
+\label{sec:framework}
+%% ============================================================
+
+RS derives physical law from three axioms~\cite{RS_Axioms}:
+\begin{enumerate}[label=(A\arabic*),nosep]
+  \item $J(1) = 0$ \hfill \textit{(Normalization)}
+  \item $J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y)$ for all $x,y>0$
+  \hfill \textit{(Recognition Composition Law)}
+  \item $J''_{\log}(0) = 1$, where $J_{\log}(t) := J(e^t)$
+  \hfill \textit{(Calibration)}
+\end{enumerate}
+
+\begin{theorem}[Cost Uniqueness~\cite{RS_Axioms}]
+\label{thm:J}
+The unique continuous solution to (A1)--(A3) is
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$, satisfying $J(x) \geq 0$
+(equality iff $x = 1$) and $J(x) = J(x^{-1})$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+$H(t) := 1 + J(e^t)$ satisfies the d'Alembert equation
+$H(s+t) + H(s-t) = 2H(s)H(t)$ with $H(0)=1$ and $H''(0)=1$.
+The Acz\'el classification~\cite{Aczel1966} forces $H(t)=\cosh t$, giving
+$J(x) = \tfrac{1}{2}(x+x^{-1})-1$.
+\end{proof}
+
+%% ============================================================
+\section{Setup}
+\label{sec:setup}
+%% ============================================================
+
+\begin{definition}[Singlet State]
+\label{def:singlet}
+A source produces two spin-$\frac{1}{2}$ particles in the
+singlet:
+\begin{equation}
+  |\Psi^-\rangle = \frac{1}{\sqrt{2}}
+  \bigl(|\!\uparrow\downarrow\rangle
+  - |\!\downarrow\uparrow\rangle\bigr).
+\end{equation}
+Alice measures spin along $\hat{a}$ (outcome $A = \pm 1$);
+Bob along $\hat{b}$ (outcome $B = \pm 1$).
+\end{definition}
+
+\begin{definition}[CHSH Parameter]
+\label{def:chsh}
+For two measurement settings per party ($a_1, a_2$ for Alice;
+$b_1, b_2$ for Bob):
+\begin{equation}
+  S = E(a_1, b_1) + E(a_1, b_2)
+  + E(a_2, b_1) - E(a_2, b_2),
+\end{equation}
+where $E(a, b) = \langle A(a)\, B(b) \rangle$ is the
+correlation function.
+\end{definition}
+
+%% ============================================================
+\section{The Classical Bound}
+\label{sec:classical}
+%% ============================================================
+
+\begin{theorem}[Bell--CHSH Inequality]
+\label{thm:bell}
+For any local hidden-variable theory:
+\begin{equation}
+  \boxed{|S| \leq 2.}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+In an LHV theory, outcomes are predetermined functions of the
+hidden variable $\lambda$: $A(a, \lambda) = \pm 1$,
+$B(b, \lambda) = \pm 1$.  For any fixed $\lambda$, define
+\begin{equation}
+  s(\lambda) = A_1(B_1 + B_2) + A_2(B_1 - B_2),
+\end{equation}
+where $A_i = A(a_i, \lambda)$, $B_j = B(b_j, \lambda)$.
+Since $B_1, B_2 = \pm 1$, either $|B_1 + B_2| = 2$ and
+$B_1 - B_2 = 0$, or $B_1 + B_2 = 0$ and
+$|B_1 - B_2| = 2$.  In both cases $|s(\lambda)| = 2$.
+Averaging:
+\begin{equation}
+  |S| = \biggl|\int d\lambda\, \rho(\lambda)\,
+  s(\lambda)\biggr| \leq 2.
+\end{equation}
+\end{proof}
+
+\begin{remark}[RS Interpretation]
+\label{rem:rs-lhv}
+The LHV assumption translates to: each particle has its own
+ledger entry with value $\lambda$.  In RS, entangled particles
+share a single entry---the singlet constraint is a global
+property of the ledger, not a pair of local properties.  The
+Bell inequality fails because the ontological unit is the
+shared entry, not two independent states.
+\end{remark}
+
+%% ============================================================
+\section{Quantum Correlation from Shared Ledger}
+\label{sec:correlation}
+%% ============================================================
+
+\begin{proposition}[Singlet Correlation --- Structural Identification]
+\label{thm:correlation}
+For a singlet state, the correlation function is:
+\begin{equation}
+  \boxed{E(\hat{a}, \hat{b}) = -\hat{a} \cdot \hat{b}
+  = -\cos\theta_{ab},}
+\end{equation}
+where $\theta_{ab}$ is the angle between measurement axes.
+\end{proposition}
+
+\begin{proof}
+The shared ledger entry imposes the following constraints on $E$:
+\begin{enumerate}[label=(\roman*),nosep]
+  \item \textbf{Rotational invariance}: The $J$-cost functional is
+  isotropic, so $E$ depends only on $\hat{a} \cdot \hat{b} = \cos\theta_{ab}$.
+  Thus $E(\hat{a}, \hat{b}) = f(\hat{a} \cdot \hat{b})$ for some function $f$.
+
+  \item \textbf{Representation constraint}: The singlet is an
+  $\ell = 0$ state of two spin-$\tfrac{1}{2}$ particles
+  (Clebsch--Gordan: $\tfrac{1}{2}\otimes\tfrac{1}{2} = 0 \oplus 1$).
+  For binary ($\pm 1$) outcomes, the correlation function has
+  angular momentum content $\ell \leq 1$, so by~(i) it must
+  take the form $E = c\cos\theta_{ab}$ for some constant~$c$.
+
+  \item \textbf{Perfect anti-correlation}: $\hat{a} = \hat{b}$
+  gives $\hat{a} \cdot \hat{b} = 1$; the double-entry conservation
+  forces $E = -1$, so $c = -1$.
+\end{enumerate}
+Therefore $E(\hat{a}, \hat{b}) = -\hat{a} \cdot \hat{b} = -\cos\theta_{ab}$.
+\end{proof}
+
+\begin{remark}
+In standard quantum mechanics this follows from
+$\langle\Psi^-|\sigma_a \otimes \sigma_b|\Psi^-\rangle =
+-\hat{a}\cdot\hat{b}$, using the Born rule and the Hilbert-space
+structure of spin.  RS replaces the Born rule with $J$-cost
+minimisation and shared-ledger conservation, but retains the
+spin-$\tfrac{1}{2}$ representation structure: the linearity of~$E$
+in $\cos\theta$ is a consequence of the angular momentum content
+of spin-$\tfrac{1}{2}$ correlations, not of the Born rule.
+\end{remark}
+
+%% ============================================================
+\section{The Tsirelson Bound}
+\label{sec:tsirelson}
+%% ============================================================
+
+\begin{theorem}[Tsirelson Bound]
+\label{thm:tsirelson}
+The maximum CHSH parameter is:
+\begin{equation}
+  \boxed{|S|_{\max} = 2\sqrt{2} = \sqrt{2^D} = \sqrt{8}
+  \approx 2.828.}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+\textbf{Step 1 (Operator bound).}
+For dichotomic observables $A_i^2 = B_j^2 = I$ with
+$[A_i, B_j] = 0$, define the Bell operator:
+\begin{equation}
+  \hat{S} = A_1 \otimes (B_1 + B_2)
+  + A_2 \otimes (B_1 - B_2).
+\end{equation}
+Computing $\hat{S}^2$:
+\begin{equation}
+  \hat{S}^2 = 4\,I \otimes I
+  - [A_1, A_2] \otimes [B_1, B_2].
+\end{equation}
+Since $\|A_i\| = \|B_j\| = 1$, we have
+$\|[A_1, A_2]\| \leq 2$ and $\|[B_1, B_2]\| \leq 2$, so
+$\|\hat{S}^2\| \leq 4 + 4 = 8$, giving:
+\begin{equation}
+  \|\hat{S}\| \leq \sqrt{8} = 2\sqrt{2}.
+\end{equation}
+
+\textbf{Step 2 (Saturation).}
+With $E(\theta) = -\cos\theta$, choose the optimal angles:
+\begin{equation}
+  a_1 = 0,\quad a_2 = \frac{\pi}{2},\quad
+  b_1 = \frac{\pi}{4},\quad b_2 = -\frac{\pi}{4}.
+\end{equation}
+These are equally spaced at intervals of $\pi/4$.  Computing:
+\begin{align}
+  E(a_1, b_1) &= -\cos\!\left(-\frac{\pi}{4}\right)
+  = -\frac{1}{\sqrt{2}}, \\
+  E(a_1, b_2) &= -\cos\!\left(\frac{\pi}{4}\right)
+  = -\frac{1}{\sqrt{2}}, \\
+  E(a_2, b_1) &= -\cos\!\left(\frac{\pi}{4}\right)
+  = -\frac{1}{\sqrt{2}}, \\
+  E(a_2, b_2) &= -\cos\!\left(\frac{3\pi}{4}\right)
+  = +\frac{1}{\sqrt{2}}.
+\end{align}
+The CHSH parameter:
+\begin{equation}
+  S = -\frac{1}{\sqrt{2}} - \frac{1}{\sqrt{2}}
+  - \frac{1}{\sqrt{2}} - \frac{1}{\sqrt{2}}
+  = -\frac{4}{\sqrt{2}} = -2\sqrt{2}.
+\end{equation}
+Hence $|S| = 2\sqrt{2}$, saturating the bound.
+\end{proof}
+
+\begin{corollary}[No Super-Quantum Correlations]
+No physical correlations can exceed the Tsirelson bound:
+$|S| \leq 2\sqrt{2}$ for all systems.
+\end{corollary}
+
+\begin{proof}
+The Cauchy--Schwarz bound on the Bell operator $\hat{S}^2$
+applies to any system with binary outcomes in a Hilbert space.
+In RS, the ledger structure is isomorphic to a Hilbert space
+(proven separately), so the bound is universal.
+\end{proof}
+
+\begin{remark}[Popescu--Rohrlich Boxes]
+The algebraic maximum of $|S|$ is~$4$, achieved by
+Popescu--Rohrlich (PR) boxes~\cite{PopescuRohrlich1994}.
+The Tsirelson bound $2\sqrt{2} \approx 2.828$ is strictly
+below~$4$; quantum mechanics (and RS) saturate the bound but do
+not reach the algebraic maximum.  PR boxes are nonphysical:
+they violate the Hilbert-space structure and, in RS terms,
+would require a non-quadratic cost functional, contradicting
+the uniqueness of~$J$.
+\end{remark}
+
+%% ============================================================
+\section{Connection to the 8-Tick Epoch}
+\label{sec:epoch}
+%% ============================================================
+
+\begin{proposition}[Optimal Angle from $D = 3$]
+\label{prop:angle}
+The optimal CHSH angular spacing is $\pi/4 = 2\pi/(2^D)$,
+which is one tick of the 8-tick epoch.
+\end{proposition}
+
+\begin{proof}
+The 8-tick epoch has period $2\pi$ (one full phase cycle) and
+$2^D = 8$ ticks.  Each tick spans a phase interval of
+$2\pi/8 = \pi/4$.  The optimal CHSH angles are separated by
+exactly this interval:
+$b_2 = -\pi/4$, $a_1 = 0$, $b_1 = \pi/4$, $a_2 = \pi/2$,
+with each adjacent pair separated by $\pi/4$.
+\end{proof}
+
+\begin{proposition}[Tsirelson Bound and $D = 3$ --- Structural Observation]
+\label{prop:tsirelson-d}
+The Tsirelson bound $2\sqrt{2} = \sqrt{2^D}$ is numerically equal to
+$\sqrt{2^3} = \sqrt{8}$ for $D = 3$.  The RS interpretation is that
+the maximum Bell violation encodes the spatial dimension via the
+8-tick epoch length.
+\end{proposition}
+
+\begin{remark}[Status of the D=3 identification]\label{rem:d3status}
+The identity $2\sqrt{2} = \sqrt{2^3}$ is a numerical fact, and its
+significance is that the CHSH Tsirelson bound (which is always
+$2\sqrt{2}$ regardless of $D$) equals $\sqrt{2^D}$ specifically when
+$D = 3$.  The Tsirelson bound for the 2-party, 2-setting CHSH game is always
+$2\sqrt{2}$ regardless of the spatial dimension; it follows from the
+Cauchy--Schwarz structure of operator algebras, not from $D = 3$
+specifically.  The numerical coincidence $2\sqrt{2} = \sqrt{2^3}$ is
+suggestive, but the RS interpretation that the ``quantum advantage''
+scales as $\sqrt{2^D}$ is a structural hypothesis, not a derivation.
+The Tsirelson bound for more general Bell scenarios takes different
+values, so the $\sqrt{2^D}$ identification is specific to the CHSH
+game.  Whether this specificity reflects a deep connection between
+the simplest Bell test and the cube geometry, or is coincidental,
+is an open question.
+\end{remark}
+
+%% ============================================================
+\section{No-Signaling}
+\label{sec:no-signaling}
+%% ============================================================
+
+\begin{proposition}[No Superluminal Signaling --- Structural Argument]
+\label{thm:nosignal}
+Entanglement does not enable faster-than-$c$ communication.
+\end{proposition}
+
+\begin{proof}
+Bob's marginal outcome distribution is independent of Alice's
+measurement choice.  For any Alice setting $a$:
+\begin{equation}
+  P_B(+1) = \sum_{A=\pm 1} P(A, +1 \mid a, b) = \frac{1}{2}.
+\end{equation}
+This follows from the phase invariance of $J$: the shared
+ledger entry has no preferred orientation, so measuring one
+subsystem yields a uniformly random outcome independent of the
+distant measurement axis.  Although the entry is global,
+updating it (the measurement/commit operation) propagates at
+$c = \ell_0/\tau_0$, and Bob cannot learn Alice's result
+faster.
+\end{proof}
+
+\begin{remark}
+No-signaling is often postulated as an axiom in quantum
+information theory.  In RS it is a theorem, following from the
+phase invariance of the $J$-cost and the speed limit
+$c = \ell_0/\tau_0$ on ledger updates.
+\end{remark}
+
+%% ============================================================
+\section{Experimental Status}
+\label{sec:experiment}
+%% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Experiment} & \textbf{Year} &
+\textbf{$|S|$} & \textbf{Loophole-free?} \\
+\midrule
+Aspect et al.~\cite{Aspect1982} & 1982 &
+$2.70 \pm 0.015$ & No \\
+Hensen et al.~\cite{Hensen2015} (Delft) & 2015 &
+$2.42 \pm 0.20$ & Yes \\
+Giustina et al.~\cite{Giustina2015} (Vienna) & 2015 &
+$> 2$ (11.5$\sigma$) & Yes \\
+Shalm et al.~\cite{Shalm2015} (NIST) & 2015 &
+$2.015$ (7.3$\sigma$) & Yes \\
+\midrule
+RS prediction (ideal) & --- & $2\sqrt{2} = 2.828$ & --- \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{remark}
+Measured $|S|$ values fall below $2\sqrt{2}$ due to finite
+detection efficiency, dark counts, and source imperfections.
+These are experimental limitations, not fundamental---the
+Tsirelson bound is the theoretical maximum for perfect
+apparatus.  The 2022 Nobel Prize in Physics was awarded to
+Aspect, Clauser, and Zeilinger for experiments establishing
+Bell inequality violation beyond reasonable doubt.
+\end{remark}
+
+%% ============================================================
+\section{Comparison}
+\label{sec:comparison}
+%% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Framework} & \textbf{Entanglement is\ldots} &
+\textbf{Bell violation because\ldots} \\
+\midrule
+LHV & Independent local states &
+Cannot exceed $|S| = 2$ \\
+Copenhagen QM & Superposition (no mechanism) &
+Measurement ``collapses'' state \\
+Many-worlds & Branch correlations &
+All branches exist \\
+RS & Shared ledger entry &
+One global entry, not two local \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%% ============================================================
+\section{Predictions and Falsifiers}
+\label{sec:predictions}
+%% ============================================================
+
+\begin{enumerate}
+  \item \textbf{$|S|_{\max} = 2\sqrt{2}$}: No ideal quantum
+  experiment should produce $|S| > 2\sqrt{2}$.
+
+  \item \textbf{Optimal angle $\pi/4$}: The maximum violation
+  occurs when measurement settings are separated by $\pi/4$,
+  connecting to the 8-tick epoch phase.
+
+  \item \textbf{No signaling}: All experiments must confirm
+  that entanglement cannot transmit information.
+
+  \item \textbf{Falsifiers}:
+  \begin{itemize}[nosep]
+    \item $|S| > 2\sqrt{2}$ in any experiment would falsify RS.
+    \item Superluminal signaling via entanglement would falsify
+    the $c = \ell_0/\tau_0$ speed limit.
+    \item A local realistic theory reproducing all quantum
+    correlations would undermine the shared-entry ontology.
+  \end{itemize}
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+Bell inequality violation follows from the shared-ledger
+structure of entanglement.  The classical bound $|S| \leq 2$
+fails because entangled particles share one global ledger
+entry, not two local states.  The Tsirelson bound
+$|S| \leq 2\sqrt{2}$ coincides with $\sqrt{2^D}$ for $D = 3$,
+and the optimal measurement angle
+$\pi/4 = 2\pi/2^D$ is one tick of the 8-tick epoch---a
+structural coincidence whose deeper significance remains an
+open question (see Remark~\ref{rem:d3status}).
+No-signaling is a theorem of the $J$-cost phase invariance and
+the ledger propagation speed.
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+\texttt{doi:10.3390/axioms15020090}
+
+\bibitem{Bell1964}
+J.~S.~Bell, ``On the Einstein Podolsky Rosen Paradox,''
+Physics \textbf{1}, 195 (1964).
+
+\bibitem{CHSH1969}
+J.~F.~Clauser, M.~A.~Horne, A.~Shimony, and R.~A.~Holt,
+``Proposed Experiment to Test Local Hidden-Variable Theories,''
+Phys.\ Rev.\ Lett.\ \textbf{23}, 880 (1969).
+
+\bibitem{Tsirelson1980}
+B.~S.~Tsirelson, ``Quantum Generalizations of Bell's
+Inequality,'' Lett.\ Math.\ Phys.\ \textbf{4}, 93 (1980).
+
+\bibitem{Aspect1982}
+A.~Aspect, P.~Grangier, and G.~Roger,
+``Experimental Realization of Einstein-Podolsky-Rosen-Bohm
+Gedankenexperiment: A New Violation of Bell's Inequalities,''
+Phys.\ Rev.\ Lett.\ \textbf{49}, 91 (1982).
+
+\bibitem{Hensen2015}
+B.~Hensen \textit{et al.}, ``Loophole-Free Bell Inequality
+Violation Using Electron Spins Separated by 1.3~km,''
+Nature \textbf{526}, 682 (2015).
+
+\bibitem{Giustina2015}
+M.~Giustina \textit{et al.}, ``Significant-Loophole-Free
+Test of Bell's Theorem with Entangled Photons,''
+Phys.\ Rev.\ Lett.\ \textbf{115}, 250401 (2015).
+
+\bibitem{Shalm2015}
+L.~K.~Shalm \textit{et al.}, ``Strong Loophole-Free Test
+of Local Realism,'' Phys.\ Rev.\ Lett.\ \textbf{115},
+250402 (2015).
+
+\bibitem{Aczel1966}
+J.~Acz\'el, \emph{Lectures on Functional Equations and Their
+Applications}, Academic Press (1966).
+
+\bibitem{PopescuRohrlich1994}
+S.~Popescu and D.~Rohrlich, ``Quantum Nonlocality as an Axiom,''
+Found.\ Phys.\ \textbf{24}, 379 (1994).
+
+\end{thebibliography}
+
+\end{document}

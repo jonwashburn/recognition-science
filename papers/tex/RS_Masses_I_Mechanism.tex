@@ -1,0 +1,510 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{hypothesis}[theorem]{Structural Hypothesis}
+\newtheorem{remark}[theorem]{Remark}
+
+% Claim hygiene
+\newcommand{\PROVED}{\textcolor{blue!70!black}{\textsf{[PROVED]}}}
+\newcommand{\HYP}{\textcolor{orange!80!black}{\textsf{[HYP]}}}
+\newcommand{\VAL}{\textcolor{purple!70!black}{\textsf{[VAL]}}}
+
+\newcommand{\phig}{\varphi}
+\newcommand{\Jcost}{J}
+\newcommand{\Rhat}{\hat{R}}
+\newcommand{\Ecoh}{E_{\mathrm{coh}}}
+\newcommand{\muStar}{\mu_{\star}}
+\newcommand{\mRS}{m^{\mathrm{RS}}}
+\newcommand{\Epass}{E_{\mathrm{passive}}}
+\newcommand{\RS}{Recognition Science}
+\newcommand{\SM}{Standard Model}
+\newcommand{\RCL}{Recognition Composition Law}
+
+\title{\textbf{The Origin of Mass in Recognition Science:\\
+Cost Geometry, Recognition Boundaries, and the $\phig$-Ladder}\\[0.5em]
+\large Paper I of VI: Mechanism}
+\author{Jonathan Washburn\\
+\small Recognition Science Research Institute, Austin, Texas\\
+\small \texttt{washburn.jonathan@gmail.com}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+In the \SM{}, fermion masses are free parameters encoded by Yukawa
+couplings to the Higgs field.  This paper develops an alternative
+ontology of mass within \RS{} (RS).  We separate two epistemic layers:
+
+\textbf{Layer 1} \PROVED: The cost functional
+$\Jcost(x) = \tfrac{1}{2}(x + x^{-1}) - 1$ is uniquely forced by the
+\RCL{} (Theorem~T5, Lean-verified).  The golden ratio
+$\phig = (1{+}\sqrt{5})/2$ is the unique self-similar fixed point
+(Theorem~T6).  Dimension $D = 3$ is forced (Theorem~T8), giving a
+3-cube with $V{=}8$, $E{=}12$, $F{=}6$.  The eight-tick cycle
+$2^3 = 8$ is the minimal cover (Theorem~T7).
+
+\textbf{Layer 2} \HYP: Mass emerges as a coordinate on a $\phig$-ladder
+whose sector-level scales are fixed by cube combinatorics.  The
+\emph{recognition boundary} --- a self-sustaining pattern on a discrete
+ledger --- replaces the point-particle ontology.  The recognition
+operator $\Rhat$ replaces the Hamiltonian; the Higgs mechanism is
+reinterpreted as a low-energy effective description.  Sector yardsticks,
+the charge-to-band map, and generation torsion are structural proposals
+with explicit falsifiers.
+
+Companion papers develop phenomenological predictions (II), the neutrino
+sector (III), transport discipline (IV), the fine-structure constant (V),
+and the generation problem (VI).
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\noindent\textbf{Claim-hygiene convention.}
+Every substantive claim carries one of:
+\PROVED\ (derived from RS axioms with complete chain, Lean-verified where noted);
+\HYP\ (structural proposal, falsifiable, not yet derived from axioms);
+\VAL\ (comparison with external data).
+\vspace{0.8em}
+\hrule
+\vspace{1em}
+
+%=============================================================================
+\section{Introduction}
+%=============================================================================
+
+\subsection{The mass problem}
+
+The \SM{} contains nine charged fermion masses spanning nearly five orders
+of magnitude, from the electron ($0.511\,\mathrm{MeV}$) to the top quark
+($173\,\mathrm{GeV}$).  These masses enter as free Yukawa couplings ---
+the SM tells us \emph{how} particles acquire mass (electroweak symmetry
+breaking) but not \emph{why} they have the particular values they do.
+
+\subsection{The RS approach}
+
+RS begins from a single primitive: the \RCL{}, \PROVED{}
+\begin{equation}
+  \Jcost(xy) + \Jcost(x/y) = 2\,\Jcost(x)\,\Jcost(y) + 2\,\Jcost(x) + 2\,\Jcost(y),
+  \label{eq:RCL}
+\end{equation}
+together with normalization $\Jcost(1) = 0$ and calibration
+$\Jcost''_{\log}(0) = 1$.  These three conditions uniquely determine
+$\Jcost(x) = \tfrac{1}{2}(x + x^{-1}) - 1$, proved in Lean~4 via ODE
+uniqueness for the d'Alembert functional equation~\cite{WashburnCost2026}.
+
+From this cost functional, a chain of forced consequences (T0--T8)
+derives discreteness, a double-entry ledger, recognition events, $\Jcost$
+uniqueness, $\phig$, the eight-tick period, and three spatial dimensions.
+Within this architecture, we \emph{propose} (Layer~2) that mass is a
+coordinate on a discrete multiplicative ladder whose base $\phig$, period
+8, and sector structure are all determined by the cube geometry.
+
+\subsection{What this paper does and does not claim}
+
+\begin{itemize}[nosep]
+\item We \emph{do} present a structural model for particle mass that uses
+  no free parameters and no per-particle fitting.
+\item We \emph{do not} claim that every element of the model is derived
+  from axioms.  The sector yardsticks, the charge-to-band map, and the
+  generation torsion are \emph{structural hypotheses} --- motivated by
+  the framework but not yet proved from it.
+\item We \emph{do} identify which parts are proved (Layer~1) and which
+  are hypothesized (Layer~2), so that a reader can evaluate each on its
+  merits.
+\end{itemize}
+
+%=============================================================================
+\section{Proved Foundation (Layer 1)}
+\label{sec:foundation}
+%=============================================================================
+
+This section collects only results with complete derivation chains.
+
+\subsection{The cost functional (T5)} \PROVED
+
+\begin{theorem}[Cost uniqueness~\cite{WashburnCost2026}]
+Let $F : \mathbb{R}_+ \to \mathbb{R}$ satisfy the \RCL{},
+$F(1) = 0$, and $\lim_{t\to 0} 2F(e^t)/t^2 = 1$.  Then
+$F(x) = \Jcost(x) := \frac{1}{2}(x + x^{-1}) - 1$ for all $x > 0$.
+
+\emph{Lean:} \texttt{IndisputableMonolith.CostUniqueness.T5\_uniqueness\_complete}.
+\end{theorem}
+
+The proof converts the \RCL{} to a d'Alembert equation via
+$H(t) := F(e^t) + 1$, yielding $H(t{+}u) + H(t{-}u) = 2H(t)H(u)$.
+By Acz\'{e}l's theorem~\cite{Aczel1966}, continuous solutions are
+$\cosh(\lambda t)$; calibration fixes $\lambda = 1$.
+
+Key properties: reciprocal symmetry $\Jcost(x) = \Jcost(1/x)$;
+non-negativity with equality iff $x = 1$; strict convexity on
+$\mathbb{R}_+$; divergence $\Jcost(0^+) = +\infty$.  The divergence
+at zero is the ``Meta-Principle'' --- the infinite cost of nothing ---
+which is a \emph{derived theorem}, not an axiom.
+
+\subsection{The golden ratio (T6)} \PROVED
+
+\begin{theorem}
+The minimal reciprocal self-correction rule $x_{n+1} = 1 + 1/x_n$ has
+unique positive fixed point $\phig = (1{+}\sqrt{5})/2$, satisfying
+$\phig^2 = \phig + 1$.  The orbit $\{\phig^n : n \in \mathbb{Z}\}$ is
+the unique self-similar lattice on $\mathbb{R}_{>0}$ compatible with
+$\Jcost$.
+
+\emph{Lean:} \texttt{IndisputableMonolith.Foundation.PhiForcing.phi\_equation}.
+\end{theorem}
+
+\subsection{Dimension, cube counts, and the eight-tick cycle (T7--T8)} \PROVED
+
+\begin{theorem}[$D = 3$ forced~\cite{WashburnD3}]
+Three independent constraints --- Alexander duality (linking invariant),
+Kepler stability (non-precessing orbits), and minimal dyadic
+synchronisation ($\mathrm{lcm}(2^D, 45)$ minimised at $D = 3$) ---
+each single out $D = 3$.
+\end{theorem}
+
+\begin{proposition}[Cube counts]
+$V = 2^3 = 8$ vertices, $E = 3 \cdot 2^2 = 12$ edges, $F = 2 \cdot 3 = 6$ faces.
+\end{proposition}
+
+\begin{theorem}[Minimal cover (T7)]
+The minimal cycle covering all $2^3 = 8$ vertex states has length~8.
+\end{theorem}
+
+These four results --- $\Jcost$ uniqueness, $\phig$, $D = 3$ with its
+cube counts, and the 8-tick cycle --- constitute the \textbf{proved
+foundation}.  Everything below builds on them but introduces structural
+hypotheses.
+
+%=============================================================================
+\section{The Mass Model (Layer 2)}
+\label{sec:model}
+%=============================================================================
+
+\noindent\emph{Every claim in this section carries the \HYP\ marker.}
+
+\subsection{What is a particle?} \HYP
+
+\begin{hypothesis}[Recognition boundary]
+A \emph{recognition boundary} is a localized, self-sustaining pattern on
+the cubic ledger $\mathbb{Z}^3$ with finite nonzero cost, invariant under
+the recognition operator $\Rhat$ (up to phase/translation), and satisfying
+eight-tick neutrality.
+\end{hypothesis}
+
+\begin{remark}[Motivation]
+This ontology replaces the point-particle with a structured pattern.  The
+hypothesis is motivated by the RS framework (where persistence requires
+finite cost and eight-tick closure) but is not derived from the axioms
+alone.  It is the \emph{definition} of the model, not a theorem.
+\end{remark}
+
+\subsection{Mass as a ladder coordinate} \HYP
+
+\begin{hypothesis}[$\phig$-ladder mass law]\label{hyp:mass}
+The mass of boundary $b$ at anchor $\muStar$ is:
+\begin{equation}
+  \mRS(b;\muStar) = A_{\mathrm{sector}(b)} \cdot
+  \phig^{\,r_b - 8 + \mathrm{gap}(Z_b)},
+  \label{eq:mass}
+\end{equation}
+where $A_{\mathrm{sector}}$ is the sector yardstick, $r_b \in \mathbb{Z}$
+the rung, $-8$ the octave reference, and
+$\mathrm{gap}(Z_b) = \log_\phig(1 + Z_b/\phig)$ the charge-derived band
+function.
+\end{hypothesis}
+
+\begin{remark}[Status of each element]
+\begin{itemize}[nosep]
+\item \textbf{Ladder base $\phig$}: \PROVED\ (Theorem~T6, from self-similarity).
+\item \textbf{Octave offset $-8$}: \PROVED\ (Theorem~T7, from the minimal cover).
+\item \textbf{Integer rung $r_b$}: \HYP\ (the claim that masses sit on
+  integer rungs is structural, not derived).
+\item \textbf{Sector yardstick $A_S$}: \HYP\ (derived from cube integers
+  by structural identification; see Section~\ref{sec:cube}).
+\item \textbf{Gap function}: \HYP\ (the specific function
+  $\log_\phig(1 + Z/\phig)$ is not yet derived from axioms).
+\item \textbf{$Z$-map}: \HYP\ (the polynomial $\tilde{Q}^2 + \tilde{Q}^4$
+  is a phenomenological ansatz; see Section~\ref{sec:Zmap}).
+\end{itemize}
+\end{remark}
+
+\subsection{Cube geometry and the counting layer}
+\label{sec:cube}
+
+\begin{hypothesis}[Active/passive decomposition]\label{hyp:passive}
+Of the 12 edges, one is ``active'' (traversed) per tick, leaving
+$\Epass = E - 1 = 11$ passive edges.  This decomposition is physically
+meaningful: the passive count enters the mass formulas.
+\end{hypothesis}
+
+\begin{remark}
+The edge count $E = 12$ is proved.  The active/passive split is
+motivated by the 8-tick update (one edge traversal per tick) but the
+claim that $\Epass$ enters the mass formulas is structural.
+\end{remark}
+
+\begin{hypothesis}[Wallpaper groups]\label{hyp:W}
+The number $W = 17$ of 2D crystallographic groups (Fedorov,
+1891~\cite{Fedorov1891}) enters the mass model as a counting constant
+for face symmetries of the cubic ledger.
+\end{hypothesis}
+
+\begin{remark}[Honest assessment]
+$W = 17$ is a mathematical theorem.  That it is \emph{physically
+relevant} is the strongest assumption in the paper series.  See
+Paper~VI~\cite{PaperVI} for the ``dimensional coincidence theorem''
+($\Epass(D) + F(D) = W$ iff $D = 3$), which provides structural
+motivation but not a derivation from axioms.
+\end{remark}
+
+\begin{hypothesis}[Sector yardstick constraints]\label{hyp:sector_constraints}
+The four $B_{\mathrm{pow}}$ values are constrained by:
+(Y1)~charge ordering ($B_{\mathrm{pow}}(\ell) < B_{\mathrm{pow}}(u) < B_{\mathrm{pow}}(d)$);
+(Y2)~active-edge normalisation ($B_{\mathrm{pow}}(u) = -A$, $B_{\mathrm{pow}}(\mathrm{EW}) = +A$);
+(Y3)~passive-edge scaling ($B_{\mathrm{pow}}(\ell) = -2\Epass$);
+(Y4)~total-edge scaling ($B_{\mathrm{pow}}(d) = 2E - 1$).
+The $r_0$ values then follow from scale compensation.
+\end{hypothesis}
+
+\begin{hypothesis}[Sector yardsticks]\label{hyp:sector}
+Each sector has $A_S = 2^{B_{\mathrm{pow}}(S)} \cdot \Ecoh \cdot
+\phig^{r_0(S)}$ where $\Ecoh = \phig^{-5}$:
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Sector & $B_{\text{pow}}$ & From constraint & $r_0$ & Formula \\
+\midrule
+Lepton & $-22$ & (Y3): $-2\Epass$ & $62$ & $4W{-}F$ \\
+Up quark & $-1$ & (Y2): $-A$ & $35$ & $2W{+}A$ \\
+Down quark & $23$ & (Y4): $2E{-}1$ & $-5$ & $E{-}W$ \\
+Electroweak & $1$ & (Y2): $+A$ & $55$ & $3W{+}4$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{hypothesis}
+
+\begin{remark}[Status and the ``same integers used twice'' concern]
+The $B_{\mathrm{pow}}$ column follows from the charge-ordering constraints
+with minimal freedom.  The $r_0$ column (e.g., $4W - F = 62$) is a
+structural identification whose derivation from an admissibility principle
+remains open.
+
+A reviewer may note that the same cube integers $(11,17,6)$ appear
+in both the yardstick formulas and the generation torsion / electron
+break.  This is \emph{expected}: the 3-cube provides exactly these
+integers as its complete counting-layer vocabulary, and every physical
+formula depending on the discrete geometry must draw from this
+vocabulary.  Table~\ref{tab:budget_brief} shows that each appearance serves a
+\emph{physically distinct} role (static sector scale vs.~dynamical
+coupling vs.~QED correction), and that the system is over-determined:
+eight yardstick parameters from five inputs.  A full discussion is in
+the companion paper~\cite{FullDerivation}, Section~3.3.
+\end{remark}
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}cll@{}}
+\toprule
+Integer & Sector role (static) & Generation role (dynamical) \\
+\midrule
+$\Epass = 11$ & $B_{\mathrm{pow}}(\ell) = -2\Epass$ & Gen-2 torsion $\tau_2 = \Epass$ \\
+$F = 6$ & $r_0(\ell) = 4W - F$ & Gen-3 step $\Delta_{2\to 3} = F$ \\
+$W = 17$ & $r_0(u) = 2W + A$;\; $r_0(d) = E - W$ & $\tau_3 = \Epass + F = W$ \\
+\bottomrule
+\end{tabular}
+\caption{The same cube integers appear in sector yardsticks (static) and
+generation torsion (dynamical)---distinct physical roles from a single
+geometric source.}
+\label{tab:budget_brief}
+\end{table}
+
+\subsection{Charge quantisation and the $Z$-map}
+\label{sec:Zmap}
+
+\begin{hypothesis}[$Z$-map] \HYP
+Integerise charge as $\tilde{Q} := 6Q$ (note $6 = F$, the face count).
+The charge-to-band index is:
+\[
+Z = \begin{cases}
+\tilde{Q}^2 + \tilde{Q}^4 & \text{(leptons)} \\
+4 + \tilde{Q}^2 + \tilde{Q}^4 & \text{(quarks)}
+\end{cases}
+\]
+producing three families: $Z_\ell = 1332$, $Z_u = 276$, $Z_d = 24$.
+\end{hypothesis}
+
+\begin{remark}
+The $Z$-map is a phenomenological ansatz.  The polynomial
+$\tilde{Q}^2 + \tilde{Q}^4$ was chosen because it separates the three
+sectors into distinct bands.  The factor $6 = F$ is suggestive but not
+derived.  Showing that this specific polynomial (and not
+$\tilde{Q}^2 + \tilde{Q}^6$, say) is forced by ledger geometry is an
+open problem.
+\end{remark}
+
+\subsection{Generation torsion} \HYP
+
+Generation torsion $\tau_g \in \{0, \Epass, W\} = \{0, 11, 17\}$ is
+universal across sectors.  The derivation --- showing that the three
+generations correspond to the three levels of cube combinatorial structure
+(vertices, edges, faces) --- is the subject of Paper~VI~\cite{PaperVI}.
+
+%=============================================================================
+\section{The Recognition Operator and Dynamics}
+\label{sec:dynamics}
+%=============================================================================
+
+The fundamental dynamical law is \HYP{}
+\begin{equation}
+  s(t + 8\tau_0) = \Rhat(s(t)),
+\end{equation}
+where $\Rhat$ minimises $\Jcost$ (not energy).  The derivation of $\Rhat$
+from $\Jcost$ and the eight-tick structure is given in~\cite{WashburnOperator}.
+
+\begin{proposition}[Hamiltonian emergence] \PROVED\ (given $\Rhat$)
+In the quadratic regime $|x - 1| \ll 1$:
+$\Jcost(x) \approx \frac{1}{2}(x - 1)^2$, so cost minimisation
+reduces to stationary action, recovering standard Hamiltonian mechanics
+as an approximation valid to $< 1\%$ for $|\varepsilon| \le 0.1$.
+\end{proposition}
+
+%=============================================================================
+\section{The Yukawa Bridge and the Higgs Reinterpretation}
+\label{sec:higgs}
+%=============================================================================
+
+\begin{hypothesis}[Yukawa bridge] \HYP
+The SM Yukawa coupling at the anchor is the derived quantity:
+\begin{equation}
+  y_f(\muStar) = \frac{\sqrt{2}}{v} \cdot A_{\mathrm{sector}(f)} \cdot
+  \phig^{\,r_f - 8 + \mathrm{gap}(Z_f)}.
+\end{equation}
+Yukawa couplings are effective parameters encoding $\phig$-ladder
+positions, not fundamental.
+\end{hypothesis}
+
+\begin{hypothesis}[Higgs reinterpretation] \HYP
+The Higgs field is the continuum effective description of discrete
+$\phig$-ladder structure.  The VEV $v \approx 246\,\mathrm{GeV}$
+corresponds to the electroweak yardstick
+$A_{\mathrm{EW}} = 2 \cdot \Ecoh \cdot \phig^{55}$.  The Goldstone
+mechanism remains intact as an effective description.
+\end{hypothesis}
+
+\begin{remark}
+These are among the boldest claims in the paper.  If the mass model
+produces the correct Yukawa couplings at $\muStar$, the bridge formula
+is validated; if it fails, the structural hypothesis is refuted.  The
+Higgs reinterpretation does not modify any SM prediction --- it
+reinterprets the origin of the parameters.
+\end{remark}
+
+%=============================================================================
+\section{Falsifiers}
+\label{sec:falsifiers}
+%=============================================================================
+
+\begin{enumerate}[nosep]
+\item Equal-$Z$ clustering failure at $\muStar$ refutes the $Z$-map
+  (Hypothesis~\ref{hyp:W}).
+\item Generation ratios inconsistent with $\phig^{11}$, $\phig^6$ refute
+  the torsion (Paper~VI).
+\item Octave reference $-8$ replaceable by another integer refutes the
+  eight-tick connection.
+\item An alternative ladder base outperforming $\phig$ refutes the
+  self-similarity argument.
+\item Sector yardstick formulas achievable from counting-layer inputs
+  \emph{other than} $(E, \Epass, F, W, A)$ would weaken the uniqueness
+  of the cube identification.
+\item Discovery of a fourth fermion generation with SM-like charges would
+  falsify the three-level combinatorial argument (Paper~VI).
+\end{enumerate}
+
+%=============================================================================
+\section{Open Problems}
+\label{sec:open}
+%=============================================================================
+
+\begin{enumerate}[label=(O\arabic*),nosep]
+\item \textbf{Derive W=17.}  Show that the wallpaper-group count enters
+  the mass formulas as a consequence of voxel face-symmetry, not as an
+  external input.
+\item \textbf{Derive the sector formulas.}  Show that
+  $r_0 = 4W - 6$ for leptons (etc.) is forced by an admissibility
+  constraint on recognition cycles.
+\item \textbf{Derive $\Ecoh = \phig^{-5}$.}  Connect the exponent $-5$
+  to a structural property of the $\phig$-ladder.
+\item \textbf{Derive the $Z$-map polynomial.}  Show that
+  $\tilde{Q}^2 + \tilde{Q}^4$ is the unique polynomial compatible with
+  ledger charge conservation.
+\item \textbf{Derive the gap function.}  Show that
+  $\log_\phig(1 + Z/\phig)$ is forced by the geometry.
+\end{enumerate}
+
+Each solved open problem would upgrade the corresponding hypothesis to a
+proved result, strengthening the framework from a structural model to a
+derivation.
+
+%=============================================================================
+\section{Conclusions}
+%=============================================================================
+
+Mass in RS is proposed as a geometric coordinate on a $\phig$-ladder
+determined by the cube's combinatorial structure.  The model uses zero
+free parameters and zero per-particle fitting.
+
+The proved foundation (Layer~1) provides $\Jcost$, $\phig$, $D = 3$,
+the cube counts, and the 8-tick cycle.  The structural hypothesis
+(Layer~2) adds recognition boundaries, sector yardsticks, the charge-band
+map, and generation torsion.  Five open problems (O1--O5) identify the
+gaps between the two layers.
+
+The companion papers develop phenomenological predictions (II), the
+neutrino sector (III), the anchor scale and transport discipline (IV),
+the fine-structure constant (V), and the generation-number argument (VI).
+
+\begin{thebibliography}{99}
+\bibitem{WashburnCost2026} J.~Washburn and M.~Zlatanovi\'{c},
+  ``Uniqueness of the Canonical Reciprocal Cost,''
+  arXiv:2602.05753v1, 2026.
+\bibitem{WashburnD3} J.~Washburn, M.~Zlatanovi\'{c}, and E.~Allahyarov,
+  ``Dimensional Rigidity: D=3,'' RS preprint, 2026.
+\bibitem{WashburnOperator} J.~Washburn,
+  ``Beyond the Hamiltonian: The Recognition Operator,'' RS preprint, 2026.
+\bibitem{PDG2024} R.~L.~Workman \textit{et al.} [PDG],
+  PTEP \textbf{2022}, 083C01.
+\bibitem{Aczel1966} J.~Acz\'{e}l,
+  \textit{Lectures on Functional Equations}, Academic Press (1966).
+\bibitem{Fedorov1891} E.~S.~Fedorov,
+  ``Simmetriya pravil'nykh sistem figur,''
+  Zapiski Imp.\ S.-Peterburgskogo Mineral.\ Obshch.\ \textbf{28},
+  1--146 (1891).
+\bibitem{Washburn2025} J.~Washburn,
+  \textit{Axioms} \textbf{15}(2), 90 (2025).
+\bibitem{PaperII} J.~Washburn, Paper~II of this series.
+\bibitem{PaperVI} J.~Washburn, Paper~VI of this series.
+\bibitem{FullDerivation} J.~Washburn,
+  ``A First-Principles Derivation of Particle Mass,''
+  RS preprint, 2026.
+\end{thebibliography}
+
+\end{document}

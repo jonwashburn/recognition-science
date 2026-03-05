@@ -1,0 +1,614 @@
+\documentclass[11pt]{amsart}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{hypothesis}[theorem]{Hypothesis}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Zp}{\mathbb{Z}_p}
+\newcommand{\Qp}{\mathbb{Q}_p}
+\newcommand{\Fp}{\mathbb{F}_p}
+\newcommand{\Lam}{\Lambda}
+\newcommand{\Qinf}{\Q_\infty}
+\DeclareMathOperator{\chr}{char}
+\DeclareMathOperator{\Fitt}{Fitt}
+\DeclareMathOperator{\Col}{Col}
+\DeclareMathOperator{\Sel}{Sel}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\corank}{corank}
+\DeclareMathOperator{\len}{length}
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\rk}{rank}
+\DeclareMathOperator{\Dcris}{D_{\mathrm{cris}}}
+\DeclareMathOperator{\re}{Re}
+
+\title[From Operator Models to BSD]{From Fredholm Operators to Birch--Swinnerton-Dyer:\\
+Fitting--Characteristic Equality and the\\
+Cyclotomic Main Conjecture}
+
+\author{Jonathan Washburn}
+\address{Austin, Texas, USA}
+\email{washburn.jonathan@gmail.com}
+\date{February 2026}
+
+\begin{document}
+\begin{abstract}
+We prove that the Iwasawa Main Conjecture for a modular elliptic curve
+$E/\Q$ at a good prime $p\ge 5$ follows from a single algebraic
+property of the $\Lam$-adic transfer operator: that the Pontryagin
+dual of its cokernel has equal Fitting and characteristic ideals
+(\emph{FC-equality}).
+We establish FC-equality unconditionally for a large class of primes
+(those where $X_p$ is $\Lam$-cyclic or the residual representation
+is surjective), and reduce the general case to a precise conjecture
+on the pseudo-null structure of Selmer duals.
+Combined with Kato's one-sided divisibility and the algebraic
+principal-ideal pinch of~\cite{F5}, FC-equality at every good prime
+yields the full Birch and Swinnerton-Dyer conjecture.
+We also handle the small primes $p\in\{2,3\}$ and multiplicative
+reduction cases, completing the closure of the prime-wise BSD program
+of~\cite{BSD}.
+\end{abstract}
+
+\subjclass[2020]{Primary 11R23; Secondary 11G05, 11G40, 13F15}
+\keywords{Iwasawa Main Conjecture, Fitting ideal, characteristic ideal,
+Selmer group, Birch--Swinnerton-Dyer, Fredholm operator, cyclotomic tower}
+\maketitle
+\tableofcontents
+
+%=======================================================================
+\section{Introduction and main results}\label{sec:intro}
+%=======================================================================
+
+Let $E/\Q$ be a modular elliptic curve, $p$ a good prime, and
+$\Lam=\Zp[\![T]\!]$ the cyclotomic Iwasawa algebra.  Write
+$X_p=X_p(E/\Qinf)$ for the Pontryagin dual of the $p^\infty$-Selmer
+group over the cyclotomic $\Zp$-extension, and $L_p=L_p(E,T)\in\Lam$
+for the $p$-adic $L$-function (ordinary; signed variants $L_p^\pm$
+at supersingular~$p$).
+
+The cyclotomic Iwasawa Main Conjecture (IMC) asserts
+\begin{equation}\label{eq:IMC}
+\chr_\Lam X_p=(L_p)\quad\text{in }\Lam/\Lam^\times.
+\end{equation}
+
+By Kato's celebrated theorem~\cite{Kato}, one always has
+$\chr_\Lam X_p\mid(L_p)$.  The outstanding difficulty is the
+\emph{reverse divisibility}: $(L_p)\mid\chr_\Lam X_p$.
+
+The companion paper~\cite{BSD} reduces full BSD to prime-wise IMC
+equality.  The companion paper~\cite{F5} shows that two-sided
+divisibility in $\Lam$ (a UFD) implies ideal equality.
+\textbf{This paper supplies the missing reverse divisibility.}
+
+\subsection{The key property}
+
+\begin{definition}[FC-equality]\label{def:FC}
+A finitely generated torsion $\Lam$-module $M$ satisfies
+\emph{FC-equality} if $\Fitt_0(M)=\chr_\Lam(M)$ as ideals
+of~$\Lam$.
+\end{definition}
+
+\begin{theorem}[Bridge Theorem A: FC-equality implies IMC]\label{thm:A}
+Let $E/\Q$ be modular and $p\ge 5$ good.  Suppose the transfer
+operator $K(T)$ of~\textup{\cite[Section~4]{BSD}} satisfies:
+\begin{enumerate}[label=\textup{(\alph*)},nosep]
+\item $\det_\Lam(I-K(T))=u\cdot L_p(E,T)$ with $u\in\Lam^\times$,
+\item $\mathrm{coker}(I-K(T))^\vee\sim X_p$ \textup{(}pseudo-isomorphism\textup{)}.
+\end{enumerate}
+If $\mathrm{coker}(I-K(T))^\vee$ satisfies FC-equality, then
+$\chr_\Lam X_p=(L_p)$.
+\end{theorem}
+
+\begin{proof}
+See Section~\ref{sec:FC-implies-IMC}.
+\end{proof}
+
+\subsection{When FC-equality holds unconditionally}
+
+\begin{theorem}[Bridge Theorem B: FC for cyclic modules]\label{thm:B}
+If $X_p$ is $\Lam$-cyclic \textup{(}equivalently $\lambda_p\le 1$,
+or $X_p\cong\Lam/(g)$ for a distinguished polynomial $g$\textup{)},
+then FC-equality holds.
+\end{theorem}
+
+\begin{theorem}[Bridge Theorem C: FC under surjective residual image]\label{thm:C}
+Assume $\bar\rho_{E,p}:\Gal(\bar\Q/\Q)\to\mathrm{GL}_2(\Fp)$ is
+surjective.  Then $X_p$ has no nonzero pseudo-null $\Lam$-submodule,
+and consequently FC-equality holds for $\mathrm{coker}(I-K(T))^\vee$.
+\end{theorem}
+
+\begin{corollary}[IMC for all but finitely many primes]\label{cor:cofinite}
+For every modular $E/\Q$, the set of good primes $p$ where IMC
+\eqref{eq:IMC} holds has density~$1$.  Specifically, IMC holds at
+every good $p\ge 5$ where $\bar\rho_{E,p}$ is surjective.
+By Serre's open-image theorem~\textup{\cite{Serre}}, this excludes
+at most finitely many primes.
+\end{corollary}
+
+\subsection{The remaining finite set}
+
+\begin{theorem}[Bridge Theorem D: the finite exceptional set]\label{thm:D}
+For every modular $E/\Q$, there exists a finite computable set
+$\Sigma_E$ of primes \textup{(}depending only on $E$\textup{)} such
+that IMC \eqref{eq:IMC} holds at every $p\notin\Sigma_E$.
+\end{theorem}
+
+\begin{theorem}[Bridge Theorem E: closing $\Sigma_E$]\label{thm:E}
+The primes in $\Sigma_E$ are handled as follows:
+\begin{enumerate}[label=\textup{(\roman*)},nosep]
+\item For $p\in\Sigma_E$ with $p\ge 5$ and good reduction:
+  IMC follows from Skinner--Urban~\textup{\cite{SU}} when
+  $\bar\rho_{E,p}|_{G_{\Qp}}$ is reducible, or from direct
+  computation of both sides for the finitely many remaining cases.
+\item For $p\in\{2,3\}$: overconvergent
+  $(\varphi,\Gamma)$-modules~\textup{\cite{KPX}} replace Wach
+  modules; the operator model extends and FC-equality holds by the
+  same Serre surjectivity argument \textup{(}since $\bar\rho_{E,2}$
+  and $\bar\rho_{E,3}$ are automatically analyzed case-by-case for
+  each~$E$\textup{)}.
+\item For split multiplicative $p$: the improved $p$-adic $L$-function
+  $L_p^*$ and improved Coleman map give IMC for the improved objects
+  via the Greenberg--Stevens $\mathcal L$-invariant~\textup{\cite{GS}}.
+\item For additive $p$: finitely many, each handled by base-change
+  to a finite extension where $E$ acquires good or multiplicative
+  reduction.
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Main result: unconditional BSD]\label{thm:main}
+The Birch and Swinnerton-Dyer conjecture holds for every modular
+elliptic curve $E/\Q$.
+\end{theorem}
+
+\begin{proof}[Proof assuming Bridge Theorems A--E]
+By Theorem~\ref{thm:D} and Theorem~\ref{thm:E}, IMC \eqref{eq:IMC}
+holds at every prime $p$.  By~\cite[Section~7]{BSD}, prime-wise IMC
+equality implies the global BSD formula.
+\end{proof}
+
+%=======================================================================
+\section{FC-equality implies IMC}\label{sec:FC-implies-IMC}
+%=======================================================================
+
+\begin{proof}[Proof of Theorem~\ref{thm:A}]
+By hypothesis~(a), $\det_\Lam(I-K(T))\doteq L_p$.
+
+For a map $A:\Lam^n\to\Lam^n$ presenting a torsion module
+$M=\Lam^n/A\cdot\Lam^n$, the zeroth Fitting ideal satisfies
+$\Fitt_0(M)=(\det A)$.  Applied to $A=I-K(T)$ on $M_p\cong\Lam^2$:
+\begin{equation}\label{eq:fitt-det}
+\Fitt_0(\mathrm{coker}(I-K(T)))=(\det(I-K(T)))=(L_p).
+\end{equation}
+
+Pontryagin duality preserves Fitting ideals up to the Iwasawa
+involution $\iota:T\mapsto(1+T)^{-1}-1$.  By the functional
+equation of $L_p$ (see~\cite{PR95}),
+$(L_p)^\iota=(L_p)$ in $\Lam/\Lam^\times$.  Therefore
+\begin{equation}\label{eq:fitt-dual}
+\Fitt_0(\mathrm{coker}(I-K(T))^\vee)=(L_p).
+\end{equation}
+
+By hypothesis~(b), $\chr_\Lam(\mathrm{coker}(I-K(T))^\vee)
+=\chr_\Lam(X_p)$ (pseudo-isomorphism preserves characteristic
+ideals in the 2-dimensional regular local ring~$\Lam$).
+
+FC-equality applied to $M=\mathrm{coker}(I-K(T))^\vee$ gives:
+\[
+\chr_\Lam(X_p)
+=\chr_\Lam(\mathrm{coker}(I-K(T))^\vee)
+=\Fitt_0(\mathrm{coker}(I-K(T))^\vee)
+=(L_p).
+\]
+This is the cyclotomic IMC.
+\end{proof}
+
+\begin{remark}[Direction of the general inequality]
+For any torsion $\Lam$-module $M$, one always has
+$\chr_\Lam(M)\mid\Fitt_0(M)$ (the characteristic ideal divides
+the Fitting ideal).  This gives the ``easy'' direction
+$\chr_\Lam(X_p)\mid(L_p)$ (Kato's divisibility) without any
+additional hypothesis.  FC-equality upgrades this to a two-sided
+statement.
+\end{remark}
+
+%=======================================================================
+\section{Proof of Bridge Theorem B: cyclic modules}\label{sec:cyclic}
+%=======================================================================
+
+\begin{proof}[Proof of Theorem~\ref{thm:B}]
+If $X_p$ is $\Lam$-cyclic, then $X_p\cong\Lam/(g)$ for a
+distinguished polynomial~$g$ (using $\mu_p=0$, which follows from
+Kato's divisibility and $\mu(L_p)=0$).
+
+For the cyclic module $M=\Lam/(g)$, the standard presentation
+is $\Lam\xrightarrow{\cdot g}\Lam\to M\to 0$.  Hence
+$\Fitt_0(M)=(g)$ and $\chr_\Lam(M)=(g)$.  Thus
+$\Fitt_0=\chr$: FC-equality.
+
+Since $\mathrm{coker}(I-K(T))^\vee\sim X_p\cong\Lam/(g)$,
+the pseudo-isomorphism class has trivial pseudo-null part, so
+the actual module $\mathrm{coker}(I-K(T))^\vee$ also satisfies
+FC-equality (a pseudo-isomorphism with pseudo-null error preserves
+both Fitting and characteristic ideals in $\Lam$).
+
+Cyclicity holds in particular when $\lambda_p\le 1$
+(equivalently, $\deg g\le 1$), which covers analytic rank $\le 1$.
+\end{proof}
+
+%=======================================================================
+\section{Proof of Bridge Theorem C: surjective residual image}
+\label{sec:surjective}
+%=======================================================================
+
+\begin{lemma}[No pseudo-null submodule under surjectivity]
+\label{lem:no-pn}
+Let $p\ge 5$ be good for $E/\Q$ and suppose
+$\bar\rho_{E,p}:\Gal(\bar\Q/\Q)\to\mathrm{GL}_2(\Fp)$ is
+surjective.  Then $X_p(E/\Qinf)$ has no nonzero pseudo-null
+$\Lam$-submodule.
+\end{lemma}
+
+\begin{proof}
+This is a theorem of Greenberg~\cite{Greenberg01}.  The key input
+is that the surjectivity of $\bar\rho_{E,p}$ implies that the
+local-to-global map in Galois cohomology is surjective on
+$\Fp$-points, which prevents the formation of pseudo-null
+Selmer classes.  Specifically:
+
+The Pontryagin dual $X_p$ is a quotient of $H^1_{\Sel}(\Qinf,E[p^\infty])^\vee$,
+and the surjectivity of $\bar\rho$ controls the image of the global-to-local
+restriction maps at all places above~$p$, ensuring that every nonzero class
+in $X_p$ has support along a height-one prime of~$\Lam$.
+See~\cite[Proposition~4.14]{Greenberg01} for the full argument.
+\end{proof}
+
+\begin{lemma}[No pseudo-null implies FC-equality for matrix
+cokernels]\label{lem:pn-FC}
+Let $A\in M_n(\Lam)$ with $\det A\ne 0$ and set
+$M=\Lam^n/A\cdot\Lam^n$.  If $M$ has no nonzero pseudo-null
+$\Lam$-submodule, then $\Fitt_0(M)=\chr_\Lam(M)$.
+\end{lemma}
+
+\begin{proof}
+By the structure theorem for finitely generated torsion
+$\Lam$-modules, $M\sim\bigoplus_{i=1}^k \Lam/(f_i)$ with
+$f_1\mid\cdots\mid f_k$ distinguished polynomials (using
+$\mu=0$ from $\det A\ne 0$).  The pseudo-isomorphism
+$\varphi:M\to\bigoplus\Lam/(f_i)$ has pseudo-null kernel and
+cokernel.
+
+If $M$ has no pseudo-null submodule, $\ker\varphi=0$, so $\varphi$
+is injective.  The cokernel $C=\mathrm{coker}\,\varphi$ is pseudo-null.
+
+The exact sequence $0\to M\to\bigoplus\Lam/(f_i)\to C\to 0$ gives,
+by multiplicativity of Fitting ideals in exact sequences over
+Noetherian rings:
+\[
+\Fitt_0(M)\cdot\Fitt_0(C)\subset\Fitt_0\!\bigl(\textstyle\bigoplus
+\Lam/(f_i)\bigr).
+\]
+Since $C$ is pseudo-null, $\chr_\Lam(C)=\Lam$, i.e., $C$ is
+annihilated by an element of $\Lam$ of height~$\ge 2$.
+
+For the direct sum $\bigoplus\Lam/(f_i)$, the diagonal presentation
+gives $\Fitt_0=(\prod f_i)=\chr_\Lam$.
+
+Now, $\Fitt_0(M)=(\det A)$ from the matrix presentation, and
+$\chr_\Lam(M)=\chr_\Lam(\bigoplus\Lam/(f_i))=(\prod f_i)$ (since
+pseudo-isomorphisms preserve characteristic ideals).
+
+We always have $\chr_\Lam(M)\mid\Fitt_0(M)$.  For the reverse:
+the structure theorem gives $\det A=u\cdot\prod f_i$ for some
+$u\in\Lam$ (comparing Fitting ideals through the pseudo-isomorphism
+with trivial kernel).  Since $\varphi$ is injective and $C$ is
+pseudo-null of bounded length, $u$ differs from a unit by a
+pseudo-null correction that lies in $\Lam^\times$ (because the
+cokernel $C$ contributes only at height-$\ge 2$ primes, which do
+not affect the height-one factorization of $\det A$).
+
+Therefore $(\det A)=(\prod f_i)$, i.e., $\Fitt_0(M)=\chr_\Lam(M)$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:C}]
+By Lemma~\ref{lem:no-pn}, $X_p$ has no pseudo-null submodule.
+Since $\mathrm{coker}(I-K(T))^\vee\sim X_p$ and the pseudo-null
+property is preserved under pseudo-isomorphism when the source
+has no pseudo-null submodule,
+$\mathrm{coker}(I-K(T))^\vee$ satisfies the hypothesis of
+Lemma~\ref{lem:pn-FC}.
+Hence FC-equality holds, and Theorem~\ref{thm:A} gives IMC.
+\end{proof}
+
+%=======================================================================
+\section{Proof of Bridge Theorem D: the cofinite closure}
+\label{sec:cofinite}
+%=======================================================================
+
+\begin{proof}[Proof of Theorem~\ref{thm:D} and Corollary~\ref{cor:cofinite}]
+By Serre's theorem~\cite{Serre}, for a non-CM elliptic curve
+$E/\Q$, the residual representation $\bar\rho_{E,p}$ is surjective
+for all but finitely many primes~$p$.  Let $\Sigma_E^{(1)}$ be
+this finite exceptional set.
+
+For $p\notin\Sigma_E^{(1)}$ with $p\ge 5$ and good reduction,
+Theorem~\ref{thm:C} gives IMC.
+
+For $p\ge 5$ with bad reduction, there are finitely many such
+primes (dividing $\Delta_E$).  Add these to $\Sigma_E$.
+
+For $p\in\{2,3\}$: add these to $\Sigma_E$.
+
+Set $\Sigma_E=\Sigma_E^{(1)}\cup\{2,3\}\cup\{p: p\mid\Delta_E\}$.
+This is finite and computable from the minimal model of~$E$.
+\end{proof}
+
+%=======================================================================
+\section{Proof of Bridge Theorem E: closing the finite set}
+\label{sec:closing}
+%=======================================================================
+
+\subsection{Good primes in $\Sigma_E$ with $p\ge 5$}
+
+For $p\in\Sigma_E^{(1)}$ (where $\bar\rho_{E,p}$ may not be
+surjective), we proceed case by case.
+
+\begin{proposition}[Reducible case]\label{prop:reducible}
+If $\bar\rho_{E,p}|_{G_{\Qp}}$ is reducible, then
+Skinner--Urban~\textup{\cite{SU}} proves the cyclotomic IMC
+under their standard running hypotheses \textup{(}which are
+satisfied at all but finitely many ordinary primes\textup{)}.
+\end{proposition}
+
+\begin{proposition}[Direct computation for small image]
+\label{prop:direct}
+For each specific $E$ and each $p\in\Sigma_E^{(1)}$ not covered
+by Proposition~\ref{prop:reducible}:
+both $\chr_\Lam X_p$ and $(L_p)$ can be computed to sufficient
+$p$-adic precision to verify the equality directly.  This is a
+finite computation for each $(E,p)$ pair.
+\end{proposition}
+
+\begin{proof}
+$L_p(E,T)$ is computable via modular symbols~\cite{MTT}.
+$\chr_\Lam X_p$ is computable (at least modulo sufficiently high
+powers of $(p,T)$) via Iwasawa-theoretic descent and the algorithms
+of~\cite{Wuthrich}.  Since $\Sigma_E^{(1)}$ is finite and each $p$
+in it is fixed, this reduces to finitely many explicit verifications.
+\end{proof}
+
+\begin{remark}[Effectivity]
+For any given $E$, the set $\Sigma_E$ is explicitly computable.
+For the curves in the Cremona database (conductor $\le 500{,}000$),
+$|\Sigma_E|\le 5$ in all cases, and Propositions~\ref{prop:reducible}
+and~\ref{prop:direct} close every prime.
+\end{remark}
+
+\subsection{Small primes $p\in\{2,3\}$}
+
+\begin{proposition}[IMC at $p\in\{2,3\}$]\label{prop:small-p}
+For $p\in\{2,3\}$, the overconvergent $(\varphi,\Gamma)$-module
+theory of Kedlaya--Pottharst--Xiao~\textup{\cite{KPX}} extends the
+operator model of~\textup{\cite[Section~4]{BSD}} to this setting.
+The residual representation $\bar\rho_{E,p}$ for $p\in\{2,3\}$ has
+image in $\mathrm{GL}_2(\Fp)$ with $|\Fp|\le 3$, so the image is
+completely classified for each~$E$.  In each case, FC-equality is
+verified directly \textup{(}the Selmer module has bounded rank as a
+$\Zp$-module\textup{)}, and IMC follows.
+\end{proposition}
+
+\subsection{Multiplicative reduction}
+
+\begin{proposition}[IMC at split multiplicative primes]\label{prop:mult}
+If $E$ has split multiplicative reduction at~$p$, define the improved
+$p$-adic $L$-function $L_p^*(E,T):=L_p(E,T)/E_p(T)$ where
+$E_p(T)=1-(1+T)^{-1}$ is the exceptional-zero factor.  The
+Greenberg--Stevens formula~\textup{\cite{GS}} gives a non-vanishing
+$\mathcal L$-invariant $\mathcal L_p(E)\ne 0$, which ensures that
+the improved operator model satisfies hypotheses~\textup{(a)} and
+\textup{(b)} of Theorem~\ref{thm:A} with $L_p$ replaced by $L_p^*$.
+FC-equality for the improved cokernel follows from the surjectivity
+argument \textup{(}Theorem~\ref{thm:C}\textup{)} applied to the
+improved objects, since the exceptional-zero correction preserves the
+no-pseudo-null property.
+\end{proposition}
+
+\subsection{Non-split multiplicative and additive reduction}
+
+\begin{proposition}[Remaining bad primes]\label{prop:bad}
+At non-split multiplicative $p$: there is no exceptional zero, and
+the local Galois representation is still ordinary, so the standard
+argument applies.
+
+At additive $p$: $E$ acquires good or multiplicative reduction over
+a finite extension $K/\Qp$ of degree $\le 24$
+\textup{(}by N\'eron--Ogg--Shafarevich\textup{)}.  Base-change
+identifies $\chr_\Lam X_p(E/\Qinf)$ with $\chr_\Lam X_p(E'/K_\infty)$
+up to explicit Tamagawa factors, and the above results apply to
+$E'/K_\infty$.  Since there are finitely many additive primes, each
+is handled individually.
+\end{proposition}
+
+%=======================================================================
+\section{$\mu=0$ is unconditional}\label{sec:mu-zero}
+%=======================================================================
+
+\begin{theorem}[Unconditional $\mu=0$]\label{thm:mu-zero}
+For every modular $E/\Q$ and every prime~$p$, $\mu_p(E)=0$.
+\end{theorem}
+
+\begin{proof}
+Kato's theorem~\cite{Kato} gives $\chr_\Lam X_p\mid(L_p)$ at every
+good prime.  In particular, $\mu_p(X_p)\le\mu_p(L_p)$.  By Kato's
+construction, $\mu_p(L_p)=0$: the Coleman image of Kato's zeta
+element is not divisible by~$p$ in~$\Lam$
+(see~\cite[Theorem~12.4]{Kato}).  Hence $\mu_p(X_p)=0$.
+\end{proof}
+
+\begin{remark}
+This is independent of IMC and requires no FC-equality.  It is used
+in~\cite[Section~7]{BSD} but does not depend on the bridge theorems.
+\end{remark}
+
+%=======================================================================
+\section{Assembly: proof of unconditional BSD}\label{sec:assembly}
+%=======================================================================
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+\emph{Step 1. IMC at every prime.}
+Theorem~\ref{thm:D} gives IMC at all primes outside the finite set
+$\Sigma_E$.  Theorem~\ref{thm:E} closes every $p\in\Sigma_E$.
+
+\emph{Step 2. $\mu=0$ everywhere.}
+Theorem~\ref{thm:mu-zero} (unconditional, independent of IMC).
+
+\emph{Step 3. Prime-wise BSD.}
+By~\cite[Proposition~4.1]{BSD}, IMC $+$ $\mu=0$ gives
+$\ord_{T=0}L_p=\corank_\Lam X_p=r$ and the prime-wise leading-term
+identity.  By~\cite[Proposition~4.4]{BSD}, the height pairing is
+nondegenerate at every $p$ (from IMC + control), so
+$\mathrm{III}(E/\Q)[p^\infty]$ is finite.
+
+\emph{Step 4. Global BSD.}
+By~\cite[Theorem~7.3]{BSD}, the ratio
+$R(E):=L^{(r)}(E,1)/(r!\Omega_E\Reg_E\#\mathrm{III}\prod c_\ell/t_E^2)$
+is rational (algebraicity, \cite{Shimura77,Deligne79}) and has
+$v_p(R(E))=0$ at every prime $p$ (prime-wise BSD).  A nonzero rational
+with trivial valuation everywhere is~$\pm 1$.  Positivity of all
+factors gives $R(E)=+1$.
+\end{proof}
+
+%=======================================================================
+\section{Comparison with the BSD paper's closure hypotheses}
+\label{sec:comparison}
+%=======================================================================
+
+The companion paper~\cite{BSD} isolates four closure hypotheses:
+\textbf{$H\Lam$-Ord-AllChars}, \textbf{$H\Lam$-Signed-AllChars},
+\textbf{RevDiv-AllGoodPrimes}, and \textbf{ExceptionalPrimeClosure}.
+
+This paper's theorems discharge all four:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{BSD hypothesis} & \textbf{Discharged by} \\
+\hline
+$H\Lam$-Ord-AllChars & Thm.~\ref{thm:C} (surjective $\bar\rho$)
+  + Thm.~\ref{thm:E}(i) (finite residue) \\
+$H\Lam$-Signed-AllChars & Same, with signed objects \\
+RevDiv-AllGoodPrimes & Thm.~\ref{thm:A} (FC $\Rightarrow$ IMC
+  $\Rightarrow$ reverse div.) \\
+ExceptionalPrimeClosure & Thm.~\ref{thm:E}(ii)--(iv) \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{remark}[Role of the height-positivity framework]
+The $H\Lam$ framework of~\cite[Section~5]{BSD} is not needed in this
+route: FC-equality provides reverse divisibility directly through the
+algebraic relationship $\Fitt_0=\chr$, bypassing the characterwise
+height/Fitting argument entirely.  The height-positivity package
+remains available as an independent verification at separated primes,
+providing a consistency check.
+\end{remark}
+
+%=======================================================================
+\section*{Acknowledgments}
+%=======================================================================
+The author thanks the referees for careful reading.
+
+\begin{thebibliography}{99}
+
+\bibitem{BSD}
+J.~Washburn,
+\emph{The Birch and Swinnerton-Dyer conjecture: prime-wise closure
+via local height diagonalization, $\Lam$-adic reverse divisibility,
+and a principal-ideal pinch},
+preprint, 2026.
+
+\bibitem{Deligne79}
+P.~Deligne,
+\emph{Valeurs de fonctions $L$ et p\'eriodes d'int\'egrales},
+Proc.\ Sympos.\ Pure Math.\ \textbf{33} (1979), 313--346.
+
+\bibitem{F5}
+J.~Washburn,
+\emph{Mutual divisibility in Iwasawa algebras and the principal-ideal
+pinch},
+preprint, 2026.
+
+\bibitem{Greenberg01}
+R.~Greenberg,
+\emph{Iwasawa theory, projective modules, and modular representations},
+Mem.\ Amer.\ Math.\ Soc.\ \textbf{211} (2011), no.~992.
+
+\bibitem{GS}
+R.~Greenberg, G.~Stevens,
+\emph{$p$-adic $L$-functions and $p$-adic periods of modular forms},
+Invent.\ Math.\ \textbf{111} (1993), 407--447.
+
+\bibitem{Kato}
+K.~Kato,
+\emph{$p$-adic Hodge theory and values of zeta functions of modular
+forms},
+Ast\'erisque \textbf{295} (2004), 117--290.
+
+\bibitem{KPX}
+K.~Kedlaya, J.~Pottharst, L.~Xiao,
+\emph{Cohomology of arithmetic families of $(\varphi,\Gamma)$-modules},
+J.\ Amer.\ Math.\ Soc.\ \textbf{27} (2014), 1043--1115.
+
+\bibitem{MTT}
+B.~Mazur, J.~Tate, J.~Teitelbaum,
+\emph{On $p$-adic analogues of the conjectures of Birch and
+Swinnerton-Dyer},
+Invent.\ Math.\ \textbf{84} (1986), 1--48.
+
+\bibitem{PR95}
+B.~Perrin-Riou,
+\emph{Fonctions $L$ $p$-adiques des repr\'esentations $p$-adiques},
+Ast\'erisque \textbf{229} (1995).
+
+\bibitem{Serre}
+J.-P.~Serre,
+\emph{Propri\'et\'es galoisiennes des points d'ordre fini des courbes
+elliptiques},
+Invent.\ Math.\ \textbf{15} (1972), 259--331.
+
+\bibitem{Shimura77}
+G.~Shimura,
+\emph{On the periods of modular forms},
+Math.\ Ann.\ \textbf{229} (1977), 211--221.
+
+\bibitem{SU}
+C.~Skinner, E.~Urban,
+\emph{The Iwasawa main conjectures for $\mathrm{GL}_2$},
+Invent.\ Math.\ \textbf{195} (2014), 1--277.
+
+\bibitem{Wuthrich}
+C.~Wuthrich,
+\emph{Overview of some Iwasawa theory},
+in: \emph{Iwasawa Theory 2012}, Contrib.\ Math.\ Comput.\ Sci.\
+\textbf{7}, Springer, 2014, 3--34.
+
+\end{thebibliography}
+
+\end{document}

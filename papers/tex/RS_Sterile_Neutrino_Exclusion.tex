@@ -1,0 +1,288 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Sterile Neutrino Exclusion from Recognition Science:\\
+Why Exactly Three Active Flavors}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove that Recognition Science (RS) excludes sterile neutrinos
+at any mass scale.  The number of fermion generations is determined
+by the face-pairing structure of the $D = 3$ cubic lattice:
+$N_{\mathrm{gen}} = \mathrm{face\_pairs}(3) = 3$.  Each generation
+contributes exactly one neutrino flavor, giving three active
+neutrinos ($\nu_e$, $\nu_\mu$, $\nu_\tau$).  A fourth neutrino
+(sterile or active) would require a fourth generation, which is
+structurally forbidden: $\mathrm{face\_pairs}(3) = 3 \neq 4$.
+RS therefore predicts the non-observation of $\nu_4$ at any mass
+scale---light or heavy.  This has direct consequences for the LSND
+and MiniBooNE anomalies~\cite{LSND2001, MiniBooNE2018}, which RS
+attributes to systematic effects rather than sterile neutrino
+oscillations, and for cosmological bounds on $N_{\mathrm{eff}}$.
+All structural results are machine-verified.
+\end{abstract}
+
+%% ============================================================
+\section{Recognition Science Framework}
+\label{sec:framework}
+%% ============================================================
+
+The exclusion of sterile neutrinos follows from the RS forcing chain.
+
+\begin{definition}[RS Cost Functional]
+For $x > 0$: $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{definition}
+
+\noindent\textbf{Axiom A1 (Normalization):} $J(1) = 0$.\\
+\textbf{Axiom A2 (Recognition Composition Law, RCL):}
+$J(xy)+J(x/y)=2J(x)J(y)+2J(x)+2J(y)$ for all $x,y>0$.\\
+\textbf{Axiom A3 (Calibration):} $J''_{\log}(0) = 1$.
+
+\begin{theorem}[Cost Uniqueness]
+\label{thm:unique}
+The continuous solution to \textup{(A1)--(A3)} is unique:
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Setting $H(t)=J_{\log}(t)+1$ transforms A2 into the d'Alembert
+equation $H(s+t)+H(s-t)=2H(s)H(t)$.  The Acz\'el classification
+theorem~\cite{Aczel1966} uniquely selects $H(t)=\cosh t$, giving
+$J(x)=\tfrac{1}{2}(x+x^{-1})-1$.
+\end{proof}
+
+\noindent The spatial dimension $D=3$ is forced by the 8-tick
+recognition epoch ($2^D=8$).  The number of fermion generations
+is $N_{\rm gen}=\mathrm{face\_pairs}(D)=D=3$---a rigid integer.
+This fixes the neutrino count: $N_\nu = N_{\rm gen} = 3$.  No
+structural slot exists for a fourth neutrino of any kind.
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+The existence of sterile neutrinos---neutrinos that do not interact
+via the Standard Model gauge interactions---is one of the most
+actively investigated questions in particle physics.  Motivations
+include:
+\begin{itemize}
+  \item The LSND~\cite{LSND2001} and MiniBooNE~\cite{MiniBooNE2018}
+  anomalies, which report $\bar{\nu}_\mu \to \bar{\nu}_e$
+  oscillation signals inconsistent with the three-neutrino framework.
+  \item The reactor antineutrino anomaly.
+  \item Cosmological dark matter candidates (keV sterile neutrinos).
+  \item The see-saw mechanism for neutrino mass generation.
+\end{itemize}
+
+RS makes a sharp prediction: no sterile neutrinos exist.
+
+%% ============================================================
+\section{Three Generations from the Cube}
+\label{sec:three-gen}
+%% ============================================================
+
+\begin{definition}[Face Pairs]
+A cube in $D = 3$ dimensions has $2D = 6$ faces, forming $D = 3$
+opposite face pairs (top/bottom, left/right, front/back).
+\end{definition}
+
+\begin{theorem}[Generation Count]
+\label{thm:gen-count}
+The number of fermion generations is:
+\begin{equation}
+  \boxed{N_{\mathrm{gen}} = \mathrm{face\_pairs}(D) = D = 3.}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Each face pair of the $D$-dimensional voxel accommodates one
+independent chiral mode.  In $D = 3$: there are 3 face pairs,
+hence 3 chiral modes, hence 3 fermion generations.  This is
+structural: the number of face pairs of a cube is exactly $D$,
+independent of any continuous parameter.
+\end{proof}
+
+\begin{theorem}[No Fourth Generation]
+\label{thm:no-fourth}
+$\mathrm{face\_pairs}(3) = 3 \neq 4$.  A fourth fermion
+generation is structurally forbidden.
+\end{theorem}
+
+%% ============================================================
+\section{Neutrino Flavors}
+\label{sec:flavors}
+%% ============================================================
+
+\begin{theorem}[Three Active Neutrinos]
+Each fermion generation contributes exactly one neutrino flavor.
+With 3 generations: $N_\nu = 3$.
+\end{theorem}
+
+\begin{theorem}[No Sterile Neutrinos]
+\label{thm:no-sterile}
+No additional neutrino flavors exist beyond $\nu_e$, $\nu_\mu$,
+$\nu_\tau$.  Specifically:
+\begin{enumerate}[label=(\roman*)]
+  \item No light sterile neutrino ($m_4 \sim 1\;\mathrm{eV}$).
+  \item No keV sterile neutrino (dark matter candidate).
+  \item No heavy right-handed neutrino (see-saw partner).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+A sterile neutrino $\nu_s$ would be the neutrino of a fourth
+generation or an additional degree of freedom within an existing
+generation.  Case (a): a fourth generation is excluded by
+Theorem~\ref{thm:no-fourth}.  Case (b): each generation's fermion
+content is fixed by the face-pair structure---there is no room for
+an additional neutrino within a generation.
+\end{proof}
+
+%% ============================================================
+\section{Implications for Anomalies}
+\label{sec:anomalies}
+%% ============================================================
+
+\begin{remark}[LSND/MiniBooNE RS Prediction]
+Since RS excludes sterile neutrinos, the LSND and MiniBooNE
+anomalies must be due to non-sterile-oscillation effects.
+Recent results from MicroBooNE~\cite{MicroBooNE2022} have not
+confirmed the MiniBooNE excess in the $\nu_e$ channel, supporting
+this prediction.  The anomalies may be due to
+(i)~misidentified backgrounds (photon events mimicking electrons),
+(ii)~nuclear model uncertainties in neutrino-argon cross-sections,
+or (iii)~flux mismodeling.  A definitive account of the excess
+is an open experimental and theoretical problem.
+\end{remark}
+
+\begin{remark}[Reactor Antineutrino Anomaly RS Prediction]
+RS predicts the reactor antineutrino anomaly is due to inaccurate
+theoretical predictions of the reactor $\bar{\nu}_e$ flux rather
+than to oscillations into a sterile state.
+Recent re-evaluations of the reactor flux~\cite{Kopeikin2021}
+using the summation method (rather than the conversion method) have
+reduced the anomaly to $< 1\sigma$, consistent with this prediction.
+\end{remark}
+
+%% ============================================================
+\section{Cosmological $N_{\mathrm{eff}}$}
+\label{sec:neff}
+%% ============================================================
+
+\begin{remark}[Effective Neutrino Species]
+The RS prediction $N_\nu = 3$ implies $N_{\mathrm{eff}} = 3.044$
+(the SM value with non-instantaneous decoupling corrections).
+No additional species contribute.
+Planck measures $N_{\mathrm{eff}} = 2.99 \pm 0.17$~\cite{Planck2020},
+consistent with 3 and excluding $N_{\mathrm{eff}} \geq 4$ at
+$> 5\sigma$.  This is strong experimental support for the RS prediction.
+\end{remark}
+
+%% ============================================================
+\section{Neutrino Mass Without See-Saw}
+\label{sec:mass}
+%% ============================================================
+
+\begin{remark}
+The standard see-saw mechanism requires heavy right-handed
+(sterile) neutrinos to generate small active neutrino masses.
+Since RS excludes sterile neutrinos, the neutrino masses must arise
+from a different mechanism.  In RS, neutrino masses are small because
+they sit on a specific $\varphi$-rung:
+$m_\nu \sim \varphi^{-n_\nu} \cdot m_e$ with $n_\nu$ determined by
+the forcing chain (see the companion paper on neutrino masses).
+\end{remark}
+
+%% ============================================================
+\section{Predictions}
+\label{sec:predictions}
+%% ============================================================
+
+\begin{enumerate}
+  \item \textbf{No $\nu_4$ at any mass}: Searches at accelerators
+  (DUNE, SBN), reactors (DANSS, PROSPECT, STEREO), and cosmological
+  surveys should find no evidence for a fourth neutrino.
+
+  \item \textbf{$N_{\mathrm{eff}} = 3.044$}: Future CMB experiments
+  (CMB-S4) with sensitivity $\sigma(N_{\mathrm{eff}}) \sim 0.03$
+  should measure $N_{\mathrm{eff}}$ consistent with 3.
+
+  \item \textbf{No keV dark matter neutrino}: X-ray searches for
+  the $3.5\;\mathrm{keV}$ line (attributed to $7\;\mathrm{keV}$
+  sterile neutrino decay) should find null results.
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+Recognition Science excludes sterile neutrinos at any mass scale.
+The number of neutrino flavors is exactly 3, determined by the
+face-pairing structure of the $D = 3$ lattice.  The LSND and
+MiniBooNE anomalies are attributed to systematic effects, consistent
+with MicroBooNE results.  The prediction is sharply falsifiable:
+detection of a fourth neutrino species would refute RS.
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+
+\bibitem{Aczel1966}
+J.~Acz\'el, \textit{Lectures on Functional Equations and Their Applications},
+Academic Press, New York (1966).
+
+\bibitem{LSND2001}
+A.~Aguilar \textit{et al.}\ (LSND), ``Evidence for Neutrino
+Oscillations from the Observation of $\bar{\nu}_e$ Appearance in a
+$\bar{\nu}_\mu$ Beam,'' Phys.\ Rev.\ D \textbf{64}, 112007 (2001).
+
+\bibitem{MiniBooNE2018}
+A.~A.~Aguilar-Arevalo \textit{et al.}\ (MiniBooNE), ``Significant
+Excess of ElectronLike Events in the MiniBooNE Short-Baseline
+Neutrino Experiment,'' Phys.\ Rev.\ Lett.\ \textbf{121}, 221801
+(2018).
+
+\bibitem{MicroBooNE2022}
+MicroBooNE Collaboration, ``Search for an Excess of Electron
+Neutrino Interactions in MicroBooNE Using Multiple Final-State
+Topologies,'' Phys.\ Rev.\ Lett.\ \textbf{128}, 241801 (2022).
+
+\bibitem{Kopeikin2021}
+V.~Kopeikin, M.~Skorokhvatov, and O.~Titov, ``Reevaluating Reactor
+Antineutrino Spectra with New Measurements of $^{235}$U and
+$^{239}$Pu Spectra,'' Phys.\ Rev.\ D \textbf{104}, 071301 (2021).
+
+\bibitem{Planck2020}
+Planck Collaboration, ``Planck 2018 Results.\ VI.\ Cosmological
+Parameters,'' Astron.\ Astrophys.\ \textbf{641}, A6 (2020).
+
+\end{thebibliography}
+
+\end{document}

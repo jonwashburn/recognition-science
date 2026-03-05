@@ -1,0 +1,389 @@
+\documentclass[11pt]{amsart}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\DeclareMathOperator{\JM}{J\!M}
+
+\title[Topological Frustration]{Topological Frustration and Residual Cost:\\
+Exact Local Minimizers for Reciprocal Bond Geometry}
+
+\author{Jonathan Washburn}
+\address{Austin, Texas, USA}
+\email{washburn.jonathan@gmail.com}
+\date{February 2026}
+
+\begin{document}
+\begin{abstract}
+Let $J(x)=\frac12(x+x^{-1})-1$ for $x>0$.
+For fixed positive neighbor data $n_1,\dots,n_d$, we study the local bond
+cost $\mathcal C(v)=\sum_{i=1}^d J(v/n_i)$.
+We prove an exact closed form for the unique minimizer:
+\[
+v^\star=\sqrt{\frac{\sum_i n_i}{\sum_i n_i^{-1}}}
+=:\JM(n_1,\dots,n_d),
+\]
+and an exact minimal residual
+$\min_{v>0}\mathcal C(v)=\sqrt{(\sum_i n_i)(\sum_i n_i^{-1})}-d$.
+This residual is strictly positive unless all neighbors are equal
+(by Cauchy--Schwarz).
+For two incompatible neighbors $n_1\neq n_2$, we obtain the explicit
+frustration formula
+$\min_{v>0}(J(v/n_1)+J(v/n_2))=\sqrt{n_1/n_2}+\sqrt{n_2/n_1}-2>0$.
+At graph level, if local neighborhoods produce different $J$-means at two
+vertices, then any simultaneous local minimizer field is necessarily
+non-uniform.  We call this forced non-uniformity \emph{topological
+frustration} and prove it in the precise form:
+the optimizing field at each node is uniquely determined by its
+neighborhood (strict convexity), so distinct neighborhoods force distinct
+node values.  We record application-interface statements for fluid-direction
+smoothing, constraint relaxation, and lattice embedding.
+\end{abstract}
+
+\subjclass[2020]{Primary 26A51; Secondary 05C69, 49J40, 26D15}
+\keywords{Reciprocal cost, strict frustration, local minimizer,
+harmonic-arithmetic mean, non-collapse, graph optimization}
+\maketitle
+
+%=======================================================================
+\section{Introduction}\label{sec:intro}
+%=======================================================================
+
+The reciprocal cost $J(x)=\frac12(x+x^{-1})-1$ is nonnegative,
+reciprocal-symmetric ($J(x)=J(1/x)$), and strictly convex on $(0,\infty)$.
+These one-variable facts are developed in detail in the companion
+paper~\cite{F1}, where it is shown that $J$ is the unique such function
+satisfying the d'Alembert functional identity with unit curvature.
+
+This paper addresses the \emph{multi-bond local problem}:
+given fixed bond neighbor values $n_1,\dots,n_d>0$,
+what value $v>0$ minimizes $\sum_{i=1}^d J(v/n_i)$?
+The answer is an explicit closed form.  This immediately yields precise
+frustration inequalities: when neighbors disagree, the residual cost is
+provably positive, with an exact formula.
+
+The paper is organized as follows.
+Section~\ref{sec:local} derives the closed form and the $J$-mean.
+Section~\ref{sec:frustration} proves the strict frustration inequalities
+with explicit lower bounds.
+Section~\ref{sec:graph} lifts the local result to a graph-level
+non-collapse theorem.
+Section~\ref{sec:apps} records application interfaces used by companion
+papers.
+
+%=======================================================================
+\section{Local optimization against fixed neighbors}\label{sec:local}
+%=======================================================================
+
+\begin{definition}[Local bond cost]
+For fixed $n_1,\dots,n_d>0$ ($d\ge1$), define
+\[
+\mathcal C(v):=\sum_{i=1}^d J(v/n_i),\qquad v>0.
+\]
+\end{definition}
+
+\begin{lemma}[Closed form]\label{lem:closed}
+With $S_1:=\sum_{i=1}^d n_i$ and $S_{-1}:=\sum_{i=1}^d n_i^{-1}$,
+\begin{equation}\label{eq:closed}
+\mathcal C(v)=\frac12\!\left(S_{-1}\,v+\frac{S_1}{v}\right)-d.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Each summand expands as
+$J(v/n_i)=\frac12(v/n_i+n_i/v)-1$.
+Summing over $i$:
+\[
+\mathcal C(v)
+=\frac{v}{2}\sum_i\frac{1}{n_i}+\frac{1}{2v}\sum_i n_i-d
+=\frac12\!\left(S_{-1}\,v+\frac{S_1}{v}\right)-d.
+\qedhere
+\]
+\end{proof}
+
+\begin{theorem}[Exact minimizer and strict convexity]\label{thm:min}
+$\mathcal C$ is strictly convex on $(0,\infty)$ with unique minimizer
+\begin{equation}\label{eq:vstar}
+v^\star=\sqrt{\frac{S_1}{S_{-1}}}
+=\sqrt{\frac{\sum_i n_i}{\sum_i n_i^{-1}}}.
+\end{equation}
+\end{theorem}
+\begin{proof}
+Differentiate~\eqref{eq:closed}:
+\[
+\mathcal C'(v)=\frac12\!\left(S_{-1}-\frac{S_1}{v^2}\right),\qquad
+\mathcal C''(v)=\frac{S_1}{v^3}>0.
+\]
+Strict positivity of $\mathcal C''$ gives strict convexity.
+Since $\mathcal C(v)\to+\infty$ as $v\to0^+$ or $v\to+\infty$
+(from~\eqref{eq:closed}), $\mathcal C$ is coercive.
+A strictly convex coercive function has exactly one critical point,
+which is the global minimum.
+Setting $\mathcal C'(v)=0$: $S_{-1}=S_1/v^2\implies v^2=S_1/S_{-1}
+\implies v^\star=\sqrt{S_1/S_{-1}}$.
+\end{proof}
+
+\begin{definition}[$J$-mean]\label{def:jmean}
+For positive data $n_1,\dots,n_d$, define the \emph{$J$-mean} as
+\[
+\JM(n_1,\dots,n_d):=\sqrt{\frac{\sum_i n_i}{\sum_i n_i^{-1}}}.
+\]
+\end{definition}
+
+\begin{corollary}[AM/HM interpretation]\label{cor:means}
+With $\operatorname{AM}:=\frac1d\sum_i n_i$ and
+$\operatorname{HM}:=d/\sum_i n_i^{-1}$,
+\[
+\JM(n_1,\dots,n_d)=\sqrt{\operatorname{AM}\cdot\operatorname{HM}}.
+\]
+For $d=2$: $\JM(n_1,n_2)=\sqrt{n_1n_2}$ (the geometric mean).
+\end{corollary}
+\begin{proof}
+$S_1/S_{-1}=d\cdot\operatorname{AM}\cdot\operatorname{HM}/d
+=\operatorname{AM}\cdot\operatorname{HM}$.
+For $d=2$:
+$(n_1+n_2)/(n_1^{-1}+n_2^{-1})
+=(n_1+n_2)\cdot n_1n_2/(n_1+n_2)=n_1n_2$.
+\end{proof}
+
+\begin{remark}[Relation to other means]
+The $J$-mean satisfies $\operatorname{HM}\le\JM\le\operatorname{AM}$
+by the AM-HM inequality, with equality throughout iff all $n_i$ are equal.
+It coincides with the geometric mean for $d=2$ but differs for $d\ge3$
+(for instance, $\JM(1,1,4)=\sqrt{6/(1+1+1/4)}=\sqrt{6/(9/4)}
+=\sqrt{8/3}\approx1.633$, while $\operatorname{GM}(1,1,4)=4^{1/3}\approx1.587$).
+See Bullen~\cite{Bullen} for a comprehensive discussion of mean inequalities.
+\end{remark}
+
+\begin{proposition}[Exact minimum value]\label{prop:min-value}
+\[
+\min_{v>0}\mathcal C(v)=\sqrt{S_1 S_{-1}}-d\ge0.
+\]
+Equality holds iff $n_1=\cdots=n_d$.
+\end{proposition}
+\begin{proof}
+Evaluate~\eqref{eq:closed} at $v^\star=\sqrt{S_1/S_{-1}}$:
+\begin{align*}
+\mathcal C(v^\star)
+&=\frac12\!\left(S_{-1}\sqrt{S_1/S_{-1}}
+  +\frac{S_1}{\sqrt{S_1/S_{-1}}}\right)-d \\
+&=\frac12(\sqrt{S_1 S_{-1}}+\sqrt{S_1 S_{-1}})-d
+=\sqrt{S_1 S_{-1}}-d.
+\end{align*}
+By the Cauchy--Schwarz inequality in $\R^d$
+(applied to the vectors $(n_1^{1/2},\dots,n_d^{1/2})$ and
+$(n_1^{-1/2},\dots,n_d^{-1/2})$):
+\[
+S_1 S_{-1}
+=\Bigl(\sum_i n_i\Bigr)\Bigl(\sum_i n_i^{-1}\Bigr)
+\ge\Bigl(\sum_i 1\Bigr)^2=d^2.
+\]
+Hence $\sqrt{S_1 S_{-1}}\ge d$, giving $\mathcal C(v^\star)\ge0$.
+Equality in Cauchy--Schwarz occurs iff $n_i^{1/2}$ and $n_i^{-1/2}$
+are proportional for all $i$, i.e.\ iff all $n_i$ are equal.
+\end{proof}
+
+\begin{example}
+For $d=3$, $n_1=1$, $n_2=2$, $n_3=8$:
+$S_1=11$, $S_{-1}=1+1/2+1/8=13/8$,
+$v^\star=\sqrt{88/13}\approx 2.602$,
+$\min\mathcal C=\sqrt{143/8}-3\approx 1.227$.
+\end{example}
+
+%=======================================================================
+\section{Strict frustration inequalities}\label{sec:frustration}
+%=======================================================================
+
+The central message of this section: when neighbor data disagree,
+no choice of $v$ can bring the total bond cost to zero.
+
+\begin{theorem}[No simultaneous annihilation]\label{thm:no-simult}
+If $n_1,n_2>0$ and $n_1\neq n_2$, there is no $v>0$ with
+$J(v/n_1)=J(v/n_2)=0$.
+\end{theorem}
+\begin{proof}
+By~\cite[Corollary~2.5]{F1}, $J(v/n_i)=0\iff v=n_i$.
+Simultaneous vanishing forces $v=n_1$ and $v=n_2$, contradicting
+$n_1\neq n_2$.
+\end{proof}
+
+\begin{corollary}[Strict two-bond frustration]\label{cor:strict-two}
+If $n_1\neq n_2$ ($n_1,n_2>0$), then for every $v>0$:
+$J(v/n_1)+J(v/n_2)>0$.
+\end{corollary}
+\begin{proof}
+Each summand is $\ge0$ (since $J\ge0$).
+If the sum were zero, both summands would vanish,
+contradicting Theorem~\ref{thm:no-simult}.
+\end{proof}
+
+\begin{proposition}[Exact two-neighbor residual]\label{prop:two-exact}
+For $n_1,n_2>0$:
+\begin{equation}\label{eq:two-residual}
+\min_{v>0}\bigl(J(v/n_1)+J(v/n_2)\bigr)
+=\sqrt{\frac{n_1}{n_2}}+\sqrt{\frac{n_2}{n_1}}-2.
+\end{equation}
+If $n_1\neq n_2$, this minimum is strictly positive.
+\end{proposition}
+\begin{proof}
+By Corollary~\ref{cor:means}, the minimizer is $v^\star=\sqrt{n_1n_2}$.
+Set $r:=\sqrt{n_2/n_1}$, so $v^\star/n_1=r$ and $v^\star/n_2=1/r$.
+Then:
+\begin{align*}
+J(r)+J(1/r)
+&=\frac12(r+r^{-1})-1+\frac12(r^{-1}+r)-1 \\
+&=(r+r^{-1})-2 \\
+&=\sqrt{\frac{n_2}{n_1}}+\sqrt{\frac{n_1}{n_2}}-2.
+\end{align*}
+By the AM-GM inequality, $r+r^{-1}\ge 2\sqrt{r\cdot r^{-1}}=2$,
+with equality iff $r=1$ (i.e.\ $n_1=n_2$).
+\end{proof}
+
+\begin{corollary}[$d$-bond positivity from one incompatible pair]
+\label{cor:d-bond}
+Let $n_1,\dots,n_d>0$ with $n_i\neq n_j$ for some pair $i\neq j$.
+Then for every $v>0$:
+\[
+\sum_{\ell=1}^d J(v/n_\ell)>0.
+\]
+Moreover,
+\[
+\sum_{\ell=1}^d J(v/n_\ell)
+\ge\sqrt{\frac{n_i}{n_j}}+\sqrt{\frac{n_j}{n_i}}-2>0.
+\]
+\end{corollary}
+\begin{proof}
+All $d$ terms are $\ge0$.  Drop all except the $(i,j)$ pair:
+$\sum_\ell J(v/n_\ell)\ge J(v/n_i)+J(v/n_j)$.
+Apply Corollary~\ref{cor:strict-two} for strict positivity and
+Proposition~\ref{prop:two-exact} for the explicit bound
+(noting that the bound holds for every $v$, hence also at the $d$-bond
+optimum).
+\end{proof}
+
+\begin{example}
+With $n_1=2$, $n_2=8$: residual $=\sqrt{1/4}+\sqrt{4}-2=1/2+2-2=1/2$.
+With $n_1=1$, $n_2=100$: residual $=1/10+10-2=8.1$.
+Wide disparity produces large frustration.
+\end{example}
+
+%=======================================================================
+\section{Graph-level non-collapse}\label{sec:graph}
+%=======================================================================
+
+We now lift the local frustration to a global statement on graphs.
+
+\begin{definition}[Prescribed neighborhood data]\label{def:prescribed}
+Let $G=(V,E)$ be a finite connected graph.
+For each vertex $u\in V$, fix a positive multiset
+$\mathcal N(u)=\{n_{u,1},\dots,n_{u,d_u}\}$.
+The \emph{local $J$-mean} is $m_u:=\JM(\mathcal N(u))$.
+\end{definition}
+
+\begin{theorem}[Distinct local means force distinct optimal states]
+\label{thm:distinct}
+Suppose there exist vertices $u,w\in V$ with $m_u\neq m_w$.
+If a field $x=(x_v)_{v\in V}$ satisfies
+\[
+x_u\in\arg\min_{t>0}\sum_{i=1}^{d_u}J(t/n_{u,i})
+\quad\text{for every }u\in V,
+\]
+then $x_u\neq x_w$.  In particular, no such field is spatially uniform.
+\end{theorem}
+\begin{proof}
+By Theorem~\ref{thm:min}, each local $\arg\min$ is a singleton:
+$\arg\min_{t>0}\sum_i J(t/n_{u,i})=\{m_u\}$.
+Hence $x_u=m_u$ for every $u$.  If $m_u\neq m_w$, then $x_u\neq x_w$.
+A uniform field $x_u\equiv c$ would require $m_u=c$ for all $u$,
+contradicting $m_u\neq m_w$.
+\end{proof}
+
+\begin{remark}[Scope of the non-collapse statement]\label{rem:scope}
+Theorem~\ref{thm:distinct} concerns optimization against
+\emph{prescribed} (externally fixed) neighborhood data.
+For the unconstrained edge-energy functional
+$\sum_{\{u,w\}\in E}J(x_u/x_w)$, constant fields achieve zero energy
+and are trivially optimal.
+Therefore the topological frustration mechanism requires either
+incompatible prescribed boundary conditions, external forcing, or
+additional constraint structure (such as window neutrality~\cite{F3}).
+This distinction is important in applications.
+\end{remark}
+
+%=======================================================================
+\section{Application interfaces}\label{sec:apps}
+%=======================================================================
+
+We record the precise forms used by companion papers.
+
+\begin{remark}[Fluid-direction smoothing interface]\label{rem:fluid}
+If direction updates near the vorticity zero set $\{\omega=0\}$ are
+modeled by local reciprocal cost minimization against neighboring
+directions, then incompatible local neighborhoods generate strictly
+positive residual cost (Corollary~\ref{cor:d-bond}), preventing
+collapse to a single linearized average in defect regions.
+See~\cite{F6} for the full blow-up exclusion argument.
+\end{remark}
+
+\begin{remark}[Constraint-relaxation interface]\label{rem:constraint}
+In graph encodings of combinatorial constraints, if a relaxed local
+state must satisfy incompatible neighboring targets, the strict residual
+cost of Corollary~\ref{cor:strict-two} forbids a zero-cost fractional
+survivor.  See the companion paper on combinatorial feasibility for the
+complete reduction.
+\end{remark}
+
+\begin{remark}[Lattice embedding interface]\label{rem:lattice}
+In reciprocal-cost lattice updates, distinct local prescribed
+neighborhoods force differentiated local optima by
+Theorem~\ref{thm:distinct}, providing a direct non-collapse criterion
+for gauge-field lattice embeddings.
+\end{remark}
+
+%=======================================================================
+\section*{Acknowledgments}
+%=======================================================================
+The author thanks the referees for careful reading.
+
+\begin{thebibliography}{99}
+
+\bibitem{Bullen}
+P.~S.~Bullen,
+\emph{Handbook of Means and Their Inequalities},
+Mathematics and Its Applications, vol.~560, Kluwer, 2003.
+
+\bibitem{F1}
+J.~Washburn,
+\emph{The canonical reciprocal cost: exact multi-bond minimization,
+frustration lower bounds, and simultaneous-vs-sequential descent},
+preprint, 2026.
+
+\bibitem{F3}
+J.~Washburn,
+\emph{Window neutrality, future-balance projection, and the phantom
+balance constraint},
+preprint, 2026.
+
+\bibitem{F6}
+J.~Washburn,
+\emph{Alexander-duality linking, link penalties, and the finite-capacity
+veto in three dimensions},
+preprint, 2026.
+
+\end{thebibliography}
+
+\end{document}

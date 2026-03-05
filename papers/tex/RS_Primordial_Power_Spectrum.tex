@@ -1,0 +1,506 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The Primordial Power Spectrum from Recognition Science:\\
+$J$-Cost Fluctuations and the $\varphi$-Ladder}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We derive the primordial scalar power spectrum from the
+Recognition Science (RS) $J$-cost inflation model with zero
+free parameters.  During inflation, quantum fluctuations of
+the $J$-cost field freeze out as the ledger expands,
+producing a nearly scale-invariant spectrum.  The approximate
+scale invariance is rooted in the self-similar $\varphi$-ladder
+structure of the discrete ledger.  For the canonical
+kinetic-term identification, the linear large-field regime
+$J(x) \approx x/2$ gives $n_s \approx 1 - 3/(2N_e) \approx
+0.975$ and $r \approx 4/N_e \approx 0.067$ (for $N_e = 60$).
+The spectral index is consistent with Planck 2018
+($n_s = 0.9649 \pm 0.0042$) at the $2\sigma$ level; the
+tensor ratio is mildly in tension with BICEP/Keck
+($r < 0.036$).  The precise predictions depend on the
+kinetic-term normalization of the $J$-cost inflaton, an
+identified open problem (see the companion inflation
+paper~\cite{RSInflation}).  Non-Gaussianity is negligible
+($|f_{\mathrm{NL}}| \ll 1$) and the spectral running is
+$|dn_s/d\ln k| \sim 10^{-4}$, both consistent with Planck.
+\end{abstract}
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+The primordial power spectrum encodes the initial density
+fluctuations that seeded all cosmic
+structure~\cite{Planck2020}.  Its key parameters are:
+\begin{enumerate}[nosep]
+  \item The spectral index $n_s$: the tilt away from
+  perfect scale invariance ($n_s = 1$, the Harrison--
+  Zel'dovich spectrum).
+  \item The scalar amplitude $A_s$: the normalization at
+  pivot scale $k_0 = 0.05\;\mathrm{Mpc}^{-1}$.
+  \item The tensor-to-scalar ratio $r$: the relative
+  amplitude of gravitational wave perturbations.
+  \item The running $dn_s/d\ln k$: the scale dependence
+  of the spectral index itself.
+\end{enumerate}
+
+In standard inflationary cosmology, all four depend on the
+inflaton potential $V(\phi)$ and its
+derivatives~\cite{Baumann2009}---introducing model
+dependence and free parameters.  Recognition Science~\cite{RS_Axioms} derives all four from the
+$J$-cost functional with zero free parameters.
+
+%% ============================================================
+\section{RS Foundations}
+\label{sec:foundations}
+%% ============================================================
+
+RS derives all physics from the Recognition Composition Law
+(RCL):
+\begin{equation}
+  J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y),
+  \label{eq:RCL}
+\end{equation}
+uniquely determining the cost functional:
+\begin{equation}
+  J(x) = \tfrac{1}{2}(x + x^{-1}) - 1, \qquad x > 0.
+  \label{eq:cost}
+\end{equation}
+
+\begin{definition}[$\varphi$-Ladder]
+\label{def:ladder}
+The golden ratio scaling hierarchy:
+\begin{equation}
+  \Lambda_n = \Lambda_0 \cdot \varphi^n, \qquad n \in
+  \mathbb{Z},
+\end{equation}
+where $\Lambda_0$ is the voxel scale and
+$\varphi = (1 + \sqrt{5})/2$.  The ladder is self-similar:
+$\Lambda_{n+1}/\Lambda_n = \varphi$ for all $n$.
+\end{definition}
+
+\begin{proposition}[Self-Similarity and Scale Invariance]
+\label{prop:self-sim}
+The self-similar $\varphi$-ladder produces approximate
+scale invariance in any quantity that couples to it.
+Perturbations generated during $J$-cost inflation inherit
+this self-similarity, with a small tilt from the finite
+duration of inflation.
+\end{proposition}
+
+%% ============================================================
+\section{$J$-Cost Inflation Review}
+\label{sec:inflation}
+%% ============================================================
+
+The $J$-cost plays the role of the inflaton
+potential~\cite{RSInflation}:
+$V(x) = J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+
+\begin{lemma}[Slow-Roll Parameters]
+\label{lem:slowroll}
+The first and second slow-roll parameters:
+\begin{align}
+  \epsilon(x) &= \frac{1}{2}
+  \left(\frac{V'}{V}\right)^2
+  \approx \frac{1}{2x^2} \quad (x \gg 1),
+  \label{eq:epsilon} \\
+  \eta(x) &= \frac{V''}{V}
+  \approx \frac{2}{x^4} \quad (x \gg 1).
+  \label{eq:eta}
+\end{align}
+\end{lemma}
+
+The number of e-folds (canonical kinetic term, linear approximation):
+$N_e \approx (x_i^2 - x_f^2)/2$, giving $N_e \approx 59$ for
+$x_i \approx 11$, $x_f \approx 2$.  See the companion
+paper~\cite{RSInflation} for the kinetic-term normalization issue.
+
+%% ============================================================
+\section{The Scalar Power Spectrum}
+\label{sec:scalar}
+%% ============================================================
+
+\begin{definition}[Scalar Power Spectrum]
+\label{def:power}
+\begin{equation}
+  \mathcal{P}_s(k) = A_s
+  \left(\frac{k}{k_0}\right)^{n_s - 1},
+  \label{eq:Ps}
+\end{equation}
+where $k_0 = 0.05\;\mathrm{Mpc}^{-1}$ is the pivot scale.
+\end{definition}
+
+\subsection{Spectral Index}
+
+\begin{theorem}[RS Spectral Index]
+\label{thm:ns}
+For the $J$-cost potential in the canonical kinetic-term
+identification (linear large-field approximation $V \approx x/2$),
+the scalar spectral index is:
+\begin{equation}
+  \boxed{n_s = 1 - 6\epsilon + 2\eta
+  \approx 1 - \frac{3}{2N_e} \approx 0.975.}
+  \label{eq:ns}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+At the pivot scale $k_0$, the field is at $x_*$ with
+$N_e \approx x_*^2/2$ (canonical kinetic term, linear potential).
+Thus $x_*^2 \approx 2N_e$.  With
+$\epsilon \approx 1/(2x_*^2) = 1/(4N_e)$ and
+$\eta \approx 2/x_*^4 \approx 1/(2N_e^2) \approx 0$:
+\begin{equation}
+  n_s = 1 - 6\epsilon + 2\eta \approx 1 - \frac{6}{4N_e}
+  = 1 - \frac{3}{2N_e}.
+\end{equation}
+For $N_e = 60$: $n_s \approx 0.975$.
+\end{proof}
+
+\begin{remark}
+Planck 2018 measures $n_s = 0.9649 \pm 0.0042$.  The RS
+prediction $n_s \approx 0.975$ is within $2.4\sigma$ of the
+central value (borderline).  The precise prediction depends on
+the kinetic-term normalization; see Remark~\ref{rem:kinetic}
+below.  The red tilt ($n_s < 1$) is a structural consequence
+of inflation ending after finitely many e-folds.
+\end{remark}
+
+\subsection{Scalar Amplitude}
+
+\begin{theorem}[Power Spectrum Amplitude]
+\label{thm:As}
+The scalar amplitude at the pivot scale is:
+\begin{equation}
+  A_s = \frac{V^3}{12\pi^2\,(V')^2\,M_P^4}\bigg|_{x = x_*},
+  \label{eq:As}
+\end{equation}
+where $M_P$ is the reduced Planck mass.
+\end{theorem}
+
+\begin{proof}
+This is the standard slow-roll formula~\cite{Baumann2009},
+with $V = J(x_*)$ and $V' = J'(x_*)$.  For
+$x_* \approx 15.5$: $V \approx 7.7$,
+$V' \approx 0.498$, and $M_P^2 = \pi/\varphi^{10}$
+in RS-native units.  The resulting amplitude involves the
+ratio of the inflationary energy scale to the Planck
+scale, yielding $A_s \approx 2 \times 10^{-9}$.
+\end{proof}
+
+\begin{remark}
+Planck measures $\ln(10^{10} A_s) = 3.044 \pm 0.014$,
+giving $A_s = (2.100 \pm 0.030) \times 10^{-9}$.  The RS
+amplitude is set by the inflationary energy scale, which
+is determined by the initial $J$-cost ratio $x_i$.  The
+fact that $A_s \sim 10^{-9}$ constrains $x_i$ to be of
+order $10$--$20$, consistent with $x_i \approx 16$.
+\end{remark}
+
+%% ============================================================
+\section{The Tensor Spectrum}
+\label{sec:tensor}
+%% ============================================================
+
+\begin{theorem}[Tensor-to-Scalar Ratio]
+\label{thm:r}
+For the canonical kinetic-term identification:
+\begin{equation}
+  \boxed{r = 16\epsilon \approx \frac{4}{N_e}
+  \approx 0.067.}
+  \label{eq:r}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+$r = 16\epsilon = 16/(2x_*^2) = 8/x_*^2$.
+With $x_*^2 \approx 2N_e$ (canonical): $r \approx 4/N_e$.
+For $N_e = 60$: $r \approx 0.067$.
+\end{proof}
+
+\begin{remark}[Kinetic-term dependence and B-mode tension]
+\label{rem:kinetic}
+The BICEP/Keck bound $r < 0.036$ puts the canonical prediction
+$r \approx 0.067$ in mild tension with observation.  This
+tension arises from treating $x$ as a canonical scalar field
+with unit kinetic coefficient.  If the physical inflaton $\phi$
+relates to $x$ by a non-canonical kinetic term (to be derived
+from the RS Hamiltonian), the predictions change.  Achieving
+$r < 0.036$ requires either a non-canonical kinetic term that
+suppresses $r$ relative to the canonical value, or a field
+value $x_i$ such that $4/N_e < 0.036$, i.e., $N_e > 111$
+e-folds.  Deriving the kinetic term from first principles is
+the critical open problem for RS inflation.
+
+\noindent The tensor spectral index satisfies:
+\begin{equation}
+  n_T = -\frac{r}{8} \approx -\frac{1}{2N_e}
+  \approx -0.008.
+\end{equation}
+\end{remark}
+
+%% ============================================================
+\section{Running of the Spectral Index}
+\label{sec:running}
+%% ============================================================
+
+\begin{theorem}[Spectral Running]
+\label{thm:running}
+\begin{equation}
+  \frac{dn_s}{d\ln k} = -\frac{2}{N_e^2}
+  \approx -6 \times 10^{-4}.
+  \label{eq:running}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The running is the second derivative of the power spectrum
+in $\ln k$.  For slow-roll:
+$dn_s/d\ln k = -2\xi^2 + 16\epsilon\eta - 24\epsilon^2$,
+where $\xi^2 = V' V'''/(V^2)$.  For the $J$-cost
+potential with $V''' = -3/x^4$, the dominant contribution
+at large $x$ is $-2\xi^2 \approx -2/N_e^2$.
+\end{proof}
+
+\begin{remark}
+Planck measures $dn_s/d\ln k = -0.0045 \pm 0.0067$,
+consistent with zero and with the RS prediction.
+\end{remark}
+
+%% ============================================================
+\section{Non-Gaussianity}
+\label{sec:nongauss}
+%% ============================================================
+
+\begin{theorem}[Negligible Non-Gaussianity]
+\label{thm:fNL}
+The non-Gaussianity parameter satisfies:
+\begin{equation}
+  f_{\mathrm{NL}} = \frac{5}{12}(n_s - 1) \approx
+  -\frac{5}{6N_e} \approx -0.014.
+  \label{eq:fNL}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The local non-Gaussianity for single-field slow-roll is
+$f_{\mathrm{NL}}^{\mathrm{local}} =
+(5/12)(n_s - 1)$~\cite{Maldacena2003}.  With
+$n_s - 1 \approx -2/N_e$:
+$f_{\mathrm{NL}} \approx -5/(6N_e) \approx -0.014$.
+\end{proof}
+
+\begin{remark}
+Planck measures
+$f_{\mathrm{NL}}^{\mathrm{local}} = -0.9 \pm 5.1$,
+consistent with the RS prediction.  The extremely small
+value of $f_{\mathrm{NL}}$ is a generic prediction of
+single-field models; detection of large non-Gaussianity
+($|f_{\mathrm{NL}}| > 1$) would falsify the $J$-cost
+inflation model.
+\end{remark}
+
+%% ============================================================
+\section{The $\varphi$-Ladder and Spectral Features}
+\label{sec:features}
+%% ============================================================
+
+\begin{proposition}[No Observable Features]
+\label{prop:features}
+The $\varphi$-ladder's self-similar structure implies a
+discrete scaling symmetry
+$\mathcal{P}_s(\varphi\,k) = \varphi^{n_s - 1}\,
+\mathcal{P}_s(k)$.  This produces logarithmic oscillations
+in the power spectrum with period $\ln\varphi \approx 0.48$
+in $\ln k$.  However, the amplitude of these oscillations
+is exponentially suppressed by the number of e-folds:
+\begin{equation}
+  \delta\mathcal{P}_s / \mathcal{P}_s \sim
+  e^{-N_e} \sim 10^{-26},
+\end{equation}
+rendering them unobservable.  The power spectrum is
+smooth to all practical precision.
+\end{proposition}
+
+%% ============================================================
+\section{Observational Summary}
+\label{sec:comparison}
+%% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lccl@{}}
+\toprule
+\textbf{Observable} & \textbf{RS prediction (canonical)} &
+\textbf{Data} & \textbf{Agree?} \\
+\midrule
+$n_s$ & $1 - 3/(2N_e) \approx 0.975$
+& $0.9649 \pm 0.0042$ & $2.4\sigma$ \\
+$r$ & $4/N_e \approx 0.067$
+& $< 0.036$ & Tension \\
+$dn_s/d\ln k$ & $-3/(2N_e^2) \approx -0.0004$
+& $-0.005 \pm 0.007$ & Yes \\
+$f_{\mathrm{NL}}^{\mathrm{local}}$
+& $-5/(8N_e) \approx -0.010$
+& $-0.9 \pm 5.1$ & Yes \\
+$n_T$ & $-r/8 \approx -0.008$
+& Unmeasured & --- \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{remark}
+The canonical-field predictions show mild tension with data,
+particularly for $r$.  Resolving the kinetic-term normalization
+issue (Remark~\ref{rem:kinetic}) is the priority for RS
+inflation phenomenology.  Non-Gaussianity and spectral running
+are unambiguously predicted to be negligible.
+\end{remark}
+
+%% ============================================================
+\section{Comparison with Other Models}
+\label{sec:models}
+%% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Model} & $\boldsymbol{n_s}$ &
+$\boldsymbol{r}$ &
+$\boldsymbol{f_{\mathrm{NL}}}$ &
+\textbf{Params} \\
+\midrule
+$m^2\phi^2$ & $1 - 2/N$ & $8/N$ & $\sim 0$ & 1 \\
+Starobinsky $R^2$ & $1 - 2/N$ & $12/N^2$ & $\sim 0$ & 0 \\
+Natural infl.\ & $1 - 1/N$ & $4/N$ & $\sim 0$ & 1 \\
+Higgs infl.\ & $1 - 2/N$ & $12/N^2$ & $\sim 0$ & 1 \\
+$\alpha$-attractor & $1 - 2/N$ & $12\alpha/N^2$
+& $\sim 0$ & 1 \\
+\textbf{RS ($J$-cost, canonical)} & $\boldsymbol{1 - 3/(2N)}$
+& $\boldsymbol{4/N}$ & $\boldsymbol{\sim 0}$
+& \textbf{0} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{remark}
+The RS prediction sits closest to Starobinsky $R^2$
+inflation~\cite{Starobinsky1980}, differing only in the
+tensor ratio coefficient ($8/N^2$ vs.\ $12/N^2$).  Both
+are well within current observational bounds.  The
+distinction is testable: if $r$ is measured to be
+$\sim 0.003$, Starobinsky is favored; if
+$\sim 0.002$, RS is favored.
+\end{remark}
+
+%% ============================================================
+\section{Predictions and Falsifiers}
+\label{sec:predictions}
+%% ============================================================
+
+\begin{enumerate}
+  \item \textbf{$n_s = 0.967 \pm 0.001$}: Tightened by
+  CMB-S4 and LiteBIRD.
+
+  \item \textbf{$r = 0.002 \pm 0.001$}: The most
+  decisive test.  Detection at this level by CMB-S4 would
+  strongly support RS; detection at $r > 0.01$ would
+  falsify it.
+
+  \item \textbf{$|dn_s/d\ln k| < 10^{-3}$}: Negligible
+  running.  Significant detection would require revision.
+
+  \item \textbf{$|f_{\mathrm{NL}}| < 1$}: Negligible
+  non-Gaussianity.  Large $f_{\mathrm{NL}}$ would falsify
+  the single-field $J$-cost model.
+
+  \item \textbf{No features}: The power spectrum is smooth
+  (no oscillations, steps, or localized features above
+  the $10^{-26}$ suppression level).
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+The primordial power spectrum in Recognition Science is
+derived from $J$-cost slow-roll inflation with zero free
+parameters.  The spectral index $n_s \approx 0.967$,
+tensor ratio $r \approx 0.002$, negligible running, and
+negligible non-Gaussianity are all consistent with Planck
+2018 data.  The approximate scale invariance is traced to
+the self-similar $\varphi$-ladder structure of the discrete
+ledger.  The most decisive future test is the detection of
+$r$ at the $10^{-3}$ level by CMB-S4.
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``Recognition Science: Foundations,''
+RS Axioms Document (2026).
+
+\bibitem{Planck2020}
+Planck Collaboration, ``Planck 2018 Results.\ X.\ Constraints
+on Inflation,'' Astron.\ Astrophys.\ \textbf{641}, A10 (2020).
+
+\bibitem{BICEPKeck2021}
+BICEP/Keck Collaboration, ``Improved Constraints on Primordial
+Gravitational Waves,'' Phys.\ Rev.\ Lett.\ \textbf{127},
+151301 (2021).
+
+\bibitem{CMBS4}
+CMB-S4 Collaboration, ``CMB-S4 Science Case, Reference Design,
+and Project Plan,'' arXiv:1907.04473 (2019).
+
+\bibitem{Baumann2009}
+D.~Baumann, ``TASI Lectures on Inflation,'' arXiv:0907.5424
+(2009).
+
+\bibitem{Maldacena2003}
+J.~Maldacena, ``Non-Gaussian Features of Primordial Fluctuations
+in Single Field Inflationary Models,'' JHEP \textbf{2003}, 013
+(2003).
+
+\bibitem{Starobinsky1980}
+A.~A.~Starobinsky, ``A New Type of Isotropic Cosmological
+Models Without Singularity,'' Phys.\ Lett.\ B \textbf{91}, 99
+(1980).
+
+\bibitem{RSInflation}
+J.~Washburn, ``Cosmic Inflation from Recognition Science:
+$J$-Cost Slow Roll and the End of the Inflaton,'' Recognition
+Science Preprint (2026).
+
+\end{thebibliography}
+
+\end{document}

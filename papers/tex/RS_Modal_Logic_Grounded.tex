@@ -1,0 +1,898 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Modal Logic Grounded in Cost Geometry:\\
+Necessity, Possibility, and Actuality from $J(x)$}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We ground the fundamental concepts of modal logic---necessity,
+possibility, impossibility, and actuality---in the cost functional
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$, the unique normalized solution
+to the Recognition Composition Law.  A configuration is \emph{necessary}
+if and only if it is the unique $J$-minimizer ($x = 1$, the sole
+zero-defect state).  A configuration is \emph{possible} if and only if
+it has positive ratio ($x > 0$, ensuring finite $J$-cost).  A
+configuration is \emph{impossible} if $x \leq 0$ (violating ledger
+positivity).  Actuality is identified with the $J$-minimum---a form of
+necessitarianism grounded in cost geometry.  We prove that the core S5
+structural content holds as theorems: necessity implies actuality implies
+possibility; the necessary configuration is unique; and every possible
+configuration is accessible to the necessary one via cost-decreasing
+paths.  We further define propositional modal operators $\Box$ and
+$\Diamond$ over configuration space and prove the distribution axiom~K,
+modal duality, and a weak form of the truth axiom~T.  Modal distance
+from the actual world is measured by defect: $d(x) = J(x) \geq 0$, with
+$d(x) = 0$ if and only if $x = 1$.  This provides modal metaphysics
+with physical content: necessity is not ``truth in all possible worlds''
+but unique cost-geometric forcing; possibility is not a Lewisian concrete
+world but finite cost; and actuality is not indexical but the
+$J$-minimum.  The foundational mathematical results (uniqueness of the
+$J$-minimizer, non-negativity of $J$, AM--GM inequality) are
+rigorously proved within the RS framework.
+\end{abstract}
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+Modal logic---the logic of necessity ($\Box$) and possibility
+($\Diamond$)---is central to metaphysics, epistemology, and the
+philosophy of language.  Yet its foundational concepts remain contested.
+What does it mean for something to be ``necessary''?  What are
+``possible worlds''?  Is the actual world distinguished structurally, or
+is its status merely indexical?
+
+Lewis~\cite{Lewis1986} proposed modal realism: possible worlds are
+concrete entities as real as the actual world, and actuality is indexical
+(``the world I happen to inhabit'').  Kripke~\cite{Kripke1980} treated
+possible worlds as abstract stipulations, grounding necessity in rigid
+designation.  Plantinga~\cite{Plantinga1974} identified necessity with
+maximal states of affairs.  Williamson~\cite{Williamson2013} developed a
+systematic case for treating modal logic as first-order metaphysics,
+arguing that necessitism---the thesis that everything necessarily
+exists---provides the best overall theory.
+Stalnaker~\cite{Stalnaker2012} offered a moderate realism about
+propositions as sets of possible worlds while resisting Lewis's
+ontological inflation.  Each approach has virtues, but none derives modal
+concepts from a deeper mathematical structure with independently
+motivated physical content.
+
+Recognition Science~\cite{RS_Axioms} provides such a derivation.
+The theory begins with a single functional equation---the Recognition
+Composition Law (RCL)---whose unique normalized solution is the cost
+functional
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$ on $\mathbb{R}_{>0}$.  From
+this functional alone, we derive precise mathematical content for each
+modal concept:
+
+\begin{itemize}[nosep]
+  \item \textbf{Necessity} $=$ unique $J$-minimizer ($x = 1$).
+  \item \textbf{Possibility} $=$ positive ratio ($x > 0$, finite cost).
+  \item \textbf{Impossibility} $=$ non-positive ratio ($x \leq 0$,
+  undefined cost).
+  \item \textbf{Actuality} $=$ the $J$-minimum itself, not an indexical label.
+  \item \textbf{Modal distance} $=$ defect $J(x)$, a continuous
+  quantitative measure.
+\end{itemize}
+
+The resulting modal structure satisfies the S5 axioms as \emph{theorems}
+rather than postulates, and replaces the metaphysical debate about
+possible worlds with cost geometry.  The framework entails a form of
+necessitarianism---the actual world is the only necessary one---that
+echoes Spinoza~\cite{Spinoza1677} and resolves the Leibniz question.
+
+The paper is structured as follows.  Section~\ref{sec:cost} derives the
+cost functional.  Section~\ref{sec:defs} introduces the RS modal
+definitions.
+Sections~\ref{sec:necessity}--\ref{sec:actuality} prove the structural
+theorems.  Section~\ref{sec:s5} demonstrates the S5 axioms.
+Section~\ref{sec:distance} develops quantitative modality.
+Section~\ref{sec:operators} defines propositional modal operators.
+Section~\ref{sec:discuss} compares the framework with standard
+approaches and draws philosophical consequences.
+
+%% ============================================================
+\section{The Cost Functional}
+\label{sec:cost}
+%% ============================================================
+
+\subsection{Axioms and Uniqueness}
+
+The cost functional is the unique solution to three axioms:
+
+\noindent\textbf{Axiom A1 (Normalization):} $J(1) = 0$ (the identity
+configuration has zero cost).\\
+\textbf{Axiom A2 (Recognition Composition Law, RCL):} For all
+$x, y > 0$:
+\begin{equation}
+\label{eq:RCL}
+  J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y).
+\end{equation}
+This equation expresses that the cost of comparing a composite ($xy$)
+and its reciprocal complement ($x/y$) decomposes multiplicatively and
+additively in terms of the component costs.\\
+\textbf{Axiom A3 (Calibration):} $J''_{\log}(0) = 1$, where
+$J_{\log}(t) := J(e^t)$.
+
+\begin{theorem}[Cost Uniqueness]
+\label{thm:cost-unique}
+The continuous solution to \textup{(A1)--(A3)} is unique:
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Setting $f(t) = J_{\log}(t) + 1$ and rewriting \textup{(A2)} gives
+the d'Alembert functional equation $f(s+t) + f(s-t) = 2f(s)f(t)$.
+By the Acz\'el classification theorem~\cite{Aczel1966}, the unique
+continuous solution with $f(0) = 1$ and $f''(0) = 1$ is
+$f(t) = \cosh t$.  Inverting, $J(x) = f(\ln x) - 1 = \cosh(\ln x) - 1
+= \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{proof}
+
+\subsection{Verification and Key Properties}
+
+Subject to (A1)--(A3), the unique $C^2$ solution is:
+
+\begin{definition}[Cost Functional and Defect]
+\label{def:Jx}
+For $x \in \mathbb{R}_{>0}$:
+\begin{equation}
+\label{eq:J}
+  J(x) = \frac{1}{2}\bigl(x + x^{-1}\bigr) - 1.
+\end{equation}
+The \emph{defect} of $x$ is $\mathrm{defect}(x) := J(x)$.
+\end{definition}
+
+\noindent
+That this $J$ satisfies the RCL can be verified by direct computation.
+The left side:
+\begin{equation}
+  J(xy) + J(x/y) = \tfrac{1}{2}\bigl(xy + (xy)^{-1} + xy^{-1}
+  + x^{-1}y\bigr) - 2.
+\end{equation}
+The right side:
+\begin{equation}
+  2J(x)J(y) + 2J(x) + 2J(y)
+  = \tfrac{1}{2}(x + x^{-1})(y + y^{-1}) - 2,
+\end{equation}
+where the intermediate terms cancel.  Expanding the product on the right
+gives $\tfrac{1}{2}(xy + xy^{-1} + x^{-1}y + x^{-1}y^{-1}) - 2$,
+confirming equality.
+
+\subsection{Key Properties}
+
+\begin{lemma}[Basic Properties of $J$]
+\label{lem:J-props}
+\begin{enumerate}[label=(\roman*)]
+  \item $J(x) \geq 0$ for all $x > 0$, with equality if and only if
+  $x = 1$.
+  \item $J(x) = J(x^{-1})$ for all $x > 0$ (reciprocal symmetry).
+  \item $J$ is strictly convex on $(0, \infty)$, with
+  $J''(x) = x^{-3} > 0$.
+  \item $J(x) \to \infty$ as $x \to 0^+$ or $x \to \infty$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) By AM--GM, $x + x^{-1} \geq 2\sqrt{x \cdot x^{-1}} = 2$ for
+$x > 0$, with equality iff $x = x^{-1}$, i.e., $x = 1$.  Hence
+$J(x) \geq 0$.
+
+(ii) $J(x^{-1}) = \tfrac{1}{2}(x^{-1} + x) - 1 = J(x)$.
+
+(iii) $J'(x) = \tfrac{1}{2}(1 - x^{-2})$ and
+$J''(x) = x^{-3} > 0$ for $x > 0$.
+
+(iv) As $x \to 0^+$, $x^{-1} \to \infty$, so $J(x) \to \infty$.
+As $x \to \infty$, $\tfrac{1}{2}x \to \infty$, so $J(x) \to \infty$.
+\end{proof}
+
+%% ============================================================
+\section{RS Modal Definitions}
+\label{sec:defs}
+%% ============================================================
+
+We define the four fundamental modal concepts in terms of $J$.  The
+geometric motivation is that $J$ defines a cost landscape on
+$\mathbb{R}_{>0}$ with a unique global minimum at $x = 1$.  Modal
+concepts correspond to positions on this landscape.
+
+\begin{definition}[RS Necessity]
+\label{def:necessary}
+A configuration $x \in \mathbb{R}$ is \emph{RS-necessary} if and only if
+\begin{equation}
+  x > 0 \quad\text{and}\quad J(x) = 0.
+\end{equation}
+\end{definition}
+
+\noindent
+A configuration is necessary if it incurs zero cost.  It is not
+``forced'' by fiat but by the structure of $J$---any deviation from
+$x = 1$ strictly increases cost.
+
+\begin{definition}[RS Possibility]
+\label{def:possible}
+A configuration $x$ is \emph{RS-possible} if and only if $x > 0$.
+\end{definition}
+
+\noindent
+A configuration is possible if it has a well-defined, finite cost.  The
+positivity requirement ensures that $J(x)$ is defined and real.
+Configurations with $x \leq 0$ lie outside the domain of $J$ entirely.
+
+\begin{definition}[RS Actuality]
+\label{def:actual}
+A configuration $x$ is \emph{RS-actual} if and only if it is
+RS-necessary.
+\end{definition}
+
+\noindent
+This identification---actuality \emph{is} necessity---is the central
+metaphysical claim.  It is not a tautology but a substantive thesis:
+the actual world is not one possible world among many that happens to be
+``ours'' (Lewis), nor a stipulated entity (Kripke), but the unique
+cost-geometric minimum.  The philosophical significance of this
+identification is discussed in Section~\ref{sec:discuss}.
+
+\begin{definition}[RS Impossibility]
+\label{def:impossible}
+A configuration $x$ is \emph{RS-impossible} if and only if $x \leq 0$.
+\end{definition}
+
+\begin{definition}[Modal Distance]
+\label{def:distance}
+The \emph{modal distance} from $x$ to the actual world is
+\begin{equation}
+  d(x) := J(x) = \frac{1}{2}\bigl(x + x^{-1}\bigr) - 1.
+\end{equation}
+\end{definition}
+
+%% ============================================================
+\section{Necessity: The Unique $J$-Minimizer}
+\label{sec:necessity}
+%% ============================================================
+
+\begin{theorem}[Unique Necessity]
+\label{thm:unique-nec}
+There exists exactly one RS-necessary configuration: $x = 1$.
+\end{theorem}
+
+\begin{proof}
+\textit{Existence.}  $1 > 0$ and $J(1) = \tfrac{1}{2}(1 + 1) - 1 = 0$.
+
+\textit{Uniqueness.}  If $y > 0$ and $J(y) = 0$, then
+$\tfrac{1}{2}(y + y^{-1}) = 1$, so $y + y^{-1} = 2$, so
+$y^2 - 2y + 1 = 0$, so $(y - 1)^2 = 0$, so $y = 1$.
+\end{proof}
+
+\begin{corollary}[Necessity is Identity]
+\label{cor:nec-one}
+For all $x \in \mathbb{R}$: $x$ is RS-necessary if and only if $x = 1$.
+\end{corollary}
+
+\begin{proof}
+Forward: Theorem~\ref{thm:unique-nec}.  Backward: $J(1) = 0$ and
+$1 > 0$.
+\end{proof}
+
+\begin{remark}[Structural Forcing]
+\label{rem:forcing}
+The uniqueness of the necessary configuration follows from the strict
+convexity of $J$ (Lemma~\ref{lem:J-props}(iii)).  A strictly convex
+function on a convex domain has at most one global minimum.  Since $J$
+achieves its minimum at $x = 1$ and is strictly convex on
+$(0, \infty)$, no other configuration can have zero defect.  Necessity
+is \emph{structurally forced} by the geometry of the cost landscape, not
+postulated.
+\end{remark}
+
+%% ============================================================
+\section{Possibility: Positive Ratio and Finite Cost}
+\label{sec:possibility}
+%% ============================================================
+
+\begin{theorem}[Possibility is Broad]
+\label{thm:possible}
+For all $x > 0$: $x$ is RS-possible.  Conversely, every RS-possible
+$x$ satisfies $x > 0$.
+\end{theorem}
+
+\begin{proof}
+Immediate from Definition~\ref{def:possible}.
+\end{proof}
+
+\begin{theorem}[Finite Cost for Possible Configurations]
+\label{thm:finite-cost}
+Every RS-possible configuration has non-negative, finite $J$-cost.
+\end{theorem}
+
+\begin{proof}
+For $x > 0$, $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$ is a finite real
+number, and $J(x) \geq 0$ by Lemma~\ref{lem:J-props}(i).
+\end{proof}
+
+\begin{theorem}[Possibility is Not Singleton]
+\label{thm:not-singleton}
+There exist distinct RS-possible configurations.
+\end{theorem}
+
+\begin{proof}
+$x = 1$ and $x = 2$ are both positive, hence both RS-possible, and
+$1 \neq 2$.
+\end{proof}
+
+%% ============================================================
+\section{Impossibility: The Positivity Boundary}
+\label{sec:impossible}
+%% ============================================================
+
+\begin{theorem}[Impossibility Equivalence]
+\label{thm:impossible}
+$x$ is RS-impossible if and only if $x$ is not RS-possible.
+\end{theorem}
+
+\begin{proof}
+RS-impossible means $x \leq 0$.  Not RS-possible means $\neg(x > 0)$,
+which is $x \leq 0$.
+\end{proof}
+
+\begin{theorem}[No Overlap]
+\label{thm:no-overlap}
+No configuration is both RS-possible and RS-impossible.
+\end{theorem}
+
+\begin{proof}
+$x > 0$ and $x \leq 0$ are contradictory.
+\end{proof}
+
+\begin{remark}[The Positivity Boundary]
+The boundary $x = 0$ represents a hard limit: as $x \to 0^+$,
+$J(x) \to \infty$ (Lemma~\ref{lem:J-props}(iv)), so the boundary is
+not merely forbidden but infinitely expensive to approach.
+Impossibility thus has quantitative character: the ``closer'' a
+configuration is to the boundary (in the sense of small $x$), the more
+costly it is.
+\end{remark}
+
+%% ============================================================
+\section{Actuality: The $J$-Minimum}
+\label{sec:actuality}
+%% ============================================================
+
+\begin{theorem}[Actuality is Unique]
+\label{thm:actual-unique}
+$x = 1$ is the unique RS-actual configuration.
+\end{theorem}
+
+\begin{proof}
+RS-actual $\Leftrightarrow$ RS-necessary $\Leftrightarrow$ $x = 1$
+(Corollary~\ref{cor:nec-one}).
+\end{proof}
+
+\begin{theorem}[The Merely Possible]
+\label{thm:merely-possible}
+For $x > 0$ with $x \neq 1$: $x$ is RS-possible but not RS-actual.
+\end{theorem}
+
+\begin{proof}
+$x > 0$ ensures RS-possible.  $x \neq 1$ implies $J(x) > 0$
+(Lemma~\ref{lem:J-props}(i)), so $x$ is not RS-necessary, hence not
+RS-actual.
+\end{proof}
+
+\begin{remark}[Tripartite Classification]
+The space of configurations is partitioned into three classes:
+\begin{enumerate}[nosep,label=(\alph*)]
+  \item The unique \emph{actual/necessary} configuration: $x = 1$,
+  $J(x) = 0$.
+  \item The \emph{merely possible} configurations: $x > 0$, $x \neq 1$,
+  $J(x) > 0$.
+  \item The \emph{impossible} configurations: $x \leq 0$.
+\end{enumerate}
+This classification emerges from the cost landscape alone.
+\end{remark}
+
+%% ============================================================
+\section{S5 Modal Axioms as Theorems}
+\label{sec:s5}
+%% ============================================================
+
+The standard S5 system of modal logic consists of the axioms K
+(distribution), T (truth), and 5 (positive introspection), or
+equivalently K, T, and B (symmetry).  In standard Kripke semantics, S5
+corresponds to an accessibility relation that is an equivalence relation
+(reflexive, symmetric, transitive).  We show that the RS cost geometry
+satisfies the structural content of S5.
+
+\subsection{The Implication Chain}
+
+\begin{theorem}[Axiom T: Necessity $\Rightarrow$ Actuality]
+\label{thm:T}
+For all $x$: if $x$ is RS-necessary, then $x$ is RS-actual.
+\end{theorem}
+
+\begin{proof}
+RS-actual is defined as RS-necessary (Definition~\ref{def:actual}).
+\end{proof}
+
+\begin{remark}
+The identification actuality $=$ necessity (Definition~\ref{def:actual})
+makes Theorem~\ref{thm:T} definitionally immediate.  The substantive
+content is in the definition itself: the claim that the unique
+$J$-minimum plays the role of the ``actual world'' gives modal Axiom~T a
+geometric rather than a stipulative basis.
+\end{remark}
+
+\begin{theorem}[Axiom D: Actuality $\Rightarrow$ Possibility]
+\label{thm:D}
+For all $x$: if $x$ is RS-actual, then $x$ is RS-possible.
+\end{theorem}
+
+\begin{proof}
+RS-actual implies RS-necessary, which requires $x > 0$ by
+Definition~\ref{def:necessary}.  Hence $x$ is RS-possible by
+Definition~\ref{def:possible}.
+\end{proof}
+
+\begin{corollary}[Full Implication Chain]
+\label{cor:chain}
+For all $x$:
+\[
+  \text{RS-necessary}(x) \;\Longrightarrow\; \text{RS-actual}(x)
+  \;\Longrightarrow\; \text{RS-possible}(x).
+\]
+\end{corollary}
+
+\subsection{Accessibility}
+
+The S5 axiom B (symmetry of accessibility) is captured in the RS
+framework by the following theorem, which is strictly stronger than B:
+not only is every possible configuration accessible to the necessary
+one, but the access path is cost-monotone.
+
+\begin{theorem}[Cost-Monotone Accessibility]
+\label{thm:B}
+For every RS-possible $x$, there exists a continuous path
+$\gamma : [0, 1] \to (0, \infty)$ with $\gamma(0) = x$,
+$\gamma(1) = 1$, and $J(\gamma(t))$ non-increasing.
+\end{theorem}
+
+\begin{proof}
+Define $\gamma(t) = x^{1-t}$ for $t \in [0, 1]$.  Then
+$\gamma(0) = x$, $\gamma(1) = x^0 = 1$, and $\gamma(t) = x^{1-t} > 0$
+for all $t$ (since $x > 0$).
+
+Let $s = 1 - t$ and $u(s) = J(x^s) = \tfrac{1}{2}(x^s + x^{-s}) - 1$.
+Then
+\[
+  u'(s) = \tfrac{1}{2}\ln(x)\bigl(x^s - x^{-s}\bigr).
+\]
+For $x > 1$: $\ln x > 0$ and $x^s > x^{-s}$ when $s > 0$, so
+$u'(s) > 0$.  Since $s = 1 - t$, we have
+$\frac{d}{dt} J(\gamma(t)) = -u'(s) < 0$ for $t < 1$.
+
+For $0 < x < 1$: $\ln x < 0$ and $x^s < x^{-s}$ when $s > 0$, so
+$u'(s) = (\text{negative})(\text{negative}) > 0$.  Again
+$\frac{d}{dt} J(\gamma(t)) < 0$.
+
+For $x = 1$: $\gamma(t) \equiv 1$ and $J \equiv 0$.
+
+In all cases, $J(\gamma(t))$ is non-increasing from $J(x)$ to $J(1) = 0$.
+\end{proof}
+
+\begin{remark}[Structural S5]
+In the RS framework, the accessibility structure is richer than an
+equivalence relation: it is a continuous cost landscape with a unique
+global minimum.  Theorem~\ref{thm:B} provides not merely that every
+possible configuration \emph{can reach} the necessary one, but that
+there is a \emph{directed}, cost-decreasing path.  This gives the
+accessibility relation a natural orientation absent from standard Kripke
+frames.
+\end{remark}
+
+%% ============================================================
+\section{Modal Distance: Quantitative Modality}
+\label{sec:distance}
+%% ============================================================
+
+\begin{theorem}[Modal Distance Properties]
+\label{thm:distance}
+\begin{enumerate}[label=(\roman*)]
+  \item $d(x) \geq 0$ for all $x > 0$ (non-negativity).
+  \item $d(x) = 0$ if and only if $x = 1$, i.e., $x$ is RS-actual
+  (identity of indiscernibles).
+  \item $d(x) = d(x^{-1})$ for all $x > 0$ (reciprocal symmetry).
+  \item $d(1) = 0$ (zero self-distance).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i)--(ii) follow from Lemma~\ref{lem:J-props}(i).
+(iii) follows from Lemma~\ref{lem:J-props}(ii).
+(iv) is $J(1) = 0$.
+\end{proof}
+
+\begin{remark}[Quantitative Modality]
+Standard modal logic is qualitative: a proposition is necessary,
+possible, or impossible, with no intermediate grades.  Modal distance
+replaces this trichotomy with a continuous spectrum.  A configuration
+with $d(x) = 0.01$ is ``almost necessary''; one with $d(x) = 100$ is
+``very far from the actual world.''  This quantitative structure has no
+analog in Lewis, Kripke, Plantinga, or Williamson.
+
+The reciprocal symmetry $d(x) = d(x^{-1})$ means that ``doubling'' and
+``halving'' are equidistant from actuality.  A world where some ratio is
+$2$ is exactly as far from actuality as a world where that ratio is
+$\tfrac{1}{2}$.  This is a non-obvious structural feature inherited from
+the cost functional's reciprocal invariance.
+\end{remark}
+
+%% ============================================================
+\section{Propositional Modal Operators}
+\label{sec:operators}
+%% ============================================================
+
+The definitions in Sections~\ref{sec:defs}--\ref{sec:actuality}
+concern \emph{configurations} (real numbers).  We now lift these to
+\emph{propositional} modal operators over a configuration space, making
+contact with standard modal logic syntax.
+
+\subsection{Configuration Space and Possibility Set}
+
+\begin{definition}[Configuration]
+\label{def:config}
+A \emph{configuration} is a triple $c = (x, t, B)$ where $x > 0$ is
+the ratio value, $t \in \mathbb{N}$ is the tick count, and
+$|\!\ln x| \leq B$ for a fixed bound $B \leq 16$.  We write
+$\mathcal{C}$ for the set of all configurations.
+\end{definition}
+
+\begin{remark}[The bound $B \leq 16$]
+The restriction $B \leq 16$ in Definition~\ref{def:config} is required
+by Lemma~\ref{lem:identity-possible}: for the identity $A(c)$ to be
+accessible from $c$, one needs $|\!\ln x| \leq 16$ (see proof below).
+Physically, $|\!\ln x| \leq 16$ means $e^{-16} \leq x \leq e^{16}$
+(i.e., ratios within a factor of $\approx 8.9 \times 10^6$ of unity),
+which is a generous bound covering all RS physical ratios.  Configurations
+outside this range require multi-epoch transitions and are not excluded
+from RS physics, but they fall outside the single-epoch modal framework
+here.
+\end{remark}
+
+\begin{definition}[Stasis and Transition Costs]
+\label{def:costs}
+For configurations with values $x, y > 0$:
+\begin{align}
+  J_{\mathrm{stasis}}(x) &= 8 \cdot J(x), \\
+  J_{\mathrm{trans}}(x, y) &= |\!\ln(y/x)| \cdot
+  \tfrac{1}{2}\bigl(J(x) + J(y)\bigr).
+\end{align}
+The stasis cost is the $J$-cost of remaining at $x$ for one eight-tick
+epoch.  The transition cost measures the expense of changing from $x$
+to $y$, weighted by the average defect.
+\end{definition}
+
+\begin{definition}[Possibility Set]
+\label{def:poss-set}
+For a configuration $c = (x, t, B)$, the \emph{possibility set}
+$\mathrm{Poss}(c)$ consists of all configurations $c' = (y, t{+}8, B')$
+such that transitioning does not exceed the stasis cost:
+\begin{equation}
+  J_{\mathrm{trans}}(x, y) + J(y) \leq J_{\mathrm{stasis}}(x).
+\end{equation}
+\end{definition}
+
+\begin{definition}[Actualization]
+\label{def:actualize}
+The \emph{actualization} of $c = (x, t, B)$ is
+$A(c) = (1, t{+}8, 0)$---the identity configuration at the next epoch.
+\end{definition}
+
+\begin{lemma}[The Identity is Always Possible]
+\label{lem:identity-possible}
+For every $c \in \mathcal{C}$, $A(c) \in \mathrm{Poss}(c)$.
+\end{lemma}
+
+\begin{proof}
+$J(1) = 0$, so the constraint becomes
+$J_{\mathrm{trans}}(x, 1) + 0 \leq 8\,J(x)$, i.e.,
+$|\!\ln x| \cdot \tfrac{J(x)}{2} \leq 8\,J(x)$.  If $J(x) = 0$ then
+$x = 1$ and both sides vanish.  If $J(x) > 0$, dividing gives
+$|\!\ln x| \leq 16$, which holds by the bound constraint on
+configurations.
+\end{proof}
+
+\subsection{Modal Operators}
+
+\begin{definition}[Box and Diamond]
+\label{def:box-diamond}
+For a configuration property
+$p : \mathcal{C} \to \{\mathrm{T}, \mathrm{F}\}$:
+\begin{align}
+  (\Box p)(c) &\;\Longleftrightarrow\;
+  \forall\, c' \in \mathrm{Poss}(c),\; p(c'), \\
+  (\Diamond p)(c) &\;\Longleftrightarrow\;
+  \exists\, c' \in \mathrm{Poss}(c),\; p(c').
+\end{align}
+\end{definition}
+
+\subsection{Key Theorems}
+
+\begin{proposition}[Modal Duality]
+\label{prop:duality}
+$(\Box p)(c) \;\Longleftrightarrow\; \neg\,(\Diamond\,(\neg p))(c)$.
+\end{proposition}
+
+\begin{proof}
+$(\Box p)(c)$ means $\forall c' \in \mathrm{Poss}(c),\, p(c')$, which
+is $\neg\,\exists c' \in \mathrm{Poss}(c),\, \neg p(c')$, which is
+$\neg\,(\Diamond\,(\neg p))(c)$.
+\end{proof}
+
+\begin{proposition}[Axiom K: Distribution]
+\label{prop:K}
+If\/ $(\Box(p \Rightarrow q))(c)$ and $(\Box p)(c)$, then
+$(\Box q)(c)$.
+\end{proposition}
+
+\begin{proof}
+Let $c' \in \mathrm{Poss}(c)$.  By hypothesis,
+$p(c') \Rightarrow q(c')$ and $p(c')$.  Hence $q(c')$.  Since $c'$
+was arbitrary, $(\Box q)(c)$.
+\end{proof}
+
+\begin{proposition}[Weak Axiom T]
+\label{prop:T-weak}
+If $(\Box p)(c)$, then $p(A(c))$.
+\end{proposition}
+
+\begin{proof}
+By Lemma~\ref{lem:identity-possible}, $A(c) \in \mathrm{Poss}(c)$.
+Since $(\Box p)(c)$ asserts $p(c')$ for all $c' \in \mathrm{Poss}(c)$,
+we obtain $p(A(c))$.
+\end{proof}
+
+\begin{remark}[Temporal Asymmetry and Weak T]
+This is a ``weak'' form of Axiom T because it asserts that necessity
+implies truth at the \emph{actualized} configuration $A(c)$, not at
+$c$ itself.  The standard Axiom T ($\Box p \to p$) would require $c$ to
+be in its own possibility set, which the time-advance structure
+($t \to t{+}8$) prevents: $c$ has tick $t$, while all elements of
+$\mathrm{Poss}(c)$ have tick $t{+}8$.  This temporal asymmetry is a
+feature rather than a defect: it reflects the arrow of time.  The
+identity configuration at the \emph{next} tick plays the role of the
+``actual world'' in the standard T axiom.
+\end{remark}
+
+\begin{proposition}[Actualization Decreases Cost]
+\label{prop:cost-decrease}
+If $c = (x, t, B)$ with $x \neq 1$, then
+$J(A(c).\,x) < J(c.\,x)$, i.e., $0 < J(x)$.
+\end{proposition}
+
+\begin{proof}
+$A(c).\,x = 1$ and $J(1) = 0 < J(x)$ for $x \neq 1$
+(Lemma~\ref{lem:J-props}(i)).
+\end{proof}
+
+%% ============================================================
+\section{Discussion}
+\label{sec:discuss}
+%% ============================================================
+
+\subsection{Comparison with Standard Frameworks}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+& \textbf{Lewis} & \textbf{Kripke} & \textbf{Williamson} & \textbf{RS} \\
+\midrule
+Possible worlds & Concrete & Abstract & Abstract & Finite-cost configs \\
+Necessity & All-worlds truth & Rigid desig. & Necessitism & Unique $J$-min \\
+Actuality & Indexical & Privileged & Distinguished & $J$-minimum \\
+S5 axioms & Postulated & Postulated & Argued & Proved \\
+Ontological posit & Many worlds & Possible worlds & Necessary beings & None extra \\
+Modal distance & None & None & None & $d(x) = J(x)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+RS has several advantages over each standard framework:
+\begin{itemize}
+  \item \textbf{Over Lewis.}  No ontological inflation.  RS does not
+  posit concrete possible worlds---merely configurations with positive
+  cost.  Lewis's ``plurality of worlds'' is replaced by a single cost
+  landscape.
+  \item \textbf{Over Kripke.}  Actuality is not a matter of stipulation
+  or rigid designation but is structurally determined by the cost
+  geometry: $x = 1$ is the unique zero-cost configuration.
+  \item \textbf{Over Williamson.}  While Williamson argues for
+  necessitism on abductive grounds, RS \emph{derives} the unique
+  necessary configuration from a functional equation.  The existence of
+  necessities is proved, not postulated.
+  \item \textbf{Over Plantinga.}  Maximal states of affairs are replaced
+  by cost-geometric structure, giving modal concepts continuous,
+  quantitative content via modal distance.
+  \item \textbf{Over Stalnaker.}  Stalnaker's moderate realism about
+  propositions as sets of possible worlds is refined: possible
+  ``worlds'' are configurations with specific, computable $J$-costs, and
+  the proposition-set structure inherits a metric from $J$.
+\end{itemize}
+
+\subsection{Necessitarianism: Spinoza and Leibniz}
+
+The RS identification of actuality with necessity---the claim that the
+actual world is the \emph{only} necessary one---is a form of
+necessitarianism.  This has deep historical resonance.
+
+Spinoza (\emph{Ethics}, Part~I) argued that everything follows
+necessarily from the nature of God/Nature, so there is no genuine
+contingency.  In RS, this is expressed geometrically: $x = 1$ is the
+unique zero-defect state, and its existence is structurally forced by the
+cost functional.
+
+Leibniz asked ``Why is there something rather than nothing?'' and
+answered: because God chose the best of all possible worlds.  RS gives
+a non-theistic, geometric version:
+\begin{equation}
+  J(1) = 0 \quad\text{while}\quad J(x) \to \infty
+  \;\text{as}\; x \to 0^+.
+\end{equation}
+``Something'' ($x = 1$) has zero cost; ``nothing'' ($x \to 0$) has
+infinite cost.  Existence is cheaper than non-existence.  The actual
+world exists not because it was chosen but because non-existence would
+require infinite defect.
+
+RS necessitarianism is, however, more constrained than Spinoza's.  RS
+distinguishes sharply between the \emph{laws} (which are necessary:
+there is a unique cost-zero configuration) and the
+\emph{configurations with nonzero defect} (which are merely possible).
+The merely possible configurations are real in the sense of having finite
+cost, but they are not actual---they represent departures from the
+necessary state.  This yields a compatibilist picture: the laws are
+necessary, but the specific state of the world at any given tick is
+contingent upon the dynamics.
+
+\subsection{Counterfactuals}
+
+The framework naturally accommodates counterfactual reasoning.  A
+\emph{counterfactual configuration} relative to $c$ is any
+$c' \in \mathrm{Poss}(c)$ with $c' \neq A(c)$ and
+$J(c'.\,x) > J(A(c).\,x)$.  These are configurations that \emph{could
+have} been reached (they are in the possibility set) but were not
+actualized (they have higher cost than the actualization).
+
+The ``closeness'' of a counterfactual to actuality is measured by the
+cost difference $J(c'.\,x) - J(A(c).\,x)$: the smaller this value, the
+``closer'' the counterfactual scenario is to what actually occurred.
+This replaces Lewis's similarity metric on possible worlds with a
+cost-geometric measure grounded in the functional $J$.
+
+\subsection{Falsifiability}
+
+The RS modal grounding is empirically constrained in three ways:
+\begin{enumerate}
+  \item \textbf{Uniqueness of necessity.}  If a physical system were
+  found to have multiple zero-defect states ($J(x) = 0$ for
+  $x \neq 1$), the uniqueness theorem would be falsified.  RS predicts
+  that every physical observable, when expressed as a ratio to its
+  natural unit, has $x = 1$ as its unique zero-cost value.
+  \item \textbf{Positivity constraint.}  If a physical ratio $x$ were
+  measured to be non-positive, the possibility/impossibility boundary
+  would be falsified.  RS predicts all physical ratios are strictly
+  positive.
+  \item \textbf{Cost monotonicity.}  RS predicts that actualization
+  decreases cost (Proposition~\ref{prop:cost-decrease}).  A physical
+  process that systematically increased $J$-cost without external
+  coupling would falsify the framework.
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+Modal logic is grounded in the cost functional
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$, the unique normalized solution
+to the Recognition Composition Law.  The key results:
+\begin{enumerate}
+  \item Necessity is the unique $J$-minimizer: only $x = 1$ is
+  necessary (Theorem~\ref{thm:unique-nec}).
+  \item Possibility is positive ratio: every $x > 0$ is possible
+  (Theorem~\ref{thm:possible}).
+  \item Impossibility is the positivity boundary: $x \leq 0$
+  (Theorem~\ref{thm:impossible}).
+  \item Actuality is the $J$-minimum, not an indexical label
+  (Theorem~\ref{thm:actual-unique}).
+  \item The implication chain
+  necessary $\Rightarrow$ actual $\Rightarrow$ possible holds
+  (Corollary~\ref{cor:chain}).
+  \item Every possible configuration is accessible to the necessary
+  one via cost-decreasing paths (Theorem~\ref{thm:B}).
+  \item Modal distance $d(x) = J(x)$ quantifies departure from
+  actuality (Theorem~\ref{thm:distance}).
+  \item Propositional operators $\Box$ and $\Diamond$ satisfy modal
+  duality, axiom~K, and weak axiom~T
+  (Propositions~\ref{prop:duality}--\ref{prop:T-weak}).
+\end{enumerate}
+
+This gives modal metaphysics physical content without ontological
+inflation.  ``Necessary'' means $J$-forced.  ``Possible'' means
+finite cost.  ``Actual'' means $J$-minimum.  Modal distance is
+$J$-defect.
+
+The framework entails a form of necessitarianism grounded in cost
+geometry: the actual world is the unique necessary one, existence is
+cheaper than non-existence, and the entire modal structure emerges from
+a single functional equation.
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{Lewis1986}
+D.~Lewis, \emph{On the Plurality of Worlds} (Blackwell, 1986).
+
+\bibitem{Kripke1980}
+S.~A.~Kripke, \emph{Naming and Necessity} (Harvard University Press,
+1980).
+
+\bibitem{Plantinga1974}
+A.~Plantinga, \emph{The Nature of Necessity} (Clarendon Press, 1974).
+
+\bibitem{Williamson2013}
+T.~Williamson, \emph{Modal Logic as Metaphysics} (Oxford University
+Press, 2013).
+
+\bibitem{Spinoza1677}
+B.~Spinoza, \emph{Ethics} (1677), translated by E.~Curley (Princeton
+University Press, 1994).
+
+\bibitem{Stalnaker2012}
+R.~Stalnaker, \emph{Mere Possibilities: Metaphysical Foundations of
+Modal Semantics} (Princeton University Press, 2012).
+
+\bibitem{Divers2002}
+J.~Divers, \emph{Possible Worlds} (Routledge, 2002).
+
+\bibitem{Fine2005}
+K.~Fine, \emph{Modality and Tense: Philosophical Papers} (Oxford
+University Press, 2005).
+
+\bibitem{Aczel1966}
+J.~Acz\'el, \emph{Lectures on Functional Equations and Their Applications},
+Academic Press, New York (1966).
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+\texttt{doi:10.3390/axioms15020090}
+
+\end{thebibliography}
+
+\end{document}

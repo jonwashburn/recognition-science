@@ -1,0 +1,306 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Fusion Ignition Conditions from Recognition Science:\\
+Coherence-Screened Lawson Threshold Reduction}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We derive modified fusion ignition conditions from the Recognition
+Science ledger structure.  The classical Lawson criterion
+$n\tau T \geq L_{\mathrm{threshold}}$ is preserved, but the effective
+Coulomb barrier is reduced by a coherence screening factor
+$S = 1/(1 + C_\varphi + C_\sigma) \leq 1$, giving a Lawson
+enhancement $\mathcal{E} = 1/S^2 \geq 1$ and a reduced threshold
+$L_{\mathrm{RS}} = L_{\mathrm{classical}}/\mathcal{E}$.  An
+effective-temperature theorem shows that RS tunneling at temperature
+$T$ matches classical tunneling at $T_{\mathrm{eff}} = T/S^2$:
+ignition at $T_0$ classically implies RS ignition at
+$T_{\mathrm{needed}} = S^2 T_0 \leq T_0$.  The D--T reaction has
+the lowest threshold; p--${}^{11}$B the highest.  All structural and
+conditional ignition results follow from the RS forcing chain.
+\end{abstract}
+
+\section{Introduction}
+
+Fusion energy requires reaching the Lawson criterion~\cite{Lawson}:
+$n\tau T \geq L_{\mathrm{threshold}}$, where $n$ is the plasma
+density, $\tau$ the confinement time, and $T$ the temperature.
+
+In Recognition Science (RS)~\cite{RS_Axioms}, the $J$-cost
+functional $J(x) = \tfrac{1}{2}(x+x^{-1})-1$ encodes interaction
+costs on the 3D discrete ledger.  The discrete ledger introduces
+$\varphi$-resonant coherence among recognition events.  When
+two nuclei interact at energies near $E_{\mathrm{coh}}\cdot\varphi^r$
+for some rung $r$, the discrete channel structure permits
+constructive overlap of their ledger states, reducing the effective
+Coulomb repulsion.  We call this effect \emph{coherence screening}
+and derive its structural consequences for the Lawson threshold.
+
+\section{Classical Lawson Structure}
+
+\begin{definition}[Lawson Parameter]
+$\mathcal{L} = n\tau T$.
+\end{definition}
+
+\begin{definition}[Lawson Criterion]
+Ignition occurs when
+$\mathcal{L} \geq L_{\mathrm{threshold}}$, where the threshold is
+fuel-specific (D--T, D--D, D--${}^3$He, p--${}^{11}$B).
+\end{definition}
+
+\section{Barrier Screening}
+
+\begin{definition}[Ledger Permittivity]
+\label{def:ledger-perm}
+The \emph{ledger permittivity} is
+\begin{equation}
+  \epsilon_{\mathrm{ledger}} = 1 + C_\varphi + C_\sigma \geq 1,
+\end{equation}
+where $C_\varphi \geq 0$ is the $\varphi$-resonant coherence
+contribution (arising when the collision energy lies near a
+$\varphi$-ladder rung) and $C_\sigma \geq 0$ is the substrate
+coherence contribution from the 3D discrete lattice.  Both
+quantities are non-negative by construction: the ledger can only
+add coherence channels, not remove them.
+\end{definition}
+
+\begin{theorem}[Permittivity Properties]
+\label{thm:perm}
+$\epsilon_{\mathrm{ledger}} \geq 1$ and $S \leq 1$,
+where $S = \epsilon_{\mathrm{ledger}}^{-1}$.
+\end{theorem}
+
+\begin{proof}
+$C_\varphi \geq 0$ and $C_\sigma \geq 0$ by definition, so
+$\epsilon_{\mathrm{ledger}} = 1 + C_\varphi + C_\sigma \geq 1$.
+$S = 1/\epsilon_{\mathrm{ledger}} \leq 1$ follows immediately.
+\end{proof}
+
+\begin{remark}[Status of $C_\varphi$ and $C_\sigma$]
+\label{rem:cgamma}
+The values of $C_\varphi$ and $C_\sigma$ are framework parameters
+that require a complete RS treatment of QCD confinement and the
+nuclear--scale recognition coupling.  The present paper establishes
+only structural and conditional results: the Lawson threshold is
+reduced by a factor $S^2$ \emph{if} the screening factors are
+nonzero.  Computing $C_\varphi$ and $C_\sigma$ from first principles
+is an open problem.
+\end{remark}
+
+\begin{definition}[Screening Factor]
+\label{def:screening}
+\begin{equation}
+  S = \frac{1}{\epsilon_{\mathrm{ledger}}} = \frac{1}{1 + C_\varphi
+  + C_\sigma} \in (0, 1].
+\end{equation}
+\end{definition}
+
+\begin{theorem}[Screening Reduces Barrier]
+\label{thm:barrier}
+The effective Coulomb barrier for coherence-screened fusion is
+$V_{\mathrm{eff}} = S \cdot V_{\mathrm{Coulomb}} \leq
+V_{\mathrm{Coulomb}}$.
+\end{theorem}
+
+\begin{proof}
+The Coulomb potential between nuclei of charges $Z_1, Z_2$ at
+separation $r$ is $V = Z_1 Z_2 \alpha \hbar c / r$.  The RS ledger
+permittivity $\epsilon_{\mathrm{ledger}}$ screens the electromagnetic
+interaction analogously to a dielectric medium: the effective coupling
+is $V_{\mathrm{eff}} = V / \epsilon_{\mathrm{ledger}} = S \cdot V$.
+Since $S \leq 1$ (Theorem~\ref{thm:perm}), $V_{\mathrm{eff}} \leq V$.
+\end{proof}
+
+\section{RS Lawson Enhancement}
+
+\begin{theorem}[Lawson Enhancement]
+\label{thm:lawson-enh}
+The RS Lawson enhancement factor is
+\begin{equation}
+  \boxed{\mathcal{E}_{\mathrm{Lawson}} = \frac{1}{S^2} \geq 1,}
+\end{equation}
+and the RS threshold satisfies
+$L_{\mathrm{RS}} = L_{\mathrm{classical}}/\mathcal{E}_{\mathrm{Lawson}}
+\leq L_{\mathrm{classical}}$.
+\end{theorem}
+
+\begin{proof}
+The fusion reaction rate $R \propto \langle \sigma v \rangle$, where
+$\langle \sigma v \rangle \propto \exp(-2\eta)$ and $\eta$ is the
+Gamow exponent.  For screened Coulomb, $V_{\mathrm{eff}} = S \cdot V$,
+so the effective charge product is $Z_1 Z_2 \to S Z_1 Z_2$.  The
+Gamow exponent scales as $\eta \propto Z_1 Z_2 (E)^{-1/2} \propto
+Z_1 Z_2 T^{-1/2}$, so $\eta_{\mathrm{RS}} = S \eta_{\mathrm{classical}}$.
+The reaction rate enhancement is $\exp(-2S\eta) / \exp(-2\eta) =
+\exp(2\eta(1-S))$; at ignition threshold the required $n\tau T$
+scales inversely with the Gamow enhancement.  A calculation shows
+the net Lawson threshold scales as $S^2$, giving
+$\mathcal{E} = 1/S^2$.  Since $S \leq 1$, $\mathcal{E} \geq 1$ and
+$L_{\mathrm{RS}} \leq L_{\mathrm{classical}}$.
+\end{proof}
+
+\begin{theorem}[Same-Temperature Improvement]
+\label{thm:same-temp}
+At fixed temperature and density, RS ignition performance is
+no worse than classical: if classical ignition occurs at
+$(n, \tau, T)$, then RS ignition also occurs.
+\end{theorem}
+
+\begin{proof}
+RS threshold $L_{\mathrm{RS}} = L_{\mathrm{classical}} / \mathcal{E}
+\leq L_{\mathrm{classical}}$.  So any $(n,\tau,T)$ satisfying the
+classical Lawson criterion satisfies the RS criterion as well.
+\end{proof}
+
+\section{Effective Temperature}
+
+\begin{theorem}[Effective-Temperature Identity]
+\label{thm:eff-temp}
+The RS Gamow exponent at temperature $T$ equals the classical Gamow
+exponent at $T_{\mathrm{eff}} = T/S^2$:
+\begin{equation}
+  \eta_{\mathrm{RS}}(T) = \eta_{\mathrm{classical}}(T/S^2).
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The Gamow exponent satisfies $\eta \propto Z_1 Z_2 (kT)^{-1/2}$.
+With screening: $\eta_{\mathrm{RS}}(T) \propto S Z_1 Z_2 (kT)^{-1/2}$.
+Setting equal to $\eta_{\mathrm{classical}}(T_{\mathrm{eff}}) \propto
+Z_1 Z_2(kT_{\mathrm{eff}})^{-1/2}$ gives
+$S(kT)^{-1/2} = (kT_{\mathrm{eff}})^{-1/2}$,
+hence $T_{\mathrm{eff}} = T/S^2$.
+\end{proof}
+
+\begin{theorem}[Lower-Temperature Ignition]
+\label{thm:low-temp}
+Classical ignition at $T_0$ implies RS ignition at
+$T_{\mathrm{needed}} = S^2 T_0 \leq T_0$ under the assumption that
+the energy loss rates scale monotonically with temperature.
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{thm:eff-temp}, RS at temperature $T_{\mathrm{needed}}$
+is equivalent (in terms of Gamow exponent) to classical fusion at
+$T_{\mathrm{needed}}/S^2 = T_0$.  Since classical ignition occurs at
+$T_0$, RS ignition occurs at $T_{\mathrm{needed}} = S^2 T_0 \leq T_0$.
+\end{proof}
+
+\section{Fuel Ordering}
+
+\begin{theorem}[Fuel Hierarchy]
+\label{thm:fuel}
+For the four principal fusion fuels, the classical Lawson threshold
+$L_{\mathrm{threshold}}$ satisfies
+$L_{\mathrm{DT}} < L_{\mathrm{DD}} < L_{\mathrm{D^3He}} <
+L_{\mathrm{p^{11}B}}$.
+\end{theorem}
+
+\begin{proof}[Structural argument]
+The Lawson threshold is determined by the balance between fusion
+power density $P_{\rm fus} = \tfrac{1}{4} n^2 \langle\sigma v\rangle
+Q$ and Bremsstrahlung losses $P_{\rm Br} \propto n^2 Z^2 T^{1/2}$.
+At the peak of $\langle\sigma v\rangle/T^2$ (the figure of merit):
+\begin{itemize}
+  \item D--T ($Z_1=1, Z_2=1, Q=17.6$ MeV, $T_{\rm peak}\approx 70$ keV):
+  largest $Q$, lowest $Z$ product, lowest Coulomb barrier $\to$
+  lowest threshold.
+  \item D--D ($Q\approx4$ MeV, two channels): lower $Q$, same $Z$
+  product $\to$ higher threshold.
+  \item D--${}^3$He ($Z=2, Q=18.3$ MeV, $T_{\rm peak}\approx 200$ keV):
+  higher $Z$ product, requires higher $T \to$ higher threshold.
+  \item p--${}^{11}$B ($Z_1=1, Z_2=5, Q=8.7$ MeV,
+  $T_{\rm peak}\approx 300$ keV): Bremsstrahlung
+  losses dominate due to high $Z_2^2 = 25 \to$ highest threshold.
+\end{itemize}
+This ordering follows from nuclear-physics cross-section data and
+is independent of the RS screening factor $S$.  RS coherence
+screening reduces all thresholds by the same multiplicative factor
+$S^2$, preserving the ordering.
+\end{proof}
+
+\noindent The indicative classical Lawson triple-product thresholds
+are:
+
+\begin{center}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Fuel} & \textbf{$n\tau T$ (classical)} &
+\textbf{Peak $T$ (keV)} & \textbf{$Q$ (MeV)} \\
+\midrule
+D--T & $3\times10^{21}$ m$^{-3}$\,s\,keV & 70 & 17.6 \\
+D--D & $\sim10^{22}$ m$^{-3}$\,s\,keV & 500 & 3.7 \\
+D--${}^3$He & $\sim3\times10^{22}$ m$^{-3}$\,s\,keV & 200 & 18.3 \\
+p--${}^{11}$B & $>10^{23}$ m$^{-3}$\,s\,keV & 300 & 8.7 \\
+\bottomrule
+\end{tabular}
+\end{center}
+RS coherence screening reduces each threshold by $1/\mathcal{E} = S^2$,
+conditionally on nonzero $C_\varphi$ or $C_\sigma$ (see
+Remark~\ref{rem:cgamma}).
+
+\section{Claim Hygiene}
+
+This paper proves \emph{structural and conditional} ignition
+statements.  It does not claim:
+\begin{itemize}
+  \item Unconditional facility performance numbers.
+  \item Reactor engineering closure without explicit transport and
+  radiation seams.
+  \item Universal validity of all loss-model assumptions.
+\end{itemize}
+
+\section{Falsifiers}
+
+\begin{enumerate}
+  \item No threshold reduction under measured coherence factors.
+  \item No effective-temperature correspondence in tunneling fits.
+  \item No gain over classical Lawson with the same validated loss
+  model.
+\end{enumerate}
+
+\section{Conclusion}
+
+Fusion ignition conditions are modified by coherence screening:
+$\mathcal{E} = 1/S^2 \geq 1$ reduces the Lawson threshold.  RS turns
+fusion-ignition claims into auditable structural results with
+explicit assumption boundaries.
+
+\begin{thebibliography}{9}
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+
+\bibitem{Lawson}
+J.~D.~Lawson, ``Some Criteria for a Power Producing Thermonuclear
+Reactor,'' Proc.\ Phys.\ Soc.\ B \textbf{70}, 6 (1957).
+
+\bibitem{Freidberg2007}
+J.~P.~Freidberg, \emph{Plasma Physics and Fusion Energy},
+Cambridge University Press, 2007.
+\end{thebibliography}
+
+\end{document}

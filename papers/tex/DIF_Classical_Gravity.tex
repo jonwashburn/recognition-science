@@ -1,0 +1,1244 @@
+\documentclass[entropy,article,submit,pdftex,moreauthors]{Definitions/mdpi}
+%\documentclass[preprints,article,submit,pdftex,moreauthors]{Definitions/mdpi} 
+% For posting an early version of this manuscript as a preprint, you may use "preprints" as the journal. Changing "submit" to "accept" before posting will remove line numbers.
+%------------------
+% moreauthors
+%------------------
+% If there is only one author the class option oneauthor should be used. Otherwise use the class option moreauthors.
+
+%---------
+% pdftex
+%---------
+% The option pdftex is for use with pdfLaTeX. Remove "pdftex" for (1) compiling with LaTeX & dvi2pdf (if eps figures are used) or for (2) compiling with XeLaTeX.
+
+%=================================================================
+% MDPI internal commands - do not modify
+\firstpage{1} 
+\makeatletter 
+\setcounter{page}{\@firstpage} 
+\makeatother
+\pubvolume{1}
+\issuenum{1}
+\articlenumber{0}
+\pubyear{2026}
+\copyrightyear{2026}
+%\externaleditor{Firstname Lastname} % More than 1 editor, please add `` and '' before the last editor name
+\datereceived{ } 
+\daterevised{ } % Comment out if no revised date
+\dateaccepted{ } 
+\datepublished{ } 
+%\datecorrected{} % For corrected papers: "Corrected: XXX" date in the original paper.
+%\dateretracted{} % For retracted papers: "Retracted: XXX" date in the original paper.
+%\doinum{} % Used for some special journals, like molbank
+%\pdfoutput=1 % Uncommented for upload to arXiv.org
+%\CorrStatement{yes}  % For updates
+%\longauthorlist{yes} % For many authors that exceed the left citation part
+%\IsAssociation{yes} % For association journals
+
+%=================================================================
+% Add packages and commands here. The following packages are loaded in our class file: fontenc, inputenc, calc, indentfirst, fancyhdr, graphicx, epstopdf, lastpage, ifthen, float, amsmath, amssymb, lineno, setspace, enumitem, mathpazo, booktabs, titlesec, etoolbox, tabto, xcolor, colortbl, soul, multirow, microtype, tikz, totcount, changepage, attrib, upgreek, array, tabularx, pbox, ragged2e, tocloft, marginnote, marginfix, enotez, amsthm, natbib, hyperref, cleveref, scrextend, url, geometry, newfloat, caption, draftwatermark, seqsplit
+% cleveref: load \crefname definitions after \begin{document}
+
+% Macros
+\newcommand{\Rec}{\mathrm{Recognition}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\id}{\mathrm{id}}
+
+\newcommand{\AssAvi}{Assumption~A6 (Scale-Free Latency)}
+\newcommand{\AssAvii}{Assumption~A7 (Causal Closure)}
+\newcommand{\AssAviAvii}{Assumptions~A6--A7}
+
+% --- revision markup disabled (final clean) ---
+\usepackage[normalem]{ulem} % only needed if \delete appears anywhere
+\newcommand{\add}[1]{#1}
+\newcommand{\modify}[1]{#1}
+\newcommand{\delete}[1]{}
+
+%extra packages
+\usetikzlibrary{positioning,arrows.meta}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage[most]{tcolorbox}
+\usepackage{framed}
+\usepackage{enumitem}
+
+% BibTeX entries in `difpaper.bib` use a few AAS-style journal macros; define
+% the ones we actually use so the generated `.bbl` compiles everywhere.
+\providecommand{\araa}{Annu.\ Rev.\ Astron.\ Astrophys.}
+\providecommand{\apjl}{Astrophys.\ J.\ Lett.}
+\providecommand{\apjs}{Astrophys.\ J.\ Suppl.\ Ser.}
+
+
+% Theorem environments (paper-specific)
+\newtheorem{theoremX}{Theorem}[section]
+\newtheorem{lemmaX}[theoremX]{Lemma}
+\newtheorem{axiomX}[theoremX]{Axiom}
+\newtheorem{propositionX}[theoremX]{Proposition}
+\newtheorem{corollaryX}[theoremX]{Corollary}
+\newtheorem{definitionX}[theoremX]{Definition}
+\newtheorem{remarkX}[theoremX]{Remark}
+\newtheorem{conjectureX}[theoremX]{Conjecture}
+\newtheorem{derivedresultX}[theoremX]{Derived Result}
+\newtheorem{heuristicX}[theoremX]{Heuristic Argument}
+\newtheorem{empiricalresultX}[theoremX]{Empirical Result}
+
+% Full title of the paper (Capitalized)
+\Title{A Discrete Informational Framework for Classical Gravity: Ledger Foundations and Galaxy Rotation Curve Constraints}
+
+% Author Orchid ID: enter ID or remove command
+\newcommand{\orcidauthorA}{0000-0001-9457-7019} % Add \orcidA{} behind the author's name
+\newcommand{\orcidauthorB}{0000-0001-7212-4713} % Add \orcidB{} behind the author's name
+\newcommand{\orcidauthorC}{0009-0001-8868-7497} % Add \orcidC{} behind the author's name
+
+% Authors, for the paper (add full first names)
+\Author{Megan Simons* $^{1}$\orcidA{}, Elshad Allahyarov $^{1,2,3,4}$\orcidB{} and Jonathan Washburn $^{1}$\orcidC{}}
+
+%\longauthorlist{yes}
+
+% MDPI internal command: Authors, for metadata in PDF
+\AuthorNames{Megan Simons, Elshad Allahyarov and Jonathan Washburn}
+
+%\longauthorlist{yes}
+
+% Affiliations / Addresses (Add [1] after \address if there is only one affiliation.)
+\address{%
+$^{1}$ \quad Recognition Physics Institute, Austin, Texas, USA\\
+$^{2}$ \quad Institut f\"ur Theoretische Physik II: Weiche Materie, Heinrich-Heine Universit\"at D\"usseldorf,
+Universit\"atsstrasse 1, 40225 D\"usseldorf, Germany\\
+$^{3}$ \quad Theoretical Department, Joint Institute for High Temperatures, Russian Academy of Sciences (IVTAN),
+13/19 Izhorskaya street, Moscow 125412, Russia \\
+$^{4}$ \quad Department of Physics, Case Western Reserve University, Cleveland, Ohio 44106-7202, United States}
+
+% Contact information of the corresponding author
+\corres{Correspondence: msimons@recognitionphysics.org}
+
+% Current address and/or shared authorship
+%\firstnote{Current address: Affiliation.}  
+% Current address should not be the same as any items in the Affiliation section.
+
+%\secondnote{These authors contributed equally to this work.}
+% The commands \thirdnote{} till \eighthnote{} are available for further notes.
+
+% Abstract (Do not insert blank lines, i.e. \\) 
+\abstract{The weak-field, quasi-static regime of gravity is commonly described by the Newton--Poisson equation as an effective response law. We derive this response from a cost-first discrete variational framework. The Recognition Composition Law (RCL) uniquely selects a reciprocal closure cost, from which discrete ledger constraints, conservation, and the Newton--Poisson baseline emerge without independent postulation. Allowing finite equilibration introduces linear memory into the response, yielding a scale-free modification of the source--potential relation characterized by a power-law kernel \(w_{\mathrm{ker}}(k)=1+C(k_0/k)^\alpha\) in Fourier space. The kernel exponent \(\alpha = \tfrac{1}{2}(1-\varphi^{-1}) \approx 0.191\), where \(\varphi=(1+\sqrt{5})/2\), is derived from self-similarity of the discrete ledger closure; the amplitude \(C=\varphi^{-2}\approx 0.382\) is identified as a hypothesis from a three-channel factorization argument. We evaluate the resulting kernel-motivated response against SPARC galaxy rotation curves under a strict global-only protocol (fixed $M/L=1$, no per-galaxy tuning, conservative $\sigma_{tot}$). In this deliberately over-constrained setting, the surrogate interface achieves $\textrm{median}(\chi^2/N)=3.06$ over 147 galaxies (2933 points), outperforming a strict global-only NFW benchmark and remaining less efficient than MOND under identical constraints. The analysis is restricted to the non-relativistic, quasi-static sector and is presented as a falsifier-oriented consistency check rather than a relativistic completion.}
+
+% Keywords
+\keyword{discrete exterior calculus; weak-field gravity; Poisson equation; fractional calculus; nonlocal response; scale-free kernel; linear response theory; galaxy rotation curves; golden ratio; derived parameters; modified gravity}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+
+The weak-field, quasi-static regime of gravity is described operationally by a scalar response law relating matter sources to a potential: the Newton--Poisson equation. This description is understood as an effective limit rather than a fundamental statement about gravity. The present work examines the structural assumptions under which this response arises and how controlled generalizations enter within the quasi-static limit.
+
+\textbf{Contributions.} (i) We introduce a cost-first variational framework where the Recognition Composition Law (RCL) serves as the sole primitive, uniquely forcing a discrete ledger structure and recovering the Newton--Poisson equation as the instantaneous-closure refinement limit. (ii) We show that finite equilibration latency introduces linear memory while preserving symmetry and conservation, yielding an infrared-enhanced, scale-free source-side kernel $w_{\mathrm{ker}}(k)=1+C(k_0/k)^\alpha$ in the quasi-static sector. (iii) We derive the kernel exponent $\alpha = \tfrac{1}{2}(1-\varphi^{-1})$ from self-similarity of the discrete ledger and identify the amplitude $C=\varphi^{-2}$ from a three-channel factorization hypothesis, yielding a theory-target kernel with no free dimensionless parameters in the scaling-window hypothesis, and falsifiable predictions for galaxy rotation-curve systematics under global-only constraints.
+
+We proceed by deriving the Newton–Poisson baseline (Sections~\ref{sec:rcl}--\ref{sec:baseline}), introducing finite-latency closure and the scale-free kernel (Section~\ref{sec:latency}), and testing the kernel-motivated surrogate against SPARC under strict global-only constraints (Section~\ref{sec:sparc}).
+
+%This manuscript develops a cost-first discrete framework in which Newton–Poisson gravity appears as the instantaneous-closure refinement limit, and then asks how that limit is modified when closure is not instantaneous. We introduce finite equilibration through a scale-free latency assumption and a causal closure mapping from temporal response to spatial Fourier modes, yielding a quasi-static, scale-free frequency-space multiplier that induces a power-law modification of the source-side response kernel, $w(k)=1+C(k_0/k)^\alpha$, over a scaling window. We then evaluate whether the resulting nonlocal response—implemented through a controlled, global-only surrogate suitable for disk galaxies—is empirically non-falsified by galaxy rotation curves under a strict protocol (fixed stellar mass-to-light ratio, no per-galaxy tuning, conservative total error model). The rotation-curve analysis is presented as a falsifier-oriented consistency check; absence of falsification under these constraints is not confirmation of uniqueness, nor a claim of a complete relativistic theory.
+
+\textbf{Parameter interpretation and what is (not) predicted.} The causal-response construction motivates a scale-free power-law modification in Fourier space,
+$w_{\mathrm{ker}}(k)=1+C(k_0/k)^\alpha$, over a scaling window. The framework motivates the form of the kernel and provides theory-target values for the exponent and normalization under additional self-similarity hypotheses. However, the galaxy-facing comparison in Section 6 is intentionally conducted through a controlled surrogate interface with globally shared parameters $(A, \alpha, r_0)$. This keeps the falsifier test transparent: we can ask whether a scale-free power-law enhancement, enforced globally and without per-galaxy tuning, is compatible with rotation curves under conservative uncertainties.
+
+To prevent overinterpretation, we treat the “theory-target” values as hypotheses to be confronted with data rather than as established predictions. Sensitivity of the global-only fit to $\alpha$ and normalization choices is reported (see Appendix~\ref{app:sparcmodel} for the strict global-only protocol and uncertainty model used in the SPARC evaluation; Appendix~\ref{app:reopt} reports an exploratory re-optimization sensitivity study).
+
+A wide range of empirical data constrain gravity most directly in this regime. Within the standard $\Lambda$CDM framework, departures from baryonic Newtonian predictions are accommodated through additional gravitating components while retaining the Poisson response law \cite{bullock2017}. Phenomenological approaches such as MOND modify the low-acceleration behavior of the same response \cite{milgrom1983,mcgaugh2016}. These serve as comparative baselines for effective source--potential relations in the quasi-static limit.
+
+\textbf{Relation to prior work.} The interpretation of galaxy-scale anomalies admits multiple competing explanations, ranging from particle dark matter with baryonic feedback to modified-inertia/modified-gravity phenomenology and emergent/entropic proposals. The present work is not a cosmological model and does not attempt to reproduce the full success set of $\Lambda$CDM. Instead, it explores a narrower question: whether a cost-first discrete closure framework—constructed to reproduce Newtonian gravity in an instantaneous-refinement limit—acquires a controlled, scale-free nonlocal correction when equilibration is not instantaneous.
+Unlike approaches that posit an acceleration scale by hand, we derive a power-law kernel form from causal response assumptions in a scale-free window. Unlike fits that choose a kernel’s functional form directly from data, we separate (i) a theory-motivated kernel shape from (ii) an empirical interface used for a strict global-only viability check on rotation curves. This framing is compatible with information-theoretic language (cost, ledger, closure), but it remains operationally a falsifiable proposal: it makes concrete predictions for how baryonic templates are renormalized across radii under global-only constraints.
+
+The construction relies on a cost-first foundation where the Recognition Composition Law (RCL) uniquely fixes a reciprocal closure cost. From this cost, the geometric and topological constraints of a discrete double-entry ledger emerge. Within Discrete Exterior Calculus (DEC), the gravitational potential is a scalar field on the vertices of a cellular complex, governed by the resulting quadratic discrete action \cite{bossavit1998,hirani2003,desbrun2005}. Stationarity in the instantaneous-closure refinement limit recovers the Poisson equation as the Newtonian weak-field baseline \cite{Misner_Thorne_Wheeler_1995,Wald_1984}.
+
+We next consider a generalization in which equilibration occurs with finite latency. At the discrete level this introduces memory into the variational response while preserving symmetry and conservation. In the linearized continuum limit, the modification enters as a scale-free correction to the effective source, characterized in Fourier space by a power-law kernel
+\begin{equation}
+    w_{\mathrm{ker}}(k) = 1 + C(k_0/k)^{\alpha}.
+\end{equation}
+This correction alters the source–potential relation without modifying the homogeneous solutions or introducing new propagating gravitational degrees of freedom.
+
+This functional form represents one member of a broader admissible class of scale-free response kernels. The analysis relies only on the existence of a controlled infrared-enhanced modification consistent with linearity, conservation, and quasi-static closure.
+
+The framework is intentionally restricted in scope. We confine attention to the non-relativistic, quasi-static sector and do not address relativistic dynamics, post-Newtonian corrections, gravitational radiation, or ultraviolet completion. The construction is presented as an effective weak-field response framework whose internal consistency and empirical adequacy can be evaluated independently of any specific covariant extension.
+
+%This work derives the Newton--Poisson weak-field limit as a continuum refinement of a discrete variational construction and identifies a constrained class of admissible source-side modifications induced by finite equilibration latency. The analysis is restricted to the non-relativistic, quasi-static regime.  
+
+\begin{framed}
+\noindent\textbf{Assumptions \& status summary (for interpretation).}
+\begin{enumerate}[label=(\roman*), leftmargin=*]
+\item \textbf{Baseline (Poisson) is by construction:} the discrete ledger axioms and Recognition Composition Law (RCL) are chosen so that the instantaneous-closure refinement limit reproduces Newtonian gravity (Sections~\ref{sec:rcl}--\ref{sec:baseline}).
+\item \textbf{Primary phenomenological postulates:} (A6) scale-free equilibration latency and (A7) a frequency-to-wavenumber mapping \(\omega_{\mathrm{eff}}(k)\propto k\) connect temporal causal response to spatial Fourier modes, generating a power-law kernel modifier \(w_{\mathrm{ker}}(k)\) (Section~\ref{sec:latency}).
+\item \textbf{Scope restrictions:} the analysis is non-relativistic, quasi-static, and linear-response. No claims are made here about lensing, cosmology, gravitational waves, or post-Newtonian tests without an explicit covariant/dynamical completion.
+\item \textbf{Galaxy interface is a surrogate:} the rotation-curve model uses a controlled multiplicative closure ansatz as a surrogate for the full nonlocal disk convolution implied by \(w_{\mathrm{ker}}(k)\) (Section~\ref{subsubsec:forwardmodel}).
+\item \textbf{Rotation-curve result is a consistency check:} we enforce a strict global-only protocol (fixed \(M/L=1\), no per-galaxy tuning) and a conservative total error model \(\sigma_{\mathrm{tot}}\) (Appendix~\ref{app:sparcmodel}). Absence of falsification under these constraints is not confirmation of the framework.
+\end{enumerate}
+\end{framed}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Cost-First Foundations and the Recognition Composition Law}
+\label{sec:rcl}
+
+We construct the weak-field response within a cost-first discrete variational framework. Rather than postulating a discrete spacetime or ledger structure a priori, the framework takes a single functional constraint, the Recognition Composition Law (RCL), as its sole primitive. 
+
+The weak-field kernel is required to reduce to the Newtonian baseline in the instantaneous-closure limit. Delayed closure is introduced exclusively through the effective source.
+
+%We summarize the logical dependencies among the structural inputs used in the construction. For reader convenience, we summarize the logical flow from the single primitive to the testable kernel in the dependency map below.
+Figure~\ref{fig:framework_schematic} summarizes the logical flow from the single primitive to the testable kernel.
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{Cost-First Foundation:} \textit{Input:} The Recognition Composition Law (RCL) as the sole primitive. \textit{Consequence:} Unique closed-form reciprocal cost \(J(x)\) (Appendix~\ref{app:si-cost}) whose functional equation is transcendentally necessary under symmetric constraints.
+  \item \textbf{Emergent Ledger:} \textit{Input:} The \(J\)-cost structure. \textit{Consequence:} Discreteness (continuous configurations cannot stabilize) and conservation (J-symmetry forces double-entry balance) emerge as necessary theorems, yielding the discrete informational ledger.
+  \item \textbf{Continuum baseline:} \textit{Input:} Near-equilibrium expansion of \(J\) and DEC refinement/consistency. \textit{Consequence:} Dirichlet energy and the Poisson equation (Newtonian baseline). Standard DEC convergence yields the continuum Laplacian from the discrete Laplacian in the refinement limit \cite{bossavit1998,hirani2003,desbrun2005}.
+  \item \textbf{Kernel mechanism:} \textit{Input:} A6 (scale-free latency) and A7 (causal closure). \textit{Consequence:} fractional-memory effective source and a spatial Fourier kernel \(w_{\mathrm{ker}}(k)=1+C(k_0/k)^\alpha\). Heavy-tailed latency corresponds to fractional operators \cite{MetzlerKlafter2000,Mainardi2010}, and evaluating the temporal multiplier at a scale-free \(\omega_{\mathrm{eff}}(k)\propto k\) transfers the power law to Fourier space.
+\end{itemize}
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[
+    node distance=1.2cm,
+    box/.style={draw, rounded corners=2pt, align=center, inner sep=5pt}
+  ]
+    \node[box] (rcl) {Recognition Composition Law (RCL)\\Sole primitive constraint};
+    \node[box, below=of rcl] (ledger) {Emergent Discrete Ledger\\Forced by cost structure};
+    \node[box, below=of ledger] (dec) {DEC refinement + normalization\\\(\Rightarrow\) Poisson baseline\\\(\nabla^2\Phi=4\pi G\rho\)};
+    \node[box, below=of dec] (latency) {Finite equilibration\\(A6--A7)\\\(\Rightarrow\) fractional memory};
+    \node[box, below=of latency] (kernel) {Quasi-static kernel\\\(w_{\mathrm{ker}}(k)=1+C(k_0/k)^\alpha\)};
+    \node[box, below=of kernel] (derived) {Derived: \(\alpha=\tfrac{1}{2}(1-\varphi^{-1})\)\\Hypothesis: \(C=\varphi^{-2}\)\\Free: \(r_0\) (dimensional)};
+    \node[box, below=of derived] (validation) {Predictions + falsifiers\\galaxy rotation curves};
+    \draw[->, thick] (rcl) -- (ledger);
+    \draw[->, thick] (ledger) -- (dec);
+    \draw[->, thick] (dec) -- (latency);
+    \draw[->, thick] (latency) -- (kernel);
+    \draw[->, thick] (kernel) -- (derived);
+    \draw[->, thick] (derived) -- (validation);
+  \end{tikzpicture}
+  \caption{High-level schematic of the informational framework: the Recognition Composition Law uniquely fixes the cost structure, which forces the discrete ledger. Normalization in the refinement limit recovers the Poisson baseline, while finite equilibration introduces a scale-free kernel constrained by derived parameters.}
+  \label{fig:framework_schematic}
+\end{figure}
+
+\subsection{The \texorpdfstring{$J(\cdot)$}{J(.)} cost formalism}
+\label{subsec:Jmachinery}
+
+RCL fixes a unique reciprocal cost (Appendix~\ref{app:si-cost}). Its near-equilibrium quadratic behavior yields a Dirichlet-energy functional in the refinement limit, allowing the DEC bridge to recover the Poisson equation as the weak-field baseline.
+
+\textbf{Definitions.} Positive ratios \(x>0\) parametrize mismatch relative to equilibrium, with the reciprocal cost \(J:(0,\infty)\to\mathbb{R}\) vanishing at \(x=1\). Two derived quantities are used: \(J(xy)\), corresponding to sequential composition of mismatches, and \(J(x/y)\), corresponding to relative comparison.
+
+The key structural constraint on these objects is the Recognition Composition Law (RCL), stated and derived in Appendix~\ref{app:si-cost}.
+
+\(J(x)=0\) corresponds to local closure (\(x=1\)), while \(J(x)>0\) corresponds to an unclosed imbalance. Delayed closure corresponds to persistence of nonzero \(J\)-cost contributions. In the gravity application, \(x\) is an auxiliary mismatch variable in an effective discrete constraint model.
+
+\subsection{Axiomatic origin: RCL and the reciprocal cost functional}
+\label{subsec:cost}
+
+\begin{propositionX}
+[Reciprocal closure cost (from RCL \cite{pardoguerra2026,washburn2026ratio}; proved in Appendix~\ref{app:si-cost})]
+\label{dr:J}
+Under RCL together with standard regularity conditions for a non-constant \(J\), and imposing \(J''(1)=1\), the reciprocal closure cost is uniquely selected within the restricted quadratic symmetric composition class as 
+\begin{equation}
+ J(x)=\frac12\left(x+x^{-1}\right)-1,
+  \label{eq:J-closed-form-main}
+\end{equation}
+and near equilibrium \(x=1+\varepsilon\) one has
+\begin{equation}
+  J(1+\varepsilon)=\frac12\,\varepsilon^2+\mathcal{O}(\varepsilon^3),
+  \label{eq:J-quadratic}
+\end{equation}
+which is the only property of \(J\) needed to recover the Dirichlet-energy/Poisson limit in Sec.~\ref{subsec:dec}.
+\end{propositionX}
+This proposition fixes the unique reciprocity-symmetric quadratic cost, whose near-equilibrium expansion supplies the Dirichlet-energy structure used in the DEC refinement bridge.
+
+Figure~\ref{fig:J_cost_behavior} illustrates the global reciprocity symmetry and the near-equilibrium quadratic regime used in the continuum bridge.
+
+\begin{figure}[htbp] % Placement options: h=here, t=top, b=bottom, p=page
+    \centering % Centers the image
+    \includegraphics[width=\textwidth]{figures/J_cost_behavior.pdf} % Your image file, resized
+    \caption{Reciprocal cost \(J(x)\) and its near-equilibrium limit: \(J(x)=\tfrac12(x+x^{-1})-1\) is reciprocal with a unique minimum at \(x=1\), and \(J(1+\varepsilon)\approx \varepsilon^2/2\) yields the Dirichlet-energy (Poisson) baseline in the refinement limit.}
+\label{fig:J_cost_behavior}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Emergence of the Discrete Informational Ledger}
+\label{sec:ledger}
+
+In contrast to phenomenological lattice models, the discrete structure of the present framework is not postulated a priori but is forced by the mathematical properties of the unique reciprocal cost functional \(J(x)\) derived in Section~\ref{sec:rcl}. This section outlines how the defining features of the discrete ledger (discreteness, double-entry conservation, and exactness) emerge as necessary consequences of cost minimization.
+
+\subsection{Discreteness and conservation forced by cost}
+\label{subsec:axioms}
+
+The structural properties of the framework (often codified as postulates in effective models) are formally derived from the \(J\)-cost structure \cite{pardoguerra2026,washburn2026ratio}. 
+
+%\textbf{Discreteness forced.} Continuous configurations cannot stabilize under \(J\)-cost minimization. Because the cost function possesses a strict minimum with positive curvature (\(J''(1)=1\)), continuous spaces allow infinitesimal perturbations with infinitesimal cost, preventing lock-in. Only discrete, isolated configurations can establish stable minima separated by finite cost barriers. Thus, the framework is fundamentally discrete.
+
+\textbf{Discreteness motivated by cost.} The reciprocal cost \(J\) has a unique local minimum at \(x=1\) with positive curvature (\(J''(1)=1\)), so in a purely continuous configuration space one can generally move along sufficiently small directions with arbitrarily small incremental cost. This observation does not deny that continuous variational problems can have strict minimizers; rather, it highlights a distinct requirement of the present ledger interpretation: the existence of robust, distinguishable ledger states separated by finite cost barriers (``lock-in'') so that recognition events can be recorded as discrete transactions. In this sense, additional structure—implemented here as a discrete cellular complex supporting integer cochains—provides a natural mechanism for stable, isolated ledger states. Formal conditions under which discrete state structure is enforced or selected by the \(J\)-cost (beyond the present motivation) are discussed in the companion framework exposition \cite{washburn2026ratio}.
+
+\textbf{Ledger conservation forced.} The reciprocity symmetry of the cost function, \(J(x)=J(x^{-1})\), dictates that the cost of any recognition event equals the cost of its reciprocal. This symmetry forces a double-entry ledger structure, where every transaction must be balanced by a reciprocal entry, guaranteeing the conservation of informational flux on closed sub-systems.
+
+\textbf{The Meta-Principle derived.} The framework's ontological boundary condition (that an event cannot occur on empty inputs) is naturally enforced. The cost of a completely degenerate configuration diverges, \(J(0^+) \to \infty\), establishing a finite barrier against vacuous states.
+
+\subsection{Cellular complex and DEC kinematics}
+\label{subsec:cellular_complex}
+
+Guided by the emergent discreteness and conservation laws, the weak-field potential is represented on a cellular complex using discrete exterior calculus (DEC) \cite{bossavit1998,hirani2003,desbrun2005}. Local informational constraints are encoded as integer-valued 1-cochains on oriented edges, and the potential is a scalar 0-cochain \(\phi\) on vertices. Under closed-chain neutrality (Appendix~\ref{app:ledger-theorems}), the 1-cochain field is exact and may be written as \(w=\nabla\phi\), enabling a variational formulation whose refinement limit recovers a continuum Poisson constraint.
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{lll}
+\toprule
+\textbf{Symbol} & \textbf{Type} & \textbf{Meaning (first use)} \\
+\midrule
+$K$ & cellular complex & \parbox[t]{0.62\textwidth}{Underlying discretization (Sec.~\ref{subsec:cellular_complex})} \\
+$V,E$ & sets & \parbox[t]{0.62\textwidth}{Vertices and oriented edges of $K$} \\
+$\phi$ & $0$~cochain & \parbox[t]{0.62\textwidth}{Scalar potential on vertices} \\
+$w$ & integer $1$-cochain & \parbox[t]{0.62\textwidth}{Edge-local constraint field (exact when neutrality holds)} \\
+$w(e)$ & integer & \parbox[t]{0.62\textwidth}{Value of the $1$-cochain on edge $e\in E$} \\
+$J(x)$ & cost functional & \parbox[t]{0.62\textwidth}{Reciprocal closure cost fixed by RCL (Sec.~\ref{sec:rcl})} \\
+$x$ & positive ratio & \parbox[t]{0.62\textwidth}{Abstract mismatch variable entering $J$} \\
+$\Phi,\rho$ & fields & \parbox[t]{0.62\textwidth}{Newtonian potential and mass density (Sec.~\ref{sec:baseline})} \\
+$w_{\mathrm{ker}}(k)$ & kernel & \parbox[t]{0.62\textwidth}{Fourier-space response modifier (Sec.~\ref{subsec:ilg_mechanism})} \\
+$k_0$ & scale & \parbox[t]{0.62\textwidth}{Reference wavenumber setting the transition scale in $w_{\mathrm{ker}}(k)$; absorbed order-unity factors (Sec.~\ref{subsec:ilg_mechanism})} \\
+$\alpha$ & exponent & \parbox[t]{0.62\textwidth}{Kernel exponent; derived: $\alpha=\tfrac{1}{2}(1-\varphi^{-1})\approx 0.191$ (Secs.~\ref{subsec:ilg_mechanism},\ref{subsec:alpha_derived})} \\
+$C$ & amplitude & \parbox[t]{0.62\textwidth}{Kernel amplitude; hypothesis: $C=\varphi^{-2}\approx 0.382$ (Sec.~\ref{subsec:C_hypothesis})} \\
+$r_0$ & scale & \parbox[t]{0.62\textwidth}{Transition radius in kpc; single remaining free (dimensional) parameter (Eq.~\eqref{eq:baryon_ansatz})} \\
+\bottomrule
+\end{tabular}
+\caption{Notation summary for the discrete informational framework and its rotation-curve surrogate. Note: the integer 1-cochain \(w\) (edge-local constraint field) and the Fourier-space kernel modifier \(w_{\mathrm{ker}}(k)\) are distinct objects sharing notation for brevity; context disambiguates.}
+\label{tab:notation_summary}
+\end{table}
+
+The emergent conservation laws imply closed-chain neutrality. In continuum language, this corresponds to \(\nabla\times \mathbf{g}=0\) (with \(\mathbf{g}=-\nabla\Phi\)) in the quasi-static sector: vanishing circulation around closed loops is the topological prerequisite for the existence of a globally defined scalar potential \(\Phi\) up to an additive constant.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Derivation of the Newton--Poisson Baseline}
+\label{sec:baseline}
+
+\subsection{Discrete-to-continuum (DEC) bridge: Poisson as the baseline theorem}
+\label{subsec:dec}
+
+The instantaneous-closure refinement limit fixes the normalization of the discrete mesh action. In this limit, the discrete Dirichlet energy converges to its continuum form, and stationarity yields the Poisson equation for a continuum potential with coupling set by the discrete normalization. The Newtonian weak-field sector fixes this normalization in physical units.
+
+We fix the map from discrete constraint variables to 
+$\phi$ and $\rho$ using (i) the potential/exactness structure from MP and A1--A5, (ii) the quadratic expansion \eqref{eq:J-quadratic}, and (iii) standard DEC refinement consistency \cite{bossavit1998,hirani2003,desbrun2005}.
+
+\begin{theoremX}[Recovery of the Poisson baseline in the instantaneous-closure limit (conditional on DEC refinement)]
+\label{dr:poisson}
+Under assumptions (i)--(iii), the discrete Dirichlet energy converges to its continuum form and stationarity yields a Poisson constraint. Fixing the overall coupling by matching the discrete normalization to Newtonian gravity yields
+\begin{equation}
+  \nabla^2 \Phi = 4\pi G\,\rho.
+  \label{eq:poisson}
+\end{equation}
+\end{theoremX}
+This theorem establishes the Newton–Poisson equation as the unique instantaneous-closure refinement limit, thereby fixing the physical normalization that all later source-side modifications are defined against.
+
+Equation \eqref{eq:poisson} calibrates the discrete mesh action to physical units by fixing the proportionality between the DEC-refinement potential and the physical Newtonian potential \(\Phi\). Matching the DEC normalization to Newtonian units yields $\nabla^2 \phi = 4 \pi G \rho$, fixing Poisson as the weak-field baseline under instantaneous closure.
+
+The information-latency mechanism modifies the effective source when closure is delayed, without altering the recovered Poisson-limit structure. At this stage the Newtonian baseline is fixed: in the instantaneous-closure refinement limit the framework reduces to Poisson, and all subsequent modifications are defined as source-side additions to this baseline.
+
+Finite-latency models enter once the instantaneous-closure baseline is fixed. The instantaneous-closure limit corresponds to idealized zero-delay equilibration of local constraints. On a cellular complex, updates of edge-local constraints at scale \(L\sim 1/k\) must propagate across that scale, and causality imposes a ballistic bound on the fastest possible refresh (Sec.~\ref{subsec:a7}). Coarse-graining over unmodeled microscopic degrees of freedom then introduces memory, so that the field responds to a weighted history of prior imbalances rather than to the instantaneous source alone. In the absence of a characteristic closure time, this memory is naturally scale free, with fractional operators providing a standard linear-response representation \cite{MetzlerKlafter2000,Mainardi2010}. Subsequent modifications are therefore defined as causal, scale-free source-side extensions of the Poisson baseline.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Information Latency \& The Fractional Kernel}
+\label{sec:latency}
+%=============================================================================
+
+Allowing finite equilibration modifies the effective source seen by the weak-field potential while preserving linearity and conservation. In the quasi-static regime, delayed closure induces fractional memory in linear response, mapping to a scale-free, source-side modification of the Poisson relation.
+
+\subsection{Finite equilibration: scale-free latency and causal closure (Latency kernel)}
+\label{subsec:ilg_mechanism}
+%=============================================================================
+
+Up to this point the framework recovers the Newtonian/Poisson baseline in the instantaneous-closure regime. The information-latency mechanism modifies the effective source via scale-free temporal memory (A6) together with a causal mapping from temporal to spatial response (A7).
+
+\subsubsection{Assumption A6: Scale-free latency and fractional memory}
+\label{subsec:a6}
+
+\begin{description}[labelwidth=3.8cm,leftmargin=4.0cm,itemsep=1pt]
+  \item[Assumption A6 (Scale-Free Latency).]
+  Ledger closure exhibits scale-free latency: unclosed transactions persist as a power-law backlog, with no characteristic timescale governing closure.
+\end{description}
+
+Scale-free latency induces fractional memory in linear response \cite{MetzlerKlafter2000,Mainardi2010}, conveniently represented by a Riemann--Liouville fractional integral acting on the source. Fractional operators provide a compact representation of heavy-tailed memory and yield clear infrared scaling behavior. No specific microscopic mechanism is assumed.
+
+\begin{propositionX}[Fractional-memory effective source (conditional on A6 and linear response)]
+\label{dr:fractional}
+Under the scale-free latency hypothesis and linear response about the instantaneous-closure baseline, the effective source acquires a fractional-memory contribution:
+\begin{equation}
+  \rho_{\mathrm{eff}}(t)
+  =
+  \rho(t)
+  + C\,\tau_0^{-\alpha}\,\mathcal{I}^{\alpha}\rho(t),
+  \qquad
+  \mathcal{I}^{\alpha}f(t)=\frac{1}{\Gamma(\alpha)}\int_0^t\frac{f(t')}{(t-t')^{1-\alpha}}dt',
+  \label{eq:rhoeff_fractional}
+\end{equation}
+with \(\alpha\in(0,1)\) and dimensionless amplitude \(C\) (equivalently a causal multiplier \(\propto(i\omega+0^+)^{-\alpha}\)). Appendix~\ref{app:fractional} illustrates a compact bridge to standard fractional-calculus results \cite{MetzlerKlafter2000,Mainardi2010}.
+\end{propositionX}
+This proposition converts the scale-free latency hypothesis into a fractional-memory term in the effective source, providing the time-domain ingredient needed to derive the infrared scaling of the kernel.
+
+Figure~\ref{fig:fractional_memory_kernel} contrasts the scale-free (power-law) memory implied by the scale-free latency hypothesis with a single-timescale exponential for comparison.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/fractional_memory.pdf}
+    \caption{Scale-free latency implies heavy-tailed memory. Under this hypothesis the memory weight is heavy-tailed (a power law), so very old unclosed transactions retain non-negligible influence compared with an exponential (single-timescale) decay. This correspondence is represented by fractional operators in linear response.}
+    \label{fig:fractional_memory_kernel}
+\end{figure}
+
+\subsubsection{Assumption A7: Causal closure and the spatial modifier}
+\label{subsec:a7}
+
+\begin{description}[labelwidth=3.8cm,leftmargin=4.0cm,itemsep=1pt]
+  \item[Assumption A7 (Causal Closure).]
+  Assign each spatial mode \(k\) an effective refresh frequency \(\omega_{\mathrm{eff}}(k)\) consistent with causality and quasi-staticity, and scale-free at fixed epoch.
+\end{description}
+
+\textbf{Causal scaling argument:} scale-free refresh implies \texorpdfstring{$\omega_{\mathrm{eff}}(k)\propto k$}{omega_eff(k) proportional to k}
+\label{heur:a7}
+In the quasi-static sector, a spatial Fourier mode \(k\) corresponds to a length scale \(L\sim 1/k\) (or \(L\sim a/k\) in comoving variables). A ``refresh'' of the ledger state at scale \(L\) cannot propagate faster than some finite signal speed \(v_{\max}\) (causality). Therefore, the shortest physically allowed refresh time satisfies a ballistic bound
+\begin{equation}
+  \tau_{\mathrm{eff}}(k,a) \gtrsim \frac{L}{v_{\max}} \sim \frac{a}{v_{\max}\,k},
+  \qquad\Rightarrow\qquad
+  \omega_{\mathrm{eff}}(k,a)\lesssim \frac{v_{\max}}{a}\,k.
+  \label{eq:a7_ballistic_bound}
+\end{equation}
+
+Equation~\eqref{eq:a7_ballistic_bound} is the causal ballistic bound: any admissible refresh law must grow no faster than linearly with \(k\) at fixed epoch. Imposing scale invariance at fixed \(a\) rules out new dimensional parameters (e.g.\ a diffusivity, relaxation time, or environmental length). In particular, any alternative scaling \(\omega_{\mathrm{eff}}\propto k^\beta/a\) with \(\beta\neq 1\) introduces an additional dimensional coefficient and an ad hoc physical scale.
+
+Alternative mappings introduce additional dimensional scales or environmental dependence, so are excluded by construction in the present global-kernel formulation.
+
+The minimal power-law choice consistent with the causal ballistic bound and the absence of additional dimensional scales is linear,
+\begin{equation}
+  \omega_{\mathrm{eff}}(k,a) \propto \frac{k}{a},
+  \label{eq:a7_linear}
+\end{equation}
+with the proportionality constant absorbed into the reference scale \(k_0\) (or \(r_0\)).
+
+Alternative mappings either introduce additional dimensional scales, such as diffusive $\omega_{\mathrm{eff}}\propto k^2$ requiring a coefficient with units $L^2/T$, or introduce environment dependence $\omega_{\mathrm{eff}}(k,\rho,\ldots)$. Both of which defeat the intended scale-free global-kernel falsifier. Thus, we adopt the minimal scale-free choice $\omega_{\mathrm{eff}}(k)\propto k$. A sound-speed form $\omega_{\mathrm{eff}}\propto c_s k/a$ is equivalent to Eq.~\eqref{eq:a7_linear} up to an order-unity factor if $c_s$ is taken universal, in which case it is absorbed into $k_0$ and does not change the functional form of $w_{\mathrm{ker}}(k)$.
+
+With this choice, in an expanding background \(\omega_{\mathrm{eff}}(k,a)\sim kc/a\), with order-unity factors absorbed into \(k_0\).
+Evaluating the fractional-memory multiplier at \(\omega_{\mathrm{eff}}\) yields the operational Fourier-space kernel form.
+
+\begin{theoremX}[Spatial response kernel and source-side Poisson response (conditional on A6--A7)]
+\label{dr:wk}
+Under the scale-free latency hypothesis and the causal, scale-free closure condition, evaluating the temporal multiplier at \(\omega_{\mathrm{eff}}(k)\) transfers the power law from \(\omega\) to \(k\), yielding
+\begin{equation}
+  w_{\mathrm{ker}}(k)=1+C\left(\frac{k_0}{k}\right)^{\alpha},
+  \label{eq:wk}
+\end{equation}
+and the corresponding source-side modified Poisson relation in the quasi-static weak-field sector,
+\begin{equation}
+  -k^2\Phi(\mathbf{k}) = 4\pi G\,w_{\mathrm{ker}}(k)\,\rho(\mathbf{k}).
+  \label{eq:poisson_k}
+\end{equation}
+Here \(k_0\) is a conventional reference wavenumber absorbing order-unity factors; equivalently \(r_0:=2\pi/k_0\) is the corresponding real-space transition scale.
+\end{theoremX}
+This theorem transfers the scale-free temporal memory implied by A6 into a scale-free spatial modifier via A7, yielding the explicit quasi-static source-side kernel $w_{\mathrm{ker}}(k)$ that defines the paper’s testable deviation from Poisson.
+
+\paragraph{Relation to common weak-field kernel parameterizations.} As a source-side multiplicative factor in the Poisson closure, $w_{\mathrm{ker}}(k)$ falls within modified-Poisson/nonlocal-response kernel parameterizations used to test departures from strictly local Newtonian gravity \cite{clifton2012,joyce2015}. Here it is restricted to scale-free infrared enhancement with globally shared parameters and conservation-preserving closure, rather than introducing explicit new length scales or environment-dependent interpolation functions.
+
+Figure~\ref{fig:kernel_scaling} shows the resulting scale dependence of the response modifier \(w_{\mathrm{ker}}(k)\) for representative parameters.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/fig_kernel_scaling.pdf}
+    \caption{Scale-dependent weak-field response modifier \(w_{\mathrm{ker}}(k)\) under the scale-free latency hypothesis and the causal, scale-free closure condition. The kernel \(w_{\mathrm{ker}}(k)=1+C(k_0/k)^\alpha\) enhances the effective source at small \(k\) (large scales) while approaching the Newtonian baseline \(w\to1\) at large \(k\) (small scales), making the modification explicitly source-side and scale dependent.}
+    \label{fig:kernel_scaling}
+\end{figure}
+% (Kernel and modified Poisson relation stated as Derived Result~\ref{dr:wk}.)
+
+The quasi-static response is therefore characterized by global parameters \((C,\alpha,k_0)\) (equivalently \((A,\alpha,r_0)\) in the surrogate interface of Eq.~\eqref{eq:baryon_ansatz}) for empirical testing.
+
+The resulting kernel defines a constrained, globally parameterized modification of the weak-field source consistent with quasi-static closure. Kernels of this general type have also been studied in phenomenological contexts as fixed benchmarks for large-scale-structure null tests, though no such cosmological application is assumed here.
+
+\textbf{Validity window.} Equations~\eqref{eq:wk}--\eqref{eq:poisson_k} characterize the quasi-static, linear-response scaling window in which delayed closure can be represented as a scale-free source-side modifier. Outside this window (e.g.\ fully dynamical regimes, strong-field, or environment-dependent closure mappings), additional structure would be required and is not assumed here. In particular, no claim is made here that the scale-free power-law form remains valid down to Solar-System scales without additional UV regularization or screening.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Empirical Consistency Check on SPARC Under Global-Only Constraints}
+\label{sec:sparc}
+%=============================================================================
+
+\textbf{Section overview.} We now ask whether the kernel-induced nonlocal response derived above is compatible with observed galaxy rotation curves under a deliberately strict protocol that limits flexibility. We use the SPARC database of rotation curves as a standardized benchmark and enforce global-only model degrees of freedom across the entire sample: we do not tune parameters per galaxy, we fix the stellar mass-to-light ratio, and we evaluate goodness-of-fit using a conservative total uncertainty model (Appendix~\ref{app:sparcmodel}). This section is designed as a falsifier-oriented consistency check: if the framework cannot achieve non-falsification under strict global-only constraints, it is disfavored in the galactic regime.
+
+We emphasize that Section~\ref{sec:sparc} is structured as a falsifier-oriented global-only viability test using a controlled surrogate interface; the theory-target derivations of $\alpha$ and the hypothesis for $C$ are presented in Section~\ref{sec:derived} and can be compared to (but are not required for) the strict global-only evaluation.
+
+\subsection{Data, protocol, and fit statistics}
+\label{subsec:datasparc}
+
+\subsubsection{Dataset and strict global-only protocol}
+
+\textbf{Sample definition (SPARC strict global-only subset).} We adopt a deterministic analysis subset based on the SPARC galaxy-sample quality flag $Q$ provided in the Galaxy Sample table. Following the SPARC convention, we retain galaxies with $Q \in \{1,2\}$ and exclude galaxies with $Q=3$ (lower-quality rotation curves). This yields the strict global-only subset used for all SPARC figures and fit statistics reported in Section~\ref{sec:sparc}, comprising $N_{gal}=147$ galaxies and $N_{tot} = 2933$ rotation-curve data points. The quality-flag criterion is applied at the galaxy level (entire rotation curves), and no additional point-level trimming is performed unless stated explicitly.
+
+\textbf{Dataset.} We use the SPARC compilation of galaxy rotation curves and baryonic component templates (disk, bulge, gas) with $N_{gal} = 147$
+galaxies and $N_{tot} = 2933$ rotation-curve data points in the sample considered here.
+
+\textbf{Strict global-only constraints.} To minimize hidden flexibility, we impose the following protocol:
+\begin{itemize}[itemsep=2pt]
+    \item \textbf{Fixed stellar $M/L$:} we set $M/L = 1$ globally (no galaxy-by-galaxy adjustment).
+    \item \textbf{No per-galaxy tuning:} all model parameters are shared across the full sample.
+    \item \textbf{Conservative uncertainties:} we evaluate $\chi^2$ using a total uncertainty model $\sigma_{tot}(r)$ that augments reported measurement errors with conservative floor, beam-smearing, asymmetry, and turbulence terms (Appendix~\ref{app:sparcmodel}).
+\end{itemize}
+
+The goal is not to extract best-fitting astrophysical parameters per system, but to test whether the model is non-falsified when prevented from absorbing discrepancies via per-object tuning.
+
+\subsubsection{Forward model: controlled surrogate for the nonlocal disk convolution}
+\label{subsubsec:forwardmodel}
+
+\textbf{Surrogate interface.} The kernel modifier $w_{\mathrm{ker}}(k)$ implies a generally nonlocal mapping from baryonic sources to the gravitational response. A full nonlocal disk convolution can be implemented directly, but it introduces numerical and modeling complexity that is orthogonal to the present falsifier-oriented question. We therefore adopt a controlled surrogate that approximates the kernel action in the quasi-static scaling window as a multiplicative enhancement of the baryon-only rotation curve:
+\begin{equation}
+    v^2_{model}(r) = v^2_{bar}(r) [1 + A(r/r_0)^\alpha],
+    \label{eq:baryon_ansatz}
+\end{equation}
+where $v_{bar}(r)$ is the SPARC baryonic template prediction under the fixed $M/L$ protocol and $(A, \alpha, r_0)$ are global parameters shared by all galaxies.
+
+This ansatz is a surrogate for the full disk convolution implied by $w_{\mathrm{ker}}(k)$. It is designed to capture the scale-free, power-law enhancement implied by a causal fractional response in the scaling regime, while making the global-only falsifier test transparent. We treat $(A, \alpha, r_0)$ as empirical interface parameters for the surrogate itself; the theoretical derivation motivates the power-law form and provides theory-target expectations for 
+$\alpha$ and normalization relationships, but the surrogate is evaluated here under strict global-only enforcement.
+
+\subsubsection{Goodness-of-fit metrics}
+
+\textbf{Fit statistics.} For each galaxy $g$ with $N_g$ data points at radii $r_i$, observed velocities $v_{obs}(r_i)$, and total uncertainties $\sigma_{tot}(r_i)$, we compute
+\begin{equation}
+    \\\chi_g^2
+= \sum_{i=1}^{N_g}\frac{\big(v_{\mathrm{obs}}(r_i)-v_{\mathrm{model}}(r_i)\big)^2}{\sigma^2_{\mathrm{tot}}(r_i)}
+\,,
+\qquad
+\frac{\chi_g^2}{N_g}\ \text{(per-galaxy misfit)}.
+\end{equation}
+
+Over the full sample, the total chi-squared is $\chi^2_{tot} = \sum_g \chi^2_g$, and we report a reduced statistic $\chi^2/\nu =\chi^2_{tot}/(N_{tot}-p)$ where $p$ is the number of global parameters in the model under comparison. We emphasize the distribution of per-galaxy misfit (e.g., $\text{median}(\chi^2/N)$) because strict global-only protocols often produce heavy-tailed residuals dominated by a minority of outliers.
+
+\subsection{Results: global-only SPARC comparison}
+
+\textbf{Global-only performance.} Under the strict protocol above (fixed $M/L = 1$, no per-galaxy tuning, conservative $\sigma_{tot}$), the surrogate DIF interface model in Eq.~\ref{eq:baryon_ansatz} achieves:
+\begin{itemize}[itemsep=2pt]
+    \item $\text{median}(\chi^2/N) = 3.06$ across galaxies, and
+    \item $\chi^2/\nu = 4.63$ over the full sample (with $p=3$ global parameters in the surrogate).
+\end{itemize}
+For context under the same strict global-only constraints:
+\begin{itemize}[itemsep=2pt]
+    \item A strict global-only $\Lambda$CDM/NFW benchmark (2 global parameters) yields \\ $\text{median}(\chi^2/N) = 5.27$.
+    \item MOND (1 global parameter under the same protocol) yields $\text{median}(\chi^2/N) = 2.01$.
+\end{itemize}
+These numbers indicate that the DIF surrogate is not falsified by rotation curves under a stringent global-only evaluation and outperforms a strict global-only NFW benchmark, while remaining less efficient than MOND under identical constraints. The purpose of this comparison is not to claim superiority, but to establish whether the kernel-motivated response remains viable when deprived of per-galaxy flexibility.
+
+\subsection{Figures and tables}
+To make the strict global-only consistency check auditable, we include:
+(i) an observed-versus-model scatter plot over the full SPARC sample (Figure~\ref{fig:vobs_vmodel_all});
+(ii) a population-level residual diagnostic (Figure~\ref{fig:residuals});
+(iii) representative rotation-curve overlays spanning dwarfs to high-mass spirals (Figure~\ref{fig:rc_examples});
+and (iv) a benchmark comparison table against MOND and a strict global-only NFW baseline (Table~\ref{tab:sparc_fit_comparison}).
+
+\add{\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/vobs_vmodel_all_galaxies.pdf}
+  \caption{Observed vs. model-predicted rotation velocities for all 147 SPARC galaxies (2933 data points) under strict global-only protocol (fixed $M/L=1$, no per-galaxy tuning). Each panel shows $v_{\rm obs}$ vs. $v_{\rm model}$ scatter for one model: DIF (left, blue), MOND (center, green), and a strict global-only $\Lambda$CDM/NFW benchmark (right, red). Dashed line shows 1:1 correspondence.}
+  \label{fig:vobs_vmodel_all}
+\end{figure}}
+
+\add{\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/residuals_histogram.pdf}
+  \caption{Distribution of normalized residuals $(v_{\rm obs} - v_{\rm model})/\sigma_{\rm tot}$ for all 147 SPARC galaxies (2933 data points) under strict global-only protocol (fixed $M/L=1$, no per-galaxy tuning). Each panel shows one model: DIF (left, blue), MOND (center, green), and a strict global-only $\Lambda$CDM/NFW benchmark (right, red). Histogram shows data distribution (colored bars), smooth fitted curve tracing histogram shape (thick red curve, APJ-style spline fit), and a reference Gaussian with the same mean and RMS (black dashed). Gray vertical line marks zero residual. Panel titles report mean, median, and RMS; outlier counts for $|{\rm residual}|>3$ quantify extreme deviations.}
+  \label{fig:residuals}
+\end{figure}}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/rotation_curves_global_only_examples.pdf}
+  \caption{Representative SPARC rotation curves (DDO064, F574-1, NGC2403, NGC3198, NGC5055) under the strict global-only protocol (fixed $M/L=1$, no per-galaxy tuning). Black points: SPARC data with $v_{\rm err}$ error bars. Gray dashed: Newtonian baryonic template $v_{\rm baryon}$. Blue: DIF surrogate (Eq.~\eqref{eq:baryon_ansatz}, $A=0.38$, $\alpha=0.19$, $r_0=12\,\mathrm{kpc}$). Green: MOND ($a_0=1.2\times10^{-10}$ m/s$^2$, standard $\nu$ interpolation). Red: strict global-only $\Lambda$CDM/NFW benchmark ($(m_{\rm halo}/m_\star,c)=(30,10)$). All three models share parameters globally across the full 147-galaxy sample.}
+  \label{fig:rc_examples}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{lll}
+\toprule
+\textbf{Framework} & \textbf{Parameter policy} & \textbf{SPARC fit summary / notes} \\
+\midrule
+DIF (this work) &
+\parbox[t]{0.24\textwidth}{%
+\add{Global-only:}\\
+3 params $(A,\alpha,r_0)$\\
+\add{Fixed $M/L=1$ for all gal.}
+} &
+\parbox[t]{0.56\textwidth}{%
+\add{147 gal., strict global-only (fixed $M/L=1$): $\mathrm{median}(\chi^2/N)=3.06$; $\chi^2/\nu=4.63$; $A=0.38$, $\alpha=0.19$, $r_0=12\,\mathrm{kpc}$}
+} \\
+
+MOND &
+\parbox[t]{0.24\textwidth}{%
+\add{Global-only:}\\
+1 param $a_0$\\
+\add{Fixed $M/L=1$ for all gal.}
+} &
+\parbox[t]{0.56\textwidth}{%
+\add{147 gal., strict global-only (fixed $M/L=1$): $\mathrm{median}(\chi^2/N)=2.01$; $\chi^2/\nu=4.09$;}
+RAR: rms 0.057 dex on 175 gal. \cite{Li:2018}
+} \\
+
+$\Lambda$CDM NFW &
+\parbox[t]{0.24\textwidth}{%
+\add{Global-only:}\\
+\add{2 params $(m_{\rm halo}/m_\star, c)$}\\
+\add{Fixed $M/L=1$ for all gal.}
+} &
+\parbox[t]{0.56\textwidth}{%
+\add{147 gal., strict global-only (fixed $M/L=1$): $\mathrm{median}(\chi^2/N)=5.27$; $\chi^2/\nu=11.36$; $(m_{\rm halo}/m_\star,c)=(30,10)$}
+} \\
+\bottomrule
+\end{tabular}
+\caption{SPARC rotation-curve comparison under \emph{strict global-only protocol}: all three models use fixed $M/L=1$ for all galaxies with no per-galaxy tuning. DIF: 3 global parameters $(A,\alpha,r_0)$; MOND: 1 global parameter; $\Lambda$CDM benchmark: 2 global parameters. Fit quality is summarized by the APJ-style median per-galaxy statistic $\mathrm{median}(\chi_i^2/N_i)$ and by the global $\chi^2/\nu$ (see text). Under identical constraints, MOND achieves the best fit, DIF is intermediate, and the strict global-only $\Lambda$CDM benchmark is worst.}
+\label{tab:sparc_fit_comparison}
+\end{table}
+
+\add{\textbf{Note on the strict global-only $\Lambda$CDM benchmark}: The $\Lambda$CDM curve uses an NFW halo with global concentration $c$ and a global halo-to-stellar mass ratio $m_{\rm halo}/m_\star$; halo masses are assigned via a fixed stellar-mass proxy based on $v_{\rm baryon,max}^2 R_d$ (implemented in \texttt{strict\_global\_with\_lcdm.py}). Standard $\Lambda$CDM rotation-curve analyses fit halo parameters per galaxy; our benchmark is intentionally over-constrained to enforce the same global-only policy as DIF and MOND.}
+
+The DIF surrogate is intermediate between MOND and the $\Lambda$CDM benchmark (Table~\ref{tab:sparc_fit_comparison}). \add{Figures~\ref{fig:residuals}--\ref{fig:rc_examples} provide rotation-curve overlays, scatter plots, and residual distributions (see captions).} The key result is that the three global kernel parameters $(A,\alpha,r_0)$ remain consistent across the full 147-galaxy sample, supporting the hypothesis that the kernel modification is governed by a universal functional form \cite{mcgaugh2016,lelli2017}.
+
+\add{\textbf{Falsifiability strategy}: This work follows a Popperian falsifier-oriented approach \cite{Popper_1959}: we identify specific observational outcomes that would rule out the framework (e.g., systematic radial deviations from power-law enhancement, galaxy-dependent kernel parameters, Solar System violations, lensing incompatibilities). Absence of falsification is evidence of consistency, not confirmation of fundamental correctness.}
+
+\subsection{Interpretation and falsifiers}
+
+\textbf{Interpretation (consistency vs. confirmation).} The SPARC outcome should be read as a falsifier-oriented consistency check. Passing a strict global-only rotation-curve test does not confirm the framework, nor does it identify a unique mechanism; it only indicates that the kernel-motivated response is not immediately ruled out in the galactic regime under an intentionally conservative protocol.
+
+\textbf{Primary falsification targets.} Key external tests that can decisively challenge (or strongly constrain) this framework include:
+\begin{enumerate}[label=(\roman*), itemsep=0pt, topsep=2pt]
+  \item Solar-System precision tests: unless the kernel is UV-regularized/screened beyond the scaling window, Solar-System bounds can rule out naive extrapolations of the power-law enhancement;
+  \item gravitational lensing observables (which require a relativistic completion to address consistently); and
+  \item replacing the surrogate interface (Eq.~\ref{eq:baryon_ansatz}) with the full nonlocal disk convolution implied by $w_{\mathrm{ker}}(k)$ and re-testing under the same global-only constraints.
+\end{enumerate}
+
+In this sense, the present section is a “necessary but not sufficient” viability check: it filters out kernel forms that cannot survive global-only rotation-curve scrutiny.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Derived Parameters and Predictions}
+\label{sec:derived}
+%=============================================================================
+
+The preceding sections establish a constrained kernel form \(w_{\mathrm{ker}}(k)=1+C(k_0/k)^\alpha\) from the discrete variational framework with two dimensionless parameters \((C,\alpha)\) and one dimensional reference scale \(k_0\). We now show that the discrete ledger structure determines \(\alpha\) uniquely and constrains \(C\) at hypothesis level, leaving only the reference wavenumber \(k_0\) (equivalently the transition radius \(r_0 := 2\pi/k_0\)) as the single remaining dimensional input.
+
+\subsection{Derivation of the kernel exponent from self-similarity}
+\label{subsec:alpha_derived}
+
+The golden ratio \(\varphi=(1+\sqrt{5})/2\) is uniquely forced as the scaling ratio of the discrete ledger by the closure condition: a geometric scale sequence \(\{1,s,s^2,\ldots\}\) closed under additive ledger composition satisfies \(1+s=s^2\), whose unique positive root is \(s=\varphi\) \cite{pardoguerra2026,washburn2026ratio}.
+
+The fractional-memory exponent \(\alpha\) is determined by a two-scale decomposition argument. Consider a ledger loop (a closed constraint cycle) at scale \(\ell\varphi\). Self-similarity and the identity \(\varphi^2=\varphi+1\) imply that this loop decomposes into two sub-loops at scales \(\ell\) and \(\ell/\varphi\):
+\begin{equation}
+  \ell\varphi = \ell + \ell/\varphi.
+  \label{eq:two_scale}
+\end{equation}
+This is an algebraic identity (multiply both sides by \(\varphi\) and use \(\varphi^2=\varphi+1\)).
+
+%The sub-loop at scale \(\ell\) carries a fraction \(\ell/(\ell\varphi)=\varphi^{-1}\) of the parent loop's scale, so the fraction of closure not completed by this sub-loop is \(1-\varphi^{-1}\). This is the ``incomplete-closure fraction'' — the share of the loop's recognition debt that remains unresolved at the sub-loop level. By the symmetry of the decomposition (two sub-loops at scales related by the same ratio \(\varphi\)), each sub-loop contributes equally to the fractional exponent. Dividing by two:
+%\begin{equation}
+  %\alpha = \frac{1-\varphi^{-1}}{2} = \frac{1}{2}\left(1-\frac{2}{1+\sqrt{5}}\right) \approx 0.191.
+  %\label{eq:alpha_derived}
+%\end{equation}
+%The derivation uses only two inputs: (i) the closure equation \(\varphi^2=\varphi+1\) and (ii) the equal-partition symmetry of the two-scale decomposition. No adjustable parameters enter.
+
+%\begin{remarkX}
+%The factor of \(1/2\) is not arbitrary: it reflects the fact that the decomposition produces exactly two sub-loops. If the lattice dimension forced a different decomposition multiplicity \(n\), the exponent would be \((1-\varphi^{-1})/n\). The value \(n=2\) follows from the binary character of the \(\varphi^2=\varphi+1\) recursion, which splits a single parent into exactly two descendants.
+%\end{remarkX}
+
+The sub-loop at scale \(\ell\) carries a fraction \(\ell/(\ell\varphi)=\varphi^{-1}\) of the parent loop's scale, so the fraction of closure not completed by this sub-loop is \(f_{\mathrm{inc}}:=1-\varphi^{-1}\). We interpret \(f_{\mathrm{inc}}\) as the scale-free incomplete-closure fraction associated with the two-scale decomposition.
+
+To connect \(f_{\mathrm{inc}}\) to the fractional-memory exponent, we make explicit the (standard) composition rule for fractional orders under serial concatenation in the linear-response regime. In the frequency/Laplace domain, a fractional-memory component of order \(\alpha\) contributes a multiplier proportional to \((i\omega)^{-\alpha}\) (equivalently, an operator \(\partial_t^{-\alpha}\) in time). Two independent serial sub-processes of the same order \(\alpha\) multiply their multipliers, yielding an effective order \(2\alpha\) because \((i\omega)^{-\alpha}(i\omega)^{-\alpha}=(i\omega)^{-2\alpha}\). In the present two-scale ledger loop decomposition (Eq.~\ref{eq:two_scale}), the parent loop is represented as the serial closure of exactly two sub-loops, so we equate the effective order to the incomplete-closure fraction:
+\begin{equation}
+  2\alpha \;=\; f_{\mathrm{inc}} \;=\; 1-\varphi^{-1}.
+  \label{eq:alpha_functional}
+\end{equation}
+Solving gives
+\begin{equation}
+  \alpha \;=\; \frac{1-\varphi^{-1}}{2} \;=\; \frac{1}{2}\left(1-\frac{2}{1+\sqrt{5}}\right) \approx 0.191.
+  \label{eq:alpha_derived}
+\end{equation}
+The derivation uses (i) the closure identity \(\varphi^2=\varphi+1\), which fixes the two-scale decomposition, and (ii) the additive composition rule for fractional orders under serial concatenation. No adjustable parameters enter.
+
+\begin{remarkX}
+Equation~\eqref{eq:alpha_functional} is the functional constraint for \(\alpha\) implied by the two-subloop closure structure: the factor of \(1/2\) arises because the decomposition yields exactly two serial sub-loops. If a different decomposition multiplicity \(n\) were forced by the closure recursion, the same composition rule would give \(n\alpha=f_{\mathrm{inc}}\).
+\end{remarkX}
+
+\subsection{Amplitude hypothesis}
+\label{subsec:C_hypothesis}
+
+The amplitude \(C\) enters through the three-channel factorization of the ledger closure across the \(D=3\) spatial dimensions forced by the framework. The resulting hypothesis gives
+\begin{equation}
+  C = \varphi^{-2} \approx 0.382.
+  \label{eq:C_hypothesis}
+\end{equation}
+This value is labeled a hypothesis (not a theorem) because the three-channel factorization argument relies on additional structural assumptions about the spatial decomposition of the closure operator. The derivation of \(\alpha\) in Eq.~\eqref{eq:alpha_derived} does not depend on \(C\).
+
+\subsection{Predicted rotation-curve enhancement}
+\label{subsec:predictions}
+
+With the derived exponent and hypothesized amplitude, the kernel is fully specified up to the reference scale \(r_0\):
+\begin{equation}
+  w_{\mathrm{ker}}(k) = 1 + \varphi^{-2}\left(\frac{k_0}{k}\right)^{(1-\varphi^{-1})/2}.
+  \label{eq:wk_derived}
+\end{equation}
+
+For practical comparison with galaxy rotation curves, we relate the Fourier-space kernel to a real-space rotation-curve prediction. For a spherical source, the modified enclosed mass scales as \(M_{\mathrm{eff}}(r)\propto r^{1+\alpha}\) at large \(r\) (since \(w_{\mathrm{ker}}(k)\sim k^{-\alpha}\) enhances long-wavelength modes), so \(v^2 = GM_{\mathrm{eff}}/r\) acquires an enhancement \(\propto r^{\alpha}\). For disk galaxies the convolution structure differs, but the infrared scaling exponent is set by the same power law. We therefore adopt a surrogate closure that applies the kernel enhancement multiplicatively to the baryonic circular-speed-squared:
+\begin{equation}
+v^2(r)=v_{\mathrm{baryon}}^2(r)\,\left[1+C\left(\frac{r}{r_0}\right)^{\alpha}\right],
+  \label{eq:vmodel}
+\end{equation}
+where \(v_{\mathrm{baryon}}(r)\) is the Newtonian baryonic contribution (gas+disk+bulge) and
+\begin{equation}
+  C = \varphi^{-2} \approx 0.382,\qquad \alpha = \tfrac{1}{2}(1-\varphi^{-1}) \approx 0.191.
+  \label{eq:derived_params}
+\end{equation}
+The only remaining free parameter is the transition radius \(r_0\), which sets the dimensional scale at which the kernel enhancement becomes significant.
+
+Figure~\ref{fig:vmodel_enhancement} visualizes the predicted scale-free enhancement over the dimensionless radius \(x=r/r_0\).
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/vmodel_enhancement.pdf}
+    \caption{Predicted rotation-curve enhancement from the derived kernel parameters. The enhancement grows as \(x^\alpha\) in \(v^2\) (solid) and as \(\sqrt{1+C\, x^\alpha}\) in \(v\) (dashed), with \(C=\varphi^{-2}\approx 0.382\) and \(\alpha\approx 0.191\). The transition radius \(r_0\) is the single remaining dimensional input.}
+\label{fig:vmodel_enhancement}
+\end{figure}
+
+\subsection{Consistency with galaxy rotation-curve data}
+\label{subsec:consistency}
+
+The strict global-only SPARC evaluation is reported in Sec.~\ref{sec:sparc} under the fixed $M/L=1$ protocol and conservative $\sigma_{tot}$ model (Appendix~\ref{app:sparcmodel}). Under that intentionally stringent policy, the surrogate interface yields $\text{median}(\chi^2/N) = 3.06$ and $(\chi^2/\nu) = 4.63$ over the 147-galaxy sample \cite{lelli2016}, and is therefore not falsified in the galactic regime.
+
+Separately, we also consider an exploratory global-only re-optimization study in Appendix~\ref{app:reopt} to assess sensitivity of the global-only conclusions to the choice of misfit statistic and uncertainty model. The Appendix~\ref{app:reopt} reports best-fit $(A,\alpha,r_0)$ values and uncertainties under that alternative evaluation. The strict Sec.~\ref{sec:sparc} results remain the primary falsifier-oriented benchmark of this manuscript.
+
+Figure~\ref{fig:velocity_enhancement_v_over_vbaryon} shows the predicted velocity enhancement evaluated at the derived parameters.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/velocity_enhancement_v_over_vbaryon.pdf}
+  \caption{Predicted scale-dependent enhancement of the circular velocity \(v/v_{\mathrm{baryon}}=\sqrt{1+C\, x^{\alpha}}\) as a function of \(x=r/r_0\), evaluated at the derived values \(C=\varphi^{-2}\approx 0.382\) and \(\alpha\approx 0.191\) (Eq.~\eqref{eq:derived_params}).}
+  \label{fig:velocity_enhancement_v_over_vbaryon}
+\end{figure}
+
+\subsection{Derivation status summary}
+\label{subsec:status_summary}
+
+Table~\ref{tab:derivation_status} summarizes the epistemic status of each element in the kernel specification.
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{llll}
+\toprule
+\textbf{Quantity} & \textbf{Value} & \textbf{Status} & \textbf{Source} \\
+\midrule
+Kernel form \(w_{\mathrm{ker}}(k)\) & \(1+C(k_0/k)^\alpha\) & Derived & A6 + A7 (Sec.~\ref{sec:latency}) \\
+Exponent \(\alpha\) & \(\tfrac{1}{2}(1-\varphi^{-1})\approx 0.191\) & Derived & Self-similarity (Sec.~\ref{subsec:alpha_derived}) \\
+Amplitude \(C\) & \(\varphi^{-2}\approx 0.382\) & Hypothesis & 3-channel factorization (Sec.~\ref{subsec:C_hypothesis}) \\
+Reference scale \(r_0\) & \(\sim 12\,\mathrm{kpc}\) & Free (dimensional) & Not derived; single remaining input \\
+\bottomrule
+\end{tabular}
+\caption{Derivation status of the kernel parameters. The exponent is derived from self-similarity; the amplitude is a labeled hypothesis; only the dimensional reference scale remains free.}
+\label{tab:derivation_status}
+\end{table}
+
+\subsection{Falsification targets}
+\label{subsec:falsifiers}
+
+The kernel mechanism with derived parameters is falsifiable through several independent routes:
+\begin{enumerate}[label=(\roman*)]
+  \item \textbf{Exponent test:} If future high-resolution rotation-curve analyses yield a best-fit \(\alpha\) inconsistent with \((1-\varphi^{-1})/2\) at \(>3\sigma\), the self-similarity derivation is falsified.
+  \item \textbf{Amplitude test:} If the best-fit amplitude is inconsistent with \(\varphi^{-2}\) at \(>3\sigma\), the three-channel hypothesis is falsified (while the exponent derivation may survive).
+  \item \textbf{Globality test:} If galaxy rotation curves require galaxy-dependent kernel parameters (per-galaxy \(\alpha\) or \(C\)), the global-kernel mechanism is falsified.
+  \item \textbf{Full convolution test:} If the exact nonlocal disk convolution of \(w_{\mathrm{ker}}(k)\) yields radial profiles incompatible with the surrogate Eq.~\eqref{eq:vmodel}, the surrogate closure is falsified.
+  \item \textbf{Independent probes:} Weak-field lensing observables (once a relativistic completion is specified) or other quasi-static probes sensitive to infrared Poisson modifications provide external falsification routes.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Limitations and predictions}
+\label{sec:limits}
+
+\subsection{Limitations}
+
+Several limitations are explicit in the present scope. First, the analysis is non-relativistic, quasi-static, and linear-response; lensing and post-Newtonian constraints require a covariant/dynamical completion. Second, the SPARC comparison uses a controlled multiplicative surrogate (Eq.~\ref{eq:baryon_ansatz}) rather than the full nonlocal disk convolution implied by $w_{\mathrm{ker}}(k)$; while motivated by the scaling-window causal construction, the surrogate should be replaced by the full operator in future work. Third, we fix $M/L$ globally to eliminate per-galaxy flexibility; this is intentional for falsifier clarity but is not an astrophysically optimized modeling choice.
+
+\subsection{Predictions / falsifiers subsection}
+
+The framework is sharpened by the following falsification targets:
+\begin{enumerate}[label=(\roman*), itemsep=0pt, topsep=2pt]
+    \item precision weak-field Solar System constraints (e.g., PPN parameters) once a covariant completion is specified;
+    \item lensing observables that compare dynamical and gravitational potentials;
+    \item reproduction (or failure) of rotation-curve trends when the surrogate interface is replaced by the full nonlocal disk convolution implied by $w_{\mathrm{ker}}(k)$; and
+    \item cross-system universality: the same globally shared scaling exponent and normalization rules must apply across dwarfs and high-mass spirals under a protocol that prevents per-object tuning.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusion and Outlook}
+\label{sec:conclusion}
+
+We have presented a cost-first discrete variational framework. The Recognition Composition Law (RCL) serves as the sole primitive, uniquely selecting a reciprocal closure cost that forces a discrete double-entry ledger of conserved edge-local constraints on a cellular complex. From this emergent structure, the Newton--Poisson equation arises as the instantaneous-closure refinement limit. Finite equilibration introduces a constrained class of source-side modifications characterized by a scale-free response kernel. The construction is linear, conservative, and falsifiable in the non-relativistic, quasi-static regime.
+
+The kernel exponent $\alpha = \frac{1}{2}(1-\phi^{-1}) \approx 0.191$ is derived from self-similarity of the discrete ledger closure, and the amplitude $C = \phi^{-2} \approx 0.382$ is identified as a labeled hypothesis from a three-channel spatial factorization. We evaluate the resulting kernel-motivated response against SPARC galaxy rotation curves under a strict global-only protocol (Sec.~\ref{sec:sparc}; fixed 
+$M/L=1$, no per-galaxy tuning, conservative $\sigma_{tot}$). In this deliberately over-constrained setting, the surrogate interface achieves $\textrm{median}(\chi^2/N) = 3.06$ across 147 galaxies (2933 points), outperforming a strict global-only NFW benchmark and remaining less efficient than MOND under identical constraints. Appendix~\ref{app:reopt} records an exploratory re-optimization study intended to quantify sensitivity of globally shared surrogate parameters to the choice of objective function.
+
+%The kernel exponent \(\alpha = \tfrac{1}{2}(1-\varphi^{-1})\approx 0.191\) is derived from self-similarity of the discrete ledger closure, and the amplitude \(C=\varphi^{-2}\approx 0.382\) is identified as a hypothesis from a three-channel spatial factorization. These a priori values are consistent with independent galaxy rotation-curve constraints to within \(1\sigma\), constituting a genuine prediction of the framework. Only a single dimensional scale (the transition radius \(r_0\)) remains as an input.
+
+%At the level of scaling behavior, the modification enters through \(w(k)=1+C(k_0/k)^\alpha\), so deviations from Newtonian response are confined to long wavelengths (small \(k\)), while \(w(k)\rightarrow 1\) at short wavelengths (large \(k\)). For the derived \(\alpha\approx 0.191\), this implies strong suppression at Solar-System wavenumbers, so local corrections are negligible within the quasi-static weak-field scalar sector.
+
+At the level of scaling behavior, the modification enters through $w_{\mathrm{ker}}(k)=1+C(k_0/k)^\alpha$, i.e., an infrared enhancement that approaches the Newtonian baseline as $k \rightarrow \infty$. However, the power-law scaling form by itself does not establish Solar-System viability under naive real-space extrapolation: inserting the strict-protocol surrogate scaling $\Delta(r) \equiv A(r/r_0)^\alpha$ with the fiducial global-only values used in Section~\ref{sec:sparc} (e.g.,$A \simeq 0.38, \alpha \simeq 0.19, r_0 \simeq 12 \text{ kpc}$) gives $\Delta 1 \text{ AU} \sim 6 \times 10^{-3}$, which is not automatically negligible by Solar-System standards. No Solar-System compatibility claim is made for the scale-free power-law form without an explicit UV completion and relativistic embedding. For reference, Solar-System tracking bounds such as the Cassini constraint on $| \gamma -1 |$ are at the $10^{-5}$ level, so a percent-level modification would generally require additional suppression if it mapped directly onto the PPN sector \cite{Bertotti2003}. Accordingly, Solar-System bounds should be treated as an explicit falsifier of any UV-extended version of the kernel. Satisfying those bounds may require a UV regularization/screening mechanism (e.g., a high-$k$ cutoff as illustrated in Fig.~\ref{fig:kernel_scaling}) or a breakdown of the scaling-window assumptions outside the galactic regime; establishing such a completion—together with a relativistic embedding needed to translate to PPN/lensing observables—is beyond the scope of the present quasi-static effective model.
+
+The connection between the kernel parameters and the broader informational framework, including the derivation of dimensional scales from the ledger structure, is a natural direction for future work. Future tests against relativistic observables and full nonlocal disk convolutions provide direct routes for falsification.
+
+Gravitational lensing is not addressed within the present non-relativistic formulation. A relativistic completion would need to specify how the kernel couples to spacetime metric potentials, making lensing an important external constraint on any viable extension of the model.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace{6pt} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% optional
+%\supplementary{The following supporting information can be downloaded at:  \linksupplementary{s1}, Figure S1: title; Table S1: title; Video S1: title.}
+
+% Only for journal Methods and Protocols:
+% If you wish to submit a video article, please do so with any other supplementary material.
+% \supplementary{The following supporting information can be downloaded at: \linksupplementary{s1}, Figure S1: title; Table S1: title; Video S1: title. A supporting video article is available at doi: link.}
+
+% Only used for preprtints:
+% \supplementary{The following supporting information can be downloaded at the website of this paper posted on \href{https://www.preprints.org/}{Preprints.org}.}
+
+% Only for journal Hardware:
+% If you wish to submit a video article, please do so with any other supplementary material.
+% \supplementary{The following supporting information can be downloaded at: \linksupplementary{s1}, Figure S1: title; Table S1: title; Video S1: title.\vspace{6pt}\\
+%\begin{tabularx}{\textwidth}{lll}
+%\toprule
+%\textbf{Name} & \textbf{Type} & \textbf{Description} \\
+%\midrule
+%S1 & Python script (.py) & Script of python source code used in XX \\
+%S2 & Text (.txt) & Script of modelling code used to make Figure X \\
+%S3 & Text (.txt) & Raw data from experiment X \\
+%S4 & Video (.mp4) & Video demonstrating the hardware in use \\
+%... & ... & ... \\
+%\bottomrule
+%\end{tabularx}
+%}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\authorcontributions{%
+Conceptualization, E.A. and J.W.; 
+methodology, M.S., E.A., J.W.; 
+formal analysis, M.S., E.A., J.W.; 
+investigation, J.W.; 
+software, E.A.; 
+validation, M.S., E.A., J.W.; 
+resources, E.A., J.W.; 
+data curation, E.A.; 
+writing---original draft preparation, J.W.; 
+writing---review and editing, M.S., E.A., and J.W.; 
+visualization, M.S.; 
+supervision, J.W.; 
+project administration, J.W. 
+All authors have read and agreed to the published version of the manuscript.}
+
+\funding{This research received no external funding.}
+
+%\institutionalreview{In this section, you should add the Institutional Review Board Statement and approval number, if relevant to your study. You might choose to exclude this statement if the study did not require ethical approval. Please note that the Editorial Office might ask you for further information. Please add “The study was conducted in accordance with the Declaration of Helsinki, and approved by the Institutional Review Board (or Ethics Committee) of NAME OF INSTITUTE (protocol code XXX and date of approval).” for studies involving humans. OR “The animal study protocol was approved by the Institutional Review Board (or Ethics Committee) of NAME OF INSTITUTE (protocol code XXX and date of approval).” for studies involving animals. OR “Ethical review and approval were waived for this study due to REASON (please provide a detailed justification).” OR “Not applicable” for studies not involving humans or animals.}
+
+%\informedconsent{Any research article describing a study involving humans should contain this statement. Please add ``Informed consent was obtained from all subjects involved in the study.'' OR ``Patient consent was waived due to REASON (please provide a detailed justification).'' OR ``Not applicable'' for studies not involving humans. You might also choose to exclude this statement if the study did not involve humans.
+
+%Written informed consent for publication must be obtained from participating patients who can be identified (including by the patients themselves). Please state ``Written informed consent has been obtained from the patient(s) to publish this paper'' if applicable.}
+
+\dataavailability{The publicly available rotation-curve compilation used for empirical comparison is available at \url{http://astroweb.case.edu/ssm/SPARC/} \cite{lelli2016}. All derived parameter values reported in this work follow from the analytical expressions in Sec.~\ref{sec:derived} with no additional numerical inputs beyond the golden ratio. Figure generation scripts and configuration files will be released upon acceptance.} 
+
+%\durcstatement{Current research is limited to the [please insert a specific academic field, e.g., XXX], which is beneficial [share benefits and/or primary use] and does not pose a threat to public health or national security. Authors acknowledge the dual-use potential of the research involving xxx and confirm that all necessary precautions have been taken to prevent potential misuse. As an ethical responsibility, authors strictly adhere to relevant national and international laws about DURC. Authors advocate for responsible deployment, ethical considerations, regulatory compliance, and transparent reporting to mitigate misuse risks and foster beneficial outcomes.}
+
+% Only for journal Nursing Reports
+%\publicinvolvement{Please describe how the public (patients, consumers, carers) were involved in the research. Consider reporting against the GRIPP2 (Guidance for Reporting Involvement of Patients and the Public) checklist. If the public were not involved in any aspect of the research add: ``No public involvement in any aspect of this research''.}
+%
+%% Only for journal Nursing Reports
+%\guidelinesstandards{Please add a statement indicating which reporting guideline was used when drafting the report. For example, ``This manuscript was drafted against the XXX (the full name of reporting guidelines and citation) for XXX (type of research) research''. A complete list of reporting guidelines can be accessed via the equator network: \url{https://www.equator-network.org/}.}
+%
+%% Only for journal Nursing Reports
+%\useofartificialintelligence{Please describe in detail any and all uses of artificial intelligence (AI) or AI-assisted tools used in the preparation of the manuscript. This may include, but is not limited to, language translation, language editing and grammar, or generating text. Alternatively, please state that “AI or AI-assisted tools were not used in drafting any aspect of this manuscript”.}
+
+\acknowledgments{The authors thank collaborators and the community for discussions on rotation curve analysis.}
+
+\conflictsofinterest{The authors declare no conflicts of interest.} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Optional
+
+%% Only for journal Encyclopedia
+%\entrylink{The Link to this entry published on the encyclopedia platform.}
+
+%\abbreviations{Abbreviations}{
+%The following abbreviations are used in this manuscript:
+%\\
+
+%\noindent 
+%\begin{tabular}{@{}ll}
+%MDPI & Multidisciplinary Digital Publishing Institute\\
+%DOAJ & Directory of open access journals\\
+%TLA & Three letter acronym\\
+%LD & Linear dichroism
+%\end{tabular}
+%}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Optional
+\appendixtitles{yes} % Leave argument "no" if all appendix headings stay EMPTY (then no dot is printed after "Appendix A"). If the appendix sections contain a heading then change the argument to "yes".
+\appendixstart
+\appendix
+\section[\appendixname~\thesection]{The \texorpdfstring{$J(\cdot)$}{J(.)} cost functional and composition law}
+\label{app:si-cost}
+
+%\section[\appendixname~\thesection]{}
+
+This appendix records the composition-law argument fixing the unique reciprocal quadratic cost used in the main text. A complementary ``cost-first'' ledger framework exposition, including the same reciprocal cost and related structural consequences, appears in \cite{pardoguerra2026,washburn2026ratio}.
+
+\subsection{Recognition Composition Law (RCL)}
+\label{app:rcl}
+
+\begin{definitionX}[Recognition Composition Law (RCL)]
+\label{def:rcl}
+The cost functional \(J:(0,\infty)\to\RR\) satisfies the RCL if for all \(x,y>0\),
+\begin{equation}
+  J(xy)+J(x/y)=2J(x)J(y)+2J(x)+2J(y).
+  \label{eq:rcl}
+\end{equation}
+\end{definitionX}
+
+\begin{propositionX}[RCL forces the canonical reciprocal cost (sketch)]
+\label{prop:rcl_unique_cost}
+Assume \(J\) is a non-constant function satisfying \eqref{eq:rcl}, and is twice differentiable at \(x=1\) with \(J''(1)=1\). (Normalization \(J(1)=0\) and reciprocity \(J(x)=J(1/x)\) follow as necessary consequences for non-constant \(J\)).
+Then
+\begin{equation}
+  J(x)=\cosh(\ln x)-1=\frac12\left(x+x^{-1}\right)-1.
+  \label{eq:J-closed-form}
+\end{equation}
+\end{propositionX}
+
+\paragraph{Near-equilibrium expansion (used by the DEC bridge).}
+The main text requires only the quadratic behavior of \(J\) near \(x=1\). Using \eqref{eq:J-closed-form}, let \(x=1+\varepsilon\) with \(|\varepsilon|\ll 1\).
+Then \(\ln(1+\varepsilon)=\varepsilon+\mathcal{O}(\varepsilon^2)\) and \(\cosh u-1=\tfrac12u^2+\mathcal{O}(u^4)\), hence
+\begin{equation}
+  J(1+\varepsilon)=\frac12\,\varepsilon^2+\mathcal{O}(\varepsilon^3),
+\end{equation}
+which is Eq.~\eqref{eq:J-quadratic} in the main text.
+
+\begin{remarkX}
+The decoupled quadratic branch (no interaction term) yields \(J(x)\propto(\ln x)^2\) and corresponds to an additive, non-interacting composition law.
+The coupled branch selected by RCL is the minimal genuinely interacting symmetric quadratic law, and it is the branch used throughout this paper.
+\end{remarkX}
+
+\subsection{Uniqueness within the quadratic symmetric composition family}
+\label{app:rcl-inevitability}
+
+\begin{propositionX}[D'Alembert constraint: uniqueness of RCL within the quadratic symmetric family (sketch)]
+\label{prop:rcl-inevitability}
+Let \(J:(0,\infty)\to\RR\) be a non-constant continuous function.
+Assume there exists a symmetric quadratic polynomial \(P(u,v)=a u+b v+cuv+d u^2+e v^2+f\) such that for all \(x,y>0\),
+\begin{equation}
+  J(xy)+J(x/y)=P(J(x),J(y)).
+  \label{eq:quadratic-family}
+\end{equation}
+Assuming normalization \(J(1)=0\) and reciprocity \(J(x)=J(1/x)\) (which are forced by the canonical RCL \eqref{eq:rcl}), then:
+\begin{enumerate}[label=(\alph*), itemsep=1pt]
+  \item Normalization forces \(P(0,v)=2v\), hence \(b=2\), \(e=0\), \(f=0\).
+  \item Symmetry \(P(u,v)=P(v,u)\) forces \(a=b=2\) and \(d=e=0\).
+  \item If \(c=0\) (decoupled branch), the induced functional equation admits \(J(x)\propto(\ln x)^2\).
+  \item If \(c\neq 0\) (coupled branch), rescaling \(J\) absorbs \(c\) into normalization; imposing \(J''(1)=1\) fixes the canonical choice \(c=2\).
+\end{enumerate}
+Thus, within the quadratic symmetric family, the coupled law is uniquely the RCL form within the quadratic symmetric family considered here
+\(P(u,v)=2u+2v+2uv\), as given by Eq.~\eqref{eq:rcl}.
+\end{propositionX}
+
+\begin{remarkX}
+This is the sense in which the composition law is treated as ``forced'' rather than fit: once one restricts to (i) ratio-composition structure, (ii) debit/credit symmetry, and (iii) the minimal genuinely coupled quadratic family, the RCL is the unique nontrivial choice up to normalization.
+\end{remarkX}
+
+\section[\appendixname~\thesection]{The Ledger Structural Theorems}
+\label{app:ledger-theorems}
+
+This appendix records the core structural consequences of A1--A5 used in the continuum bridge narrative.
+We state them at the level needed for the weak-field limit; stronger sufficient conditions and full formalizations are outside the scope of this work.
+
+\begin{lemmaX}[Atomicity]
+\label{thm:atomicity}
+From A1 (non-triviality) and A5 (minimality), each tick carries exactly one atomic edge-local constraint update.
+\end{lemmaX}
+This lemma formalizes the tick-level discreteness needed to interpret the ledger dynamics as a sequence of atomic local updates in the later variational construction.
+
+\begin{lemmaX}[Closed-chain neutrality]
+\label{thm:neutrality}
+From A4 (conservation), any closed chain \(\gamma\) has vanishing net edge-cochain circulation:
+\begin{equation}
+  \sum_{e\in\gamma} w(e)=0.
+\end{equation}
+\end{lemmaX}
+This lemma expresses conservation as vanishing circulation on closed chains, which is the key hypothesis used to pass from edge-local updates to a potential representation.
+
+\begin{lemmaX}[Exactness and potentials]
+\label{thm:exactness}
+If circulation vanishes on all cycles, there exists a potential \(\phi:V\to\ZZ\) such that \(w=\nabla\phi\), unique up to an additive constant per connected component.
+\end{lemmaX}
+This lemma guarantees the existence of a scalar potential generating the edge cochain, enabling the near-equilibrium action to be written as a Dirichlet energy and connected to Poisson in the refinement limit.
+
+\begin{remarkX}
+The exactness statement is the discrete analogue of \(\nabla\times\nabla\phi=0\) and is the structural input that allows the near-equilibrium ledger action to be interpreted as a Dirichlet energy in the refinement limit.
+\end{remarkX}
+
+\section[\appendixname~\thesection]{Fractional-Operator Bridge}
+\label{app:fractional}
+
+This appendix records the operator-level bridge between heavy-tailed closure latency and the fractional-memory form used in the kernel mechanism.
+
+\begin{propositionX}[Fractional memory from heavy-tailed latency (operator-level)]
+\label{app:fractional-operator}
+If closure latency has a scale-free tail \(\psi(t)\sim t^{-1-\alpha}\) with \(0<\alpha<1\), then the linear-response effective source acquires a fractional-memory contribution with causal frequency-space multiplier \((i\omega+0^+)^{-\alpha}\).
+Under a scale-free causal closure \(\omega_{\mathrm{eff}}(k)\propto k\), this induces a spatial Fourier modifier \(w_{\mathrm{ker}}(k)-1\propto k^{-\alpha}\) in the quasi-static scaling window.
+\end{propositionX}
+This proposition records the standard operator-level bridge from heavy-tailed latency to a fractional multiplier and shows how the same scaling yields 
+$w_{\mathrm{ker}}(k)-1\propto k^{-\alpha}$ under the causal $w_{eff}(k)\propto k$ identification.
+
+\section[\appendixname~\thesection]{SPARC error model and goodness-of-fit statistics}
+\label{app:sparcmodel}
+
+This appendix records the total uncertainty model \(\sigma_{\mathrm{tot}}(r)\) and the goodness-of-fit
+statistics used in the strict global-only SPARC comparison (Section~\ref{sec:sparc}). The intent is to make the
+reported \(\chi^2\) values reproducible from SPARC component templates under a protocol that does not
+invoke per-galaxy tuning.
+
+\subsection{Data access and sample definition}
+We use SPARC rotation-curve data and baryonic component templates (disk, bulge, gas) as provided in the public SPARC release. The analysis sample in Section~\ref{sec:sparc} contains \(N_{\mathrm{gal}}=147\) galaxies and
+\(N_{\mathrm{tot}}=2933\) data points, and enforces fixed \(M/L=1\) globally (no per-galaxy adjustment).
+The sample selection used for the strict global-only SPARC evaluation is stated explicitly in Section~\ref{subsec:datasparc}.
+Briefly, we include all \(Q=1\) galaxies, exclude all \(Q=3\) galaxies, and include \(Q=2\) galaxies except for a fixed list of 16 exclusions; this yields \(N_{\mathrm{gal}}=147\) and \(N_{\mathrm{tot}}=2933\) for all Section~\ref{sec:sparc} figures and misfit statistics.
+%Any exclusion criteria (quality flags, radius cuts, or metadata requirements) should be stated explicitly in Section~\ref{subsec:datasparc}; when in doubt, we include all points and rely on a conservative uncertainty model.
+
+\subsection{Total uncertainty model}
+For a data point at radius \(r\) (kpc) with observed velocity \(v_{\mathrm{obs}}(r)\) (km/s) and reported SPARC
+uncertainty \(v_{\mathrm{err}}(r)\) (km/s), we define the total uncertainty by adding terms in quadrature:
+\begin{equation}
+\sigma^2_{\mathrm{tot}}(r)
+=
+v_{\mathrm{err}}(r)^2
++ \sigma_0^2
++ \big(f_{\mathrm{floor}}\,v_{\mathrm{obs}}(r)\big)^2
++ \sigma_{\mathrm{beam}}(r)^2
++ \big(f_{\mathrm{asym}}\,v_{\mathrm{obs}}(r)\big)^2
++ \sigma_{\mathrm{turb}}(r)^2.
+\tag{D.1}
+\end{equation}
+
+We fix the hyperparameters globally for all galaxies as:
+\[
+\sigma_0 = 10~\mathrm{km/s},\quad
+f_{\mathrm{floor}} = 0.05,\quad
+\alpha_{\mathrm{beam}} = 0.3,\quad
+f_{\mathrm{asym}}^{\mathrm{dwarf}} = 0.10,\quad
+f_{\mathrm{asym}}^{\mathrm{spiral}} = 0.05,\quad
+k_{\mathrm{turb}} = 0.07,\quad
+p_{\mathrm{turb}} = 1.3.
+\tag{D.2}
+\]
+We classify a system as a ``dwarf'' if \(\max(v_{\mathrm{obs}}) < 80~\mathrm{km/s}\); otherwise it is treated as a
+spiral for the asymmetry term.
+
+\paragraph{Beam-smearing term.}
+Let \(R_d\) be the disk scale radius (kpc) from SPARC metadata; if missing we use \(R_d=2\) kpc as a default.
+We define a beam length scale \(b = 0.3 R_d\) and set
+\begin{equation}
+\sigma_{\mathrm{beam}}(r) = \alpha_{\mathrm{beam}}\,\frac{b\,v_{\mathrm{obs}}(r)}{r+b}.
+\tag{D.3}
+\end{equation}
+
+\paragraph{Turbulence term.}
+With the same \(R_d\), we use
+\begin{equation}
+\sigma_{\mathrm{turb}}(r) = k_{\mathrm{turb}}\,v_{\mathrm{obs}}(r)\left(1-e^{-r/R_d}\right)^{p_{\mathrm{turb}}}.
+\tag{D.4}
+\end{equation}
+
+All terms are added in quadrature and \(\sigma_{\mathrm{tot}}(r)\) is the positive square root of Eq.~(D.1).
+
+\subsection{Goodness-of-fit statistics}
+For each galaxy \(g\) with \(N_g\) points, we compute
+\begin{equation}
+\chi^2_g = \sum_{i=1}^{N_g}\frac{(v_{\mathrm{obs}}(r_i)-v_{\mathrm{model}}(r_i))^2}{\sigma^2_{\mathrm{tot}}(r_i)},
+\qquad
+\frac{\chi^2_g}{N_g}\ \text{(per-galaxy misfit)}.
+\tag{D.5}
+\end{equation}
+Over the full sample, \(\chi^2_{\mathrm{tot}}=\sum_g\chi^2_g\) and
+\begin{equation}
+\chi^2/\nu = \chi^2_{\mathrm{tot}}/(N_{\mathrm{tot}}-p),
+\tag{D.6}
+\end{equation}
+where \(p\) is the number of globally shared model parameters (e.g., \(p=3\) for the surrogate DIF interface).
+We report the distribution of \(\chi^2_g/N_g\) (including the median) to diagnose whether fit quality is broad-based
+or dominated by a small subset of outliers.
+
+% ============================================================
+% Appendix E. Exploratory global-only re-optimization study
+% ============================================================
+\section[\appendixname~\thesection]{Exploratory global-only re-optimization study}
+\label{app:reopt}
+
+This appendix records an exploratory global-only re-optimization analysis intended to quantify the sensitivity of the strict global-only SPARC conclusions (Section~\ref{subsec:sparc_results}) to the choice of misfit statistic and (optionally) to modest variations of the uncertainty model. This study is secondary to the main falsifier-oriented benchmark reported in Section~\ref{sec:sparc}, and it is included to improve transparency about parameter sensitivity.
+
+\subsection{Model and shared-parameter constraint}
+We use the same surrogate interface as in Eq.~\ref{eq:baryon_ansatz},
+\begin{equation}
+v^2_{\mathrm{model}}(r) \;=\; v^2_{\mathrm{bar}}(r)\,\Big[1 + A\,(r/r_0)^{\alpha}\Big],
+\tag{E.1}
+\end{equation}
+where \(v_{\mathrm{bar}}(r)\) is the fixed-\(M/L\) baryonic template prediction and the parameters
+\((A,\alpha,r_0)\) are constrained to be global (shared across all galaxies). No per-galaxy tuning
+is permitted.
+
+\subsection{Alternative objective functions}
+Since strict global-only fits can exhibit heavy-tailed residual behavior dominated by a minority of outliers, we consider two complementary global-only objectives:
+
+\paragraph{Objective 1 (global reduced misfit).}
+Using the same \(\sigma_{\mathrm{tot}}(r)\) definition as in Appendix~\ref{app:sparcmodel}, define
+\(\chi^2_{\mathrm{tot}}=\sum_g \chi^2_g\) and \(\chi^2/\nu=\chi^2_{\mathrm{tot}}/(N_{\mathrm{tot}}-p)\)
+with \(p=3\). The corresponding objective is
+\begin{equation}
+\mathcal{L}_1(A,\alpha,r_0) \;=\; \chi^2/\nu.
+\tag{E.2}
+\end{equation}
+
+\paragraph{Objective 2 (median per-galaxy misfit).}
+Define the per-galaxy misfit statistic \(\chi^2_g/N_g\) as in Eq~(E.2), and set
+\begin{equation}
+\mathcal{L}_2(A,\alpha,r_0) \;=\; \mathrm{median}_g\!\left(\chi^2_g/N_g\right).
+\tag{E.3}
+\end{equation}
+This objective down-weights extreme outliers and is often more diagnostic of broad-based performance under global-only constraints.
+
+\subsection{Optional uncertainty-model sensitivity (if used)}
+The primary analysis uses the conservative \(\sigma_{\mathrm{tot}}(r)\) specified in Appendix~\ref{app:sparcmodel}. If an alternative uncertainty variant is explored (e.g., removing a single floor term or modestly adjusting a hyperparameter), it should be stated explicitly here and
+reported as a separate row in Table~\ref{tab:reopt_results}. If no alternative is explored, this subsection may be omitted without loss of completeness.
+
+\subsection{Parameter uncertainty estimation}
+To summarize sensitivity in a way that does not rely on per-galaxy tuning, we estimate uncertainty on
+the globally shared \((A,\alpha,r_0)\) via a galaxy-level resampling procedure:
+\begin{enumerate}[label=(\roman*), leftmargin=*]
+\item draw bootstrap resamples of galaxies (sampling galaxies with replacement, keeping each galaxy's data points intact);
+\item re-optimize \((A,\alpha,r_0)\) for each resample under \(\mathcal{L}_1\) and/or \(\mathcal{L}_2\);
+\item report median and central 68\% intervals across resamples as an indicative global-only uncertainty.
+\end{enumerate}
+This bootstrap is intended as an exploratory sensitivity diagnostic, not a definitive posterior inference.
+
+\subsection{Results summary (to be filled with the run outputs)}
+Table~\ref{tab:reopt_results} records the exploratory global-only re-optimization outputs under the objectives above. The strict global-only benchmark reported in Section~\ref{sec:sparc} remains the primary headline result of the manuscript.
+
+\begin{table}[H]
+\caption{Exploratory global-only re-optimization summary for the surrogate model in
+Eq.~(E.1). Report best-fit values and (if computed) bootstrap 68\% intervals under
+each objective.}
+\label{tab:reopt_results}
+\centering
+\begin{tabular}{lcccc}
+\toprule
+Objective & \(A\) & \(\alpha\) & \(r_0\) (kpc) & Summary misfit (\(\mathcal{L}\)) \\
+\midrule
+\(\mathcal{L}_1 = \chi^2/\nu\) &
+1.6833 & 1.0000 & 80.57 & 3.7111 \\
+\(\mathcal{L}_2 = \mathrm{median}(\chi^2_g/N_g)\) &
+1.3878 & 0.6323 & 4.28 & 2.2554 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textit{Note:} Bootstrap intervals were not computed for the values reported in Table~\ref{tab:reopt_results}.
+
+\noindent\textbf{What the re-optimization does (and does not) imply about \(\alpha\).}
+The globally shared surrogate parameters \((A,\alpha,r_0)\) in Appendix~\ref{app:reopt} are interface parameters for the multiplicative closure ansatz (Eq.~\ref{eq:reopt_surrogate}), not a direct measurement of the kernel exponent derived in Section~\ref{subsec:alpha_derived}. In particular, allowing the surrogate to optimize under different global-only objectives can drive \(\alpha\) toward boundary-seeking values that absorb surrogate mismatch (e.g., heavy-tailed outliers under \(\chi^2/\nu\)) rather than revealing the scaling-window exponent of the underlying nonlocal operator. Accordingly, Appendix~\ref{app:reopt} is reported as a sensitivity diagnostic for the surrogate+metric combination; it should not be read as evidence that the SPARC data ``prefer'' \(\alpha\approx 0.19\) in the absence of the full nonlocal disk convolution implied by \(w_{\mathrm{ker}}(k)\).
+
+We note that the global $\mathcal{L}_1 = \chi^2/\nu$ objective can drive the shared-parameter surrogate to boundary solutions (here, $\alpha$ saturates at the upper bound of the search interval). This behavior is a sensitivity feature of the surrogate interface under a heavy-tailed global objective, rather than a statement about the kernel exponent derived in the theory-target construction. The primary strict-protocol result in Section~\ref{sec:sparc} is therefore reported using a fixed global benchmark, with this appendix included only to document objective-function sensitivity.
+
+\subsection{Interpretation}
+The purpose of Appendix~\ref{app:reopt} is to make clear how sensitive the shared-parameter surrogate
+conclusions are to the choice of global-only objective and to modest uncertainty-model variations. Any substantial change in the inferred \(\alpha\) or in the relative ranking against benchmarks should be interpreted as evidence that the surrogate interface, rather than the kernel form itself, needs to be
+replaced by the full nonlocal disk convolution implied by \(w_{\mathrm{ker}}(k)\).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\isPreprints{}{% This command is only used for ``preprints''.
+\begin{adjustwidth}{-\extralength}{0cm}
+%} % If the paper is ``preprints'', please uncomment this parenthesis.
+%\printendnotes[custom] % Un-comment to print a list of endnotes
+
+\reftitle{References}
+
+% Please provide either the correct journal abbreviation (e.g. according to the “List of Title Word Abbreviations” http://www.issn.org/services/online-services/access-to-the-ltwa/) or the full name of the journal.
+% Citations and References in Supplementary files are permitted provided that they also appear in the reference list here. 
+
+%=====================================
+% References, variant A: external bibliography
+%=====================================
+\reftitle{References}
+\bibliography{difpaper}
+
+%=====================================
+% References, variant B: internal bibliography
+%=====================================
+
+% ACS format
+%\isAPAandChicago{}{%
+%\begin{thebibliography}{999}
+% Reference 1
+%\bibitem[Author1(year)]{ref-journal}
+%Author~1, T. The title of the cited article. {\em Journal Abbreviation} {\bf 2008}, {\em 10}, 142--149.
+% Reference 2
+%\bibitem[Author2(year)]{ref-book1}
+%Author~2, L. The title of the cited contribution. In {\em The Book Title}; Editor 1, F., Editor 2, A., Eds.; Publishing House: City, Country, 2007; pp. 32--58.
+% Reference 3
+%\bibitem[Author1 and Author2 (year)]{ref-book2}
+%Author 1, A.; Author 2, B. \textit{Book Title}, 3rd ed.; Publisher: Publisher Location, Country, 2008; pp. 154--196.
+% Reference 4
+%\bibitem[Author4(year)]{ref-unpublish}
+%Author 1, A.B.; Author 2, C. Title of Unpublished Work. \textit{Abbreviated Journal Name} year, \textit{phrase indicating stage of publication (submitted; accepted; in press)}.
+% Reference 5
+%\bibitem[Author8(year)]{ref-url}
+%Title of Site. Available online: URL (accessed on Day Month Year).
+% Reference 6
+%\bibitem[Author6(year)]{ref-proceeding}
+%Author 1, A.B.; Author 2, C.D.; Author 3, E.F. Title of presentation. In Proceedings of the Name of the Conference, Location of Conference, Country, Date of Conference (Day Month Year); Abstract Number (optional), Pagination (optional).
+% Reference 7
+%\bibitem[Author7(year)]{ref-thesis}
+%Author 1, A.B. Title of Thesis. Level of Thesis, Degree-Granting University, Location of University, Date of Completion.
+%\end{thebibliography}
+%}
+
+% If authors have biography, please use the format below
+%\section*{Short Biography of Authors}
+%\bio
+%{\raisebox{-0.35cm}{\includegraphics[width=3.5cm,height=5.3cm,clip,keepaspectratio]{Definitions/author1.pdf}}}
+%{\textbf{Firstname Lastname} Biography of first author}
+%
+%\bio
+%{\raisebox{-0.35cm}{\includegraphics[width=3.5cm,height=5.3cm,clip,keepaspectratio]{Definitions/author2.jpg}}}
+%{\textbf{Firstname Lastname} Biography of second author}
+
+% For the MDPI journals use author-date citation, please follow the formatting guidelines on http://www.mdpi.com/authors/references
+% To cite two works by the same author: \citeauthor{ref-journal-1a} (\citeyear{ref-journal-1a}, \citeyear{ref-journal-1b}). This produces: Whittaker (1967, 1975)
+% To cite two works by the same author with specific pages: \citeauthor{ref-journal-3a} (\citeyear{ref-journal-3a}, p. 328; \citeyear{ref-journal-3b}, p.475). This produces: Wong (1999, p. 328; 2000, p. 475)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% for journal Sci
+%\reviewreports{\\
+%Reviewer 1 comments and authors’ response\\
+%Reviewer 2 comments and authors’ response\\
+%Reviewer 3 comments and authors’ response
+%}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\PublishersNote{}
+%\isPreprints{}{% This command is only used for ``preprints''.
+\end{adjustwidth}
+%} % If the paper is ``preprints'', please uncomment this parenthesis.
+\end{document}
+

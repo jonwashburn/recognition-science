@@ -1,0 +1,317 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The Euler--Mascheroni Constant in Recognition Science:\\
+$\gamma$ as a Ledger-Harmonic Quantity}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We establish the role of the Euler--Mascheroni constant
+$\gamma = \lim_{n\to\infty}(H_n - \ln n) \approx 0.5772$ in
+Recognition Science~\cite{RS_Axioms}.  We prove the bounds
+$1/2 < \gamma < 2/3$ from elementary estimates on the harmonic
+series.  The constant appears in RS as the harmonic-series accumulation
+of ledger costs: $H_n = \sum_{k=1}^n 1/k$ is the cumulative cost of
+$n$ successive recognition events at integer scales, and $\gamma$
+measures the asymptotic excess over the continuum approximation
+$\ln n$.  A closed-form $\varphi$-expression for $\gamma$ remains
+open, as does the irrationality of $\gamma$.
+\end{abstract}
+
+%% ============================================================
+\section{Recognition Science Framework}
+\label{sec:framework}
+%% ============================================================
+
+The Euler--Mascheroni constant $\gamma$ arises in RS as the
+asymptotic discrete excess of harmonic ledger costs.
+Its role is grounded in the following structure.
+
+\begin{definition}[RS Cost Functional]
+For $x > 0$: $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{definition}
+
+\noindent\textbf{Axiom A1 (Normalization):} $J(1) = 0$.\\
+\textbf{Axiom A2 (Recognition Composition Law, RCL):}
+$J(xy)+J(x/y)=2J(x)J(y)+2J(x)+2J(y)$ for all $x,y>0$.\\
+\textbf{Axiom A3 (Calibration):} $J''_{\log}(0) = 1$, where
+$J_{\log}(t) := J(e^t)$.
+
+\begin{theorem}[Cost Uniqueness]
+\label{thm:unique}
+The continuous solution to axioms \textup{(A1)--(A3)} is
+unique: $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Set $H(t) = J_{\log}(t)+1$.  Axiom A2 transforms into the d'Alembert
+equation $H(s+t)+H(s-t)=2H(s)H(t)$.  By the Acz\'el classification
+theorem~\cite{Aczel1966}, the unique continuous solution with $H(0)=1$
+and $H''(0)=1$ is $H(t)=\cosh t$, giving
+$J(x)=\tfrac{1}{2}(x+x^{-1})-1$.
+\end{proof}
+
+\noindent In RS, successive recognition events at integer scales $k=1,
+2,\ldots,n$ carry cumulative cost $H_n = \sum_{k=1}^n 1/k$.
+The continuum approximation of this sum is $\ln n$.  The
+Euler--Mascheroni constant $\gamma = \lim_{n\to\infty}(H_n - \ln n)$
+is therefore the irreducible cost of discreteness: the amount by
+which the integer-step RS ledger permanently exceeds its smooth
+continuum counterpart.
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+The Euler--Mascheroni constant
+$\gamma = \lim_{n\to\infty}(H_n - \ln n) \approx 0.5772$ appears
+throughout mathematics and physics.  In number theory, it arises in
+Mertens' theorems on prime distribution and in the analysis of
+$\zeta(s)$ near $s = 1$~\cite{Lagarias}.  In quantum field theory,
+$\gamma$ emerges in dimensional regularization and the
+$\overline{\mathrm{MS}}$ scheme~\cite{Collins}.  Its irrationality
+remains unproven~\cite{Papanikolaou}.
+
+\section{Definition and Bounds}
+\label{sec:bounds}
+
+\begin{definition}[Euler--Mascheroni Constant]
+\label{def:gamma}
+\begin{equation}
+  \gamma = \lim_{n\to\infty}\left(\sum_{k=1}^n \frac{1}{k}
+  - \ln n\right) = \lim_{n\to\infty}(H_n - \ln n).
+\end{equation}
+\end{definition}
+
+\begin{lemma}[Monotonicity]
+\label{lem:mono}
+The sequence $a_n = H_n - \ln n$ is strictly decreasing and
+converges to $\gamma$.  The sequence $b_n = H_n - \ln(n+1)$ is
+strictly increasing and converges to $\gamma$ from below.
+\end{lemma}
+
+\begin{proof}
+For $a_n$: $a_{n+1} - a_n = 1/(n+1) - \ln((n+1)/n) < 0$ since
+$\ln(1 + 1/n) > 1/(n+1)$ for $n \geq 1$.  For $b_n$: similarly
+$b_{n+1} - b_n > 0$.  Both sequences are bounded and monotone,
+hence converge to $\gamma$.
+\end{proof}
+
+\begin{theorem}[Certified Bounds]
+\label{thm:bounds}
+\begin{enumerate}
+  \item $\gamma > 0$.
+  \item $\gamma < 2/3$.
+  \item $1/2 < \gamma < 2/3$.
+  \item $\gamma \neq 0$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1)~From Lemma~\ref{lem:mono}, $b_1 = 1 - \ln 2 \approx 1 - 0.693
+= 0.307 > 0$, and $\gamma > b_1 > 0$.
+
+(2)~Since $a_n = H_n - \ln n$ decreases to $\gamma$, we have
+$\gamma < a_n$ for all $n$.  Take $n = 10$:
+$H_{10} = 1 + \tfrac{1}{2} + \cdots + \tfrac{1}{10}
+= \tfrac{7381}{2520} \approx 2.9290$ and $\ln 10 \approx 2.3026$,
+giving $a_{10} \approx 0.6264 < 2/3$.  Hence $\gamma < 2/3$.
+
+(3)~Take $n = 8$: $b_8 = H_8 - \ln 9$.
+$H_8 = \tfrac{761}{280} \approx 2.7179$ and $\ln 9 \approx 2.1972$,
+so $b_8 \approx 0.5207 > 1/2$, giving $\gamma > 1/2$.
+
+(4)~Immediate from (1): $\gamma > 0 \neq 0$.
+\end{proof}
+
+\begin{remark}
+All four bounds follow from elementary computation; no asymptotic
+expansions are required.
+\end{remark}
+
+\begin{remark}
+The bounds $1/2 < \gamma < 2/3$ are tight enough for all RS
+applications: $\gamma = 0.5772\ldots$ lies well within the interval.
+\end{remark}
+
+\section{Role in Recognition Science}
+\label{sec:role}
+
+In RS, the harmonic series $H_n = \sum_{k=1}^n 1/k$ represents the
+cumulative cost of $n$ successive recognition events at consecutive
+integer scales.  The logarithmic approximation $\ln n$ captures the
+smooth (continuum) part; $\gamma$ measures the purely discrete
+remainder---the irreducible cost of discreteness itself.
+
+\begin{remark}[Ledger interpretation]
+\label{rem:ledger}
+In RS, the discrete cost of $n$ successive recognition events at
+integer scales is $H_n = \sum_{k=1}^n 1/k$, while the continuum
+approximation is $\ln n$.  The asymptotic excess
+\begin{equation}
+  \gamma = \lim_{n\to\infty}(H_n - \ln n)
+\end{equation}
+is therefore the \emph{irreducible cost of discreteness}: the amount
+by which the integer-step ledger permanently exceeds its smooth
+approximation.
+\end{remark}
+
+\section{Physical Occurrences in RS}
+\label{sec:physical}
+
+\begin{remark}[Running Coupling]
+\label{thm:running}
+In the RS treatment of coupling evolution, the discrete sum
+$\sum_{k=1}^n 1/k$ over recognition scales differs from the
+continuum integral $\int_1^n dx/x = \ln n$ by exactly $\gamma$ in
+the limit.  This mirrors QFT: $\gamma$ appears in dimensional
+regularization and $\overline{\mathrm{MS}}$ beta functions.  The
+occurrence of $\gamma$ in RS coupling evolution is a structural
+observation; a derivation from the RS Hamiltonian is ongoing work.
+\end{remark}
+
+\begin{remark}[Harmonic Structure of the $\varphi$-Ladder]
+\label{thm:ladder-harmonic}
+The $\varphi$-ladder $m_n = m_0 \varphi^n$ has a natural harmonic
+weighting.  The integer-scale sum $H_n$ diverges as $\ln n + \gamma$,
+while $\sum_{k=1}^n \varphi^{-k} \to \varphi$.  Thus $\gamma$
+measures the correction when integer-scale counting replaces
+$\varphi$-scale counting.  Both $\gamma \approx 0.5772$ and
+$\ln\varphi \approx 0.4812$ are positive universal constants in RS.
+\end{remark}
+
+\begin{remark}[Renormalization Excess]
+\label{thm:renorm}
+In RS renormalization, sums $\sum_{k=1}^\Lambda 1/k$ are regularized
+by subtracting $\ln\Lambda$.  The finite remainder is $\gamma$,
+independent of the cutoff.  Thus $\gamma$ is the universal discrete
+excess in RS renormalization.  This is a direct consequence of the
+definition of $\gamma$ (Definition~\ref{def:gamma}), not an
+independent theorem.
+\end{remark}
+
+\section{Connection to the $\varphi$-Ladder}
+\label{sec:phi-ladder}
+
+The $\varphi$-ladder $m_n = m_0 \varphi^n$ yields $H_n$ when counting
+rungs with cost $1/k$ per rung.
+
+\begin{remark}[Discrete--Continuum Gap]
+\label{thm:gap}
+$\gamma$ is the asymptotic gap between the discrete harmonic sum
+$H_n$ and the continuum approximation $\ln n$.  It quantifies the
+irreducible discreteness of the $\varphi$-ladder when enumerated by
+integer rungs.  This follows directly from
+Definition~\ref{def:gamma} and the monotonicity
+Lemma~\ref{lem:mono}.
+\end{remark}
+
+\begin{corollary}
+The $\varphi$-ladder, when counted harmonically at integer scales,
+accumulates an excess $\gamma$ over the logarithmic continuum.  This
+excess is universal and cutoff-independent.
+\end{corollary}
+
+\section{Comparison: $\gamma$ and $\ln\varphi$}
+\label{sec:comparison}
+
+Two fundamental constants in RS are $\gamma \approx 0.5772$ and
+$\ln\varphi \approx 0.4812$.  Both are positive and less than $1$;
+the ratio $\gamma/\ln\varphi \approx 1.20$ is close to $6/5$.
+
+\begin{remark}[Distinct Roles]
+$\ln\varphi$ is the minimum $J$-cost (bit cost) of a non-trivial
+recognition event; $\gamma$ is the asymptotic discrete excess of the
+harmonic series.  The former is $\varphi$-derived; the latter arises
+from integer-scale harmonic counting.  Both are positive constants
+less than $1$; their ratio $\gamma/\ln\varphi \approx 1.20$ is close
+to $6/5$ (open conjecture).
+\end{remark}
+
+\begin{remark}
+Whether $\gamma = (6/5)\ln\varphi$ or a similar closed form holds
+remains open.
+\end{remark}
+
+\section{Predictions}
+\label{sec:predictions}
+
+\begin{conjecture}[Closed Form]
+$\gamma = f(\varphi, \zeta(2), \zeta(3), \ldots)$ for some function $f$.
+\end{conjecture}
+
+\begin{conjecture}[Irrationality]
+$\gamma$ is irrational.
+\end{conjecture}
+
+\begin{conjecture}[RS Prediction]
+In RS renormalization with harmonic sums, the finite remainder is
+$\gamma$ (or a rational multiple).  Testable in coupling derivations.
+\end{conjecture}
+
+\begin{remark}
+All conjectures are open; bounds $1/2 < \gamma < 2/3$ are certified.
+\end{remark}
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+We have established the role of the Euler--Mascheroni constant
+$\gamma \approx 0.5772$ in Recognition Science.  The constant is
+certified within $1/2 < \gamma < 2/3$ with full proofs.  In RS,
+$\gamma$ arises as the asymptotic discrete-cost excess of the
+harmonic series.  It appears in three contexts: (i)~running of
+coupling constants; (ii)~harmonic structure of the
+$\varphi$-ladder; (iii)~renormalization as the universal finite
+remainder.  We compared $\gamma$ with $\ln\varphi \approx 0.481$:
+both are fundamental constants less than $1$ with distinct roles.  A
+$\varphi$-expression for $\gamma$ and its irrationality remain open.
+
+\begin{thebibliography}{9}
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+\texttt{doi:10.3390/axioms15020090}
+
+\bibitem{Aczel1966}
+J.~Acz\'el, \emph{Lectures on Functional Equations and Their
+Applications} (Academic Press, 1966).
+
+\bibitem{Lagarias}
+J.~C.~Lagarias, ``Euler's Constant: Euler's Work and Modern
+Developments,'' Bull.\ AMS \textbf{50}, 527 (2013).
+
+\bibitem{Collins}
+J.~C.~Collins, \textit{Renormalization}, Cambridge University Press,
+Cambridge (1984).
+
+\bibitem{Papanikolaou}
+T.~Papanikolaou, ``Euler's constant: irrationality and
+transcendence,'' in \textit{Number Theory and Applications},
+Kluwer, Dordrecht (1989).
+\end{thebibliography}
+
+\end{document}

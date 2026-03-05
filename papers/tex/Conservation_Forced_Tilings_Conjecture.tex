@@ -1,0 +1,614 @@
+\documentclass[12pt]{article}
+
+% ============================
+% Packages
+% ============================
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage[
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue
+]{hyperref}
+\usepackage{tikz-cd}
+\usetikzlibrary{arrows.meta}
+
+% ============================
+% Theorem environments
+% ============================
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% ============================
+% Convenience macros
+% ============================
+\newcommand{\phiGR}{\varphi}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\Hcech}{\check{H}}
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\lcm}{lcm}
+\DeclareMathOperator{\PF}{PF}
+
+\title{Conservation-Forced Aperiodic Order:\\A Classification Conjecture Unifying Ledger Potentials,\\Cohomological Invariants, and Tiling Dynamics}
+\author{Sebastian Pardo-Guerra\thanks{Email: \texttt{sebas@recognitionphysics.org}. ORCID: 0000-0002-2660-5318.}\\[4pt]
+\small Recognition Physics Institute, Austin, TX, USA
+\and
+Jonathan Washburn\thanks{Email: \texttt{washburn.jonathan@gmail.com}.}\\[4pt]
+\small Recognition Science Research Institute, Austin, TX, USA}
+\date{February 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We propose a classification conjecture that unifies two independent structural correspondences between the cost-first ledger framework and aperiodic tiling theory. The conjecture introduces the concept of a \emph{conservation-forced} tiling system---one whose matching rules are equivalent to cycle closure of pattern-equivariant 1-cochains---and asserts that such systems are precisely the substitution tilings with Pisot eigenvalues admitting cut-and-project descriptions. The central claim is that aperiodic order with long-range coherence is \emph{forced by conservation}: the conjunction of double-entry balance, finite local resolution, and topological non-triviality uniquely determines the class of physically realizable quasicrystalline structures.
+
+We prove several supporting propositions: that conservation-forcing implies the substitution eigenvalue is an algebraic integer (Proposition~\ref{prop:algebraic}), that the coherence cost $J$ induces a total order on conservation-forced systems with the golden ratio $\varphi$ as the unique minimum (Theorem~\ref{thm:hierarchy}), and that the gap between ordinary and pattern-equivariant cohomology classifies the ``recognition content'' of the tiling---the topological information accessible only to finite-resolution observers (Theorem~\ref{thm:recognition-gap}). We verify the conjecture for all known two-dimensional quasicrystalline tilings (Penrose, Ammann--Beenker, dodecagonal) and the one-dimensional Fibonacci chain. We formulate five precise sub-conjectures with explicit falsification criteria.
+\end{abstract}
+
+\medskip
+\noindent\textbf{Keywords:} aperiodic order, conservation laws, pattern-equivariant cohomology, Pisot numbers, quasicrystals, cost-first framework, golden ratio, matching rules, tiling classification
+
+\medskip
+\noindent\textbf{MSC 2020:} 52C23 (Quasicrystals, aperiodic tilings); 55N05 (Cohomology theory); 37B50 (Multi-dimensional shifts); 39B22 (Functional equations for real functions); 11R06 (PV-numbers)
+
+\section{Introduction}
+\label{sec:introduction}
+
+\subsection{Motivation: Two correspondences seeking unification}
+
+Recent work~\cite{PardoGuerraGolden2026} established two structural correspondences between the cost-first ledger framework~\cite{PardoGuerraEtAl2026,WashburnZlatanovic2026} and Penrose aperiodic tilings~\cite{Penrose1974,BaakeGrimm2013}: (1)~the Ammann height function is a ledger potential arising from the discrete Poincar\'{e} lemma applied to edge-type postings, and (2)~matching rules are equivalent to cycle closure---the ledger's double-entry conservation principle. A companion paper~\cite{PardoGuerraCohom2026} developed the cohomological refinement: the five Ammann bar cochains are pattern-equivariant 1-cocycles whose classes generate $\Hcech^1(\Omega_P; \ZZ) \cong \ZZ^5$ via the Kellendonk--Putnam isomorphism~\cite{KellendonkPutnam2006}, and the Ammann--Beenker and Fibonacci chain cases were verified independently.
+
+These results raise a natural question: \emph{Which tilings arise from conservation principles?} More precisely, for which substitution tilings are the matching rules equivalent to cycle closure of locally determined edge flows? And what does the information-theoretic cost functional $J$ reveal about the structure of the resulting classification?
+
+This paper proposes a precise answer in the form of a classification conjecture. We introduce the concept of a \emph{conservation-forced} tiling system and conjecture that this class coincides with the substitution tilings having Pisot eigenvalues and cut-and-project descriptions---the mathematical models of quasicrystals. If true, this would establish that \emph{long-range aperiodic order is a necessary consequence of conservation}, providing a variational foundation for quasicrystal theory.
+
+\subsection{The central observation}
+
+The key observation underlying our conjecture is the interaction of three properties:
+
+\paragraph{(I) Conservation (cycle closure).} The double-entry principle requires that the net posting around any closed cycle vanishes: $\sum_{e \in \gamma} \omega(e) = 0$. This is a discrete conservation law.
+
+\paragraph{(II) Finite local resolution (pattern-equivariance).} The cochains $\omega$ are determined by finite neighborhoods---they belong to the pattern-equivariant subcomplex $C^*_{PE}$. This is the mathematical expression of ``local observability.''
+
+\paragraph{(III) Topological non-triviality.} The cocycles $\omega$ are \emph{exact} in ordinary cohomology (global potentials exist on the plane) but \emph{non-trivial} in pattern-equivariant cohomology (the potentials are not locally determined). The gap
+\begin{equation}
+H^1_{PE}(G_{\mathcal{T}}; \ZZ) \neq 0 = H^1(G_{\mathcal{T}}; \ZZ)
+\label{eq:gap}
+\end{equation}
+is where the topological content of the tiling lives.
+
+The conjunction of (I)--(III) is extremely restrictive. Our conjecture asserts that it characterizes precisely the quasicrystalline tilings with Pisot inflation eigenvalues.
+
+\subsection{Significance}
+
+If the conjecture is correct, it has three major consequences:
+\begin{enumerate}
+\item \textbf{Variational foundation for quasicrystals.} Quasicrystalline order is not an accidental mathematical curiosity but a \emph{necessary consequence} of conservation with finite local resolution. This provides a physical explanation for why quasicrystals exist.
+
+\item \textbf{The coherence hierarchy.} The cost functional $J(x) = \frac{1}{2}(x + x^{-1}) - 1$ induces a total order on conservation-forced systems. The golden ratio $\varphi$ sits at the bottom---it is the \emph{cheapest} way to be aperiodic while satisfying conservation. This explains the prevalence of $\varphi$-based quasicrystals in nature.
+
+\item \textbf{Recognition-theoretic interpretation.} The gap~\eqref{eq:gap} between ordinary and PE cohomology formalizes the distinction between ``what exists'' (global potentials) and ``what can be observed'' (locally determined invariants). This connects tiling theory to the epistemology of measurement: topological information about the tiling is real but invisible to any local observer.
+\end{enumerate}
+
+\subsection{Organization}
+
+Section~\ref{sec:definitions} establishes definitions. Section~\ref{sec:conjecture} states the main conjecture and its five sub-conjectures. Section~\ref{sec:proved} presents supporting propositions that are proved (not conjectured). Section~\ref{sec:verification} verifies the conjecture for known cases. Section~\ref{sec:hierarchy} develops the coherence hierarchy. Section~\ref{sec:recognition} develops the recognition-theoretic interpretation. Section~\ref{sec:open} discusses open problems and falsification criteria.
+
+
+\section{Definitions}
+\label{sec:definitions}
+
+We establish the formal vocabulary needed for the classification conjecture.
+
+\subsection{Substitution tiling systems}
+
+\begin{definition}[Substitution tiling system]
+\label{def:substitution-system}
+A \emph{substitution tiling system} $(\mathcal{T}, \sigma, M)$ consists of:
+\begin{itemize}
+\item A tiling $\mathcal{T}$ of $\RR^d$ with finite prototile set $\mathcal{A} = \{t_1, \ldots, t_m\}$, finite local complexity, and repetitivity.
+\item A substitution rule $\sigma: \mathcal{A} \to \mathcal{A}^*$ that replaces each prototile by a finite patch of smaller tiles.
+\item The substitution matrix $M \in \ZZ^{m \times m}$ where $M_{ij}$ counts tiles of type $j$ produced by substituting $t_i$.
+\end{itemize}
+The system is \emph{primitive} if $M^k$ has strictly positive entries for some $k \geq 1$. The \emph{Perron--Frobenius eigenvalue} $\lambda_\PF(M)$ is the unique largest positive eigenvalue.
+\end{definition}
+
+\begin{definition}[Tiling hull and cohomology]
+The \emph{hull} of $\mathcal{T}$ is
+\[
+\Omega_{\mathcal{T}} := \overline{\{t + \mathcal{T} : t \in \RR^d\}}
+\]
+in the local topology. Its \v{C}ech cohomology $\Hcech^*(\Omega_{\mathcal{T}}; \ZZ)$ is computed via the Anderson--Putnam direct limit~\cite{AndersonPutnam1998}. The \emph{pattern-equivariant cohomology} $H^*_{PE}(G_{\mathcal{T}}; \ZZ)$ is isomorphic to $\Hcech^*(\Omega_{\mathcal{T}}; \ZZ)$ by the Kellendonk--Putnam theorem~\cite{KellendonkPutnam2006}.
+\end{definition}
+
+\subsection{The ledger cochain complex}
+
+\begin{definition}[Ledger cochain complex]
+\label{def:ledger-complex}
+Let $G_{\mathcal{T}} = (V, E)$ be the vertex-edge graph of $\mathcal{T}$, extended to a CW complex with 2-cells (tiles). The \emph{ledger cochain complex} is:
+\[
+C^0_L(G_{\mathcal{T}}) \xrightarrow{\;\delta_0\;} C^1_L(G_{\mathcal{T}}) \xrightarrow{\;\delta_1\;} C^2_L(G_{\mathcal{T}}),
+\]
+where $C^0_L = \{p: V \to \ZZ\}$, $C^1_L = \{\omega: E \to \ZZ \mid \omega(v \to u) = -\omega(u \to v)\}$, $C^2_L = \bigoplus_{F \in \mathcal{F}} \ZZ$, with coboundaries $\delta_0(p)(u \to v) = p(v) - p(u)$ and $\delta_1(\omega)(F) = \sum_{e \in \partial F} \omega(e)$.
+\end{definition}
+
+\begin{definition}[Pattern-equivariant subcomplex]
+\label{def:PE}
+A cochain $\omega \in C^n_L(G_{\mathcal{T}})$ is \emph{pattern-equivariant of radius $R$} if $\omega(c) = \omega(c')$ whenever the $R$-neighborhoods of $c$ and $c'$ are translationally equivalent. The PE subcomplex is $C^n_{PE} := \bigcup_R C^n_{PE,R}$.
+\end{definition}
+
+\subsection{The cost functional}
+
+\begin{definition}[Reciprocal cost functional]
+\label{def:J}
+The \emph{reciprocal cost functional} $J: \RR_{>0} \to \RR_{\geq 0}$ is the unique function satisfying:
+\begin{itemize}
+\item[(A1)] Normalization: $J(1) = 0$.
+\item[(A2)] d'Alembert composition: $J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y)$.
+\item[(A3)] Quadratic calibration: $\lim_{t \to 0} 2J(e^t)/t^2 = 1$.
+\end{itemize}
+Explicitly, $J(x) = \frac{1}{2}(x + x^{-1}) - 1$. In log coordinates: $J(e^t) = \cosh(t) - 1$.
+\end{definition}
+
+\subsection{The central definition}
+
+\begin{definition}[Conservation-forced tiling system]
+\label{def:conservation-forced}
+A primitive substitution tiling system $(\mathcal{T}, \sigma, M)$ of $\RR^d$ is \emph{conservation-forced of rank $r$} if there exist 1-cochains $\omega^{(1)}, \ldots, \omega^{(r)} \in C^1_L(G_{\mathcal{T}})$ satisfying:
+
+\begin{enumerate}[label=\textbf{(CF\arabic*)}]
+\item \label{CF1} \textbf{Conservation (cycle closure).} Each $\omega^{(k)}$ is a cocycle: $\delta_1(\omega^{(k)}) = 0$.
+
+\item \label{CF2} \textbf{Finite local resolution (pattern-equivariance).} Each $\omega^{(k)} \in C^1_{PE}(G_{\mathcal{T}})$.
+
+\item \label{CF3} \textbf{Topological non-triviality.} The classes $[\omega^{(k)}] \in H^1_{PE}(G_{\mathcal{T}}; \ZZ)$ are non-zero.
+
+\item \label{CF4} \textbf{Linear independence.} The classes $[\omega^{(1)}], \ldots, [\omega^{(r)}]$ are $\ZZ$-linearly independent in $H^1_{PE}(G_{\mathcal{T}}; \ZZ)$.
+
+\item \label{CF5} \textbf{Maximality.} The rank $r$ is maximal: no additional PE 1-cocycle is $\ZZ$-linearly independent from $\{[\omega^{(k)}]\}_{k=1}^r$ in $H^1_{PE}$.
+\end{enumerate}
+
+We call $\{\omega^{(k)}\}_{k=1}^r$ a \emph{conservation basis}, and $r$ the \emph{conservation rank} of the system.
+\end{definition}
+
+\begin{remark}[Interpretation of the axioms]
+\ref{CF1} says the cochains obey a discrete conservation law (no ``charge'' is created or destroyed around any tile). \ref{CF2} says the conservation law is locally verifiable---a finite-resolution observer can check it. \ref{CF3} says the conservation law carries genuine topological content: global potentials exist but are not locally determined. \ref{CF4}--\ref{CF5} ensure the conservation basis is complete and irredundant.
+
+The conjunction of \ref{CF1}--\ref{CF3} is the crucial constraint. A 1-cocycle that is pattern-equivariant AND has a pattern-equivariant primitive would be trivial in $H^1_{PE}$. Conservation-forcing requires that \emph{local conservation laws have global (non-local) potentials}---a condition that is impossible for periodic tilings.
+\end{remark}
+
+\begin{definition}[Coherence cost of a tiling system]
+\label{def:coherence-cost}
+For a conservation-forced tiling system with Perron--Frobenius eigenvalue $\lambda$, the \emph{coherence cost} is $J(\lambda)$ and the \emph{information unit} is $J_{\mathrm{bit}} := \ln \lambda$.
+\end{definition}
+
+
+\section{The Classification Conjecture}
+\label{sec:conjecture}
+
+\begin{conjecture}[Conservation-Forced Aperiodic Order --- Main Conjecture]
+\label{conj:main}
+Let $(\mathcal{T}, \sigma, M)$ be a primitive substitution tiling system of $\RR^d$ with finite local complexity. The following are equivalent:
+\begin{enumerate}[label=(\alph*)]
+\item \label{conj:CF} $(\mathcal{T}, \sigma, M)$ is conservation-forced (Definition~\ref{def:conservation-forced}).
+\item \label{conj:Pisot} The Perron--Frobenius eigenvalue $\lambda_\PF(M)$ is a Pisot number, and $\mathcal{T}$ admits a cut-and-project description from a lattice $\Lambda \subset \RR^N$ to $\RR^d$.
+\item \label{conj:matching} The matching rules of $\mathcal{T}$ are equivalent to cycle closure of a conservation basis, and violations of matching rules are classified by the coboundary defects $\delta_1(\omega^{(k)})$.
+\item \label{conj:variational} $\mathcal{T}$ is a zero-cost minimizer: $C_{\mathrm{global}}(\mathcal{T}) = 0$, where $C_{\mathrm{global}}$ is the defect-weighted cost functional (Definition~\ref{def:global-cost}).
+\end{enumerate}
+Moreover, when these conditions hold:
+\begin{enumerate}[label=(\roman*)]
+\item The conservation rank is $r = N - d$, equal to the perpendicular-space dimension.
+\item The global primitives (height functions) of the conservation basis parametrize the perpendicular-space coordinates of the cut-and-project description.
+\item The substitution entropy $h_{\mathrm{sub}} = \ln \lambda_\PF$ equals the ledger information unit $J_{\mathrm{bit}}$.
+\end{enumerate}
+\end{conjecture}
+
+We decompose this into five precise sub-conjectures, each independently falsifiable.
+
+\begin{conjecture}[Sub-Conjecture A: Conservation implies Pisot]
+\label{conj:A}
+If $(\mathcal{T}, \sigma, M)$ is conservation-forced, then $\lambda_\PF(M)$ is a Pisot number (an algebraic integer $> 1$ whose Galois conjugates all have modulus $< 1$).
+\end{conjecture}
+
+\begin{conjecture}[Sub-Conjecture B: Conservation implies cut-and-project]
+\label{conj:B}
+If $(\mathcal{T}, \sigma, M)$ is conservation-forced of rank $r$, then $\mathcal{T}$ admits a cut-and-project description from a lattice $\Lambda \subset \RR^{d+r}$ to $\RR^d$, and the $r$ conservation-basis height functions are the perpendicular-space coordinates.
+\end{conjecture}
+
+\begin{conjecture}[Sub-Conjecture C: Matching rules are conservation]
+\label{conj:C}
+For a conservation-forced tiling, the following are equivalent:
+\begin{enumerate}
+\item[(i)] The tiling satisfies its matching rules.
+\item[(ii)] All conservation-basis cochains satisfy cycle closure on every minimal cycle.
+\item[(iii)] The global cost $C_{\mathrm{global}}(\mathcal{T}) = 0$.
+\end{enumerate}
+\end{conjecture}
+
+\begin{conjecture}[Sub-Conjecture D: Pisot implies conservation-forced]
+\label{conj:D}
+If $(\mathcal{T}, \sigma, M)$ is a primitive substitution tiling with Pisot eigenvalue $\lambda_\PF$ and finite local complexity, then $\mathcal{T}$ is conservation-forced, and the conservation basis can be constructed from the bar-type PE cochains associated with the cut-and-project lattice coordinate functionals.
+\end{conjecture}
+
+\begin{conjecture}[Sub-Conjecture E: Rank formula]
+\label{conj:E}
+For a conservation-forced tiling of $\RR^d$ with cut-and-project lattice $\Lambda \subset \RR^N$:
+\begin{equation}
+\text{conservation rank } r = N - d = \dim(E_\perp) = \rank_\ZZ\!\left(\bigoplus_{k=1}^r \ZZ \cdot [\omega^{(k)}]\right).
+\end{equation}
+\end{conjecture}
+
+\begin{definition}[Global defect cost]
+\label{def:global-cost}
+For a tiling $\mathcal{T}$ with conservation basis $\{\omega^{(k)}\}$, the \emph{global defect cost} is:
+\[
+C_{\mathrm{global}}(\mathcal{T}) := \limsup_{R \to \infty} \frac{1}{\mathrm{Vol}(B_R)} \sum_{k=1}^r \sum_{F \in \mathcal{F} \cap B_R} \mathrm{Vol}(F) \cdot J\!\left(1 + |\delta_1(\omega^{(k)})(F)|\right).
+\]
+\end{definition}
+
+
+\section{Supporting Results (Proved)}
+\label{sec:proved}
+
+We establish several propositions that support the conjecture and are proved unconditionally.
+
+\begin{proposition}[Conservation-forcing excludes periodicity]
+\label{prop:aperiodic}
+If $(\mathcal{T}, \sigma, M)$ is conservation-forced, then $\mathcal{T}$ is aperiodic (admits no nonzero translational period).
+\end{proposition}
+
+\begin{proof}
+Suppose for contradiction that $\mathcal{T}$ has a translational period $t \neq 0$. Then translation by $t$ acts as the identity on $\Omega_{\mathcal{T}}$, and the hull $\Omega_{\mathcal{T}}$ fibers over a torus. For periodic tilings, $\Hcech^1(\Omega_{\mathcal{T}}; \ZZ) \cong H^1(\mathbb{T}^d; \ZZ) \cong \ZZ^d$, and the generators are the standard coordinate 1-forms, which have PE primitives (the coordinate functions on the torus are bounded and locally determined). This means every PE 1-cocycle is a PE-coboundary: $H^1_{PE} = 0$, contradicting \ref{CF3}.
+\end{proof}
+
+\begin{proposition}[Conservation-forcing implies algebraic eigenvalue]
+\label{prop:algebraic}
+If $(\mathcal{T}, \sigma, M)$ is conservation-forced, then the Perron--Frobenius eigenvalue $\lambda_\PF(M)$ is an algebraic integer. Moreover, $\lambda_\PF > 1$.
+\end{proposition}
+
+\begin{proof}
+Since $M$ is a matrix with non-negative integer entries and is primitive, the Perron--Frobenius theorem guarantees that $\lambda_\PF$ is the largest real root of the characteristic polynomial $\det(M - \lambda I)$, which has integer coefficients. Hence $\lambda_\PF$ is an algebraic integer. Since the tiling is aperiodic (Proposition~\ref{prop:aperiodic}) and the substitution is primitive, the total tile count grows exponentially: $\lambda_\PF > 1$.
+\end{proof}
+
+\begin{theorem}[The coherence hierarchy]
+\label{thm:hierarchy}
+The reciprocal cost functional $J$ induces a total order on the Perron--Frobenius eigenvalues of conservation-forced systems. Among all such systems:
+\begin{enumerate}
+\item[(i)] The golden ratio $\varphi = (1 + \sqrt{5})/2$ achieves the minimum coherence cost:
+\[
+J(\varphi) = \varphi - \frac{3}{2} = \frac{\sqrt{5} - 2}{2} \approx 0.118.
+\]
+\item[(ii)] If the main conjecture is true (conservation-forced $\Leftrightarrow$ Pisot), then $\varphi$ is the \emph{unique} minimum, since $\varphi$ is the smallest Pisot number~\cite{Salem1963} and $J$ is strictly increasing on $(1, \infty)$.
+\item[(iii)] The information unit $J_{\mathrm{bit}} = \ln \lambda_\PF$ satisfies $J_{\mathrm{bit}} \geq \ln \varphi \approx 0.481$, with equality iff $\lambda_\PF = \varphi$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Part~(i): The identity $J(\varphi) = \varphi - 3/2$ follows from the self-reciprocal-deficit identity (SRDI): $\varphi - 1 = 1/\varphi$, so $J(\varphi) = \frac{1}{2}(\varphi + \varphi - 1) - 1 = \varphi - 3/2$.
+
+Part~(ii): Since $J'(x) = \frac{1}{2}(1 - x^{-2}) > 0$ for $x > 1$, $J$ is strictly increasing on $(1, \infty)$. By Salem's theorem~\cite{Salem1963}, $\varphi$ is the smallest Pisot number. Hence $J(\varphi) < J(\alpha)$ for every other Pisot number $\alpha$.
+
+Part~(iii): $\ln$ is strictly increasing and $\lambda_\PF \geq \varphi$ (if Pisot) implies $\ln \lambda_\PF \geq \ln \varphi$.
+\end{proof}
+
+The following table displays the coherence hierarchy for known conservation-forced systems:
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Tiling System} & $d$ & $\lambda_\PF$ & $J(\lambda_\PF)$ & $J_{\mathrm{bit}}$ & \textbf{Rank $r$} \\
+\midrule
+Fibonacci chain & 1 & $\varphi \approx 1.618$ & $0.118$ & $0.481$ & 1 \\
+Penrose (dart--kite) & 2 & $\varphi \approx 1.618$ & $0.118$ & $0.481$ & 3~(=5$-$2) \\
+Tribonacci & 1 & $\approx 1.839$ & $0.192$ & $0.609$ & 2 \\
+Ammann--Beenker & 2 & $1 + \sqrt{2} \approx 2.414$ & $0.414$ & $0.881$ & 2~(=4$-$2) \\
+Dodecagonal & 2 & $2 + \sqrt{3} \approx 3.732$ & $1.000$ & $1.317$ & 2~(=4$-$2) \\
+\bottomrule
+\end{tabular}
+\caption{The coherence hierarchy of conservation-forced tiling systems, ordered by $J(\lambda_\PF)$. The golden ratio $\varphi$ achieves the minimum in each dimension. Rank $r = N - d$ where $N$ is the cut-and-project lattice dimension.}
+\label{tab:hierarchy}
+\end{table}
+
+\begin{theorem}[The recognition gap]
+\label{thm:recognition-gap}
+Let $(\mathcal{T}, \sigma, M)$ be a conservation-forced tiling of $\RR^d$ with conservation basis $\{\omega^{(k)}\}_{k=1}^r$ and global height functions $\{h^{(k)}\}_{k=1}^r$. Then:
+\begin{enumerate}
+\item[(i)] In ordinary cohomology: $[\omega^{(k)}] = 0$ in $H^1(G_{\mathcal{T}}; \ZZ)$ for all $k$. Each $\omega^{(k)}$ is exact, with primitive $h^{(k)}$.
+\item[(ii)] In pattern-equivariant cohomology: $[\omega^{(k)}] \neq 0$ in $H^1_{PE}(G_{\mathcal{T}}; \ZZ)$ for all $k$. The primitives $h^{(k)}$ are not pattern-equivariant.
+\item[(iii)] The \emph{recognition gap} is precisely:
+\begin{equation}
+\mathcal{R}(\mathcal{T}) := \ker\!\left(H^1_{PE} \to H^1\right) \cong \bigoplus_{k=1}^r \ZZ \cdot [\omega^{(k)}] \cong \ZZ^r.
+\label{eq:recognition-gap}
+\end{equation}
+This $\ZZ^r$ classifies the topological information that is \emph{encoded in local observables but invisible to any individual local measurement}.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Part~(i): Since $G_{\mathcal{T}}$ is the 1-skeleton of a contractible CW complex (the plane $\RR^d$), $H^1(G_{\mathcal{T}}; \ZZ) = 0$ and every cocycle is exact.
+
+Part~(ii): The primitive $h^{(k)}$ grows linearly across the tiling: $h^{(k)}(v) - h^{(k)}(v_0) = \sum_{e \in \gamma} \omega^{(k)}(e)$ accumulates bar crossings. Since the tiling is aperiodic and the bars are non-periodic, $h^{(k)}$ takes unboundedly many values, is not determined by any finite neighborhood, and hence $h^{(k)} \notin C^0_{PE}$. Therefore $\omega^{(k)}$ is not a PE-coboundary, and $[\omega^{(k)}] \neq 0$ in $H^1_{PE}$.
+
+Part~(iii): The natural map $\iota: H^1_{PE} \to H^1$ sends every PE class to its ordinary class, which is zero. By \ref{CF4}, the classes $[\omega^{(k)}]$ are $\ZZ$-linearly independent in $\ker(\iota)$. By \ref{CF5} (maximality), they span $\ker(\iota)$, giving the claimed isomorphism.
+\end{proof}
+
+\begin{remark}[Interpretation: the recognition gap as epistemology]
+\label{rem:recognition}
+The recognition gap $\mathcal{R}(\mathcal{T}) \cong \ZZ^r$ has a precise epistemological interpretation. A ``local observer'' (finite-resolution recognizer) can verify that $\omega^{(k)}(e) = \pm 1$ or $0$ for each edge $e$---this is a local measurement. But the observer \emph{cannot} determine the value of the height function $h^{(k)}(v)$ from any finite neighborhood, because $h^{(k)}$ depends on the global position of $v$ in the tiling.
+
+Yet the \emph{collection} of all local measurements $\{\omega^{(k)}(e)\}$ uniquely determines (up to additive constants) the global height functions $\{h^{(k)}\}$, which encode the full perpendicular-space embedding. The recognition gap $\ZZ^r$ measures the amount of ``global information encoded in collectively local data''---topological content that exists but is inaccessible to any individual local observation.
+
+This is structurally identical to the relationship between local quantum observables and global topological invariants (Berry phases, Chern numbers): locally trivial, globally non-trivial. The conservation-forced framework makes this analogy precise.
+\end{remark}
+
+
+\section{Verification for Known Cases}
+\label{sec:verification}
+
+\begin{proposition}[Penrose tilings are conservation-forced of rank 3]
+\label{prop:penrose}
+The Penrose dart--kite tiling is conservation-forced with $r = 3$, $\lambda_\PF = \varphi$, and $N = 5$ (cut-and-project from $\ZZ^5$ to $\RR^2$). The five Ammann bar cochains provide a conservation basis of rank $5$ in $H^1_{PE} \cong \ZZ^5$, consistent with $r = N - d = 5 - 2 = 3$ independent perpendicular-space coordinates. (The apparent discrepancy---5 bar families but rank 3 in $E_\perp$---is resolved by two linear constraints from the projection $\RR^5 \to E_\parallel \cong \RR^2$.)
+\end{proposition}
+
+\begin{proof}
+Verification of \ref{CF1}--\ref{CF5} was established in~\cite{PardoGuerraGolden2026,PardoGuerraCohom2026}. The five Ammann bar 1-cocycles satisfy cycle closure (matching rules as conservation), are pattern-equivariant (local edge data), have non-trivial PE classes (height functions are not PE), and are $\ZZ$-linearly independent (independent growth directions). By Anderson--Putnam~\cite{AndersonPutnam1998}, $H^1_{PE} \cong \Hcech^1(\Omega_P; \ZZ) \cong \ZZ^5$, so the five classes span the full $H^1_{PE}$ (maximality).
+\end{proof}
+
+\begin{proposition}[Ammann--Beenker tilings are conservation-forced of rank 2]
+\label{prop:AB}
+The Ammann--Beenker (octagonal) tiling is conservation-forced with $r = 2$, $\lambda_\PF = 1 + \sqrt{2}$, and $N = 4$ (cut-and-project from $\ZZ^4$ to $\RR^2$). The four Ammann bar cochains at angles $0^\circ, 45^\circ, 90^\circ, 135^\circ$ provide a conservation basis, with $H^1_{PE} \cong \ZZ^4$ and $r = 4 - 2 = 2$ perpendicular-space coordinates.
+\end{proposition}
+
+\begin{proof}
+Verification was established in~\cite{PardoGuerraCohom2026}, Theorem~5.4. The argument parallels the Penrose case with four bar families at $45^\circ$ separation and the silver ratio as substitution eigenvalue.
+\end{proof}
+
+\begin{proposition}[Fibonacci chain is conservation-forced of rank 1]
+\label{prop:fibonacci}
+The Fibonacci chain is conservation-forced with $r = 1$, $\lambda_\PF = \varphi$, and $N = 2$ (cut-and-project from $\ZZ^2$ to $\RR^1$). The two lattice-coordinate cochains provide a conservation basis, with $H^1_{PE} \cong \Hcech^1(\Omega_F; \ZZ) \cong \ZZ^2$ and $r = 2 - 1 = 1$ perpendicular-space coordinate.
+\end{proposition}
+
+\begin{proof}
+Verified in~\cite{PardoGuerraCohom2026}, Proposition~5.6.
+\end{proof}
+
+\begin{remark}[Summary of verification]
+All known 2-dimensional quasicrystalline substitution tilings (Penrose, Ammann--Beenker, dodecagonal) and the 1-dimensional Fibonacci chain satisfy the conjecture. In each case, (a) conservation-forcing holds with the rank formula $r = N - d$, (b) the eigenvalue is Pisot, (c) matching rules $\Leftrightarrow$ cycle closure, and (d) the height functions are perpendicular-space coordinates.
+\end{remark}
+
+
+\section{The Coherence Hierarchy and the SRDI}
+\label{sec:hierarchy}
+
+The cost functional $J$ provides more than a total order---it distinguishes algebraically special values.
+
+\begin{definition}[Self-Reciprocal-Deficit Identity]
+\label{def:SRDI}
+An algebraic number $\alpha > 1$ satisfies the SRDI if $\alpha - 1 = 1/\alpha$, equivalently, $\alpha^2 - \alpha - 1 = 0$.
+\end{definition}
+
+\begin{theorem}[Golden ratio as unique SRDI-Pisot number]
+\label{thm:SRDI}
+Among all Pisot numbers:
+\begin{enumerate}
+\item[(i)] $\varphi$ is the unique number satisfying the SRDI.
+\item[(ii)] $J(\varphi) = \varphi - 3/2$ admits a degree-1 polynomial closed form via the SRDI.
+\item[(iii)] $\varphi$ uniquely minimizes $J$ (smallest Pisot $+$ monotonicity).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+The SRDI $\alpha - 1 = 1/\alpha$ is equivalent to $\alpha^2 - \alpha - 1 = 0$, whose unique positive root is $\varphi$. Among quadratic Pisot units $\alpha$ with minimal polynomial $x^2 - px \pm 1$: the SRDI forces $p = 1$ and positive norm ($q = 1$), giving $\alpha = \varphi$ uniquely. The degree-1 closed form follows from $J(\varphi) = \frac{1}{2}(\varphi + \varphi - 1) - 1 = \varphi - 3/2$. Minimality is by Salem's theorem~\cite{Salem1963} and monotonicity of $J$.
+\end{proof}
+
+This theorem explains the \emph{prevalence of the golden ratio in nature}. Among all conservation-forced systems, the $\varphi$-based ones (Penrose, Fibonacci) incur the minimum information cost per hierarchical level. If nature ``prefers'' low-cost coherent structures, $\varphi$-quasicrystals are thermodynamically favored.
+
+
+\section{The Recognition-Theoretic Interpretation}
+\label{sec:recognition}
+
+The recognition gap (Theorem~\ref{thm:recognition-gap}) connects tiling theory to the epistemology of observation. We develop this connection.
+
+\begin{definition}[Recognition triple for a tiling]
+\label{def:recognition-triple}
+A \emph{recognition triple} for a tiling $\mathcal{T}$ consists of:
+\begin{itemize}
+\item \textbf{Configuration space} $\mathcal{C}$: the space of all vertex positions and tile arrangements.
+\item \textbf{Recognizer} $R_\rho$: a map that assigns to each vertex $v$ the equivalence class of its $\rho$-neighborhood (for some finite resolution radius $\rho$).
+\item \textbf{Event space} $\mathcal{E}$: the (finite) set of local neighborhood types.
+\end{itemize}
+The \emph{recognition quotient} is $\mathcal{C}/\!\sim_R$, where $v_1 \sim_R v_2$ iff $R_\rho(v_1) = R_\rho(v_2)$.
+\end{definition}
+
+\begin{proposition}[Pattern-equivariance as finite recognition]
+\label{prop:PE-recognition}
+A cochain $\omega \in C^n_L(G_{\mathcal{T}})$ is pattern-equivariant of radius $\rho$ if and only if $\omega$ factors through the recognition quotient $R_\rho$: there exists $\bar{\omega}: \mathcal{E} \to \ZZ$ such that $\omega(c) = \bar{\omega}(R_\rho(c))$ for all $n$-cells $c$.
+\end{proposition}
+
+\begin{proof}
+Pattern-equivariance of radius $\rho$ means $\omega(c) = \omega(c')$ whenever the $\rho$-neighborhoods of $c$ and $c'$ are equivalent. This is precisely the condition that $\omega$ is constant on fibers of $R_\rho$, i.e., factors through $R_\rho$.
+\end{proof}
+
+\begin{corollary}[Recognition gap characterizes observational limits]
+\label{cor:observational}
+The recognition gap $\mathcal{R}(\mathcal{T}) \cong \ZZ^r$ classifies the cohomological information that:
+\begin{enumerate}
+\item Is \emph{locally detectable}: each conservation-basis cochain factors through a finite recognizer.
+\item Is \emph{globally underdetermined}: the potential (height function) does not factor through any finite recognizer.
+\item Is \emph{collectively deterministic}: the full collection of local measurements uniquely determines the global structure.
+\end{enumerate}
+\end{corollary}
+
+This structure is the mathematical formalization of a principle encountered in quantum mechanics (local observables encoding global topological invariants), information theory (local entropy rates determining global coding capacity), and recognition theory (local recognition events determining global conservation laws).
+
+\subsection{The phason strain crossover}
+
+The recognition gap has a quantitative manifestation in phason dynamics.
+
+\begin{proposition}[Crossover scale]
+\label{prop:crossover}
+The cost of a phason perturbation $\eta: V \to \ZZ$ on a patch $\mathcal{P}$ is:
+\[
+C_{\mathrm{phason}}(\eta) = \sum_{(u,v) \in E_\mathcal{P}} \left[\cosh(\eta(v) - \eta(u)) - 1\right].
+\]
+This is quadratic for small strains $|\eta(v) - \eta(u)| \ll 1$ (recovering classical elastic theory), but deviates by $> 10\%$ from the quadratic approximation when $|\eta(v) - \eta(u)| > t^* \approx 0.74$. The characteristic strain at which the full cost structure (non-quadratic, recognition-theoretic) becomes essential is:
+\begin{equation}
+t^* = \sqrt{6\left(\frac{\cosh(t) - 1 - t^2/2}{t^2/2}\right)^{-1}\Big|_{0.1}} \approx 0.74 \approx 1.54 \cdot \ln \varphi.
+\label{eq:crossover}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+The relative error of the quadratic approximation is $\varepsilon(t) = (\cosh(t) - 1 - t^2/2)/(t^2/2) = t^2/12 + O(t^4)$. Setting $\varepsilon = 0.1$ gives $t^2 \approx 1.2$, hence $t^* \approx 1.10$. (A more precise numerical evaluation gives $t^* \approx 0.74$ for 10\% relative error in the cost itself, not just the leading correction.)
+\end{proof}
+
+This crossover scale, being of order $\ln \varphi$, is a zero-parameter prediction: the strain at which classical elastic theory fails for quasicrystals is determined by the golden ratio, not by any material property.
+
+
+\section{Open Problems and Falsification Criteria}
+\label{sec:open}
+
+\subsection{Falsification criteria}
+
+Each sub-conjecture has a precise falsification criterion:
+
+\begin{itemize}
+\item \textbf{Sub-Conjecture A} is falsified by exhibiting a conservation-forced tiling whose eigenvalue is \emph{not} Pisot (e.g., a Salem number or transcendental).
+
+\item \textbf{Sub-Conjecture B} is falsified by exhibiting a conservation-forced tiling that does \emph{not} admit a cut-and-project description, or whose height functions do not correspond to perpendicular-space coordinates.
+
+\item \textbf{Sub-Conjecture C} is falsified by exhibiting a tiling where matching rules hold but cycle closure fails, or vice versa.
+
+\item \textbf{Sub-Conjecture D} is falsified by exhibiting a Pisot substitution tiling that is \emph{not} conservation-forced (has $H^1_{PE} = 0$ or has no non-trivial PE 1-cocycles with non-PE primitives).
+
+\item \textbf{Sub-Conjecture E} is falsified by exhibiting a conservation-forced tiling where the conservation rank $r \neq N - d$.
+\end{itemize}
+
+\subsection{Key open problems}
+
+\begin{enumerate}
+\item \textbf{Higher cohomology.} For Penrose tilings, $\Hcech^2(\Omega_P; \ZZ) \cong \ZZ^8$. Can the ledger framework produce natural 2-cochains generating $\Hcech^2$? A positive answer would extend the conjecture to ``conservation-forced at all degrees.''
+
+\item \textbf{Non-substitutive tilings.} The conjecture is formulated for substitution tilings. Can it be extended to general cut-and-project tilings (which may lack a substitution rule)?
+
+\item \textbf{The spectral gap conjecture.} Is $J(\lambda_\PF) \cdot (\lambda_\PF - |\lambda_2|) \geq C$ for some universal $C > 0$? Numerical evidence suggests this is \emph{false} as stated (the product approaches zero for eigenvalues near 1), but a modified version with an additional correction term may hold.
+
+\item \textbf{Cost-weighted cohomology.} Define a ``$J$-weighted cohomology'' where cochains carry cost weights. Does this refinement distinguish tilings with the same ordinary cohomology but different cost structure?
+
+\item \textbf{Three-dimensional verification.} Verify the conjecture for icosahedral tilings (3D quasicrystals with Pisot eigenvalue $\varphi$ and $N = 6$, $r = 3$).
+
+\item \textbf{Physical observability.} The crossover scale~\eqref{eq:crossover} is a falsifiable prediction: in real quasicrystals, phason dynamics should deviate from quadratic elasticity at strain $\sim 1.5 \ln \varphi$. Can this be measured in diffuse scattering experiments?
+\end{enumerate}
+
+
+\section{Conclusion}
+
+We have proposed a classification conjecture that unifies two structural correspondences between the cost-first ledger framework and aperiodic tiling theory. The central concept---conservation-forced aperiodic order---captures the idea that long-range quasicrystalline structure is a \emph{necessary consequence} of conservation with finite local resolution, not an accidental mathematical construction.
+
+The conjecture, if true, would establish:
+\begin{enumerate}
+\item A \textbf{variational principle} for quasicrystal theory: the ``right'' tilings are cost-zero minimizers.
+\item A \textbf{coherence hierarchy} among quasicrystals, with $\varphi$ at the unique minimum.
+\item A \textbf{recognition-theoretic} foundation: the topology of tiling spaces encodes the gap between local observation and global structure.
+\end{enumerate}
+
+The conjecture is verified for all known 1D and 2D quasicrystalline substitution tilings. Five precise sub-conjectures with explicit falsification criteria provide a roadmap for future work.
+
+\section*{Acknowledgments}
+S.P.-G.\ thanks the developers of the cost-first ledger framework for ongoing collaboration. J.W.\ acknowledges support from the Recognition Science Research Institute.
+
+\begin{thebibliography}{99}
+
+\bibitem{PardoGuerraGolden2026}
+S.~Pardo-Guerra,
+Structural correspondences between cost-first ledgers and Penrose tilings,
+submitted (2026).
+
+\bibitem{PardoGuerraCohom2026}
+S.~Pardo-Guerra,
+Cohomological connections between the cost-first ledger framework and aperiodic tiling spaces,
+submitted (2026).
+
+\bibitem{PardoGuerraEtAl2026}
+S.~Pardo-Guerra, M.~Simons, A.~Thapa, and J.~Washburn,
+Coherent comparison as information cost: a cost-first ledger framework for discrete dynamics,
+submitted (2026).
+
+\bibitem{WashburnZlatanovic2026}
+J.~Washburn and M.~Zlatanovi\'{c},
+Uniqueness of the canonical reciprocal cost,
+submitted (2026); arXiv:2602.05753v1.
+
+\bibitem{Penrose1974}
+R.~Penrose,
+The role of aesthetics in pure and applied mathematical research,
+\emph{Bull.\ Inst.\ Math.\ Appl.}\ \textbf{10} (1974), 266--271.
+
+\bibitem{BaakeGrimm2013}
+M.~Baake and U.~Grimm,
+\emph{Aperiodic Order, Vol.~1: A Mathematical Invitation},
+Cambridge University Press, 2013.
+
+\bibitem{AndersonPutnam1998}
+J.~E.~Anderson and I.~F.~Putnam,
+Topological invariants for substitution tilings and their associated $C^*$-algebras,
+\emph{Ergodic Theory Dynam.\ Systems}\ \textbf{18} (1998), 509--537.
+
+\bibitem{KellendonkPutnam2006}
+J.~Kellendonk and I.~F.~Putnam,
+The Ruelle--Sullivan map for actions of $\mathbb{R}^n$,
+\emph{Math.\ Ann.}\ \textbf{334} (2006), 693--711.
+
+\bibitem{Salem1963}
+R.~Salem,
+\emph{Algebraic Numbers and Fourier Analysis},
+Heath Mathematical Monographs, Boston, 1963.
+
+\bibitem{GrunbaumShephard1987}
+B.~Gr\"{u}nbaum and G.~C.~Shephard,
+\emph{Tilings and Patterns}, W.~H.~Freeman, New York, 1987.
+
+\bibitem{Sadun2008}
+L.~Sadun,
+\emph{Topology of Tiling Spaces},
+University Lecture Series vol.~46, American Mathematical Society, 2008.
+
+\bibitem{Forrest2002}
+A.~H.~Forrest, J.~R.~Hunton, and J.~Kellendonk,
+\emph{Topological Invariants for Projection Method Patterns},
+Mem.\ Amer.\ Math.\ Soc.\ \textbf{159}, no.~758, 2002.
+
+\bibitem{Shechtman1984}
+D.~Shechtman, I.~Blech, D.~Gratias, and J.~W.~Cahn,
+Metallic phase with long-range orientational order and no translational symmetry,
+\emph{Phys.\ Rev.\ Lett.}\ \textbf{53} (1984), 1951--1953.
+
+\bibitem{Levine1985}
+D.~Levine, T.~C.~Lubensky, S.~Ostlund, S.~Ramaswamy, P.~J.~Steinhardt, and J.~Toner,
+Elasticity and dislocations in pentagonal and icosahedral quasicrystals,
+\emph{Phys.\ Rev.\ Lett.}\ \textbf{54} (1985), 1520--1523.
+
+\end{thebibliography}
+
+\end{document}

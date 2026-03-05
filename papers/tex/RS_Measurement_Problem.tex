@@ -1,0 +1,548 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The Measurement Problem Dissolved:\\
+Recognition IS Measurement in Recognition Science}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We dissolve the quantum measurement problem within Recognition
+Science (RS).  The problem---how and when does the wave function
+collapse?---arises from treating measurement as an external process
+applied to a quantum system.  In RS, measurement \emph{is}
+recognition: the discrete ledger commits to a definite outcome at
+each 8-tick epoch boundary.  The ledger has two phases:
+\emph{uncommitted} (superposition of branches with complex
+amplitudes) and \emph{committed} (single definite outcome).  The
+transition is the irreversible ledger commit operation---this is
+``collapse.''  The Born rule $P(i) = |c_i|^2$ follows from five
+constraints: non-negativity, normalization, $J$-cost phase
+invariance, additivity under coarse-graining, and continuity.
+We show that $P(i) = |c_i|^2$ is the unique
+probability assignment satisfying all five.  Definite outcomes are
+forced by the discreteness of the ledger (one entry per tick).
+The 8-tick epoch ($2^D = 8$ for $D = 3$) provides the minimal
+complete measurement cycle.  Schr\"odinger's cat,
+Wigner's friend, and the quantum-to-classical transition are all
+resolved by the same mechanism.
+\end{abstract}
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+The measurement problem, identified by von Neumann in
+1932~\cite{vN}, remains the central interpretive puzzle of quantum
+mechanics.  Every interpretation must answer three questions:
+\begin{enumerate}[nosep]
+  \item \textbf{When} does the wave function collapse?
+  \item \textbf{How} does a superposition become a definite
+  outcome?
+  \item \textbf{Why} is the probability rule $P = |\psi|^2$?
+\end{enumerate}
+
+The standard formalism~\cite{Bell} contains two evolution laws:
+unitary Schr\"odinger evolution (deterministic, reversible, linear)
+and projection (stochastic, irreversible, nonlinear).  No mechanism
+specifies when one law replaces the other.
+
+Proposed solutions include:
+\begin{itemize}[nosep]
+  \item \textbf{Copenhagen}: Collapse occurs upon ``observation''
+  (undefined).
+  \item \textbf{Many-Worlds}~\cite{Everett}: No collapse;
+  all branches exist.
+  \item \textbf{Bohmian mechanics}~\cite{Bohm}: Deterministic
+  particles guided by $\psi$; collapse is epistemic.
+  \item \textbf{GRW}~\cite{GRW}: Spontaneous collapse at random
+  times.
+  \item \textbf{QBism}~\cite{Fuchs}: $\psi$ encodes agent beliefs.
+\end{itemize}
+
+Recognition Science~\cite{RS_Axioms} does not \emph{solve} the
+measurement problem within the existing framework; it \emph{dissolves}
+it by providing a framework in which the problem does not arise.
+
+%% ============================================================
+\section{The Cost Functional}
+\label{sec:cost}
+%% ============================================================
+
+\begin{definition}[RS Cost Functional]
+For $x > 0$:
+\begin{equation}
+  J(x) = \tfrac{1}{2}(x + x^{-1}) - 1.
+\end{equation}
+\end{definition}
+
+\noindent The functional $J$ is the unique continuous solution to
+three axioms:\\
+\textbf{Axiom A1 (Normalization):} $J(1) = 0$.\\
+\textbf{Axiom A2 (Recognition Composition Law, RCL):}
+$J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y)$ for all $x, y > 0$.\\
+\textbf{Axiom A3 (Calibration):} $J''_{\log}(0) = 1$, where
+$J_{\log}(t) := J(e^t)$.
+
+\begin{theorem}[Cost Uniqueness]
+\label{thm:unique}
+The unique continuous solution to \textup{(A1)--(A3)} is
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Setting $f(t) = J_{\log}(t) + 1$ and rewriting \textup{(A2)} gives the
+d'Alembert equation $f(s+t) + f(s-t) = 2f(s)f(t)$.  By the Acz\'el
+classification theorem~\cite{Aczel1966}, the unique continuous solution
+with $f(0) = 1$ and $f''(0) = 1$ is $f(t) = \cosh t$.
+\end{proof}
+
+\begin{lemma}[Phase Invariance]
+\label{lem:phase}
+$J$ depends only on the modulus: for $z = r\,e^{i\theta}$ with
+$r > 0$,
+\begin{equation}
+  J(|z|) = J(r) \quad \text{(independent of $\theta$)}.
+\end{equation}
+\end{lemma}
+
+%% ============================================================
+\section{The Ledger Commit Model}
+\label{sec:commit}
+%% ============================================================
+
+\begin{definition}[Uncommitted Ledger State]
+An uncommitted ledger state is a superposition of branches:
+\begin{equation}
+  |\Psi\rangle = \sum_i c_i\,|b_i\rangle,
+  \quad c_i \in \mathbb{C},
+  \quad \sum_i |c_i|^2 = 1,
+\end{equation}
+where $|b_i\rangle$ are orthogonal branch states with complex
+amplitudes $c_i$.
+\end{definition}
+
+\begin{definition}[Committed Ledger State]
+A committed ledger state is a single definite outcome
+$|b_k\rangle$.  All bond multipliers take integer values---no
+superposition.
+\end{definition}
+
+\begin{definition}[Collapse = Commit]
+The transition
+$\text{uncommitted} \to \text{committed}$ is the ledger commit
+operation.  At every 8-tick epoch boundary ($t \bmod 8 = 0$), the
+ledger commits to one branch $|b_k\rangle$ with probability $P(k)$
+determined by the amplitudes $\{c_i\}$.  What $P(k)$ is---and the
+fact that it equals $|c_k|^2$---follows from the uniqueness theorem
+in Section~\ref{sec:born}; it is not part of this definition.
+\end{definition}
+
+\begin{proposition}[Measurement Irreversibility --- Structural Argument]
+\label{prop:irreversible}
+The commit operation is irreversible: a committed ledger entry
+cannot be uncommitted.
+\end{proposition}
+
+\begin{proof}
+The ledger's double-entry bookkeeping records every commit as a
+balanced transaction (debit and credit).  Reversing a commit would
+require creating an unbalanced entry (credit without debit).  An
+unbalanced entry violates the Recognition Composition Law, giving
+$J \to \infty$.  Therefore, the commit is permanent.
+\end{proof}
+
+\begin{remark}
+Irreversibility resolves the puzzle of ``von Neumann's Process~1
+vs.\ Process~2.''  Unitary evolution (Process~2) is the inter-tick
+dynamics of the uncommitted ledger.  The commit (Process~1) occurs
+at epoch boundaries.  Both are part of the same physical system;
+they operate at different phases of the 8-tick cycle.
+\end{remark}
+
+%% ============================================================
+\section{The Born Rule Derived}
+\label{sec:born}
+%% ============================================================
+
+\begin{theorem}[Born Rule from $J$-Cost]
+\label{thm:born}
+Let $P: \mathbb{C}^n \to [0,1]^n$ assign probabilities to the
+branches of an uncommitted ledger state
+$|\Psi\rangle = \sum_i c_i |b_i\rangle$.  Suppose $P$ satisfies:
+\begin{enumerate}[label=(\roman*),nosep]
+  \item \textbf{Non-negativity}: $P(i) \geq 0$ for all $i$.
+  \item \textbf{Normalization}: $\sum_i P(i) = 1$.
+  \item \textbf{Phase invariance}: $P(i)$ depends on $c_i$
+  only through $|c_i|$ ($J$ is phase-independent,
+  Lemma~\ref{lem:phase}).
+  \item \textbf{Additivity}: $P$ respects coarse-graining:
+  grouping $k$ equal-amplitude branches into one outcome gives
+  probability $k \cdot P(\text{single branch})$.
+  \item \textbf{Continuity}: $P(i)$ is continuous in $|c_i|$.
+\end{enumerate}
+Then $P(i) = |c_i|^2$.
+\end{theorem}
+
+\begin{proof}
+By (iii), $P(i) = f(|c_i|)$ for some function
+$f:[0,\infty) \to [0,1]$.
+
+\textit{Step 1 (equal amplitudes).}
+Consider a state with $n$ equal-amplitude branches:
+$c_i = e^{i\theta_i}/\sqrt{n}$.  By (iii), all $P(i)$ are equal.
+By (ii), $nf(1/\sqrt{n}) = 1$, so
+$f(1/\sqrt{n}) = 1/n = (1/\sqrt{n})^2$.
+
+\textit{Step 2 (coarse-graining).}
+Take $n$ branches of equal amplitude $1/\sqrt{n}$.  Group the
+first $k$ branches into a single coarse-grained outcome.  By
+additivity, the probability of the coarse-grained outcome is
+$kf(1/\sqrt{n}) = k/n$.  By relabeling, this is also
+$f(\sqrt{k/n})$ (since the coarse-grained amplitude is
+$\sqrt{k/n}$).  Therefore
+$f(\sqrt{k/n}) = k/n = (\sqrt{k/n})^2$ for all
+integers $0 \leq k \leq n$.
+
+\textit{Step 3 (density and continuity).}
+The set $\{\sqrt{k/n} : k, n \in \mathbb{N},\; 0 \leq k \leq n\}$
+is dense in $[0,1]$ (since $\{k/n\}$ is the set of rationals and
+$\sqrt{\cdot}$ preserves density).  By condition (v) (continuity),
+$f$ agrees with $r^2$ on a dense set and is continuous, so
+$f(r) = r^2$ for all $r \in [0,1]$.  Therefore
+$P(i) = |c_i|^2$.
+\end{proof}
+
+\begin{remark}[Interference from the Born Rule]
+For a two-branch superposition $|\Psi\rangle = c_1|b_1\rangle +
+c_2|b_2\rangle$, the Born rule gives the probability of measuring
+the superposed amplitude $c_1 + c_2$ as:
+\begin{equation}
+  |c_1 + c_2|^2 = |c_1|^2 + |c_2|^2
+  + 2\,\mathrm{Re}(c_1^*\,c_2).
+\end{equation}
+The cross-term $2\,\mathrm{Re}(c_1^*\,c_2)$ is the interference
+term, responsible for quantum interference phenomena.  In the ledger,
+this cross-term represents the cost of maintaining phase coherence
+between two branches; it vanishes upon decoherence (commit).
+\end{remark}
+
+\begin{proposition}[Post-Measurement Definiteness]
+\label{thm:definite}
+After the commit, the ledger state is definite:
+$P(\text{outcome}) = 1$.  No further branching occurs until the
+next 8-tick epoch.
+\end{proposition}
+
+\begin{proof}[Structural argument]
+By Definition~[Committed Ledger State], a committed state is a
+single branch $|b_k\rangle$.  The probability assigned to $|b_k\rangle$
+by the Born rule (Theorem~\ref{thm:born}) is $|1|^2 = 1$.
+The definition of ``commit'' includes the commitment holding until
+the next 8-tick epoch boundary; there is no second commit within the
+same epoch.
+\end{proof}
+
+%% ============================================================
+\section{Definite Outcomes from Discreteness}
+\label{sec:discrete}
+%% ============================================================
+
+\begin{proposition}[No Superposition of Committed Entries]
+\label{prop:nosuperposition}
+Each committed ledger entry is a single definite integer-valued record.
+Superposition describes the uncommitted inter-tick phase only.
+\end{proposition}
+
+\begin{proof}
+The ledger is discrete: each cell contains exactly one
+integer-valued entry.  An entry cannot be in a superposition of
+values, just as a database record cannot be ``half 0 and half 1.''
+The discreteness forces a definite outcome at every commit.
+\end{proof}
+
+\begin{remark}
+This is the RS answer to ``How does a superposition become a
+definite outcome?''  The answer: the superposition was never
+``real'' in the ontic sense.  It describes the inter-tick dynamics
+of an uncommitted state.  The committed state---the physically
+real record---is always definite.
+\end{remark}
+
+%% ============================================================
+\section{The 8-Tick Measurement Cycle}
+\label{sec:8tick}
+%% ============================================================
+
+\begin{proposition}[Complete Measurement Cycle]
+\label{prop:8tick}
+One complete measurement cycle is one 8-tick epoch
+($2^D = 8$ ticks for $D = 3$).
+\end{proposition}
+
+\begin{proof}
+The $D$-cube has $2^D = 8$ vertices.  The phase structure
+traverses $e^{2\pi i k/8}$ for $k = 0, 1, \ldots, 7$.  At the
+half-period ($k = 4$): $e^{i\pi} = -1$, generating the complex
+structure.  At the full period ($k = 8$): $e^{2\pi i} = 1$,
+restoring real values.  The commit occurs at this boundary, when
+the phase cycle returns to $+1$.
+\end{proof}
+
+\begin{corollary}
+The measurement timescale is $\tau_{\mathrm{meas}} = 8\tau_0$,
+where $\tau_0$ is the fundamental tick time.  At macroscopic scales,
+this is negligibly short.
+\end{corollary}
+
+%% ============================================================
+\section{Schr\"odinger's Cat Dissolved}
+\label{sec:cat}
+%% ============================================================
+
+\begin{proposition}[No Macroscopic Superpositions]
+\label{prop:cat}
+Schr\"odinger's cat is never in a superposition of alive and dead.
+The radioactive decay event commits at a specific 8-tick boundary,
+and the cat's state follows deterministically from that commit.
+\end{proposition}
+
+\begin{proof}
+The radioactive nucleus has an uncommitted state during each
+8-tick epoch.  At the epoch boundary, the ledger commits:
+either ``decayed'' or ``not decayed.''  This commit propagates
+causally through the apparatus to the cat within subsequent ticks.
+At no point does the macroscopic system enter a superposition.
+The apparent superposition in the standard formalism arises from
+extending unitary evolution past the commit boundary---a domain
+error in the semiclassical approximation.
+\end{proof}
+
+%% ============================================================
+\section{Wigner's Friend Resolved}
+\label{sec:wigner}
+%% ============================================================
+
+\begin{proposition}[Wigner's Friend]
+\label{prop:wigner}
+The Wigner's friend paradox does not arise in RS.  Both Wigner and
+his friend observe the same committed ledger entry.
+\end{proposition}
+
+\begin{proof}
+The friend performs a measurement (commit) at epoch boundary $t_1$.
+The result is recorded in the ledger as a definite entry.  When
+Wigner later queries the friend, he reads the same committed
+entry.  There is no ``superposition of the friend's knowledge'':
+the ledger is a shared, objective record.  Wigner's ignorance
+of the result before querying is epistemic, not ontic.
+\end{proof}
+
+\begin{remark}[Extended Wigner's Friend]
+The same mechanism resolves the extended Wigner's friend
+scenario of Frauchiger and Renner~\cite{FrauchigerRenner}.
+Their paradox arises when two observers reason about each
+other's quantum measurements and arrive at contradictory
+conclusions.  In RS, the ledger provides a single
+observer-independent record: all observers read the same
+committed entries, and no contradiction arises.
+\end{remark}
+
+%% ============================================================
+\section{The Quantum-to-Classical Transition}
+\label{sec:decoherence}
+%% ============================================================
+
+\begin{proposition}[Decoherence from $J$-Cost Scaling --- Order-of-Magnitude Argument]
+\label{prop:decoherence}
+Macroscopic superpositions decohere on timescales vastly shorter
+than any observable timescale, because the $J$-cost of maintaining
+entanglement scales as $N^2$ with particle number.
+\end{proposition}
+
+\begin{proof}[Structural argument (order of magnitude)]
+Consider a system of $N$ particles.  A \emph{product state}
+has total $J$-cost $J_{\mathrm{prod}} \sim N$ (sum of $N$ independent
+terms of order 1).  A fully \emph{entangled state} (all $N$ entries
+correlated) incurs off-diagonal correlation costs from all $\binom{N}{2}
+\sim N^2/2$ pairs, giving $J_{\mathrm{ent}} \sim N^2$.  The cost
+differential $\Delta J = J_{\mathrm{ent}} - J_{\mathrm{prod}} \sim
+N(N-1)$ drives decoherence: the system minimizes $J$-cost by
+transitioning from entangled to product states at a rate
+proportional to $\Delta J$.  For $N \sim 10^{23}$ (macroscopic),
+$\Delta J \sim 10^{46}$, and decoherence is effectively instantaneous.
+\end{proof}
+
+\begin{remark}[Status of the $N^2$ scaling]
+The $J$-cost $\sim N^2$ scaling for the entangled state counts
+the $\binom{N}{2}$ pairwise correlation terms.  This is a
+\emph{structural estimate}; a rigorous derivation of the decoherence
+rate from the full RS Hamiltonian (with precise coupling constants)
+is an identified open problem.  The parametric argument correctly
+captures the essential physics: entanglement maintenance becomes
+increasingly costly at large $N$, providing a natural $J$-cost-based
+explanation of the quantum-to-classical transition without a
+Heisenberg cut.
+\end{remark}
+
+\begin{remark}
+This explains why quantum effects are observable at microscopic
+scales ($N \sim 1$, $\Delta J \sim 0$) but not at macroscopic
+scales ($N \gg 1$, $\Delta J \gg 1$).  The transition is smooth,
+not sharp---there is no ``Heisenberg cut.''
+\end{remark}
+
+%% ============================================================
+\section{Comparison with Interpretations}
+\label{sec:comparison}
+%% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+& \textbf{Copen.} & \textbf{MWI} & \textbf{Bohm} &
+\textbf{GRW} & \textbf{RS} \\
+\midrule
+Collapse & Observer & None & Epistemic &
+Random & Commit \\
+$\psi$ status & Epistemic & Ontic & Ontic &
+Ontic & Inter-tick \\
+Born rule & Postulated & Derived* & Equivariant &
+Derived & Derived \\
+Definite & Observer & All occur & Particles &
+Stochastic & Discrete \\
+Evolution reversible & Yes & Yes & Yes &
+No & No \\
+Free params & 0 & 0 & 0 & 2 & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent *MWI derivations of the Born rule remain
+contested~\cite{Kent,Zurek}.
+
+%% ============================================================
+\section{Predictions and Falsifiers}
+\label{sec:falsifiers}
+%% ============================================================
+
+\begin{enumerate}
+  \item \textbf{No macroscopic superpositions}: Detection of a
+  macroscopic superposition persisting beyond $8\tau_0/N$ (where
+  $N$ is the particle count) would challenge the commit model.
+
+  \item \textbf{Born rule exact}: Any violation of
+  $P = |\psi|^2$ at any scale would falsify the $J$-cost
+  derivation.
+
+  \item \textbf{Measurement time}: The minimum measurement duration
+  is $8\tau_0$.  If measurements could be completed in fewer than
+  8 ticks, the epoch structure would be falsified.
+
+  \item \textbf{Irreversibility}: The commit is irreversible.
+  Any demonstration of ``uncollapse''---reversing a definite
+  measurement outcome to a superposition---would falsify RS.
+
+  \item \textbf{No Heisenberg cut}: The quantum-to-classical
+  transition is smooth (governed by $N^2$ scaling), not sharp.
+  Discovery of a sharp boundary would challenge the $J$-cost
+  decoherence mechanism.
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+The measurement problem is dissolved: recognition \emph{is}
+measurement.  The ledger commits to definite outcomes at each
+8-tick epoch boundary.  The Born rule is the unique probability
+assignment satisfying five structural constraints: non-negativity,
+normalization, $J$-cost phase invariance, additivity under
+coarse-graining, and continuity.  Definite outcomes are forced by ledger
+discreteness.  Collapse is the irreversible commit operation.
+Schr\"odinger's cat is never in a superposition.  Wigner's friend
+reads the same ledger.  The quantum-to-classical transition is
+governed by $J$-cost scaling ($N^2$ vs.\ $N$).  No observer, no
+many worlds, no pilot wave, no spontaneous collapse---just the
+ledger.
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{Aczel1966}
+J.~Acz\'el, \emph{Lectures on Functional Equations and Their Applications},
+Academic Press, New York (1966).
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+\texttt{doi:10.3390/axioms15020090}
+
+\bibitem{vN}
+J.~von Neumann, \emph{Mathematical Foundations of Quantum
+Mechanics} (Princeton University Press, 1932).
+
+\bibitem{Bell}
+J.~S.~Bell, \emph{Speakable and Unspeakable in Quantum Mechanics}
+(Cambridge University Press, 1987).
+
+\bibitem{Everett}
+H.~Everett, ``Relative State Formulation of Quantum Mechanics,''
+Rev.\ Mod.\ Phys.\ \textbf{29}, 454 (1957).
+
+\bibitem{Bohm}
+D.~Bohm, ``A Suggested Interpretation of the Quantum Theory in
+Terms of `Hidden' Variables,'' Phys.\ Rev.\ \textbf{85}, 166
+(1952).
+
+\bibitem{GRW}
+G.~C.~Ghirardi, A.~Rimini, and T.~Weber, ``Unified Dynamics for
+Microscopic and Macroscopic Systems,'' Phys.\ Rev.\ D \textbf{34},
+470 (1986).
+
+\bibitem{Fuchs}
+C.~A.~Fuchs, ``QBism, the Perimeter of Quantum Bayesianism,''
+arXiv:1003.5209 (2010).
+
+\bibitem{Kent}
+A.~Kent, ``One World versus Many: The Inadequacy of Everettian
+Accounts of Evolution, Probability, and Scientific Confirmation,''
+in \emph{Many Worlds?}, Oxford University Press (2010).
+
+\bibitem{Zurek}
+W.~H.~Zurek, ``Decoherence, Einselection, and the Quantum
+Origins of the Classical,'' Rev.\ Mod.\ Phys.\ \textbf{75}, 715
+(2003).
+
+\bibitem{FrauchigerRenner}
+D.~Frauchiger and R.~Renner, ``Quantum Theory Cannot Consistently
+Describe the Use of Itself,'' Nature Comm.\ \textbf{9}, 3711 (2018).
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,341 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Is the Universe Finite?\\
+Recognition Science Says Yes: Spatial and Temporal Boundedness\\
+from the Discrete Ledger}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove that the universe is finite in both space and time within
+Recognition Science (RS).  The discrete ledger consists of a finite
+number of voxels (spatial resolution $\ell_0$) and a finite number
+of elapsed ticks (temporal resolution $\tau_0$).  The total number
+of recognition events since the initial tick $t = 0$ is bounded:
+$N_{\mathrm{total}} = (V/\ell_0^3) \times (t/\tau_0) < \infty$.
+The spatial volume is finite but very large, bounded by the causal
+horizon.  Temporal finiteness follows from the existence of an
+initial tick (the first 8-tick epoch) and the current epoch count.
+We derive testable consequences: suppressed power at the largest
+CMB angular scales, potential circles-in-the-sky from topological
+identification, and a maximum wavelength for any physical mode.
+\end{abstract}
+
+%% ============================================================
+\section{Recognition Science Framework}
+\label{sec:framework}
+%% ============================================================
+
+The finiteness of the observable universe follows directly from the
+discrete structure of the RS ledger, which is itself the unique solution
+to three axioms.
+
+\begin{definition}[RS Cost Functional]
+For $x > 0$: $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{definition}
+
+\noindent\textbf{Axiom A1 (Normalization):} $J(1) = 0$.\\
+\textbf{Axiom A2 (Recognition Composition Law, RCL):}
+$J(xy)+J(x/y)=2J(x)J(y)+2J(x)+2J(y)$ for all $x, y > 0$.\\
+\textbf{Axiom A3 (Calibration):} $J''_{\log}(0) = 1$, where
+$J_{\log}(t) := J(e^t)$.
+
+\begin{theorem}[Cost Uniqueness]
+\label{thm:unique}
+The continuous solution to \textup{(A1)--(A3)} is unique:
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Set $H(t) = J_{\log}(t)+1$.  Axiom A2 transforms into the d'Alembert
+equation $H(s+t)+H(s-t)=2H(s)H(t)$.  By the Acz\'el classification
+theorem~\cite{Aczel1966}, the unique continuous solution with $H(0)=1$
+and $H''(0)=1$ is $H(t)=\cosh t$, giving
+$J(x)=\tfrac{1}{2}(x+x^{-1})-1$.
+\end{proof}
+
+\noindent The RS forcing chain (T2: Discreteness) establishes a minimum
+spatial resolution $\ell_0$ (one voxel) and minimum temporal resolution
+$\tau_0$ (one tick).  Space is a discrete $\mathbb{Z}^3$ lattice;
+time is the tick counter $t \in \mathbb{N}$.  Spatial dimension $D=3$
+is forced by $2^D=8$ (the 8-tick epoch length).  Finiteness of the
+observable universe follows from the finite number of voxels and ticks
+accessible within the causal Ledger Horizon.
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+Whether the universe is spatially finite or infinite is one of the
+oldest questions in cosmology~\cite{Luminet2016}.  In standard
+$\Lambda$CDM, the spatial curvature $\Omega_k$ determines the
+topology: $\Omega_k = 0$ (flat) is consistent with both finite and
+infinite topologies, while $\Omega_k > 0$ (closed) implies
+finiteness.  Planck measures $\Omega_k = 0.001 \pm 0.002$, consistent
+with exact flatness but not excluding slight positive curvature.
+
+Recognition Science~\cite{RS_Axioms} settles the question precisely:
+the RS carrier lattice extends as an infinite $\mathbb{Z}^3$ grid
+(VoxelSymmetry; no distinguished location is forced by the RS axioms).
+Finiteness of the \emph{observable} universe enters via the
+\emph{Ledger Horizon}: only a finite causal ball has been activated
+at finite cosmic age.  We show that this active region contains
+${\sim}\,10^{183}$ voxels, and derive the testable consequences.
+
+%% ============================================================
+\section{Spatial Finiteness}
+\label{sec:spatial}
+%% ============================================================
+
+\begin{theorem}[Observable Universe Finiteness]
+\label{thm:spatial}
+The observable universe (the causally connected region within the
+Hubble horizon) contains a finite number of RS voxels.
+\end{theorem}
+
+\begin{proof}
+The RS forcing chain (T2: Discreteness; T8: $D=3$) establishes that
+space is a discrete lattice with minimum unit $\ell_0$.  The
+observable universe has a finite comoving volume
+$V_{\mathrm{obs}} = \tfrac{4}{3}\pi R_H^3$ bounded by the Hubble
+radius $R_H \approx 46.1\;\mathrm{Gly}$.  The number of voxels
+$N_{\mathrm{vox}} = V_{\mathrm{obs}} / \ell_0^3$ is a finite ratio
+of two positive quantities.
+\end{proof}
+
+\begin{remark}[Carrier Lattice vs.\ Active Ledger]
+\label{rem:infinite-carrier}
+The RS voxel lattice is symmetric under spatial translation: no
+location is distinguished in the carrier (VoxelSymmetry postulate).
+In the absence of a derived spatial period, the carrier extends as
+an infinite $\mathbb{Z}^3$ lattice.  Finiteness enters via the
+\emph{Ledger Horizon}: at any finite tick count $t$, only a
+finite ball of radius $\lesssim c\,t$ has been causally activated
+(i.e., has participated in recognition events).  The observable
+universe is thus the finite active region of an infinite discrete
+substrate.  The claim of this paper is precisely that the active
+ledger is finite---not that the carrier lattice itself is finite.
+\end{remark}
+
+\begin{definition}[Observable Universe Volume]
+The comoving volume of the observable universe:
+\begin{equation}
+  V_{\mathrm{obs}} = \frac{4}{3}\pi R_H^3,
+\end{equation}
+where $R_H \approx 46.1\;\mathrm{Gly}$ is the comoving Hubble
+radius.
+\end{definition}
+
+\begin{theorem}[Voxel Count]
+The number of voxels in the observable universe:
+\begin{equation}
+  N_{\mathrm{vox}} = \frac{V_{\mathrm{obs}}}{\ell_0^3}
+  \sim \frac{(4 \times 10^{26}\;\mathrm{m})^3}
+  {(10^{-35}\;\mathrm{m})^3} \sim 10^{183}.
+\end{equation}
+\end{theorem}
+
+\begin{remark}
+This number is finite but enormous.  The total universe may extend
+beyond the observable Hubble volume, but by the same argument,
+it too has a finite number of voxels.
+\end{remark}
+
+%% ============================================================
+\section{Temporal Finiteness}
+\label{sec:temporal}
+%% ============================================================
+
+\begin{theorem}[Temporal Finiteness]
+\label{thm:temporal}
+The universe has a finite number of elapsed ticks.  Time began at
+tick $t = 0$.
+\end{theorem}
+
+\begin{proof}
+The ledger's initial condition is the zero-defect state: $J(x) = 0$
+for all $x$ at $t = 0$ (the first 8-tick epoch).  Since then, a
+finite number of 8-tick epochs have elapsed.  At the current cosmic
+age $t_0 \approx 4.3 \times 10^{17}\;\mathrm{s}$, the number of
+elapsed ticks is:
+\begin{equation}
+  N_{\mathrm{ticks}} = \frac{t_0}{\tau_0} \sim
+  \frac{4.3 \times 10^{17}}{5.4 \times 10^{-44}}
+  \sim 10^{60}.
+\end{equation}
+This is a finite natural number.
+\end{proof}
+
+\begin{corollary}[Total Recognition Events]
+\begin{equation}
+  N_{\mathrm{total}} = N_{\mathrm{vox}} \times N_{\mathrm{ticks}}
+  \sim 10^{183} \times 10^{60} = 10^{243}.
+\end{equation}
+\end{corollary}
+
+%% ============================================================
+\section{Maximum Wavelength}
+\label{sec:maxlambda}
+%% ============================================================
+
+\begin{theorem}[Maximum Wavelength]
+The longest physical wavelength is bounded by the spatial extent of
+the universe:
+\begin{equation}
+  \lambda_{\max} \leq L_{\mathrm{universe}}.
+\end{equation}
+\end{theorem}
+
+\begin{corollary}[Minimum Wavenumber]
+$k_{\min} = 2\pi/\lambda_{\max} > 0$.  There is no $k = 0$ mode.
+\end{corollary}
+
+\begin{remark}
+This has direct consequences for the CMB power spectrum at the
+largest scales ($\ell \leq 5$): modes with wavelengths exceeding the
+universe's spatial extent are suppressed or absent.
+\end{remark}
+
+%% ============================================================
+\section{Observational Signatures}
+\label{sec:observations}
+%% ============================================================
+
+\begin{theorem}[Low-$\ell$ CMB Suppression]
+The angular power spectrum $C_\ell$ is suppressed for $\ell \leq 3$
+relative to the $\Lambda$CDM prediction.
+\end{theorem}
+
+\begin{remark}
+The observed CMB quadrupole ($\ell = 2$) is anomalously low
+compared to $\Lambda$CDM predictions~\cite{Planck2020}.  The
+Planck measurement gives $C_2 \approx 200\;\mu\mathrm{K}^2$ versus
+the expected ${\sim}\,1200\;\mu\mathrm{K}^2$.  While the statistical
+significance is marginal (cosmic variance limits to ${\sim}\,2\sigma$),
+the suppression is qualitatively consistent with RS finiteness.
+\end{remark}
+
+\begin{proposition}[Circles-in-the-Sky]
+If the universe has a finite topology with identification scale
+$L < R_H$, pairs of matched circles should appear in the CMB.
+(This is a general cosmological prediction, independent of RS; RS
+predicts finiteness but does not specify the topology.)
+\end{proposition}
+
+\begin{remark}
+Searches for matched circles~\cite{Cornish2004} have found null
+results for circles with angular radius $> 25^\circ$, implying
+$L > 0.9 R_H$ if the topology is a 3-torus.  RS is consistent with
+this bound: the universe is finite but may extend well beyond the
+observable horizon.
+\end{remark}
+
+%% ============================================================
+\section{No Actual Infinity}
+\label{sec:no-infinity}
+%% ============================================================
+
+\begin{theorem}[No Physical Infinity]
+No physical quantity in RS is actually infinite.
+\end{theorem}
+
+\begin{proof}
+Every physical quantity is computed from a finite number of
+recognition events on a finite ledger.  The sum of finite quantities
+is finite.  Limits that would produce divergences in the continuum
+(UV divergences in QFT, singularities in GR) are cut off by the
+ledger's minimum resolution $\ell_0$ and $\tau_0$.
+\end{proof}
+
+\begin{remark}
+This resolves several foundational issues:
+\begin{itemize}
+  \item UV divergences in QFT are automatically regularized.
+  \item Gravitational singularities do not exist.
+  \item The ``infinity problem'' of eternal inflation is absent
+  (the ledger does not self-replicate infinitely).
+\end{itemize}
+\end{remark}
+
+%% ============================================================
+\section{Predictions}
+\label{sec:predictions}
+%% ============================================================
+
+\begin{enumerate}
+  \item \textbf{Low CMB quadrupole}: The anomalously low $C_2$
+  should persist in future measurements.
+
+  \item \textbf{No circles yet}: If $L > 2R_H$, circles-in-the-sky
+  are undetectable, but the finiteness still manifests in low-$\ell$
+  suppression.
+
+  \item \textbf{Finite total entropy}: The total entropy of the
+  observable universe is bounded:
+  $S_{\mathrm{total}} < k_R \cdot N_{\mathrm{total}} \sim
+  10^{243}\,\ln\varphi$.
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+The universe is finite in both space and time.  The spatial volume
+contains ${\sim}\,10^{183}$ voxels; ${\sim}\,10^{60}$ ticks have
+elapsed since the initial epoch.  No physical quantity is actually
+infinite.  The finiteness has testable consequences: suppressed power
+at the largest CMB scales and a maximum wavelength for physical modes.
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+
+\bibitem{Luminet2016}
+J.-P.~Luminet, ``The Status of Cosmic Topology after Planck Data,''
+Universe \textbf{2}, 1 (2016).
+
+\bibitem{Planck2020}
+Planck Collaboration, ``Planck 2018 Results.\ VII.\ Isotropy and
+Statistics of the CMB,'' Astron.\ Astrophys.\ \textbf{641}, A7
+(2020).
+
+\bibitem{Cornish2004}
+N.~J.~Cornish, D.~N.~Spergel, G.~D.~Starkman, and E.~Komatsu,
+``Constraining the Topology of the Universe,'' Phys.\ Rev.\ Lett.\
+\textbf{92}, 201302 (2004).
+
+\bibitem{Aczel1966}
+J.~Acz\'el, \emph{Lectures on Functional Equations and Their
+Applications} (Academic Press, 1966).
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,389 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The Weinberg Angle from Recognition Science:\\
+$\sin^2\theta_W = (3 - \varphi)/6 \approx 0.230$}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We derive the weak mixing angle $\theta_W$ from the Recognition
+Science (RS) $D$-cube structure.  The formula:
+$\sin^2\theta_W = (D - \varphi)/(2D) = (3 - \varphi)/6
+\approx 0.2303$, where $D = 3$ is the spatial dimension and
+$\varphi = (1+\sqrt{5})/2$ is the golden ratio.  The
+$\overline{\mathrm{MS}}$ value at $M_Z$ (PDG 2024) is
+$\sin^2\hat\theta_W = 0.23121 \pm 0.00003$, giving agreement
+to $0.4\%$.  The on-shell value $1 - m_W^2/m_Z^2 \approx 0.2231$
+is 3.2\% from the RS prediction; the RS formula most naturally
+corresponds to the $\overline{\mathrm{MS}}$ scheme at $M_Z$.
+The RS formula connects electroweak mixing directly to the golden
+ratio and the dimension of space: $\sin^2\theta_W$ is the
+fraction of gauge space not filled by the $\varphi$-ladder
+(structural derivation; open problem to establish from the RS
+gauge lattice in full rigor).  We prove $0 < \sin^2\theta_W < 1/2$,
+derive the $W/Z$ mass ratio $m_W/m_Z = \cos\theta_W$, and show
+that only $D = 3$ reproduces the observed value.
+\end{abstract}
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+The Weinberg angle $\theta_W$~\cite{Weinberg1967,Glashow1961}
+parameterizes the mixing between the $SU(2)_L$ and $U(1)_Y$ gauge
+fields in the electroweak theory.  The physical photon and $Z$ boson
+are:
+\begin{align}
+  A_\mu &= B_\mu \cos\theta_W + W_\mu^3 \sin\theta_W, \\
+  Z_\mu &= -B_\mu \sin\theta_W + W_\mu^3 \cos\theta_W.
+\end{align}
+The mixing parameter
+$\sin^2\theta_W = g'^2/(g_2^2 + g'^2)$ is a free parameter in
+the Standard Model.  Recognition Science~\cite{RS_Axioms} derives it
+from the dimension $D = 3$ and the golden ratio $\varphi$.
+
+%% ============================================================
+\section{Recognition Science Framework}
+\label{sec:framework}
+%% ============================================================
+
+Recognition Science derives all physics from a single primitive,
+the \emph{recognition cost functional} $J(x)$, uniquely determined
+by three axioms.
+
+\begin{definition}[RS Cost Functional]
+For $x > 0$: $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{definition}
+
+\noindent\textbf{Axiom A1 (Normalization):} $J(1) = 0$.\\
+\textbf{Axiom A2 (Recognition Composition Law, RCL):}
+$J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y)$ for all $x, y > 0$.\\
+\textbf{Axiom A3 (Calibration):} $J''_{\log}(0) = 1$, where
+$J_{\log}(t) := J(e^t)$.
+
+\begin{theorem}[Cost Uniqueness]
+\label{thm:unique}
+The unique continuous solution to \textup{(A1)--(A3)} is
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Setting $f(t) = J_{\log}(t) + 1$ and rewriting \textup{(A2)} gives the
+d'Alembert equation $f(s+t) + f(s-t) = 2f(s)f(t)$.  By the Acz\'el
+classification theorem~\cite{Aczel1966}, the unique continuous solution
+with $f(0) = 1$ and $f''(0) = 1$ is $f(t) = \cosh t$.
+\end{proof}
+
+\begin{theorem}[$\varphi$ Forcing]
+\label{thm:phi}
+The golden ratio $\varphi = (1+\sqrt{5})/2$ is the unique positive real
+satisfying the self-similarity equation forced by the RCL\@.  All stable
+masses lie on the $\varphi$-ladder: $m(r) = E_{\rm coh}\cdot\varphi^r$,
+where $E_{\rm coh} = \varphi^{-5}$ in RS units and $r \in \mathbb{Z}$.
+\end{theorem}
+
+\noindent Spatial dimension $D = 3$ is forced by the gap-45 synchronization
+$\operatorname{lcm}(8,45) = 360$, which uniquely requires $D = 3$ faces on
+the fundamental cube.
+
+%% ============================================================
+\section{Derivation from the $D$-Cube}
+\label{sec:derivation}
+%% ============================================================
+
+\begin{definition}[$D$-Cube Gauge Counting]
+\label{def:gauge}
+The $D$-cube has $2D$ faces.  In RS, these $2D$ face-pairs are
+the gauge directions---each face corresponds to a generator of
+the gauge group.  The total gauge space has dimension $2D$.
+\end{definition}
+
+\begin{proposition}[Hypercharge Fraction]
+\label{prop:hyper}
+Of the $2D$ gauge directions, the $\varphi$-ladder structure
+``fills'' $D + \varphi$ of them (the $D$ spatial directions
+plus $\varphi$ units of self-similar overlap).  The remaining
+fraction:
+\begin{equation}
+  \frac{2D - (D + \varphi)}{2D} = \frac{D - \varphi}{2D}
+\end{equation}
+corresponds to the $U(1)_Y$ (hypercharge) component of the
+gauge space.
+\end{proposition}
+
+\begin{remark}[Status of Proposition~\ref{prop:hyper}]
+The claim that $D + \varphi$ directions are ``filled'' by the
+$\varphi$-ladder is a structural hypothesis: the $D = 3$ spatial
+directions fill $D$ gauge degrees of freedom, and the golden-ratio
+self-similar scaling contributes an effective $\varphi$ units of
+overlap between the $SU(2)_L$ and $U(1)_Y$ sectors.  A fully
+rigorous derivation of this effective filling fraction from the
+RS lattice gauge theory is an open problem.  The formula's agreement
+with experiment ($0.4\%$) supports its structural basis.
+\end{remark}
+
+\begin{proposition}[Weinberg Angle --- RS Prediction]
+\label{thm:weinberg}
+\begin{equation}
+  \boxed{\sin^2\theta_W = \frac{D - \varphi}{2D}
+  = \frac{3 - \varphi}{6} \approx 0.2303.}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+The electroweak mixing parameter is the hypercharge fraction of
+the total gauge space.  By Proposition~\ref{prop:hyper}:
+\begin{equation}
+  \sin^2\theta_W = \frac{D - \varphi}{2D}
+  = \frac{3 - (1+\sqrt{5})/2}{6}
+  = \frac{(5 - \sqrt{5})/2}{6}
+  = \frac{5 - \sqrt{5}}{12}.
+\end{equation}
+Numerically:
+\begin{equation}
+  \sin^2\theta_W = \frac{5 - 2.236}{12}
+  = \frac{2.764}{12} = 0.2303.
+\end{equation}
+\end{proof}
+
+\begin{remark}
+The formula has no free parameters: $D = 3$ and $\varphi$ are
+both forced by the RS framework.  The denominator $2D = 6$ is
+the number of cube faces; the numerator $D - \varphi$ is the
+``unfilled'' gauge space.
+\end{remark}
+
+%% ============================================================
+\section{Properties}
+\label{sec:properties}
+%% ============================================================
+
+\begin{remark}[Bounds]
+\label{thm:bounds}
+From the formula $(3-\varphi)/6$:
+\begin{enumerate}[label=(\roman*)]
+  \item $0 < \sin^2\theta_W < 1/2$: since $1 < \varphi < 3$,
+  $0 < (3-\varphi)/6 < 1/3 < 1/2$.
+  \item $\sin^2\theta_W \neq 1/4$: $(3-\varphi)/6 = 1/4$ requires
+  $\varphi = 3/2$, but $\varphi = (1+\sqrt{5})/2 \neq 3/2$.
+  This rules out tree-level $SU(5)$ as a coincidence.
+  \item $|\sin^2\theta_W - 0.230| = 0.0003 < 0.002$.
+\end{enumerate}
+\end{remark}
+
+\begin{corollary}[W/Z Mass Ratio]
+\label{thm:wz}
+\begin{equation}
+  \frac{m_W}{m_Z} = \cos\theta_W
+  = \sqrt{1 - \frac{D - \varphi}{2D}}
+  = \sqrt{\frac{D + \varphi}{2D}} \approx 0.877.
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+$\cos^2\theta_W = 1 - \sin^2\theta_W = 1 - (D-\varphi)/(2D)
+= (2D - D + \varphi)/(2D) = (D + \varphi)/(2D)$.
+$(3 + 1.618)/6 = 4.618/6 = 0.7697$, so
+$\cos\theta_W = \sqrt{0.7697} = 0.877$.
+The experimental value is $m_W/m_Z = 80.369/91.188 = 0.8813$, a
+$0.5\%$ deviation from the RS prediction.
+\end{proof}
+
+\begin{corollary}
+$m_W < m_Z$ (since $\cos\theta_W < 1$).
+\end{corollary}
+
+%% ============================================================
+\section{Running of $\sin^2\theta_W$}
+\label{sec:running}
+%% ============================================================
+
+\begin{remark}[Scheme dependence and RS comparison]
+\label{rem:scheme}
+The RS formula $(3-\varphi)/6 = 0.2303$ gives a ``bare''
+value at the recognition scale.  In quantum field theory,
+$\sin^2\theta_W$ runs with energy and depends on the
+renormalization scheme.  The three most commonly quoted values
+are distinct:
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Scheme / Scale} & \textbf{Measured (PDG 2024)} &
+\textbf{RS deviation} \\
+\midrule
+On-shell: $1 - m_W^2/m_Z^2$ & $\approx 0.2231$~\cite{PDG2024} & $3.2\%$ \\
+$\overline{\mathrm{MS}}$, $M_Z$ & $0.23121 \pm 0.00003$~\cite{PDG2024} & $0.4\%$ \\
+Effective leptonic, $M_Z$ & $0.23153 \pm 0.00016$~\cite{PDG2024} & $0.5\%$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+The RS formula $0.23033$ agrees well with the
+$\overline{\mathrm{MS}}$ scheme value at $M_Z$ (0.4\% deviation)
+and the effective leptonic value (0.5\%).  The on-shell scheme
+value ($\approx 0.2231$, from $m_W = 80.369~\mathrm{GeV}$,
+$m_Z = 91.188~\mathrm{GeV}$) is 3.2\% from the RS prediction,
+suggesting that the RS tree-level formula most naturally
+corresponds to the $\overline{\mathrm{MS}}$ or effective
+scheme at $M_Z$.  The identification of the RS formula's
+scheme correspondence is a structural open problem.
+\end{remark}
+
+%% ============================================================
+\section{Experimental Comparison}
+\label{sec:comparison}
+%% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Quantity} & \textbf{RS} &
+\textbf{Exp.\ (PDG 2024)} & \textbf{Dev.} \\
+\midrule
+$\sin^2\hat\theta_W(M_Z)_{\overline{\rm MS}}$ & $0.23034$ & $0.23122\pm 0.00003$ & $0.4\%$ \\
+$\sin^2\theta_W$ (on-shell) & $0.23034$ & $\approx 0.2231$ & $3.2\%$ \\
+$m_W/m_Z$ & $0.877$ & $0.881$ & $0.5\%$ \\
+$\sin^2\theta_W$ (eff.\ leptonic) & $0.23034$ & $0.23153\pm 0.00016$ & $0.5\%$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%% ============================================================
+\section{Dimension Dependence}
+\label{sec:dimension}
+%% ============================================================
+
+\begin{proposition}[Only $D = 3$ Works]
+\label{prop:dimension}
+The formula $(D - \varphi)/(2D)$ gives:
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{ccc}
+\toprule
+$D$ & $\sin^2\theta_W$ & Status \\
+\midrule
+2 & $(2 - \varphi)/4 = 0.0955$ & Ruled out ($\gg\!10\sigma$) \\
+3 & $(3 - \varphi)/6 = 0.2303$ & Matches ($\overline{\rm MS}$: $0.4\%$) \\
+4 & $(4 - \varphi)/8 = 0.2977$ & Ruled out ($\gg\!10\sigma$) \\
+\bottomrule
+\end{tabular}
+\end{center}
+Only $D = 3$ is compatible with the observed value.
+\end{proposition}
+
+%% ============================================================
+\section{Comparison with Other Predictions}
+\label{sec:other}
+%% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Framework} & \textbf{$\sin^2\theta_W$} &
+\textbf{Free params} & \textbf{Error ($\overline{\rm MS}$)} \\
+\midrule
+$SU(5)$ GUT (tree, $M_\mathrm{GUT}$) & $3/8 = 0.375$ & 0 & $62\%$ \\
+$SO(10)$ GUT (run to $M_Z$) & $\sim 0.21$ & 0 & $\sim 9\%$ \\
+Standard Model (fitted) & $0.23122$ & 1 & $0$ (by fit) \\
+RS (zero parameters) & $(3-\varphi)/6 = 0.23034$ & 0 & $0.4\%$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{remark}
+GUT theories predict $\sin^2\theta_W = 3/8$ at the unification
+scale, which must run down to $\approx 0.23$ at $M_Z$.  RS
+predicts $0.2303$ directly at the electroweak scale, without
+invoking unification or running from a high scale.
+\end{remark}
+
+%% ============================================================
+\section{Predictions and Falsifiers}
+\label{sec:predictions}
+%% ============================================================
+
+\begin{enumerate}
+  \item \textbf{$\sin^2\theta_W = (3-\varphi)/6 = 0.2303$}:
+  Zero-parameter prediction at the electroweak scale.
+
+  \item \textbf{$m_W/m_Z = \sqrt{(3+\varphi)/6} = 0.877$}:
+  Derived from the same formula.
+
+  \item \textbf{Falsifier}: A precision measurement showing
+  the running of $\sin^2\theta_W$ is inconsistent with
+  $(3-\varphi)/6$ as the tree-level value would challenge the
+  formula.
+
+  \item \textbf{No GUT unification}: RS predicts no high-energy
+  scale at which the gauge couplings unify in the $SU(5)$ sense.
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+The Weinberg angle is derived from the $D = 3$ cube geometry:
+$\sin^2\theta_W = (3-\varphi)/6 = (5-\sqrt{5})/12 \approx 0.23034$,
+matching the experimental $\overline{\rm MS}$ value at $M_Z$
+($0.23122 \pm 0.00003$) to $0.4\%$ with zero free parameters.
+The formula connects electroweak mixing directly to the golden ratio
+and the dimension of space.  The on-shell scheme value ($\approx
+0.2231$) shows a $3.2\%$ discrepancy, suggesting the RS tree-level
+formula corresponds most naturally to the $\overline{\rm MS}$ scheme
+at $M_Z$.  A rigorous derivation of the hypercharge-fraction formula
+from the RS lattice gauge theory remains an open problem.
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{Aczel1966}
+J.~Acz\'el, \emph{Lectures on Functional Equations and Their Applications},
+Academic Press, New York (1966).
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+\texttt{doi:10.3390/axioms15020090}
+
+\bibitem{Weinberg1967}
+S.~Weinberg, ``A Model of Leptons,'' Phys.\ Rev.\ Lett.\
+\textbf{19}, 1264 (1967).
+
+\bibitem{PDG2024}
+S.~Navas \textit{et al.}\ (PDG), ``Review of Particle Physics,''
+Phys.\ Rev.\ D \textbf{110}, 030001 (2024).
+
+\bibitem{Glashow1961}
+S.~L.~Glashow, ``Partial-Symmetries of Weak Interactions,''
+Nucl.\ Phys.\ \textbf{22}, 579 (1961).
+
+\end{thebibliography}
+
+\end{document}

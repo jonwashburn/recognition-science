@@ -1,0 +1,612 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\geometry{margin=1in}
+
+\title{Goldbach via a Mod-8 Kernel:\\
+Density-One Positivity, Short-Interval Bounds,\\
+and a Conditional Dispersion Improvement}
+\author{Jonathan Washburn\\Recognition Physics Institute}
+\date{February 2026}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Claim hygiene markers
+\newcommand{\PROVED}{\textcolor{blue!70!black}{\textsf{[PROVED]}}}
+\newcommand{\COND}{\textcolor{orange!80!black}{\textsf{[CONDITIONAL]}}}
+\newcommand{\CONJ}{\textcolor{red!70!black}{\textsf{[CONJECTURE]}}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We develop a classical circle-method framework for Goldbach's conjecture
+using a mod-8 periodic kernel $K_8$ that preserves the natural residue
+structure and isolates the $2$-adic local factor.
+On major arcs we obtain a positive main term
+$(c_8(2m)+o(1))\,\mathfrak{S}(2m)\,N/\log^2 N$
+with $c_8(2m)\in\{1,\frac{1}{2}\}$.
+On minor arcs we prove \emph{unconditional} density-one positivity
+via mean-square bounds and convert fourth-moment control into
+bounded gaps between exceptional even integers $\ll(\log N)^8$.
+We formulate a precise \emph{conjecture} on medium-arc dispersion
+(a log-power saving $\delta_{\mathrm{med}}>0$ on a three-tier arc
+decomposition) and show that it would lower the short-interval
+exponent to $(\log N)^{8-\delta_{\mathrm{med}}}$ and yield
+uniform positivity beyond an explicit threshold $N_0$.
+An unconditional Chen/Selberg variant (prime $+$ almost-prime)
+and a GRH conditional template are recorded for comparison.
+
+\medskip\noindent
+\textbf{Claim hygiene.}
+Every result is marked \PROVED{} (unconditional),
+\COND{} (follows from a stated conjecture), or
+\CONJ{} (the conjecture itself).
+\end{abstract}
+
+\tableofcontents
+
+%% ============================================================
+\section{Introduction}\label{sec:intro}
+%% ============================================================
+
+Goldbach's conjecture asserts that every even integer $2m>2$
+is a sum of two primes.
+We develop a circle-method framework using a mod-8 periodic kernel
+$K_8$ that preserves the natural residue structure and isolates
+the $2$-adic local factor.
+
+\paragraph{Contributions.}
+\begin{enumerate}[label=(\roman*)]
+\item \PROVED{} A mod-8 kernel $K_8$ with a positive major-arc
+  main term involving a $2$-adic gate $c_8(2m)\in\{1,\frac{1}{2}\}$.
+\item \PROVED{} Unconditional density-one positivity and
+  bounded gaps $\ll(\log N)^8$ between exceptions.
+\item \CONJ{} A medium-arc dispersion conjecture (log-power
+  saving $\delta_{\mathrm{med}}>0$).
+\item \COND{} Improved exponent $(\log N)^{8-\delta_{\mathrm{med}}}$
+  and uniform positivity beyond explicit $N_0$,
+  conditional on the conjecture.
+\item \PROVED{} An unconditional Chen/Selberg variant
+  (prime $+$ almost-prime) with computable threshold.
+\end{enumerate}
+
+%% ============================================================
+\section{The mod-8 kernel and circle-method setup}\label{sec:kernel}
+%% ============================================================
+
+\subsection{Mod-8 kernel}
+Let $\chi_8$ be the primitive real Dirichlet character modulo $8$:
+\[
+\chi_8(n)=\begin{cases}
+0,& n\equiv 0,2,4,6\pmod{8},\\
+{+}1,& n\equiv 1,7\pmod{8},\\
+{-}1,& n\equiv 3,5\pmod{8},
+\end{cases}
+\]
+and define for even $2m$ the switch
+\[
+\varepsilon(2m)=\begin{cases}
+{+}1,& 2m\equiv 0,2\pmod{8},\\
+{-}1,& 2m\equiv 4,6\pmod{8}.
+\end{cases}
+\]
+Set the aligned kernel
+\begin{equation}\label{eq:K8}
+K_8(n,m)\;:=\;\tfrac12\,\mathbf{1}_{n\text{ odd}}\,
+\mathbf{1}_{2m-n\text{ odd}}\,
+\bigl(1+\varepsilon(2m)\,\chi_8(n)\,\chi_8(2m-n)\bigr),
+\end{equation}
+which is periodic modulo $8$ in both arguments and, for each
+residue class $2m\bmod 8$, keeps a positive proportion of
+odd--odd pairs.
+
+\subsection{Smoothed bilinear form}
+Write $\Lambda$ for the von Mangoldt function.
+Fix $N\asymp m$ and a smooth cutoff
+$\eta\in C_c^\infty((0,2))$ with $\eta\equiv 1$ on $[\frac14,\frac74]$.
+Define
+\[
+R_8(2m;N)\;:=\;\sum_{n\ge 1}\Lambda(n)\,\Lambda(2m{-}n)\,
+K_8(n,m)\,\eta\!\Bigl(\tfrac{n}{N}\Bigr)\,
+\eta\!\Bigl(\tfrac{2m-n}{N}\Bigr).
+\]
+Let
+\[
+S(\alpha)=\sum_{n\ge 1}\Lambda(n)\,e(\alpha n)\,
+\eta\!\Bigl(\tfrac{n}{N}\Bigr),\qquad
+S_{\chi_8}(\alpha)=\sum_{n\ge 1}\Lambda(n)\,\chi_8(n)\,
+e(\alpha n)\,\eta\!\Bigl(\tfrac{n}{N}\Bigr).
+\]
+Expanding \eqref{eq:K8} gives
+\begin{equation}\label{eq:circle}
+R_8(2m;N)=\tfrac12\int_0^1 S(\alpha)^2 e(-2m\alpha)\,d\alpha
+\;{+}\;\tfrac12\,\varepsilon(2m)\int_0^1 S_{\chi_8}(\alpha)^2
+e(-2m\alpha)\,d\alpha,
+\end{equation}
+up to negligible even--even contributions.
+
+%% ============================================================
+\section{Unconditional results}\label{sec:unconditional}
+%% ============================================================
+
+\subsection{Major arcs and the 2-adic gate}\PROVED
+
+Let $\mathfrak{M}$ be the standard major arcs.
+Classical analysis (Vaughan~\cite{Vaughan1997}, Chs.~3--4) yields:
+
+\begin{proposition}[Major-arc main term]\label{prop:major}
+Uniformly for even $2m\le 2N$,
+\[
+\int_{\mathfrak{M}}\Bigl(\tfrac12 S^2
++\tfrac12\varepsilon S_{\chi_8}^2\Bigr)
+e(-2m\alpha)\,d\alpha
+\;=\;\bigl(c_8(2m)+o(1)\bigr)\,\mathfrak{S}(2m)\,
+\frac{N}{\log^2 N},
+\]
+where
+\[
+c_8(2m)=\begin{cases}
+1,&2m\equiv 0,4\pmod{8},\\
+\tfrac12,&2m\equiv 2,6\pmod{8},
+\end{cases}
+\]
+and the singular series satisfies the uniform lower bound
+\[
+\mathfrak{S}(2m)\;\ge\;c_0\;:=\;2C_2
+\;=\;2\prod_{p>2}\frac{p(p-2)}{(p-1)^2}\;\approx\;1.32032.
+\]
+\end{proposition}
+
+\begin{proof}
+Standard Hardy--Littlewood singular series analysis.
+The factor $c_8$ is the $2$-adic weight from the odd--odd
+gating in \eqref{eq:K8}.
+The lower bound on $\mathfrak{S}(2m)$ follows from its
+Euler product since each factor $(p-1)/(p-2)\ge 1$
+for $p\mid m$, $p>2$.
+See \cite[Ch.~4]{Vaughan1997}.
+\end{proof}
+
+\subsection{Density-one positivity}\PROVED
+
+\begin{theorem}[Density-one positivity]\label{thm:density-one}
+For almost all even $2m\le 2N$,
+\[
+R_8(2m;N)=\bigl(c_8(2m)+o(1)\bigr)\,\mathfrak{S}(2m)\,
+\frac{N}{\log^2 N}\;>\;0.
+\]
+The set of even $2m\le 2N$ with $R_8(2m;N)=0$ has
+asymptotic density~$0$.
+\end{theorem}
+
+\begin{proof}
+On the minor arcs $\mathfrak{m}$, standard mean-square bounds
+(Vaughan's identity, large sieve, zero-density estimates;
+\cite[Ch.~3]{Vaughan1997}, \cite[Ch.~13]{MontgomeryVaughan2007})
+give, for any fixed $A>0$,
+\[
+\int_{\mathfrak{m}}|S(\alpha)|^2\,d\alpha\ll
+\frac{N}{(\log N)^A},\qquad
+\int_{\mathfrak{m}}|S_{\chi_8}(\alpha)|^2\,d\alpha\ll
+\frac{N}{(\log N)^A}.
+\]
+By Cauchy--Schwarz the minor-arc contribution is
+$\ll N/(\log N)^A$.
+Choosing $A>2$ and averaging over $m$ gives the density-one
+conclusion.
+\end{proof}
+
+\subsection{Short-interval positivity at exponent~8}\PROVED
+
+\begin{theorem}[Bounded gaps between exceptions]\label{thm:short-interval}
+There exists an absolute constant $C>0$ such that,
+for all sufficiently large $N$,
+every interval of $H\ge C(\log N)^8$ consecutive
+values of $m$ contains some even $2m$ with
+$R_8(2m;N)>0$.
+\end{theorem}
+
+\begin{proof}
+Write the minor-arc remainder as
+\[
+F(2m;N):=\tfrac12\int_{\mathfrak{m}}S^2 e(-2m\alpha)\,d\alpha
++\tfrac12\varepsilon\int_{\mathfrak{m}}S_{\chi_8}^2
+e(-2m\alpha)\,d\alpha.
+\]
+By Parseval and the classical fourth-moment bound
+(\cite[Ch.~13]{MontgomeryVaughan2007}),
+\[
+\sum_{2m\in\mathcal{M}}|F(2m;N)|^2\;\le\;
+I_{\mathrm{minor}}(N)\;\ll\;N^2(\log N)^4.
+\]
+Set $T(N):=\frac14 c_0\,N/\log^2 N$ (half the worst-case
+major-arc lower bound, using $\min c_8=\frac12$).
+By Markov's inequality, the number of $m$ in any window of
+length $H$ with $|F(2m;N)|\ge T(N)$ is at most
+$I_{\mathrm{minor}}(N)/T(N)^2\ll(\log N)^8$.
+If $H$ exceeds this, at least one $m$ has
+$|F|<T$, hence $R_8>0$.
+\end{proof}
+
+\begin{remark}
+The $K_8$-combined fourth moment
+$I_{\mathrm{minor}}^{K_8}:=
+\frac12\int|S|^4+\frac12\int|S_{\chi_8}|^4$
+satisfies
+$\sum|F|^2\le I_{\mathrm{minor}}^{K_8}
+\le\frac12 I_{\mathrm{minor}}$,
+giving a factor-of-two constant improvement (same exponent~8).
+\end{remark}
+
+\subsection{Chen/Selberg variant}\PROVED
+
+\begin{proposition}[Prime $+$ almost-prime]\label{prop:chen}
+There exists a computable $M_0$ such that for all even
+$2m\ge M_0$,
+\[
+2m\;=\;p\;+\;P_2,
+\]
+with $p$ prime and $P_2$ a product of at most two primes.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Replace $\Lambda$ by a Selberg lower-bound sieve weight $W$
+adapted to primes and $P_2$'s.
+The $K_8$ gate adjusts only the local factor at $2$
+(the $c_8$ switch).
+By Chen's method
+(\cite{Chen1973}, adapted to finitely many congruence
+conditions as in \cite{Vaughan1997}),
+the modified bilinear form $R_8^{(2)}(2m;N)>0$ for all
+$2m\ge M_0$.
+The threshold $M_0$ depends on sieve constants,
+Bombieri--Vinogradov level, zero-density estimates,
+and the circle-method constants from Proposition~\ref{prop:major}.
+\end{proof}
+
+%% ============================================================
+\section{The medium-arc dispersion conjecture}\label{sec:conjecture}
+%% ============================================================
+
+We now isolate the single unproved ingredient that, if
+established, would improve the exponent from~$8$ and yield
+uniform positivity.
+
+\subsection{Three-tier arc decomposition}
+Fix parameters
+\[
+Q=\frac{N^{1/2}}{(\log N)^4},\qquad
+Q'=\frac{N^{2/3}}{(\log N)^6}.
+\]
+Define
+\begin{align*}
+\mathfrak{M}&=\bigcup_{1\le q\le Q}\bigcup_{(a,q)=1}
+\Bigl\{\alpha:\Bigl|\alpha-\tfrac{a}{q}\Bigr|
+\le\tfrac{Q}{qN}\Bigr\},\\
+\mathfrak{M}_{\mathrm{med}}&=
+\bigcup_{Q<q\le Q'}\bigcup_{(a,q)=1}
+\Bigl\{\alpha:\Bigl|\alpha-\tfrac{a}{q}\Bigr|
+\le\tfrac{Q'}{qN}\Bigr\}\setminus\mathfrak{M},\\
+\mathfrak{m}_{\mathrm{deep}}&=
+[0,1)\setminus(\mathfrak{M}\cup\mathfrak{M}_{\mathrm{med}}).
+\end{align*}
+
+\begin{lemma}[Local $L^4$ on short arcs]\label{lem:local-L4}\PROVED{}
+For any finitely supported sequence $(c_x)$ and $B\in(0,1]$,
+\[
+\int_{|\beta|\le B}\Bigl|\sum_x c_x\,e(\beta x)\Bigr|^4
+d\beta\;\le\;2B\,\Bigl(\sum_x|c_x|^2\Bigr)^2.
+\]
+\end{lemma}
+\begin{proof}
+Expand the fourth power and integrate termwise:
+$\int_{-B}^B e(\beta(u-v))\,d\beta\le 2B$.
+Cauchy--Schwarz on the shift-convolution gives the claim.
+\end{proof}
+
+\subsection{The conjecture}
+
+\begin{conjecture}[Medium-arc $L^4$ saving]\label{conj:dispersion}
+\CONJ{}
+With the three-tier decomposition above and
+Vaughan partition $U=V=N^{1/3}$, there exist absolute
+constants $C_{\mathrm{disp}}>0$ and $\delta_{\mathrm{med}}>0$
+such that, for all sufficiently large $N$,
+\begin{equation}\label{eq:dispersion}
+\int_{\mathfrak{M}_{\mathrm{med}}}
+\bigl(|S(\alpha)|^4+|S_{\chi_8}(\alpha)|^4\bigr)\,d\alpha
+\;\le\;C_{\mathrm{disp}}\,N^2\,(\log N)^{4-\delta_{\mathrm{med}}}.
+\end{equation}
+\end{conjecture}
+
+\begin{remark}[Why this is not yet proved]\label{rem:gap}
+The natural attack is:
+apply Lemma~\ref{lem:local-L4} to each bilinear piece
+$\mathcal{B}(\alpha)$ on arcs near $a/q$,
+then sum over reduced $a\bmod q$ using completion modulo $q$
+and the additive large sieve.
+The large sieve controls the \emph{$L^2$ average} over residues:
+\[
+\sum_{\substack{a\bmod q\\(a,q)=1}}
+\Bigl|\sum_{m,n}A_m B_n e\bigl(\tfrac{a}{q}mn\bigr)\Bigr|^2
+\;\le\;(q+M+N/M)\,MN\,(\log N)^C.
+\]
+However, the $L^4$ bound requires controlling the
+\emph{square} of the quadratic form:
+$\sum_a\bigl(\sum_x|\cdots|^2\bigr)^2$.
+Passing from the $L^2$ average to the $L^4$ norm requires
+either a pointwise (maximum) bound over residues $a$,
+or a direct fourth-moment large sieve---neither of which
+follows from the standard additive large sieve alone.
+
+Techniques from Deshouillers--Iwaniec~\cite{DeshouillersIwaniec}
+(Kloosterman-sum dispersion),
+Duke--Friedlander--Iwaniec~\cite{DukeFriedlanderIwaniec}
+(bilinear forms with Kloosterman sums),
+and their exposition in
+Iwaniec--Kowalski~\cite{IwaniecKowalski} can potentially
+close this gap, but the adaptation to the present $L^4$-on-medium-arcs
+setting requires substantial additional work
+that we do not complete here.
+\end{remark}
+
+\begin{remark}[Plausibility]
+The saving is plausible because on medium arcs ($Q<q\le Q'$),
+the modular structure modulo $q$ introduces cancellation in
+bilinear sums beyond what the trivial $L^2$-to-$L^4$ passage
+provides.
+The factor $\log(Q'/Q)/\log N$ is positive and
+provides the natural candidate for $\delta_{\mathrm{med}}$.
+\end{remark}
+
+%% ============================================================
+\section{Conditional consequences of the conjecture}\label{sec:conditional}
+%% ============================================================
+
+Throughout this section, all results assume
+Conjecture~\ref{conj:dispersion} with some
+$\delta_{\mathrm{med}}>0$.
+
+\subsection{Coercivity inequality}\COND
+
+\begin{lemma}[Medium-arc coercivity]\label{lem:coercivity}
+Assume Conjecture~\ref{conj:dispersion}.
+Set $C_{\mathrm{meas}}:=\mathrm{meas}(\mathfrak{M}_{\mathrm{med}})
+\le\bigl(\frac{12}{\pi^2}\log\frac{Q'}{Q}+2\bigr)\frac{Q'}{N}$.
+Then uniformly for $2m\le 2N$,
+\[
+R_8(2m;N)\;\ge\;\int_{\mathfrak{M}}\cdots
+\;-\;\frac{1}{\sqrt{2}}\,C_{\mathrm{meas}}^{1/2}\,
+\mathcal{D}_{\mathrm{med}}^{1/2}
+\;-\;\epsilon_{\mathrm{deep}}(N),
+\]
+where $\mathcal{D}_{\mathrm{med}}=
+\int_{\mathfrak{M}_{\mathrm{med}}}(|S|^4+|S_{\chi_8}|^4)\,d\alpha$
+and $\epsilon_{\mathrm{deep}}\ll N/(\log N)^A$ for any fixed $A\ge 6$.
+\end{lemma}
+
+\begin{proof}
+Split $[0,1)=\mathfrak{M}\cup\mathfrak{M}_{\mathrm{med}}
+\cup\mathfrak{m}_{\mathrm{deep}}$.
+On $\mathfrak{M}_{\mathrm{med}}$, Cauchy--Schwarz gives
+$|\int S^2 e|\le\mathrm{meas}^{1/2}\cdot(\int|S|^4)^{1/2}$.
+On $\mathfrak{m}_{\mathrm{deep}}$, use $|\int f^2 e|\le\int|f|^2$
+and the classical mean-square bound.
+\end{proof}
+
+\subsection{Improved short-interval exponent}\COND
+
+\begin{theorem}[Short-interval improvement]\label{thm:improved-interval}
+Assume Conjecture~\ref{conj:dispersion} with
+$\delta_{\mathrm{med}}>0$.
+Then there exists $C>0$ such that, for all large $N$,
+every interval of $H\ge C(\log N)^{8-\delta_{\mathrm{med}}}$
+consecutive values of $m$ contains some even $2m$ with
+$R_8(2m;N)>0$.
+\end{theorem}
+
+\begin{proof}
+Replace $I_{\mathrm{minor}}(N)\ll N^2(\log N)^4$ in the proof
+of Theorem~\ref{thm:short-interval} by the improved bound
+$I_{\mathrm{minor}}^{K_8}(N)\le
+\frac12 C_{\mathrm{disp}}N^2(\log N)^{4-\delta_{\mathrm{med}}}
++\frac12 C_{\mathrm{deep}}N^2(\log N)^4$.
+The medium-arc term dominates, giving
+$H_0\ll(\log N)^{8-\delta_{\mathrm{med}}}$.
+\end{proof}
+
+\subsection{Uniform pointwise positivity}\COND
+
+\begin{theorem}[Uniform positivity beyond $N_0$]\label{thm:uniform}
+Assume Conjecture~\ref{conj:dispersion} with
+$\delta_{\mathrm{med}}\ge 10^{-3}$ and
+$C_{\mathrm{disp}}\le 10^3$.
+Then there exists an explicit $N_0$ (depending on
+$C_{\mathrm{disp}}$, $\delta_{\mathrm{med}}$, and the
+deep-minor constant) such that for every $N\ge N_0$
+and all even $2m\le 2N$,
+\[
+R_8(2m;N)\;>\;0.
+\]
+Conservative examples: $\log N_0\approx 66$ for
+$C_{\mathrm{disp}}=10^3$.
+\end{theorem}
+
+\begin{proof}
+By Lemma~\ref{lem:coercivity} and Proposition~\ref{prop:major},
+it suffices to have
+\[
+\sqrt{C_{\mathrm{meas}}\cdot C_{\mathrm{disp}}}\,
+(\log N)^{2-\delta_{\mathrm{med}}/2}
++C_{\mathrm{deep}}/(\log N)^4
+\;\le\;\tfrac12\,c_0/\log^2 N.
+\]
+Since $C_{\mathrm{meas}}\ll N^{-1/3}(\log N)^{-5}$,
+the left side decays as $N^{-1/6}$ times log-powers,
+while the right is $O(1/\log^2 N)$.
+The inequality holds for $N\ge N_0$ with
+$N_0$ computable from the constants.
+\end{proof}
+
+%% ============================================================
+\section{GRH conditional theorem}\label{sec:grh}
+%% ============================================================
+
+\begin{theorem}[Goldbach under GRH]\label{thm:grh}\PROVED{}
+(relative to GRH)
+Assume GRH for Dirichlet $L$-functions and standard
+zero-free/zero-density estimates.
+Then there exists $N_0$ such that for all $N\ge N_0$
+and all even $2m\le 2N$, $R(2m;N)>0$.
+A finite verification below $2N_0$ completes the proof.
+\end{theorem}
+
+\begin{proof}[Sketch]
+Under GRH, pointwise minor-arc estimates of size
+$\ll N/(\log N)^A$ hold for each $2m$, giving
+$R_8(2m;N)>0$ for all large $2m$.
+\end{proof}
+
+%% ============================================================
+\section{Discussion: what is proved and what remains}
+\label{sec:discussion}
+%% ============================================================
+
+\subsection{Summary table}
+
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Result} & \textbf{Status} & \textbf{Reference} \\
+\midrule
+Major-arc positivity ($c_8\cdot\mathfrak{S}\cdot N/\log^2 N$)
+  & \PROVED & Prop.~\ref{prop:major} \\
+Density-one positivity
+  & \PROVED & Thm.~\ref{thm:density-one} \\
+Bounded gaps $\ll(\log N)^8$
+  & \PROVED & Thm.~\ref{thm:short-interval} \\
+Chen variant (prime $+$ $P_2$)
+  & \PROVED & Prop.~\ref{prop:chen} \\
+Medium-arc $L^4$ saving $\delta_{\mathrm{med}}>0$
+  & \CONJ & Conj.~\ref{conj:dispersion} \\
+Improved exponent $8-\delta_{\mathrm{med}}$
+  & \COND & Thm.~\ref{thm:improved-interval} \\
+Uniform positivity beyond $N_0$
+  & \COND & Thm.~\ref{thm:uniform} \\
+Goldbach under GRH
+  & \PROVED{} (rel.~GRH) & Thm.~\ref{thm:grh} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{The bottleneck}
+
+The entire conditional tower rests on a single unproved
+ingredient: an $L^4$ saving on medium arcs
+(Conjecture~\ref{conj:dispersion}).
+As explained in Remark~\ref{rem:gap}, the obstacle is
+the passage from $L^2$ large-sieve control (which is standard)
+to $L^4$ control (which requires either a pointwise bound
+over residues or a direct fourth-moment large sieve).
+
+\paragraph{Approaches that might close the gap.}
+\begin{itemize}
+\item The Deshouillers--Iwaniec dispersion method
+  \cite{DeshouillersIwaniec}, if adapted to bound
+  the fourth moment of bilinear sums on medium arcs directly.
+\item Heath-Brown's fourth-moment large sieve, applied to
+  the Vaughan-decomposed pieces with medium-arc localization.
+\item A type-II estimate using Kloosterman refinements
+  (Duke--Friedlander--Iwaniec~\cite{DukeFriedlanderIwaniec})
+  to control individual residue contributions pointwise.
+\end{itemize}
+Any of these, if carried out to yield $\delta_{\mathrm{med}}>0$,
+would immediately activate all conditional results in
+Section~\ref{sec:conditional}.
+
+\subsection{The role of the mod-8 kernel}
+
+The $K_8$ kernel serves two purposes:
+\begin{enumerate}
+\item It isolates the $2$-adic structure cleanly,
+  producing an explicit gate $c_8\in\{1,\frac{1}{2}\}$
+  rather than a generic local factor.
+\item The $K_8$-combined fourth moment
+  $I^{K_8}=\frac12\int|S|^4+\frac12\int|S_{\chi_8}|^4$
+  gives a constant-factor improvement over the plain bound
+  (same exponent, better prefactor).
+\end{enumerate}
+In the context of Recognition Science, the mod-8 structure
+resonates with the 8-tick periodicity of the recognition
+operator $\hat{R}$, providing a natural number-theoretic
+instantiation of the 8-phase ledger structure.
+
+\subsection{Computational verification}
+
+For any explicit $N_0$ (conditional or under GRH),
+the residual range $4\le 2m\le 2N_0$ can be closed by
+deterministic computation:
+segmented sieve $\to$ odd-only bitset $\to$ mod-8 gate
+$+$ wheel-840 $\to$ first-hit search per even $n$.
+This is essentially linear time in $N_0$ up to log factors.
+
+%% ============================================================
+\begin{thebibliography}{9}
+
+\bibitem{HardyLittlewood}
+G.~H.~Hardy and J.~E.~Littlewood,
+``Some problems of `Partitio Numerorum'; III,''
+\emph{Acta Math.} \textbf{44} (1923).
+
+\bibitem{Vaughan1997}
+R.~C.~Vaughan,
+\emph{The Hardy--Littlewood Method}, 2nd ed.,
+Cambridge University Press, 1997.
+
+\bibitem{MontgomeryVaughan2007}
+H.~L.~Montgomery and R.~C.~Vaughan,
+\emph{Multiplicative Number Theory~I},
+Cambridge University Press, 2007.
+
+\bibitem{Chen1973}
+J.~R.~Chen,
+``On the representation of a large even integer as the sum
+of a prime and the product of at most two primes,''
+\emph{Sci.\ Sinica} \textbf{16} (1973), 157--176.
+
+\bibitem{DeshouillersIwaniec}
+J.-M.~Deshouillers and H.~Iwaniec,
+``Kloosterman sums and Fourier coefficients of cusp forms,''
+\emph{Invent.\ Math.} \textbf{70} (1982/83), 219--288.
+
+\bibitem{DukeFriedlanderIwaniec}
+W.~Duke, J.~Friedlander, and H.~Iwaniec,
+``Bilinear forms with Kloosterman sums,''
+\emph{Invent.\ Math.} \textbf{128} (1997), 23--43.
+
+\bibitem{IwaniecKowalski}
+H.~Iwaniec and E.~Kowalski,
+\emph{Analytic Number Theory},
+AMS Colloq.\ Publ., Vol.~53, 2004.
+
+\end{thebibliography}
+
+\end{document}

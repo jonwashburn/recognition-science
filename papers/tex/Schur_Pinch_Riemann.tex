@@ -1,0 +1,588 @@
+\documentclass[11pt]{amsart}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage[numbers,sort&compress]{natbib}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\PP}{\mathcal{P}}
+\DeclareMathOperator{\dettwo}{det_2}
+\DeclareMathOperator{\re}{Re}
+
+\title[Schur Pinch for Arithmetic Ratios]{%
+A Schur Pinch Theorem for Arithmetic Ratios:\\
+Reducing the Riemann Hypothesis to a Positivity Condition}
+
+\author{Jonathan Washburn}
+\address{Austin, TX, USA}
+\email{jon@recognitionphysics.org}
+
+\author{Amir Rahnamai Barghi}
+\email{arahnamab@gmail.com}
+
+\date{\today}
+
+\begin{document}
+\begin{abstract}
+We introduce the \emph{arithmetic ratio}
+$\mathcal J(s):=\dettwo(I-A(s))/\zeta(s)\cdot(s-1)/s$,
+where $\dettwo$ is the regularized Fredholm determinant of the
+prime-diagonal operator on~$\ell^2(\PP)$,
+and prove that the positivity condition
+$\re\mathcal J(s)\ge 0$ on $\{\re s>1/2\}\setminus Z(\zeta)$
+\emph{implies} the Riemann Hypothesis.
+The proof is a new \emph{Schur Pinch} argument using the
+Cayley transform, Riemann's removable singularity theorem,
+and the Maximum Modulus Principle.
+We verify $\re\mathcal J>0$ unconditionally in the
+Euler product region $\{\re s>1\}$
+and on the full real half-line $\sigma>1/2$,
+and establish the precise boundary behavior
+$\mathcal J(s)\to\infty$ at each hypothetical zero.
+The paper therefore reduces the Riemann Hypothesis
+to the single analytical condition
+$\re\mathcal J\ge 0$ on the half-plane.
+\end{abstract}
+
+\subjclass[2020]{Primary 11M26; Secondary 30H10, 47B35, 30C80}
+\keywords{Riemann hypothesis, Schur function,
+Cayley transform, Euler product, removable singularity,
+regularized determinant, Herglotz function}
+\maketitle
+
+%% ============================================================
+\section{Introduction}\label{sec:intro}
+%% ============================================================
+
+Let $\Omega:=\{\,s\in\C:\re s>\tfrac12\,\}$
+and let $\PP$ denote the set of rational primes.
+The Riemann Hypothesis~(RH) asserts that the
+Riemann zeta function $\zeta(s)$ has no zeros in~$\Omega$.
+
+The purpose of this paper is to establish an
+\emph{equivalence} between~RH and a positivity condition
+for a meromorphic function naturally attached to~$\zeta$.
+
+\subsection*{Structural context: the forced exclusion pipeline}
+In a companion paper~\cite{WashburnExclusion}, we prove that
+any correct, finite-data exclusion procedure---given a unique
+strictly convex cost functional, finite resolution, and
+conservation---factors \emph{uniquely} as
+$\mathcal{O}\to\mathcal{R}\to\mathcal{C}\to\mathcal{S}$
+(obstruction $\to$ reciprocal sensor $\to$ Cayley transform
+$\to$ Schur certification), and that this order is forced.
+The present paper is the \emph{arithmetic instantiation} of
+this pipeline:
+\begin{center}\small
+\begin{tabular}{@{}ll@{}}
+\textbf{Pipeline step} & \textbf{This paper} \\
+\hline
+$\mathcal{O}$: obstruction & $\zeta(s)=0$ defines the candidate \\
+$\mathcal{R}$: reciprocal sensor &
+  $\mathcal J=\dettwo(I{-}A)/\zeta\cdot(s{-}1)/s$ \\
+$\mathcal{C}$: Cayley transform &
+  $\Xi=(2\mathcal J{-}1)/(2\mathcal J{+}1)$
+  (unique conformal map~\cite{WashburnExclusion}) \\
+$\mathcal{S}$: Schur certification &
+  Removable singularity $+$ Maximum Modulus (Thm~\ref{thm:pinch}) \\
+\end{tabular}
+\end{center}
+The proof structure is therefore not one approach among many;
+it is the \emph{unique optimal exclusion strategy} applied
+to this domain.
+
+\subsection*{The arithmetic ratio}
+For $s\in\Omega$, the prime-diagonal operator
+$A(s)e_p:=p^{-s}e_p$ on~$\ell^2(\PP)$ is Hilbert--Schmidt,
+and its regularized Fredholm determinant
+\begin{equation}\label{eq:det2-def}
+  \dettwo(I-A(s))\;=\;
+  \prod_{p\in\PP}(1-p^{-s})\,e^{p^{-s}}
+\end{equation}
+is holomorphic and zero-free on~$\Omega$
+(\cite{SimonTrace}).
+Define the \emph{arithmetic ratio}
+\begin{equation}\label{eq:J-def}
+  \mathcal J(s)\;:=\;
+  \frac{\dettwo(I-A(s))}{\zeta(s)}\cdot\frac{s-1}{s}\,,
+  \qquad s\in\Omega\setminus Z(\zeta),
+\end{equation}
+where $Z(\zeta):=\{s\in\Omega:\zeta(s)=0\}$.
+Since $\dettwo(I-A)$ is zero-free on~$\Omega$
+and $\zeta$ has a simple pole at $s=1$ (canceled by
+the factor $(s-1)/s$), $\mathcal J$ is meromorphic
+on~$\Omega$ with poles exactly at $Z(\zeta)$.
+
+\begin{remark}[Behavior at infinity]
+For real $\sigma\to+\infty$,
+$\dettwo(I-A(\sigma))/\zeta(\sigma)
+\to\prod_p(1-p^{-\sigma})^2 e^{p^{-\sigma}}\to 1$,
+and $({\sigma-1})/{\sigma}\to 1$,
+so $\mathcal J(\sigma)\to 1$.
+\end{remark}
+
+Define the \emph{Cayley field}
+\begin{equation}\label{eq:Xi-def}
+  \Xi(s)\;:=\;\frac{2\mathcal J(s)-1}{2\mathcal J(s)+1}\,.
+\end{equation}
+
+\subsection*{Main results}
+Our two main results are:
+
+\begin{theorem}[Schur Pinch]\label{thm:pinch}
+Let $U\subset\Omega$ be a connected open set.
+Suppose:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item\label{it:pos}
+  $\re\mathcal J(s)\ge 0$ for all
+  $s\in U\setminus Z(\zeta)$;
+\item\label{it:poles}
+  $\mathcal J(s)\to\infty$ at each
+  $\rho\in Z(\zeta)\cap U$;
+\item\label{it:nontrivial}
+  there exists $s_*\in U\setminus Z(\zeta)$ with
+  $|\Xi(s_*)|<1$.
+\end{enumerate}
+Then $Z(\zeta)\cap U=\varnothing$:
+the zeta function has no zeros in~$U$.
+\end{theorem}
+
+\begin{theorem}[Reduction]\label{thm:equiv}
+If
+\begin{equation}\label{eq:positivity}
+  \re\mathcal J(s)\;\ge\;0
+  \qquad\text{for all }
+  s\in\Omega\setminus Z(\zeta),
+\end{equation}
+then the Riemann Hypothesis holds.
+\end{theorem}
+
+Hypothesis~\ref{it:poles} is unconditional
+(Lemma~\ref{lem:poles} below).
+Hypothesis~\ref{it:nontrivial} is satisfied at any
+point in the Euler product region
+(Lemma~\ref{lem:euler}).
+Therefore the entire content of~RH is concentrated in
+hypothesis~\ref{it:pos}: the non-negative real part
+of the arithmetic ratio.
+
+\subsection*{What this paper does and does not prove}
+\begin{itemize}
+\item We \textbf{do} prove the unconditional
+  reduction \eqref{eq:positivity}
+  $\Longrightarrow$ RH (Theorem~\ref{thm:equiv}).
+\item We \textbf{do} verify \eqref{eq:positivity}
+  unconditionally in the Euler product region
+  $\{\re s>1\}$ (Lemma~\ref{lem:euler})
+  and on the full real half-line
+  $\sigma>1/2$ (Lemma~\ref{lem:real-line}).
+\item We \textbf{do not} prove the converse
+  (RH $\Longrightarrow$ \eqref{eq:positivity}).
+  A holomorphic function positive on a ray need not
+  have non-negative real part on a half-plane;
+  establishing the converse requires additional structure
+  of~$\mathcal J$ and is an open question.
+\item We \textbf{do not} prove \eqref{eq:positivity}
+  on the full half-plane $\Omega$.
+  Establishing~\eqref{eq:positivity}
+  for $1/2<\re s\le 1$ would close~RH and is the
+  subject of a companion paper.
+\end{itemize}
+
+%% ============================================================
+\section{The Cayley property}\label{sec:cayley}
+%% ============================================================
+
+\begin{remark}[Cayley uniqueness]
+The transform $\Xi=(2w-1)/(2w+1)$ is the unique
+normalised conformal bijection
+$\{\re w>0\}\to\D$ satisfying $\Xi(\infty)=1$ and
+$\Xi(1/2)=0$ (up to M\"obius equivalence).
+This is proved in~\cite{WashburnExclusion} as part of
+the forced factorisation of the exclusion pipeline;
+no alternative conformal map achieves the
+pole-to-boundary correspondence without free parameters.
+\end{remark}
+
+\begin{lemma}[Cayley property]\label{lem:cayley}
+Let $w\in\C$ with $2w+1\ne 0$ and define
+$\Xi:=(2w-1)/(2w+1)$.
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item\label{it:cayley-equiv}
+  $\re w\ge 0$ if and only if $|\Xi|\le 1$.
+\item\label{it:cayley-strict}
+  $\re w>0$ if and only if $|\Xi|<1$.
+\item\label{it:cayley-infty}
+  $|w|\to\infty$ implies $\Xi\to 1$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+Expand
+\[
+  |2w+1|^2-|2w-1|^2
+  =(2w+1)(2\bar w+1)-(2w-1)(2\bar w-1)
+  =4(w+\bar w)=8\,\re w.
+\]
+Hence $|2w-1|^2\le|2w+1|^2$ if and only if
+$\re w\ge 0$.
+Dividing by $|2w+1|^2>0$ gives~\ref{it:cayley-equiv};
+\ref{it:cayley-strict} is the strict version.
+For~\ref{it:cayley-infty}:
+$\Xi-1=-2/(2w+1)\to 0$.
+\end{proof}
+
+%% ============================================================
+\section{Poles and Euler positivity}\label{sec:euler}
+%% ============================================================
+
+\begin{lemma}[Pole behavior]\label{lem:poles}
+At each $\rho\in Z(\zeta)$,
+$\mathcal J(s)\to\infty$ as $s\to\rho$.
+\end{lemma}
+\begin{proof}
+Since $\dettwo(I-A(\rho))\ne 0$ and
+$\zeta(\rho)=0$,
+\[
+  |\mathcal J(s)|
+  =\frac{|\dettwo(I-A(s))|}{|\zeta(s)|}
+  \cdot\frac{|s-1|}{|s|}
+  \;\to\;\frac{|\dettwo(I-A(\rho))|}{0^+}
+  \cdot\frac{|\rho-1|}{|\rho|}
+  =+\infty.
+  \qedhere
+\]
+\end{proof}
+
+\begin{lemma}[Euler positivity]\label{lem:euler}
+For real $\sigma>1$,
+\[
+  \mathcal J(\sigma)\;=\;
+  \prod_{p\in\PP}(1-p^{-\sigma})^2\,
+  e^{p^{-\sigma}}
+  \cdot\frac{\sigma-1}{\sigma}\;>\;0.
+\]
+In particular, $\re\mathcal J(\sigma)>0$
+and $|\Xi(\sigma)|<1$.
+\end{lemma}
+\begin{proof}
+For $\sigma>1$, the Euler product converges absolutely:
+$\dettwo(I-A(\sigma))
+=\prod_p(1-p^{-\sigma})e^{p^{-\sigma}}$
+and $\zeta(\sigma)^{-1}=\prod_p(1-p^{-\sigma})$.
+Every factor is real and positive,
+as is $(\sigma-1)/\sigma$.
+The Cayley assertion follows from
+Lemma~\ref{lem:cayley}\ref{it:cayley-strict}.
+\end{proof}
+
+%% ============================================================
+\section{Proof of the Schur Pinch
+(Theorem~\ref{thm:pinch})}
+\label{sec:pinch-proof}
+%% ============================================================
+
+\begin{proof}[Proof of Theorem~\ref{thm:pinch}]
+Define $\Xi_{\rm ext}:U\to\C$ by
+\[
+  \Xi_{\rm ext}(s):=
+  \begin{cases}
+  \Xi(s), & s\notin Z(\zeta),\\
+  1, & s\in Z(\zeta)\cap U.
+  \end{cases}
+\]
+
+\textit{Step~1} (Schur bound).
+By~\ref{it:pos} and
+Lemma~\ref{lem:cayley}\ref{it:cayley-equiv},
+$|\Xi(s)|\le 1$ on $U\setminus Z(\zeta)$.
+
+\textit{Step~2} (Continuity at poles).
+By~\ref{it:poles} and
+Lemma~\ref{lem:cayley}\ref{it:cayley-infty},
+$\Xi(s)\to 1$ as $s\to\rho$ for each
+$\rho\in Z(\zeta)\cap U$.
+Hence $\Xi_{\rm ext}$ is continuous at~$\rho$.
+
+\textit{Step~3} (Removability).
+Zeros of~$\zeta$ in~$\Omega$ are isolated (they are zeros
+of the non-constant entire function~$\zeta$).
+On a punctured disc around each~$\rho$,
+$\Xi_{\rm ext}$ is holomorphic and bounded by~$1$.
+By Riemann's removable singularity theorem
+\cite[p.\,280]{RudinRCA},
+$\Xi_{\rm ext}$ extends holomorphically to all
+of~$U$ with $|\Xi_{\rm ext}|\le 1$.
+
+\textit{Step~4} (Maximum Modulus).
+Suppose for contradiction that some
+$\rho\in Z(\zeta)\cap U$ exists.
+Then $|\Xi_{\rm ext}(\rho)|=1$, which is an
+interior maximum of $|\Xi_{\rm ext}|$ on the
+connected open set~$U$.
+By the Maximum Modulus Principle
+\cite[Theorem~10.24]{RudinRCA},
+$\Xi_{\rm ext}$ is constant: $\Xi_{\rm ext}\equiv 1$.
+But $|\Xi_{\rm ext}(s_*)|=|\Xi(s_*)|<1$
+by~\ref{it:nontrivial}.
+Contradiction.
+\end{proof}
+
+%% ============================================================
+\section{Real-line positivity and proof of the reduction}
+\label{sec:equiv-proof}
+%% ============================================================
+
+Before proving the main reduction, we establish positivity
+on the full real half-line, which extends the Euler product
+region into the critical strip.
+
+\begin{lemma}[Real-line positivity]\label{lem:real-line}
+For all real $\sigma>1/2$ with $\sigma\ne 1$,
+$\mathcal J(\sigma)>0$.
+\end{lemma}
+\begin{proof}
+For $\sigma>1$, this is Lemma~\ref{lem:euler}.
+For $\sigma\in(1/2,1)$:
+$\dettwo(I-A(\sigma))
+=\prod_p(1-p^{-\sigma})e^{p^{-\sigma}}>0$
+(each factor positive).
+$\zeta(\sigma)<0$ (the zeta function is negative
+on $(0,1)$ since $\zeta$ has a simple pole at $s=1$
+with positive residue and $\zeta(0)=-1/2$).
+$(\sigma-1)/\sigma<0$ for $\sigma<1$.
+Hence $\mathcal J(\sigma)=
+(\text{positive})\cdot(\text{negative})^{-1}
+\cdot(\text{negative})>0$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:equiv}]
+Apply Theorem~\ref{thm:pinch} with $U=\Omega$.
+Hypothesis~\ref{it:pos} is \eqref{eq:positivity}.
+Hypothesis~\ref{it:poles} holds by
+Lemma~\ref{lem:poles}.
+Hypothesis~\ref{it:nontrivial} holds at $s_*=2$:
+$\mathcal J(2)>0$ (Lemma~\ref{lem:euler}),
+so $|\Xi(2)|<1$
+(Lemma~\ref{lem:cayley}\ref{it:cayley-strict}).
+Theorem~\ref{thm:pinch} gives
+$Z(\zeta)\cap\Omega=\varnothing$.
+\end{proof}
+
+\begin{remark}[On the converse direction]
+An earlier version of this paper claimed the
+\emph{equivalence} RH $\Longleftrightarrow$
+\eqref{eq:positivity}.
+The forward direction (RH $\Rightarrow$
+\eqref{eq:positivity}) attempted a Maximum Modulus
+argument, but that argument requires
+$|\Xi|\le 1$ on the whole region---precisely the
+conclusion.  The forward implication remains an
+open question: a holomorphic function that is
+positive on a ray need not have non-negative
+real part on a half-plane.
+Lemma~\ref{lem:real-line} establishes positivity
+on the real half-line $\sigma>1/2$, but extension
+to the complex half-plane requires additional
+analytical structure specific to~$\mathcal J$.
+\end{remark}
+
+%% ============================================================
+\section{The det\texorpdfstring{$_2$}{2} log-remainder}
+\label{sec:det2}
+%% ============================================================
+
+We record properties of $\mathcal J$ that inform the
+positivity question~\eqref{eq:positivity},
+although we do not resolve it here.
+
+\begin{proposition}[Log-remainder decomposition]
+\label{prop:log-decomp}
+For $s\in\Omega\setminus Z(\zeta)$,
+\begin{equation}\label{eq:log-J}
+  \log\mathcal J(s)
+  \;=\;\underbrace{\sum_p r_p(s)}_{\text{(I)}}
+  \;+\;\underbrace{\log\frac{1}{\zeta(s)}}_{\text{(II)}}
+  \;+\;\underbrace{\log\frac{s-1}{s}}_{\text{(III)}}\,,
+\end{equation}
+where $r_p(s):=\log(1-p^{-s})+p^{-s}$
+is the $\dettwo$ log-remainder satisfying
+\begin{equation}\label{eq:rp-bound}
+  |r_p(s)|\;\le\;
+  \frac{p^{-2\sigma}}{2(1-2^{-\sigma})}\,,
+  \qquad \sigma:=\re s>\tfrac12.
+\end{equation}
+\end{proposition}
+\begin{proof}
+From \eqref{eq:det2-def},
+$\log\dettwo(I-A(s))
+=\sum_p[\log(1-p^{-s})+p^{-s}]$.
+Dividing by $\zeta(s)$ and multiplying by $(s-1)/s$
+gives~\eqref{eq:log-J}.
+For the bound: $|\log(1-z)+z|\le|z|^2/(2(1-|z|))$
+for $|z|<1$, and $|p^{-s}|=p^{-\sigma}\le 2^{-\sigma}<1$.
+\end{proof}
+
+\begin{remark}[Structure of the positivity question]
+Term~(I) in~\eqref{eq:log-J} converges absolutely
+for $\sigma>1/2$ and contributes a bounded phase.
+Term~(III) is smooth and has
+$|\arg((s-1)/s)|<\pi/2$ for $\sigma>1/2$.
+Term~(II), $\log(1/\zeta(s))$, is the
+\emph{only} potentially unbounded contribution
+to $\arg\mathcal J$.
+Therefore the positivity
+condition~\eqref{eq:positivity} is equivalent to
+controlling the phase of $1/\zeta(s)$:
+\[
+  |\arg\mathcal J(s)|<\pi/2
+  \quad\Longleftrightarrow\quad
+  \re\mathcal J(s)>0.
+\]
+Any approach to~\eqref{eq:positivity} must
+tame the oscillatory behavior of $\log(1/\zeta)$
+in the critical strip $\{1/2<\sigma\le 1\}$.
+\end{remark}
+
+%% ============================================================
+\section{Discussion}\label{sec:discussion}
+%% ============================================================
+
+\subsection*{Comparison with existing approaches}
+The equivalence in Theorem~\ref{thm:equiv} provides
+a new \emph{operator-theoretic} formulation of~RH:
+rather than asking about the location of zeros
+of an entire function, one asks about the sign of the
+real part of a meromorphic function built from the
+Euler product.
+The Cayley transform converts the sign question into
+a Schur-class membership question,
+which is the natural domain of Nevanlinna--Pick
+interpolation theory~\cite{RosenblumRovnyak}
+and bounded-real (KYP) certification from
+control theory~\cite{ZhouDoyleGlover}.
+
+The Schur Pinch mechanism (removable singularity
+$+$ Maximum Modulus) is elementary but, to our knowledge,
+has not been applied to the arithmetic ratio~$\mathcal J$
+in this form.
+
+\subsection*{The positivity condition as a research program}
+Theorem~\ref{thm:equiv} suggests a research program:
+\emph{establish $\re\mathcal J\ge 0$ on progressively
+wider subsets of~$\Omega$}.
+Each verified region is a zero-free region for~$\zeta$.
+Known unconditional zero-free regions
+(e.g.\ Vinogradov--Korobov~\cite{Titchmarsh})
+can be reinterpreted as partial positivity results
+for~$\mathcal J$.
+
+\subsection*{Relation to the cost-functional characterization}
+The form of $\mathcal J$ is motivated by the
+\emph{reciprocal convex cost} framework developed
+in~\cite{WashburnEntropy}, where the functional
+$J(x)=\tfrac12(x+x^{-1})-1$ is characterized as the
+unique mismatch penalty satisfying a d'Alembert-type
+composition identity.
+The arithmetic ratio~$\mathcal J$ is the natural
+``sensor'' in this framework: its poles detect zeros
+of~$\zeta$, and its real part controls the Cayley field.
+
+\subsection*{This paper as a domain instantiation}
+The Exclusion Theorem~\cite{WashburnExclusion} proves
+that the four-step pipeline
+$\mathcal{O}\to\mathcal{R}\to\mathcal{C}\to\mathcal{S}$
+is the unique optimal exclusion strategy given a unique
+strictly convex cost and finite resolution.
+This paper instantiates that pipeline for the zeta function.
+The Euler-positivity check (Lemma~\ref{lem:euler},
+$\mathcal J(2)>0$ hence $|\Xi(2)|<1$) discharges the
+nontriviality hypothesis of the pipeline, and the
+Schur Pinch (Theorem~\ref{thm:pinch}) is exactly the
+$\mathcal{S}$-step.  The remaining open content is the
+positivity condition~\eqref{eq:positivity}, which is the
+\emph{domain adapter}: the theorem connecting this
+specific arithmetic Cayley field to the cost-contracting
+realization class.
+The companion paper~\cite{WashburnPositivity} derives
+this positivity condition from the RS bandwidth argument.
+
+\subsection*{Acknowledgments}
+The authors thank the anonymous referees for comments
+that improved the accuracy and clarity of this work.
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{RudinRCA}
+W.~Rudin,
+\emph{Real and Complex Analysis},
+3rd ed., McGraw--Hill, 1987.
+
+\bibitem{Titchmarsh}
+E.~C.~Titchmarsh,
+\emph{The Theory of the Riemann Zeta-Function},
+2nd ed., revised by D.~R.~Heath-Brown,
+Oxford University Press, 1986.
+
+\bibitem{SimonTrace}
+B.~Simon,
+\emph{Trace Ideals and Their Applications},
+2nd ed., American Mathematical Society, 2005.
+
+\bibitem{RosenblumRovnyak}
+M.~Rosenblum and J.~Rovnyak,
+\emph{Hardy Classes and Operator Theory},
+Oxford University Press, 1985.
+
+\bibitem{ZhouDoyleGlover}
+K.~Zhou, J.~C.~Doyle, and K.~Glover,
+\emph{Robust and Optimal Control},
+Prentice Hall, 1996.
+
+\bibitem{WashburnEntropy}
+J.~Washburn and A.~Rahnamai~Barghi,
+Reciprocal convex costs for ratio matching:
+functional-equation characterization
+and decision geometry,
+submitted to \emph{Entropy}, 2026.
+
+\bibitem{WashburnExclusion}
+J.~Washburn,
+The Exclusion Theorem: the unique impossibility
+certificate forced by canonical cost,
+RS preprint, 2026.
+
+\bibitem{WashburnPositivity}
+J.~Washburn and A.~Rahnamai~Barghi,
+Positivity of the arithmetic ratio from the
+canonical reciprocal cost: a Recognition Science
+derivation,
+RS preprint, 2026.
+
+\bibitem{WashburnCPT}
+J.~Washburn,
+The Coercive Projection Theorem: the unique
+certification strategy forced by canonical cost,
+RS preprint, 2026.
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,589 @@
+\documentclass[11pt]{article}
+
+% ------------------------------------------------
+% Nice compact front matter
+% ------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{amssymb,amsmath,mathtools}
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage[nameinlink,capitalize]{cleveref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=black,
+  pdftitle={The Coercive Projection Law of Gravity},
+  pdfauthor={Jonathan Washburn}
+}
+
+% Typography tweaks
+\setlength{\parskip}{0.55em}
+\setlength{\parindent}{0pt}
+\linespread{1.08}
+\setlist{nosep}
+
+% Handy macros
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\Defect}{\mathsf{D}}
+\newcommand{\proj}{\Pi}
+\newcommand{\w}{\mathsf{w}}
+\newcommand{\grad}{\nabla}
+\newcommand{\vphi}{\varphi}
+
+% Theorem environments
+\usepackage{amsthm}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Keywords macro
+\newcommand{\keywords}[1]{\begingroup
+\noindent\textbf{Keywords: }#1\par\endgroup}
+
+% Title and author
+\title{\vspace{-0.5em}
+The Coercive Projection Law of Gravity:\\
+A Universal Variational Principle with Explicit Constants and Cross‑Probe Falsifiers
+\vspace{0.3em}}
+
+\author{Jonathan Washburn\\
+\small Recognition Physics\\
+\small \texttt{jon@recognitionphysics.org}
+}
+
+\date{\small \today}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\vspace{-1.0em}
+
+\begin{abstract}
+\noindent
+We articulate a single, universal principle that governs gravitational inference under finite information: the \emph{coercive projection law}. In this view, nature implements a projection from raw baryonic sources to an \emph{effective} source through a fixed, scale-- and time--aware kernel; the gravitational field is the unique minimizer of a classical energy with that effective source. We show that Information‑Limited Gravity (ILG) is precisely the gravitational instantiation of this law in the \emph{pressure} formulation, where the kernel \( \w(k,a)=1+C\,(a/(k\tau_0))^{\alpha} \) maps observed baryons to the effective pressure \(p\), and the potential \(\Phi\) solves the classical Poisson equation \(\grad^{2}\Phi=4\pi G\,a^{2}p\). 
+
+Mathematically, we prove a coercivity inequality with explicit constants that (i) guarantees existence/uniqueness and stability of the projected solution, (ii) certifies positivity and monotonicity displays used in galaxies and cosmology, and (iii) yields \emph{falsifiers} that bind probes together: rotation curves, tracer‑independent \(E_G\), the low‑\(\ell\) ISW sign, and the low‑\(L\) CMB‑lensing amplitude are all simultaneously constrained by the same kernel and the same coercivity constants. Operationally, this converts “fits” into \emph{audited inferences}: each analysis ships with machine‑readable \emph{certificates} (energy values, residual norms, positivity checks, convergence diagnostics) that verify compliance with the coercive projection law.
+
+Conceptually, the universality and the specific constants trace to Recognition Geometry: the exponent \(\alpha=\tfrac{1}{2}(1-\varphi^{-1})\) and prefactor \(C=\varphi^{-3/2}\) are fixed by golden‑ratio structure; the finite‑net and rank‑one projection constants match those that appear in independent CPM instantiations (e.g., protein folding), explaining cross‑domain alignment. We release a minimal, dependency‑light engine that implements the grid (FFT) and disk (Hankel) paths and emits certificates with each result (\href{https://github.com/jonwashburn/CPM-Cosmology-Grid-Path}{CPM‑Cosmology‑Grid‑Path}).
+\end{abstract}
+
+\keywords{coercive projection; information‑limited gravity; variational methods; explicit constants; falsifiability; recognition geometry; rotation curves; linear growth; ISW; CMB lensing}
+
+\vspace{0.5em}
+
+\section{Introduction}
+\label{sec:intro}
+
+\paragraph{A single law.}
+This paper advances a unifying claim: \emph{gravitational inference in the real world is governed by a universal coercive projection.} Raw baryonic sources are first mapped through a fixed kernel into an effective source, and the observed field is the unique minimizer of a classical energy with that source. Information‑Limited Gravity (ILG) is the concrete gravitational presentation of this law. In the \emph{pressure} formulation, the kernel
+\[
+\w(k,a)\;=\;1+C\Big(\frac{a}{k\,\tau_0}\Big)^{\alpha},
+\qquad
+C=\varphi^{-3/2},\quad \alpha=\tfrac{1}{2}\bigl(1-\varphi^{-1}\bigr),
+\]
+builds an effective pressure \(p\) from baryons, and \(\Phi\) solves the standard Poisson equation
+\(
+\grad^{2}\Phi=4\pi G\,a^{2}p.
+\)
+At small scales (large \(k\)) the kernel tends to unity (laboratory gravity); at large scales (small \(k\)) it yields a mild, monotone enhancement that is the \emph{same} in galaxies and cosmology.
+
+\paragraph{From phenomenology to principle.}
+Prior work established ILG’s empirical adequacy for rotation curves under a global‑only policy and recast ILG as classical gravity with a pressure source. Here we elevate ILG to a \emph{law} by proving a \emph{coercivity inequality with explicit constants} in a general CPM (Coercive Projection Method) framework. The inequality certifies that (i) the projection is unique and stable, (ii) positivity and monotonicity displays are structurally enforced, and (iii) \emph{one} kernel with \emph{one} set of constants simultaneously constrains galaxies, linear growth, lensing, and ISW. This binds probes together: if the kernel is forced globally, any failure in one regime falsifies the whole structure—no retuning.
+
+\paragraph{Certificates, not just fits.}
+The coercive projection law is operational. Each analysis can—and should—emit \emph{certificates}:
+\[
+\text{energy } \E[\Phi|p],\quad
+\text{residual } \|\grad^{2}\Phi-4\pi G\,a^{2}p\|,\quad
+\text{positivity/monotonicity checks},\quad
+\text{grid/Hankel convergence},
+\]
+which together verify compliance with the law. We provide a minimal engine that implements both the 3D grid (FFT) and axisymmetric disk (Hankel) paths and writes these certificates alongside figures and tables (\href{https://github.com/jonwashburn/CPM-Cosmology-Grid-Path}{CPM‑Cosmology‑Grid‑Path}).
+
+\paragraph{Why the constants are what they are.}
+The specific constants are not fitted artifacts. The exponent \(\alpha\) and prefactor \(C\) follow from Recognition Geometry’s golden‑ratio structure; the finite‑net and rank‑one projection factors that appear in the coercivity bound match those arising in independent CPM instantiations (e.g., folding as phase recognition). This cross‑domain alignment explains the empirical universality: \emph{proof optimization} (CPM) and \emph{physical optimization} (recognition under finite information) discover the same architecture.
+
+\paragraph{Contributions.}
+\begin{enumerate}[leftmargin=2.1em,itemsep=0.25em]
+  \item \textbf{Universal coercivity law.} A CPM formulation of ILG with an \emph{explicit‑constant} coercivity inequality that guarantees uniqueness, stability, and positivity/monotonicity displays.
+  \item \textbf{Single‑kernel universality.} A ``no‑retuning'' statement: the same kernel governs galaxies and cosmology; any per‑system retuning falsifies the law.
+  \item \textbf{Cross‑probe falsifiers.} Linked predictions for rotation‑curve residuals (slope nulls), tracer‑independent \(E_G\) with a monotone scale trend, negative low‑\(\ell\) ISW sign, and mild low‑\(L\) CMB‑lensing enhancement—\emph{all} from the same kernel and constants.
+  \item \textbf{Certificates as data.} A practical audit layer (energy, residuals, positivity, convergence, kernel checks) that ships with results and is machine‑verifiable.
+  \item \textbf{Constant structure explained.} Alignment of CPM constants and ILG exponents via Recognition Geometry (golden‑ratio rigidity), clarifying why universality holds across domains.
+\end{enumerate}
+
+\paragraph{Roadmap.}
+\Cref{sec:cpm-law} formalizes the CPM structure (structured set, projection, energy, defect, nets, aggregation). \Cref{sec:ilg} instantiates ILG as the pressure formulation and proves existence/uniqueness. \Cref{sec:coercivity} records the explicit constants (\(K_{\mathrm{net}}\), \(C_{\mathrm{proj}}\), \(C_{\mathrm{eng}}\)) that yield \(c=49/162\). \Cref{sec:falsifiers} derives cross‑probe falsifiers (rotation curves, \(E_G\), ISW, lensing). \Cref{sec:certs} specifies the certificate schema. \Cref{sec:constants-cross} aligns CPM constants across domains. \Cref{sec:predictions} gives new, sign/slope‑level predictions. \Cref{sec:outlook} sketches the relativistic program. Appendices provide technical details, algorithms, and reproducibility notes.
+
+\section{The Coercive Projection Law (Abstract CPM $\to$ Physics)}
+\label{sec:cpm-law}
+
+We state the coercive projection law abstractly and specialize it to gravity. The ingredients are: (i) an admissible \emph{structured set} of potentials, (ii) a \emph{projection} map to the unique energy minimizer, (iii) \emph{energy} and \emph{defect} quantifying distance to structure, (iv) \emph{finite nets} and \emph{dispersion} control, and (v) an \emph{aggregation} principle elevating local positivity to global guarantees with \emph{explicit constants}.
+
+\subsection*{Structured set and projection}
+Let \(\Omega\subset\R^3\) be either (a) a bounded Lipschitz domain with Dirichlet boundary data (isolated systems, with the convention \(\Phi\to 0\) at infinity), or (b) a periodic box \(\mathbb{T}^3\) with mean\-zero potentials. Define the admissible class
+\[
+\mathcal V\;=\;\begin{cases}
+H^1_0(\Omega), & \text{Dirichlet (isolated)},\\[2pt]
+\{\Phi\in H^1(\mathbb{T}^3):\ \int_{\mathbb{T}^3}\!\Phi\,dx=0\}, & \text{periodic (mean\-zero)}.
+\end{cases}
+\]
+The \emph{structured set} for the potential is the admissible set itself, endowed with the classical Dirichlet metric (Section~\ref{sec:intro}). The \emph{projection} \(\proj\) is the solution operator that maps any effective source \(p\) to the unique minimizer \(\Phi^{\ast}=\proj(p)\in\mathcal V\) solving Poisson’s equation
+\begin{equation}
+\label{eq:poisson-pressure-law}
+\grad^{2}\Phi\;=\;4\pi G\,a^{2}\,p,\qquad p\;=\;\bigl[\w(\grad, a)\,s\bigr],
+\end{equation}
+with the \emph{same} kernel \(\w\) used in all probes. Here \(s\) is the raw baryonic source: \(s=\rho_b\) for galaxies (at \(a=1\)), and \(s=\bar\rho_b(a)\,\delta_b\) for cosmology. The operator \(\w(\grad,a)\) is the isotropic convolution with Fourier symbol
+\begin{equation}
+\label{eq:w-symbol}
+\w(k,a)\;=\;1\; +\; C\,\Bigl(\tfrac{a}{k\,\tau_0}\Bigr)^{\!\alpha},\qquad C=\varphi^{-3/2},\quad \alpha=\tfrac{1}{2}\bigl(1-\varphi^{-1}\bigr),
+\end{equation}
+so that \(\w\to 1\) in the laboratory limit (large \(k\)) and increases monotonically at long wavelengths.
+
+\subsection*{Energy and defect}
+For fixed \(a\) and source \(p\), define the classical energy functional
+\begin{equation}
+\label{eq:energy-functional}
+\E[\Phi\,|\,p]\;=\;\frac{1}{8\pi G}\int_{\Omega}\!|\grad\Phi|^{2}\,dx\; +\;\int_{\Omega}\!a^{2}\,p\,\Phi\,dx,\qquad \Phi\in\mathcal V.
+\end{equation}
+Standard first\-variation gives the Euler\--Lagrange equation \eqref{eq:poisson-pressure-law}, so the projection \(\proj\) returns the unique minimizer \(\Phi^{\ast}\). We measure 
+\emph{defect} in two equivalent ways:
+\begin{align}
+\label{eq:defect-H1}
+\Defect_{\!H^1}(\Phi)&\;=\;\int_{\Omega}\!|\grad(\Phi-\Phi^{\ast})|^{2}\,dx,\\[2pt]
+\label{eq:defect-residual}
+\Defect_{\!\mathrm{res}}(\Phi)&\;=\;\bigl\|\grad^{2}\Phi-4\pi G\,a^{2}p\bigr\|_{H^{-1}}^{2},
+\end{align}
+and record the \emph{energy\--defect control} (a consequence of Poincar\'e and elliptic regularity): there exists \(C_{\mathrm{eng}}\!>0\) depending only on boundary conditions and domain geometry such that
+\begin{equation}
+\label{eq:energy-control}
+\Defect_{\!H^1}(\Phi)\;\le\; C_{\mathrm{eng}}\,\bigl(\E[\Phi\,|\,p]-\E[\Phi^{\ast}\,|\,p]\bigr),\qquad \E[\Phi\,|\,p]-\E[\Phi^{\ast}\,|\,p]\;\gtrsim\;\Defect_{\!\mathrm{res}}(\Phi).
+\end{equation}
+In periodic boxes one may take \(C_{\mathrm{eng}}=1\) by construction; under Dirichlet data, \(C_{\mathrm{eng}}\) is an \(O(1)\) constant fixed by the Poincar\'e constant of \(\Omega\).
+
+\subsection*{Finite nets and dispersion control}
+The CPM template localizes distance\-to\-structure by covering admissible modes with a finite \(\varepsilon\)\-net and controlling the orthogonal projection error with an explicit constant. In the present setting:
+\begin{itemize}[leftmargin=1.4em,itemsep=0.2em]
+  \item \emph{Projection constant.} A rank\-one/Hermitian estimate yields \(C_{\mathrm{proj}}\le 2\) for the fiberwise projection that removes components orthogonal to the structured set.
+  \item \emph{Net constant.} For a unit \(\varepsilon\)\-net on spectral shells (FFT) or Hankel bands (disks), one records \(K_{\mathrm{net}}=((1+\varepsilon)/(1-\varepsilon))^{2}\). An \emph{eight\-tick aligned} choice \(\varepsilon=1/8\) gives \(K_{\mathrm{net}}=(9/7)^{2}\).
+  \item \emph{Dispersion hygiene.} CIC/TSC assignment windows and a \(2/3\) spectral cutoff suppress aliasing; in Hankel space, logarithmic sampling and Bessel\-kernel quadrature control leakage. These rules ensure that the discrete projection respects the continuous positivity of \(\w\).
+\end{itemize}
+
+\subsection*{Aggregation of local positivity}
+Positivity and monotonicity of \(\w\) (\(\w\ge 1,\ \partial_k \w<0,\ \partial_a \w>0\)) imply local window tests cannot manufacture sign flips in the effective source or non\-monotone displays in derived quantities. Let \(\{T_W\}\) denote a bounded\-overlap family of local tests (e.g., residual norms in radial windows for galaxies, bandpowers for cosmology). A standard CPM aggregation yields the global bound
+\begin{equation}
+\label{eq:aggregation}
+\Defect_{\!H^1}(\Phi)\;\le\; M\,K_{\mathrm{net}}\,C_{\mathrm{proj}}\,\sup_{W}\,T_W[\Phi],
+\end{equation}
+where \(M\) is the window overlap constant (fixed by the analysis design). If the right\-hand side is below a \emph{critical threshold} determined by \eqref{eq:energy-control}, the energy gap forces small global defect and, hence, proximity to the structured solution.
+
+\subsection*{Explicit constants and the role of \texorpdfstring{$\varphi$}{phi} and \texorpdfstring{$\tau_0$}{tau0}}
+The coercivity constant that appears in the inequality
+\begin{equation}
+\label{eq:coercivity-summary}
+\E[\Phi\,|\,p]\-\E[\Phi^{\ast}\,|\,p]\;\ge\; c\,\Defect_{\!H^1}(\Phi),\qquad c\;=\;\frac{1}{K_{\mathrm{net}}\,C_{\mathrm{proj}}\,C_{\mathrm{eng}}},
+\end{equation}
+is \emph{explicit}. With the eight\-tick choice \(\varepsilon=1/8\), \(K_{\mathrm{net}}=(9/7)^2\), the Hermitian bound \(C_{\mathrm{proj}}\le 2\), and periodic energy normalization \(C_{\mathrm{eng}}=1\), one finds
+\[
+c\;=\;\frac{1}{(9/7)^2\cdot 2\cdot 1}\;=\;\frac{49}{162}\;\approx\;0.302\,.
+\]
+The \emph{kernel constants} derive from Recognition Geometry: the exponent \(\alpha=\tfrac{1}{2}(1\-\varphi^{\-1})\) and prefactor \(C=\varphi^{\-3/2}\) fix the long\-wavelength slope and amplitude of \(\w\), while the fundamental tick \(\tau_0\) sets the (dimensionless) gate between laboratory and cosmic regimes through the ratio \(a/(k\,\tau_0)\). These constants explain why the same projection law governs galaxies, growth, and optics without per\-system tuning.
+
+\section{ILG as the Gravitational Instantiation}
+\label{sec:ilg}
+
+\paragraph{Pressure source.}
+In Information\-Limited Gravity (ILG), the effective source is the \emph{pressure} field obtained by filtering the raw baryonic source \(s\) through the universal kernel \(\w\):
+\begin{equation}
+\label{eq:ilg-pressure-source}
+p(\bm x, a)\;=\;\bigl[\w(\grad, a)\, s\bigr](\bm x),\qquad
+\widehat{p}(\bm k, a)\;=\;\w(k,a)\,\widehat{s}(\bm k, a),
+\end{equation}
+with
+\begin{equation}
+\label{eq:ilg-kernel}
+\w(k,a)\;=\;1\; +\; C\,\Bigl(\tfrac{a}{k\,\tau_0}\Bigr)^{\!\alpha},\qquad C=\varphi^{-3/2},\quad \alpha=\tfrac{1}{2}\bigl(1-\varphi^{-1}\bigr).
+\end{equation}
+For galaxies (present epoch, \(a=1\)) one takes \(s=\rho_b\); for cosmology, \(s=\bar\rho_b(a)\,\delta_b\) in comoving coordinates. The potential \(\Phi\) solves the \emph{classical} Poisson equation with this source,
+\begin{equation}
+\label{eq:ilg-poisson}
+\grad^{2}\Phi(\bm x, a)\;=\;4\pi G\,a^{2}\,p(\bm x, a),
+\end{equation}
+under Dirichlet decay at infinity (isolated) or periodic mean\-zero (cosmology) boundary conditions.
+
+\paragraph{Variational statement; existence and uniqueness.}
+For fixed scale factor \(a\) and source \(p\), consider the energy \(\E[\Phi\,|\,p]\) in \eqref{eq:energy-functional}. The first variation yields \eqref{eq:ilg-poisson}, so the admissible minimizer \(\Phi^{\ast}\in\mathcal V\) is the \emph{unique} weak solution. Coercivity of the Dirichlet form and the Poincar\'e inequality on \(\mathcal V\) imply \emph{existence and uniqueness} by the Lax\--Milgram theorem when \(p\in H^{\-1}(\Omega)\) (e.g., \(p\in L^{2}\) suffices). In periodic boxes, fixing the zero mode of \(\widehat{\Phi}\) yields a unique mean\-zero solution; in isolated domains with \(p\in L^{1}\cap L^{6/5}\), the Green\'s representation
+\begin{equation}
+\Phi(\bm x, a)\;=\;-\,G\,a^{2}\int_{\R^{3}}\!\frac{p(\bm y, a)}{|\bm x\-\bm y|}\,d^{3}y
+\end{equation}
+solves \eqref{eq:ilg-poisson} in the distributional sense and decays as required. In either case, the energy gap controls the \(H^{1}\) distance to the solution by \eqref{eq:energy-control}, establishing stability.
+
+\paragraph{Positivity, monotonicity, and the laboratory limit.}
+Because \(\w(k,a)\ge 1\) for all \(k>0\) and \(a\in(0,1]\), the Fourier\-multiplier operator \(\w(\grad,a)\) is \emph{positive} in the operator sense:
+\begin{equation}
+\label{eq:operator-positivity}
+\langle f,\ \w(\grad,a)\,f \rangle\;=\;\int\!|\widehat{f}(\bm k)|^{2}\,\w(k,a)\,\frac{d^{3}k}{(2\pi)^{3}}\;\ge\;\int\!|\widehat{f}(\bm k)|^{2}\,\frac{d^{3}k}{(2\pi)^{3}}\;=\;\|f\|^{2}_{2}.
+\end{equation}
+Moreover,
+\begin{equation}
+\partial_{k}\,\w(k,a)\;<\;0,\qquad \partial_{a}\,\w(k,a)\;>\;0,\qquad \lim_{k\to\infty}\,\w(k,a)\;=\;1,
+\end{equation}
+so increasing scale (smaller \(k\)) or later times \(a\) monotonically enhance the effective source, while the \emph{laboratory limit} is recovered exactly as \(k\to\infty\). These properties propagate to display\-level quantities: (i) effective surface profiles built from \(p\) inherit non\-pathological signs; (ii) ratios such as \(w(R)=v^{2}(R)/v^{2}_{\mathrm{baryon}}(R)\) are monotone in regimes where the baryonic Hankel power is concentrated at low \(k\); and (iii) small\-scale predictions reduce to standard gravity because \(\w\to 1\).
+
+\section{Coercivity with Explicit Constants}
+\label{sec:coercivity}
+
+We now record the explicit constants that certify stability of the coercive projection and bind all probes under a single kernel. The bound reads
+\begin{equation}
+\label{eq:coercivity-explicit}
+\E[\Phi\,|\,p]-\E[\Phi^{\ast}\,|\,p]\;\ge\; c\,\Defect_{\!H^1}(\Phi),\qquad
+c\;=\;\frac{1}{\,K_{\mathrm{net}}\,C_{\mathrm{proj}}\,C_{\mathrm{eng}}\,}.
+\end{equation}
+
+\paragraph{Projection constant (rank\-one/Hermitian).}
+The fiberwise projection step admits the Hermitian rank\-one estimate
+\(\min_{\lambda\ge 0,\ \|v\|=1}\|H-\lambda\,v\otimes v^{\!*}\|_{\mathrm{HS}}^{2}\le 2\,\|H-\tfrac{\mathrm{tr}\,H}{d}I\|_{\mathrm{HS}}^{2}\),
+hence one may take \(C_{\mathrm{proj}}\le 2\). This constant is domain\-agnostic and matches independent CPM instantiations.
+
+\paragraph{Net constant (eight\-tick nets or 2/3 spectral cutoff).}
+For a unit \(\varepsilon\)\-net on spectral shells (FFT) or Hankel bands (disks), the cone\-vs\-net bound records
+\(K_{\mathrm{net}}=((1+\varepsilon)/(1-\varepsilon))^{2}\). The \emph{eight\-tick} alignment \(\varepsilon=1/8\) gives \(K_{\mathrm{net}}=(9/7)^{2}\). On periodic grids with a \(2/3\) spectral cutoff, the effective \(\varepsilon\) induced by shell spacing/window overlap yields a comparable constant; we retain the eight\-tick value for analysis invariance.
+
+\paragraph{Energy\--control (periodic/Dirichlet classes).}
+With the energy normalization in \eqref{eq:energy-functional}, the linear source term cancels at the minimizer, giving the identity
+\(\E[\Phi\,|\,p]-\E[\Phi^{\ast}\,|\,p]=\tfrac{1}{8\pi G}\int|\grad(\Phi-\Phi^{\ast})|^{2}\),
+so \(C_{\mathrm{eng}}=1\) on periodic and Dirichlet classes (additive constant fixed by mean\-zero/decay).
+
+\paragraph{Coercivity constant and RS alignment.}
+Combining the three constants yields the \emph{explicit} coercivity bound:
+\begin{equation}
+\label{eq:c-numeric}
+\boxed{c\;=\;\frac{1}{K_{\mathrm{net}}\,C_{\mathrm{proj}}\,C_{\mathrm{eng}}}\;=\;\frac{1}{(9/7)^{2}\cdot 2\cdot 1}\;=\;\frac{49}{162}\;\approx\;0.302}
+\end{equation}
+\textbf{Universality and cross\-domain structure.} The same eight\-tick net and Hermitian projection constant appear in other CPM domains (e.g., folding), yielding the \emph{same} numerical \(c\). This is strong evidence that projection geometry—not problem\-specific tuning—governs stability. Meanwhile, the kernel's exponent and prefactor (\(\alpha=\tfrac{1}{2}(1-\vphi^{-1})\), \(C=\vphi^{-3/2}\)) and the gate \(\tau_0\) fix the long\-wavelength behavior of \(\w\) via Recognition Geometry. Together these explain why a \emph{single} coercivity constant and \emph{single} kernel constrain galaxies, growth, and optics without per\-system retuning.
+
+\section{Aggregation to Falsifiers Across Probes}
+\label{sec:falsifiers}
+
+The CPM aggregation bound \eqref{eq:aggregation} elevates \emph{local} window tests to a \emph{global} defect control with explicit constants. Because the same kernel \(\w\) and the same coercivity constant \(c\) govern all modalities, a single family of falsifiers binds galaxies and cosmology together: if any probe fails under the declared windows and hygiene, the universal law is falsified (\emph{no retuning}).
+
+\subsection*{Galaxies: windows $\to$ global defect}
+Let \(\{W\}\) be radial windows on each rotation curve after fairness masks (inclination, inner beam, outer reliability, bar/warp excision). With tests \(T_W\) (e.g., windowed residual norms) and bounded overlap \(M\), \eqref{eq:aggregation} gives
+\[
+\Defect_{\!H^1}(\Phi)\;\le\; M\,K_{\mathrm{net}}\,C_{\mathrm{proj}}\,\sup_W T_W[\Phi].
+\]
+Two immediate consequences become falsifiers:
+\begin{itemize}[leftmargin=1.4em,itemsep=0.2em]
+  \item \textbf{No Retuning Theorem.} With kernel \(\w\) and constants fixed globally, acceptable residuals \emph{cannot} require per\-galaxy changes to \(\w\). Any such retuning implies that a single projection does not minimize a single energy across systems, violating the law.
+  \item \textbf{Residual\-slope nulls.} Across windows spanning \(\sim2\!\text{--}\!4\) disc scale lengths, the slope of residuals \(\Delta v(R)\) should be unbiased and \emph{uncorrelated} with basic baryonic observables (surface brightness \(\Sigma_\ast\), gas fraction \(f_{\mathrm{gas}}\), morphology) under the global\-only policy. Statistically significant correlations constitute a failure of dispersion hygiene or positivity and thus falsify the law.
+\end{itemize}
+Positivity/monotonicity of \(\w\) propagates to display\-level checks:
+\begin{itemize}[leftmargin=1.4em,itemsep=0.2em]
+  \item \textbf{Sign/monotone displays.} The effective surface profile \(P(R)=\int p(R,z)\,dz\) must be non\-pathological when \(\Sigma_b\ge 0\) is smooth; the derived display \(w(R)=v^{2}(R)/v^{2}_{\mathrm{baryon}}(R)\) should be monotone in regimes where Hankel power concentrates at low \(k\). Persistent sign flips or non\-monotone behavior in clean systems falsify the positivity/monotonicity inheritance from \(\w\).
+\end{itemize}
+
+\subsection*{Cosmology: linked predictions from the same kernel}
+In linear theory, the growth equation with the pressure source is
+\(\ddot{\delta}_b+2\mathcal H\dot{\delta}_b-4\pi G\,a^{2}\,\bar\rho_b(a)\,\w(k,a)\,\delta_b=0\), so all cosmological predictions inherit the same \(\w\).
+\begin{itemize}[leftmargin=1.4em,itemsep=0.2em]
+  \item \textbf{Tracer\-independent $E_G$ factorization.} Define
+  \(E_G(a,k)=\dfrac{a\,k^{2}\,\widehat{\Phi}(a,k)}{H(a)\,f(a,k)\,\widehat{\delta}_b(a,k)}\). Using \(k^{2}\widehat{\Phi}=4\pi G\,a^{2}\,\bar\rho_b\,\w\,\widehat{\delta}_b\), one gets
+  \begin{equation}
+  \label{eq:EG-factor}
+  E_G(a,k)\;=\;\Bigl[\tfrac{4\pi G\,a^{3}\,\bar\rho_b(a)}{H(a)}\Bigr]\,\dfrac{\w(k,a)}{f(a,k)},
+  \end{equation}
+  which is \emph{tracer\-independent}. Falsifier: significant tracer\-dependent splits or a residual scale trend opposite to the monotone \(\w\) (after controlling for \(f\)).
+  \item \textbf{Mild, monotone scale dependence in $f(a,k)$.} Since \(\w\) mildly enhances long wavelengths, the growth rate \(f(a,k)=\partial\ln D/\partial\ln a\) acquires a controlled, monotone \(k\)\-dependence at late times, reverting to the standard limit at early times/small scales. Falsifier: strong, non\-monotone \(k\)\-dependence inconsistent with \(\partial_k\w<0\).
+  \item \textbf{ISW sign (low $\ell$).} The growth of \(\w(k,a)\) with \(a\) slows the decay of \(\Phi\) and can make \(\dot{\Phi}<0\) on the largest scales, predicting a \emph{negative} low\-\(\ell\) ISW cross\-correlation. Falsifier: a robust, mask\-stable \emph{positive} low\-\(\ell\) signal.
+  \item \textbf{CMB lensing amplitude (low $L$).} The line\-of\-sight average of \(\w\) mildly increases the lensing amplitude at low multipoles \(L\), with a smooth return to GR (\(\w\to 1\)) at high \(L\). Falsifier: a significant \emph{decrease} toward low \(L\) or non\-smooth trends incompatible with the monotone kernel.
+\end{itemize}
+All four predictions are locked to the \emph{same} constants and \emph{same} kernel \(\w\). A pass/fail in one regime cannot be repaired by retuning another: the coercive projection law binds galaxies, growth, ISW, and lensing as a \emph{single} auditable structure.
+
+\section{Certificates as First\-Class Outputs}
+\label{sec:certs}
+
+The coercive projection law converts fits into \emph{audited inferences}. Each plot, table, or quantitative claim should ship with a compact, machine\-readable \emph{certificate} that verifies compliance with existence/uniqueness, positivity/monotonicity, and discretization hygiene. This section specifies the minimum fields, schemas, and default thresholds.
+
+\subsection*{What to publish with every figure}
+For each result (galaxy, growth bandpower, lensing bin), attach:
+\begin{itemize}[leftmargin=1.4em,itemsep=0.2em]
+  \item \textbf{Energy:} \(\E[\Phi\,|\,p]\) and gap \(\E[\Phi\,|\,p]-\E[\Phi^{\ast}\,|\,p]\).
+  \item \textbf{Residual norms:} \(\|\nabla^{2}\Phi-4\pi G\,a^{2}p\|_{L^{2}}\) (or \(H^{\-1}\)) and windowed residuals \(T_W\).
+  \item \textbf{Positivity/monotonicity:} pass/fail and metrics for (i) operator positivity checks (non\-negative quadratic form), (ii) display\-level sign (e.g., \(P(R)\ge 0\) where applicable), (iii) monotone display trends (e.g., slope of \(w(R)\)).
+  \item \textbf{Grid/Hankel convergence:} relative change under resolution doubling/padding (e.g., \(\|\Phi_{2N}-\Phi_N\|/\|\Phi_{2N}\|\), \(|v^{2}_{2M}-v^{2}_M|/v^{2}_{2M}\)).
+  \item \textbf{Kernel checks:} (i) \(\w\to 1\) at large \(k\) (laboratory limit), (ii) long\-wavelength slope sign \(\partial_k \w<0\), time monotonicity \(\partial_a \w>0\), (iii) numerical stability (log\-evaluation for enhancement term), (iv) kernel checksum for provenance.
+\end{itemize}
+
+\subsection*{Schema (JSON)}
+We recommend a single JSON object per artifact (figure/table). The schema includes:
+\begin{itemize}[leftmargin=1.4em,itemsep=0.1em]
+  \item \texttt{artifact\_id}: unique identifier (e.g., \texttt{"fig\_3\_panel\_b"})
+  \item \texttt{context}: probe type, dataset, object/system, constants \((\vphi,\alpha,C,\tau_0,G)\)
+  \item \texttt{energy}: \(\E[\Phi|p]\) and gap
+  \item \texttt{residuals}: global norms (\(L^{2}\), \(H^{-1}\)) and windowed \(T_W\)
+  \item \texttt{positivity\_monotonicity}: operator quadratic form min, display signs/slopes, pass/fail
+  \item \texttt{convergence}: grid/Hankel relative errors
+  \item \texttt{kernel}: high\-\(k\) deviation, slope signs, checksum (SHA256)
+  \item \texttt{provenance}: commit hash, environment, seeds, timestamp
+\end{itemize}
+A minimal example (\texttt{fig\_3\_panel\_b.json}):
+{\small
+\begin{verbatim}
+{"artifact_id": "fig_3_panel_b",
+ "context": {"probe": "galaxy", "dataset": "SPARC", "object": "NGC3198",
+             "constants": {"phi": 1.618034, "alpha": 0.190983, 
+                           "C": 0.485868, "tau0": 1.0, "G": 4.3e-6}},
+ "energy": {"E": 1.234e5, "gap": 2.1e3},
+ "residuals": {"norm_L2": 3.5e-3, "windows": [...]},
+ "positivity_monotonicity": {"passes": true},
+ "convergence": {"hankel": {"rel_error": 0.008}},
+ "kernel": {"checksum_sha256": "abc123..."},
+ "provenance": {"code_commit": "abd3eba", "timestamp": "2025-11-04T..."}}
+\end{verbatim}
+}
+
+\subsection*{Default thresholds}
+Thresholds should be set globally and pre\-declared (per analysis commit):
+\begin{itemize}[leftmargin=1.4em,itemsep=0.2em]
+  \item \textbf{Convergence:} \(\|\Phi_{2N}-\Phi_N\|/\|\Phi_{2N}\|<1\%\); \(|v^{2}_{2M}-v^{2}_M|/v^{2}_{2M}<1\%\) over reported radii.
+  \item \textbf{Kernel (hi\-$k$):} \(|\w(k_{\max})-1|<5\%\) on the mesh; slope signs \(\partial_k\w<0\), \(\partial_a\w>0\).
+  \item \textbf{Positivity/monotonicity:} operator quadratic form \(\ge 1\) to numerical tolerance; display sign non\-negative where \(\Sigma_b\ge 0\); monotone trend consistent with low\-$k$ dominance.
+  \item \textbf{Windows:} bounded overlap \(M\) recorded; \(\sup_W T_W\) below the critical threshold implied by \eqref{eq:energy-control} and \eqref{eq:coercivity-explicit}.
+\end{itemize}
+
+\subsection*{“Green checkmark” reproducibility and audit}
+We recommend a short, per\-artifact box that lists pass/fail for each certificate class. A result is marked with a \emph{green checkmark} only if all items pass under the frozen configuration:
+\begin{itemize}[leftmargin=1.4em,itemsep=0.2em]
+  \item \textbf{Reproducibility:} code commit hash; kernel checksum; constants file (\(\varphi,\alpha,C,\tau_0,G\)); environment and version pins; random seeds.
+  \item \textbf{Energy/residuals:} gap and norms reported; thresholds met.
+  \item \textbf{Positivity/monotonicity:} operator and displays pass stated tests.
+  \item \textbf{Convergence:} grid/Hankel tolerances met; padding documented for isolated systems.
+  \item \textbf{Windows:} masks and overlap constant \(M\) recorded; \(\sup_W T_W\) below threshold.
+\end{itemize}
+Certificates should be archived alongside figures/tables (e.g., as \texttt{.json} sidecars) and referenced in captions. This enables third parties to audit compliance with the coercive projection law without rerunning the full pipeline.
+
+\section{Cross\-Domain Constant Structure}
+\label{sec:constants-cross}
+
+The same CPM constants that control stability in gravity appear in independent recognition problems (e.g., folding as phase recognition). \Cref{tab:constants-alignment} aligns the numerical values and their provenance, and highlights how the golden\-ratio structure fixes the kernel exponent \(\alpha\) and prefactor \(C\) in gravity.
+
+\begin{table}[h]
+\centering
+\small
+\setlength{\tabcolsep}{8pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}l l l l l@{}}
+\toprule
+\textbf{Quantity} & \textbf{Symbol} & \textbf{Folding (CPM)} & \textbf{Gravity (ILG)} & \textbf{Provenance} \\
+\midrule
+Net constant & \(K_{\mathrm{net}}\) & \(\bigl(\tfrac{9}{7}\bigr)^{2}\) & \(\bigl(\tfrac{9}{7}\bigr)^{2}\) & Eight\-tick \((\varepsilon=1/8)\) finite net \\
+Projection constant & \(C_{\mathrm{proj}}\) & \(\le 2\) & \(\le 2\) & Hermitian rank\-one bound \\
+Energy control & \(C_{\mathrm{eng}}\) & \(1\) & \(1\) & Dirichlet/periodic normalization \\
+Coercivity & \(c\) & \(\tfrac{49}{162}\approx 0.302\) & \(\tfrac{49}{162}\approx 0.302\) & \(1/(K_{\mathrm{net}} C_{\mathrm{proj}} C_{\mathrm{eng}})\) \\
+Kernel exponent & \(\alpha\) & \textemdash & \(\tfrac{1}{2}(1\!-\!\varphi^{\!-1})\) & Recognition geometry (golden ratio) \\
+Kernel prefactor & \(C\) & \textemdash & \(\varphi^{\!-3/2}\) & Recognition geometry (golden ratio) \\
+Gate parameter & \(\tau_0\) & \textemdash & global (fixed) & Finite refresh; lab\,\(\to\)\,cosmic gate \\
+\bottomrule
+\end{tabular}
+\caption{Alignment of CPM constants across domains. The same net and projection constants yield the same coercivity \(c\). In gravity, the kernel exponent \(\alpha\) and prefactor \(C\) follow from golden\-ratio structure, while \(\tau_0\) sets the dimensionless gate between laboratory and cosmic regimes.}
+\label{tab:constants-alignment}
+\end{table}
+
+\paragraph{Interpretation: why proof and physics discover the same constants.}
+Recognition Science (RS) explains why \emph{proof optimization} (CPM) and \emph{physical optimization} (inference under finite refresh) converge to the same architecture:
+\begin{itemize}[leftmargin=1.4em,itemsep=0.2em]
+  \item The eight\-tick alignment \((\varepsilon=1/8)\) that optimizes covering nets in CPM coincides with the timing structure (eight\-beat ledger cycles) that optimizes recognition capacity.
+  \item The Hermitian rank\-one bound \((C_{\mathrm{proj}}\le 2)\) reflects the same minimal projection geometry across convex cones and recognition modes.
+  \item In gravity, golden\-ratio rigidity fixes the kernel's long\-wavelength behavior: \(\alpha=\tfrac{1}{2}(1-\vphi^{-1})\) and \(C=\vphi^{-3/2}\) are \emph{not} tunable; they follow from the recognition cost functional and the golden ratio's unique fixed\-point property.
+\end{itemize}
+The result: a single set of constants that stably governs galaxies, growth, and optics without per\-system dials. The constant alignment (\(c=49/162\) in both folding and gravity) is not numerology—it is RS architecture discovered from both directions.
+
+\section{New Predictions (from the Law, not a Model)}
+\label{sec:predictions}
+
+The coercive projection law yields \emph{linked, sign\- and slope\-level predictions} that do not depend on auxiliary modeling choices. They arise from positivity and monotonicity of \(\w\), the explicit coercivity constant, and the single\-kernel universality that binds probes together.
+
+\subsection*{The rotation–lensing–growth triangle}
+\begin{itemize}[leftmargin=1.4em,itemsep=0.2em]
+  \item \textbf{Linked signs and slopes.} A monotone \(\w(k,a)\) (\(\partial_k\w<0,\ \partial_a\w>0\)) demands: (i) 
+  outer rotation\-curve displays \(w(R)\) nondecreasing over radii where Hankel power concentrates at low \(k\);
+  (ii) a mild, monotone \(k\)\-dependence in the late\-time growth rate \(f(a,k)\);
+  (iii) a negative low\-\(\ell\) ISW sign; and (iv) a mild low\-\(L\) enhancement in CMB lensing amplitude with a smooth return to GR at high \(L\).
+  \item \textbf{No\-go behaviors.} The following cannot occur under the law: (i) persistent non\-monotone \(w(R)\) in clean disks; (ii) strong, oscillatory \(k\)\-dependence in \(f(a,k)\) after controlling for background; (iii) a robust \emph{positive} low\-\(\ell\) ISW cross\-correlation; (iv) a decreasing lensing amplitude toward low \(L\); or (v) per\-probe retuning of \(\w\) to reconcile inconsistent signs/slopes. Any one is a structural falsifier.
+\end{itemize}
+
+\subsection*{Near\-field slope and nanogravity trend}
+At high wavenumber, \(\w(k,a)=1+C(a/(k\tau_0))^{\alpha}\) with \(\alpha>0\) implies a \emph{negative} logarithmic slope
+\(d\ln \w/d\ln k=-\alpha\, \tfrac{C(a/(k\tau_0))^{\alpha}}{1+C(a/(k\tau_0))^{\alpha}}<0\).
+Thus, near\-field deviations must be small, negative\-slope corrections approaching unity from above as \(k\to\infty\). The \emph{nanogravity} regime therefore exhibits a gentle, monotone approach to GR with no oscillatory or positive\-slope features. Controlled experiments that recover the \emph{opposite} sign or a non\-monotone behavior would falsify the kernel form.
+
+\subsection*{Cross\-probe amplitude\,–\,band constraints}
+The line\-of\-sight average of \(\w\) imposes consistent amplitude bounds across probes and bands: rotation\-curve displays, tracer\-independent \(E_G\), low\-\(\ell\) ISW, and low\-\(L\) lensing form a \emph{single amplitude budget}. A scale/time band that demands enhancement in one probe must produce a commensurate response in the others. Conversely, a band that appears enhanced in one probe but suppressed in another (after identical hygiene) violates single\-kernel universality.
+
+\section{Outlook: Relativistic Completion via Coercive Projection}
+\label{sec:outlook}
+
+The non\-relativistic law invites a relativistic presentation that preserves coercivity and universality.
+
+\subsection*{Effective stress–energy and route identities}
+Define an effective, divergence\-controlled stress–energy (or pressure 2\-form) built from the filtered source \(p=\w(\grad,a)\,s\), and choose a gauge in which the coercivity identity \eqref{eq:coercivity-explicit} holds at the level of metric potentials. \emph{Route identities} (K\-gates) then lock normalizations by equating independent constructions (e.g., time\,–\,to\,–\,length routes), eliminating ambiguity in gauge presentations and preventing hidden degrees of freedom. The same constants (\(\varphi,\alpha,C,\tau_0\)) fix the long\-wavelength sector.
+
+\subsection*{Program for N\-body and multi\-probe synthesis}
+\begin{itemize}[leftmargin=1.4em,itemsep=0.2em]
+  \item \textbf{N\-body with pre\-filtered sources.} Incorporate the pre\-filter step (\(p=\w\ast s\)) at each time slice, then solve standard Poisson and advance particles. Emit certificates (energy, residuals, convergence, kernel checks) per snapshot.
+  \item \textbf{Multi\-probe joins.} Enforce single\-kernel universality by sharing kernel arrays and constants across rotation\-curve, growth, lensing, and ISW pipelines; attach per\-probe certificates and a cross\-probe consistency summary.
+  \item \textbf{Release practice.} Archive certificate sidecars (JSON), kernel checksums, and environment pins with each public figure/table to enable independent audit without reruns.
+\end{itemize}
+This program extends the present non\-relativistic law to survey\-scale inference while preserving its decisive feature: \emph{a single, auditable structure} that ties galaxies, growth, and optics together by coercivity and explicit constants.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+We have articulated and instantiated a \emph{coercive projection law of gravity}: nature projects raw baryonic sources through a fixed, scale\- and time\-aware kernel to construct an effective pressure source, and the gravitational field is the unique minimizer of a classical energy with that source. In this presentation, Information\-Limited Gravity (ILG) is not a tunable phenomenology but the gravitational face of a universal projection principle. A CPM (Coercive Projection Method) framework with \emph{explicit constants} certifies existence/uniqueness, positivity, and stability, and binds galaxies, growth, ISW, and lensing as a \emph{single} auditable structure.
+
+\paragraph{Three distinguishing features.}
+\begin{enumerate}[leftmargin=2.1em,itemsep=0.25em]
+  \item \textbf{Universality.} One kernel and one set of coercivity constants apply across probes; per\-system retuning falsifies the law.
+  \item \textbf{Falsifiability.} Positivity and monotonicity of the kernel generate linked, sign\- and slope\-level predictions (rotation\,–\,growth\,–\,lensing triangle; near\-field slope sign; cross\-probe amplitude bands) that cannot be violated without breaking the principle.
+  \item \textbf{Auditability.} Every result ships with compact \emph{certificates}—energy values, residual norms, positivity/monotonicity checks, convergence diagnostics, kernel sanity and checksums—so that independent parties can verify compliance without reruns.
+\end{enumerate}
+
+\paragraph{Why the constants align.}
+The coercivity constants (net, projection, energy) match those arising in independent CPM domains (e.g., folding), while the kernel's exponent and prefactor follow from Recognition Geometry's golden\-ratio rigidity; the fundamental tick \(\tau_0\) sets the gate between laboratory and cosmic regimes. This alignment explains why \emph{proof optimization} (CPM) and \emph{physical optimization} (recognition under finite refresh) converge: the same architecture is discovered from both directions.
+
+\paragraph{The engine and next steps.}
+We release a minimal engine (\href{https://github.com/jonwashburn/CPM-Cosmology-Grid-Path}{CPM\-Cosmology\-Grid\-Path}) that implements the grid (FFT) and disk (Hankel) paths, emits certificates by default, and enables multi\-probe synthesis under a single kernel. Near\-term directions: (i) relativistic completion preserving coercivity via effective stress–energy and K\-gates; (ii) N\-body pipelines with pre\-filtered sources and per\-snapshot certificates; (iii) survey\-scale audits reporting pass/fail against pre\-declared thresholds. The decisive test is not a better fit but a \emph{better law}: one kernel, explicit constants, green checkmarks, and cross\-probe predictions that stand or fall together.
+
+\appendix
+
+\section*{Appendix A: Functional Setting and Existence Details}
+\addcontentsline{toc}{section}{Appendix A: Functional Setting and Existence Details}
+
+\paragraph{Function spaces and boundary conditions.}
+For an isolated domain \(\Omega\subset\R^{3}\) with \(\Phi\to 0\) at infinity, take \(\mathcal V=H^{1}_{0}(\Omega)\). For periodic \(\mathbb{T}^{3}\), take \(\mathcal V=\{\Phi\in H^{1}(\mathbb{T}^{3}):\int\Phi=0\}\). Assume \(p\in H^{-1}(\Omega)\) (\(p\in L^{2}\) suffices). The bilinear form \(a(\Phi,\Psi)=(8\pi G)^{-1}\int\grad\Phi\cdot\grad\Psi\) is continuous and coercive on \(\mathcal V\).
+
+\paragraph{Lax\--Milgram and energy identity.}
+By Lax\--Milgram, for each \(p\in H^{-1}\) there exists a unique \(\Phi^{\ast}\in\mathcal V\) solving \(\grad^{2}\Phi=4\pi G\,a^{2}p\) with the stated boundary conditions. Moreover,
+\[
+\E[\Phi\,|\,p]-\E[\Phi^{\ast}\,|\,p]\;=\;\frac{1}{8\pi G}\int_{\Omega}|\grad(\Phi-\Phi^{\ast})|^{2}\,dx,
+\]
+giving \(C_{\mathrm{eng}}=1\) in the energy\--defect control.
+
+\paragraph{Green’s representation (isolated).}
+If \(p\in L^{1}(\R^{3})\cap L^{6/5}(\R^{3})\), the potential \(\Phi(\bm x,a)=-\,G\,a^{2}\int p(\bm y,a)/|\bm x-\bm y|\,d^{3}y\) solves the Poisson equation in the distributional sense and decays at infinity; the Dirichlet energy is finite.
+
+\paragraph{Operator positivity.}
+For real \(f\in L^{2}\), \(\langle f,\w(\grad,a)f\rangle=\int \w(k,a)|\widehat f|^{2}\,d^{3}k/(2\pi)^{3}\ge \|f\|^{2}_{2}\) since \(\w\ge 1\). This is an operator\-level statement and does not require a pointwise \(W(r,a)\ge 0\).
+
+\section*{Appendix B: Discretization Hygiene and Algorithms}
+\addcontentsline{toc}{section}{Appendix B: Discretization Hygiene and Algorithms}
+
+\paragraph{FFT grid path (periodic).}
+\begin{itemize}[leftmargin=1.4em,itemsep=0.2em]
+  \item Deposit \(s\) on an \(N_x\!\times\!N_y\!\times\!N_z\) mesh; FFT to \(\widehat s\).
+  \item Multiply by \(\w(k,a)\) in Fourier space (evaluate enhancement in logs).
+  \item Solve \(\widehat{\Phi}=-4\pi G\,a^{2}\widehat p/k^{2}\) for \(\bm k\ne 0\); set \(\widehat{\Phi}(0)=0\).
+  \item Inverse FFT; differentiate spectrally for forces; apply a \(2/3\) spectral cutoff.
+\end{itemize}
+
+\paragraph{Hankel disk path (axisymmetric).}
+\begin{itemize}[leftmargin=1.4em,itemsep=0.2em]
+  \item Compute \(\tilde \Sigma_b(k)=\int R\,\Sigma_b(R)\,J_0(kR)\,dR\) on a log grid (FFTLog).
+  \item Form \(\tilde P(k)=\w(k,1)\,\tilde \Sigma_b(k)\) and \(v^{2}(R)=2\pi G\,R\int k\,J_1(kR)\,\tilde P(k)\,dk\).
+  \item Use thickness corrections via \(k_z\) quadrature or standard kernels as needed.
+\end{itemize}
+
+\paragraph{Convergence and padding.}
+Double resolution (grid) or sample count (Hankel) and require relative changes \(<1\%\). For isolated boxes, zero\-pad by \(\ge 2\) per dimension and verify stability against padding.
+
+\section*{Appendix C: Certificate Fields and Thresholds}
+\addcontentsline{toc}{section}{Appendix C: Certificate Fields and Thresholds}
+
+\paragraph{Minimum fields.}
+\begin{itemize}[leftmargin=1.4em,itemsep=0.2em]
+  \item Energy \(\E\), gap; residual norms (\(L^{2}\), \(H^{\-1}\)); windowed residuals \(T_W\).
+  \item Positivity/monotonicity: operator quadratic form min; \(P(R)\) sign; \(w(R)\) slope sign.
+  \item Convergence: grid/Hankel relative errors; padding factor for isolated systems.
+  \item Kernel: high\-\(k\) deviation from unity; slope signs; kernel checksum.
+  \item Provenance: commit, constants (\(\varphi,\alpha,C,\tau_0,G\)), environment pins, seeds, timestamp.
+\end{itemize}
+
+\paragraph{Default thresholds.}
+Convergence \(<1\%\); high\-\(k\) \(|\w-1|<5\%\); slope signs \(\partial_k\w<0,\ \partial_a\w>0\); positivity within numerical tolerance; window overlap \(M\) recorded; \(\sup_W T_W\) below the critical threshold implied by coercivity.
+
+\section*{Appendix D: Constants and Provenance}
+\addcontentsline{toc}{section}{Appendix D: Constants and Provenance}
+
+Golden ratio \(\varphi=(1+\sqrt{5})/2\); exponent \(\alpha=\tfrac{1}{2}(1-\varphi^{-1})\); prefactor \(C=\varphi^{-3/2}\); tick \(\tau_0\) catalog\-global; Newton’s constant \(G\) in consistent units (kpc/Mpc conventions noted in artifacts). Release kernel checksum (SHA256) and constants JSON with each analysis.
+
+\section*{Appendix E: Reproducibility Notes}
+\addcontentsline{toc}{section}{Appendix E: Reproducibility Notes}
+
+Repository: \href{https://github.com/jonwashburn/CPM-Cosmology-Grid-Path}{CPM\-Cosmology\-Grid\-Path}. Dependencies: Python 3.11, NumPy \(\ge 1.26\), SciPy \(\ge 1.11\). Examples: grid path (growth, lensing, ISW) and disk path (rotation curves). Provide a one\-command script to regenerate figures with certificate sidecars; pin environments and record seeds. Artifacts should include per\-artifact JSON certificates and a run manifest.
+
+\section*{Appendix F: Growth and $E_G$ Details}
+\addcontentsline{toc}{section}{Appendix F: Growth and $E_G$ Details}
+
+\paragraph{Growth ODE.}
+Integrate \(\ddot{\delta}_b+2\mathcal H\dot{\delta}_b-4\pi G\,a^{2}\,\bar\rho_b\,\w\,\delta_b=0\) in \(a\) using \(\delta\propto a\) initial conditions at early times; report \(D(a,k)=\delta/\delta_0\) and \(f(a,k)=a\,\dot{\delta}/\delta\).
+
+\paragraph{$E_G$ estimator.}
+Use \eqref{eq:EG-factor} with survey\-specific geometry factors; report tracer\-independent values and consistency across tracers as a certificate item.
+
+\section*{Appendix G: No\-Retuning Theorem (Sketch)}
+\addcontentsline{toc}{section}{Appendix G: No-Retuning Theorem (Sketch)}
+
+Assume a single kernel \(\w\), fixed constants, and bounded window overlap \(M\). Suppose acceptable residuals require per\-galaxy changes to \(\w\). Then the projection \(\proj\) cannot be a unique minimizer of a single energy across the survey, contradicting the coercive projection law (existence/uniqueness with explicit constants). Equivalently, \(\sup_W T_W\) computed under the global kernel exceeds the critical threshold implied by coercivity for some systems; replacing \(\w\) galaxy\-by\-galaxy constitutes a change of law rather than a parameter choice. Therefore per\-galaxy retuning \emph{falsifies} the universal law.
+
+\section*{Appendix H: Notation and Symbols}
+\addcontentsline{toc}{section}{Appendix H: Notation and Symbols}
+
+\begin{center}
+\small
+\setlength{\tabcolsep}{8pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}l >{\raggedright\arraybackslash}p{4.8cm} >{\raggedright\arraybackslash}p{5.2cm}@{}}
+\toprule
+\textbf{Symbol} & \textbf{Meaning} & \textbf{Notes} \\
+\midrule
+\(\Phi(\bm x,a)\) & Gravitational potential & Admissible \(\Phi\in\mathcal V\) (Dirichlet or periodic) \\
+\(p(\bm x,a)\) & Effective pressure source & \(p=\w(\grad,a)\,s\) \\
+\(s\) & Raw baryonic source & \(\rho_b\) (galaxies), \(\bar\rho_b\,\delta_b\) (cosmology) \\
+\(\w(k,a)\) & ILG kernel (Fourier symbol) & \(1+C(a/(k\tau_0))^{\alpha}\) \\
+\(C,\alpha\) & Kernel constants & \(C=\vphi^{-3/2},\ \alpha=\tfrac{1}{2}(1-\vphi^{-1})\) (RS\-derived) \\
+\(\tau_0\) & Fundamental tick & Lab\,\(\to\)\,cosmic gate (global, fixed) \\
+\(\E[\Phi|p]\) & Energy functional & \(\tfrac{1}{8\pi G}\int|\grad\Phi|^{2}+\int a^{2}p\,\Phi\) \\
+\(\Defect_{H^{1}}\) & Dirichlet defect & \(\int|\grad(\Phi-\Phi^{\ast})|^{2}\) \\
+\(\Defect_{\mathrm{res}}\) & Residual defect & \(\|\grad^{2}\Phi-4\pi G a^{2}p\|^{2}_{H^{-1}}\) \\
+\(\proj\) & Projection & \(\Phi^{\ast}=\proj(p)\) unique Poisson solution \\
+\(K_{\mathrm{net}}\) & Net constant & \(((1+\varepsilon)/(1-\varepsilon))^{2}\); \(\varepsilon=1/8\) (eight\-tick) \\
+\(C_{\mathrm{proj}}\) & Projection constant & \(\le 2\) (rank\-one/Hermitian bound) \\
+\(C_{\mathrm{eng}}\) & Energy\--control & \(1\) (normalization) \\
+\(c\) & Coercivity constant & \(49/162\approx 0.302\) (universal across CPM domains) \\
+\(f(a,k)\) & Growth rate & \(\partial\ln D/\partial\ln a\) \\
+\(E_G(a,k)\) & Tracer\-independent ratio & \([4\pi G a^{3}\bar\rho_b/H]\,\w/f\) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{1.5em}
+\noindent\textbf{Repository and reproducibility.} \\
+Code, tests, examples, and certificate templates: \href{https://github.com/jonwashburn/CPM-Cosmology-Grid-Path}{\texttt{github.com/jonwashburn/CPM-Cosmology-Grid-Path}}.
+
+\end{document}

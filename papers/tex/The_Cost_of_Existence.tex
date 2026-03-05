@@ -1,0 +1,725 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{graphicx}
+
+\geometry{margin=1in}
+
+\newcommand{\RSExists}{\mathrm{RSExists}}
+\newcommand{\RSTrue}{\mathrm{RSTrue}}
+\newcommand{\RSReal}{\mathrm{RSReal}}
+\newcommand{\Stab}{\mathrm{Stab}}
+\newcommand{\Ccfg}{\mathcal{C}}
+\newcommand{\Eset}{\mathcal{E}}
+\newcommand{\Dset}{\mathcal{D}}
+\newcommand{\Rpos}{\mathbb{R}_{>0}}
+\newcommand{\Bool}{\{0,1\}}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\begin{document}
+\title{\textbf{Logic, Identity and Existance through the Recognition Composition Law}}
+\author{Jonathan Washburn, Philip Beltracchi \\
+Recognition Science Research Institute}
+\date{\today}
+\maketitle
+\begin{abstract}
+
+Standard physical theories typically postulate the existence of a manifold, a set of logical axioms, and initial conditions as irreducible priors. This paper examines a ``Cost-First'' foundation. Starting from the \textit{Recognition Composition Law} (RCL)—we derive a unique cost functional $J(x)$. We demonstrate that consistent configurations emerge as the ground state of this functional ($J(1)=0$), and any cost minimizing dynamics are repelled away from the boundary $x\rightarrow 0$  by the singularity ($J(0) \to \infty$).
+
+\end{abstract}
+
+\section{Introduction}
+
+The search for a fundamental theory of physics has historically been a search for the correct equations of motion governing matter and energy on a pre-existing manifold.  A truly fundamental theory must derive these priors. It must explain not only \textit{how} the universe behaves, but \textit{why} it exists in a logical, discrete, and conserved form.
+
+ In standard physics, variational/ optimization methods are ubiquitous. Historically early examples include  Fermat's principle  in optics, which states that light takes the path that minimizies the time\cite{Feynman:1963uxa}, and trajectories in classical geometric mechanics that minimize the action functional through the Lagrangian $S=\int_{t_0}^{t_1} L dt$\cite{Arnold:1989who,TongDynamics}. Direct annalogies to these approaches have carried through to modern times, for instance, field theories are typically phrased terms of terms of an action minimized with respect to a Lagrangian density $S=\int\mathcal{L} d^n x$\cite{Peskin:1995ev,10.1093/acprof:oso/9780199699322.001.0001}, and test particles in general relativity follow geodesic trajectories extremizing the spacetime interval\cite{1984ucp..book.....W,Carroll:1997ar}. Further examples include in statistical mechanics, equilibrium configurations are those that extremize a thermodynamic potential such as the Helmhotz free energy for cannonical systems or entropy for microcannonical systems\cite{TongStatMech}, and  ground state configuations in standard quantum mechanics  that minimize the energy through the Hamiltonian $\hat{H}$\cite{Sakurai_Napolitano_2020}. In the Recognition Science paradigm, systems are constrained by the minimization of \textbf{Recognition Cost} ($J$). By analyzing the structure of recognition—defined strictly as the interaction or comparison of states—Recognition Science uncovers a ``Cost-First'' foundation.
+
+
+
+
+
+\paragraph{Operational semantics (recognizers and ratios).}
+We adopt the measurement-first viewpoint of Recognition Geometry \cite{RecognitionGeometry}. A \emph{recognizer} is a map $R:\mathcal{C}\to\mathcal{E}$ from a configuration space $\mathcal{C}$ to an event space $\mathcal{E}$; observational indistinguishability $c\sim_R c'$ is defined by $R(c)=R(c')$, and observable states are equivalence classes in the recognition quotient $\mathcal{C}_R:=\mathcal{C}/\!\sim_R$. To compare two observable states (or a state and a reference outcome) we attach positive scale maps $\iota$ and form a ratio $x\in\mathbb{R}_{>0}$; in ratio-induced models one may write $x=\iota_S(s)/\iota_O(o)$ \cite{EntropyInterface}
+
+The foundation of Recognitions Science rests on a primitive functional equation, the \textbf{Recognition Composition Law (RCL)}. We demonstrate that any system satisfying this law, subject to normalization and calibration, is forced into a unique cost structure:
+\begin{equation}
+    J(x) = \frac{1}{2}\left(x + \frac{1}{x}\right) - 1
+    \label{jcost1}
+\end{equation}
+This function $J(x)$ serves as the ``ontological potential''.
+
+
+In the sections that follow, we trace the consequences of this cost. We show how the law of identity is connected to zero cost, and under what circumstances the boundary divergence of $J$ as $x\rightarrow0$ can be interpreted as forcing dynamics away from ``nonexistence". We then show how finite local resolution in recognition quotients \cite{RecognitionGeometry} yields discrete observable structure (T2), and summarize how reciprocity together with a balance-preserving update rule yields a double-entry ledger form \cite{CoherentComparisonLedger} (T3).
+\subsection{Formal definitions of RS ontological states}
+
+It is important to distinguish that the RS framework, such as recognition geometry, the cost function, etc. are described using pre-existing notions of mathematics. 
+It is also important to distinguish the definitions of some specific ontological states within the Recognition Science framework: ``RSExists", ``RSTrue", and ``RSReal", because they have specific conditions beyond the standard definitions of the terms ``exists", ``true" and ``real".
+
+Define
+\begin{equation}
+  \RSExists(x)
+  \;\Longleftrightarrow\;
+  (0<x)\land (J(x)=0),\label{RSExistdef}
+\end{equation}
+where $J$ is from \ref{jcost1}.
+
+Note this is more restrictive than the definition in \cite{CoherentComparisonLedger}, where an ``Exists" condition is defined only requiring $J(x)<\infty$, and the condition that $J(x)=0$ or $x=1$ is referred to as ``Balance". Based on the definition of \ref{jcost1}, $\mathrm{RSExists}(x)\implies x=1$. However, the variable $x$ is typically a ratio (for instance as in \cite{EntropyInterface}), so it is helpful to extend the idea directly to configurations.
+
+Let \(\Ccfg\) be a configuration space, \(R:\Ccfg\to\Eset\) an observable map,
+\(\iota:\Eset\to\Rpos\) a scale map, and \(c_{\mathrm{ref}}\in\Ccfg\) a reference configuration.
+Define the cost bridge
+\begin{equation}
+  \chi_{R,\iota,c_{\mathrm{ref}}}(c)
+  := \frac{\iota(R(c))}{\iota(R(c_{\mathrm{ref}}))}
+  \in \Rpos.\label{chiratio}
+\end{equation}
+Then define configuration-level existence by
+\begin{equation}
+  \RSExists_{\Ccfg}(c)
+  \;\Longleftrightarrow\;
+  \RSExists\!\big(\chi_{R,\iota,c_{\mathrm{ref}}}(c)\big).\label{configexist}
+\end{equation}
+
+It is an important distinction that at the level of the scalar cost function input, only $x=1$ RSExists. However, there may be multiple RSExistant configurations mapping to $1$ through \ref{chiratio}.
+
+The condition ``RSTrue" requires a few more steps to define. Suppose there is a map between configurations $B: \mathcal{C}\rightarrow \mathcal{C}$ and a map between configurations and classical Booleans $P:\mathcal{C}\rightarrow\{\text{true,false}\}$. We say a configuration sequence $c_i=B^i(c_0)$ \textbf{stabilizes} under $P$ if , for $n,N\in\mathbb{N}$,
+\begin{equation}
+    \Stab(B,P,c_0,c_*)
+  \;\Longleftrightarrow\;
+  \exists N\in\mathbb{N}\;\forall n\ge N,\;
+  P(B^n(c_0)) = P(c_*).
+  \label{stabdef}
+\end{equation}
+
+Further, $P$ is \textbf{RS-decidable} at $(c_*,B,c_0)$ if:
+\begin{enumerate}
+  \item $\RSExists_\Ccfg(c_*)$, and
+  \item $\Stab(B,P,c_0,c_*)$.
+\end{enumerate}
+
+With \(B,\chi_{R,\iota,c_{\mathrm{ref}}}\), and \(c_0\) fixed, define
+\begin{equation}
+  \RSTrue_{B,\chi,c_0}(P;c_*)
+  \;\Longleftrightarrow\;
+  \RSExists_{\Ccfg}(c_*)
+  \land P(c_*)
+  \land\Big(\exists N\in\mathbb{N}\;\forall n\ge N,\; P(B^n(c_0))=P(c_*)\Big).
+\end{equation}
+Therefore, the RSTrue condition requires configuration level existance \ref{configexist} of $c_*$, Boolean truth of the $P$ map acting on the state $c_*$, and stabilization of the sequence $B^n(c_0)$. Alternatively, RSTrue applies when we have RS-decidability and $P(c_*)$. Notice that we will sometimes suppress the subscripts $B,\chi,c_0$ to reduce clutter.
+
+
+Finally, ``RSReal" requires a discrete skeleton $\mathcal{D}$.
+Formally, 
+\begin{equation}
+  \RSReal_{\Dset}(x)
+  \;\Longleftrightarrow\;
+  \RSExists(x)\land (x\in\Dset).
+\end{equation}
+One example of a discrete skeleton is the ``$\phi$ ladder"
+\begin{equation}
+    \mathcal{D}_\phi=\{\phi^n, n\in \mathbb{Z}\}
+\end{equation}
+where $\phi=(1+\sqrt{5})/2$.
+Note the discrete skeleton is not restrictive where $x$ is treated as its own scalar entity and the skeleton is the $\phi$ ladder: $1=\phi^0\in\Dset_\phi$. However, a more general process could apply a discrete skeleton \(\Dset_U\subseteq U\) to a component space \(U\), then define $x$ through a synthesis map \(F:U\to\Rpos\). In this case,
+\begin{equation}
+  \RSReal_{F,\Dset_U}(x)
+  \;\Longleftrightarrow\;
+  \Big(\exists u\in\Dset_U:\; x=F(u)\Big)\land \RSExists(x).
+\end{equation}
+One concrete example of this would be a configuration space $U=\mathbb{R}^2$, such that $u=(y,z)$, the discrete skeleton $\Dset_U:y,z\in \mathbb{Z}$, and $F(u)=|z+y|+1$. In this example, $\RSExists(x)\Leftrightarrow z=-y$ and membership $u\in \Dset_U$ are independent, so the $\RSReal_{F,\Dset_U}(x)$ could fail for either reason.
+
+
+
+\section{The Primitive: The Recognition Composition Law (RCL)}
+
+The foundation of Recognition Science is not a particle or a field, but a constraint on how recognition events combine. We posit a single primitive functional equation, the \textbf{Recognition Composition Law (RCL)}, which governs the cost of interaction between states.
+
+\subsection{Defining the Primitive}
+Let $J(x)$ be a cost functional defined on positive real numbers $x \in \mathbb{R}_+$. The primitive law is given by:
+\begin{equation}
+    J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y)
+    \label{eq:RCL}
+\end{equation}
+In the RS framework, this is called \textbf{A2} (cost function axiom 2) \cite{CoherentComparisonLedger}. This equation describes how the cost of a composite state ($xy$) and a relative state ($x/y$) relates to the costs of the individual components. It is a calibrated multiplicative form of the d'Alembert functional equation, see Eqs. (\ref{eq:K-dalembert-mult},\ref{eq:f-dalembert-add}) below.
+
+\subsection{Boundary Conditions}
+To select a physical solution from this functional constraint, we impose two natural boundary conditions corresponding to the existence of a neutral identity and a standard scale:
+
+\begin{enumerate}
+    \item \textbf{A1: Normalization.} The identity element must have zero cost. Consistency is ``free.'' 
+    %(NOTE: We later derive consistency is free, but here we IMPOSE it, I mention this later)
+    \begin{equation}
+        J(1) = 0
+    \end{equation}
+
+    \item \textbf{A3: Calibration.} We fix the scale of the cost function by defining the curvature at the minimum in logarithmic coordinates. Let $\widetilde{J}(u):=J(e^{u})$ for $u\in\mathbb{R}$. We set:
+    \begin{equation}
+      \widetilde{J}''(0) = 1
+    \end{equation}
+    This condition rules out the trivial solution $J\equiv 0$ and fixes the units of the cost landscape.
+\end{enumerate}
+Here the labeling of the conditions \textbf{A1}, \textbf{A3} follow the convention from  \cite{CoherentComparisonLedger}. 
+
+It is noteworthy that \textbf{A1} can be derived from \textbf{A2} and the weaker condition of nonnegative cost
+\begin{equation}
+    J(x)\ge0, \label{nonnegJ}
+\end{equation}
+by setting $x=y=1$:
+\begin{align}
+    J(1\cdot) + J(1/1) &= 2J(1)J(1) + 2J(1) + 2J(1)\nonumber\\
+    0&=2J(1)^2+2J(1)\nonumber\\
+    J(1)=0,&\quad J(1)=-1 \label{J1is0ornegative}
+\end{align}
+from which only $J(1)=0$ survives \ref{nonnegJ}. However, the axioms are labeled in the order that they are because other papers have used $\textbf{A1}$ to constrain more general laws for ratio comparison. For instance, \cite{DAlembertInevitability} shows that if $F:(0,\infty)\to\mathbb{R}$ is continuous and nontrivial, $F(1)=0$, and there exists a \emph{symmetric quadratic polynomial} $P$ such that
+\begin{equation}
+F(xy)+F(x/y)=P(F(x),F(y))\qquad(x,y>0),\qquad P(u,v)=P(v,u),
+\end{equation}
+then the law itself is forced into the unique bilinear family
+\begin{equation}
+P(u,v)=2u+2v+cuv\qquad(c\in\mathbb{R}).
+\end{equation}
+A natural log-curvature calibration at the identity then fixes $c=2$, recovering (\ref{eq:RCL}) exactly. Similarly, \cite{CoherentComparisonLedger} starts with a general equation of the form
+\begin{equation}
+    F(xy)+F(x/y)=\alpha F(x) F(y)+\beta F(x)+\beta F(y)+\gamma
+\end{equation} 
+and uses normalization to eliminate $\gamma$.
+\subsection{Theorem T5: Cost Uniqueness}
+\textbf{Theorem (T5: Uniqueness of the calibrated cost).}
+Let $J:(0,\infty)\to[0,\infty)$ be continuous and nontrivial, satisfy the Recognition Composition Law (\ref{eq:RCL}), and obey $J(1)=0$. Assume moreover that $\widetilde{J}(u):=J(e^{u})$ is twice differentiable at $u=0$ with $\widetilde{J}''(0)=1$. Then the cost function is uniquely determined on $\mathbb{R}_{>0}$ as the form in \ref{jcost1} $J(x) = \frac{1}{2}\left(x + \frac{1}{x}\right) - 1$.
+A detailed proof and analysis of the cost function (\ref{jcost1}), and description of what happens when any one of the cost axioms \textbf{A1-A3} is not enforced, is given in \cite{uniqueness}. However, we sketch the proof here to make this manuscript self-contained.
+\begin{proof}
+Define $K:(0,\infty)\to[1,\infty)$ by $K(x):=1+J(x)$. Expanding the right-hand side of (\ref{eq:RCL}) shows that (\ref{eq:RCL}) is equivalent to the generalized d'Alembert equation for groups \cite{Kannappan1968TheFE,groupdalambert2013}
+\begin{equation}
+    K(xy)+K(x y^{-1})=2K(x)K(y)\qquad(x,y>0).
+    \label{eq:K-dalembert-mult}
+\end{equation}
+where here the group in question is the positive reals under multiplication.
+Now define $f:\mathbb{R}\to[1,\infty)$ by $f(u):=K(e^{u})$. Continuity of $J$ implies continuity of $f$, and substituting $x=e^{u}$ and $y=e^{v}$ into (\ref{eq:K-dalembert-mult}) yields the standard d'Alembert equation \cite{aczel1966lectures}
+\begin{equation}
+    f(u+v)+f(u-v)=2f(u)f(v)\qquad(u,v\in\mathbb{R}),
+    \label{eq:f-dalembert-add}
+\end{equation}
+with $f(0)=K(1)=1$ from \textbf{A1} and $f''(0)=\widetilde{J}''(0)=1$ from \textbf{A3}.
+The classical classification of continuous solutions to (\ref{eq:f-dalembert-add}), admits $f\equiv 1$, $f\equiv0$, $f(u)=\cos(au)$, or $f(u)=\cosh(au)$ for some $a>0$ \cite{Aczel_Dhombres_1989}. Notice that $f(0)=1$ excludes $f\equiv0$ and $f''(0)=1$ excludes $f(u)\equiv1$ (because then $f''(0)$ would be $0$) and $f(u)=\cos(au)$ (because then $f''(0)$ would be $-a^2\cos(0)=-a^2<0$ for real $a$).  Hence $f(u)=\cosh(au)$ for some $a>0$, so
+\begin{equation}
+K(x)=\cosh(a\log x)\quad\text{and}\quad
+J(x)=\cosh(a\log x)-1=\tfrac12(x^{a}+x^{-a})-1.
+\end{equation}
+Finally, $\widetilde{J}(u)=J(e^{u})=\cosh(au)-1$ has $\widetilde{J}''(0)=a^{2}$, so the calibration $\widetilde{J}''(0)=1$ forces $a=1$.
+Thus $J(x)=\cosh(\log x)-1=\frac12(x+x^{-1})-1$, as claimed.
+
+\end{proof}
+
+\noindent \textbf{Note:} Theorem T5 establishes the mathematical ``terrain'' of Recognition Science. Subsequent physical laws—logic, existence, discreteness, and conservation—are consequences of minimizing this specific potential $J(x)$.
+
+\section{Logic, Identity, and Cost (T0)}
+We begin with a statement and proof of \textbf{T0}.
+
+\textbf{Theorem (T0: Cost of Identity).}
+The global minimum of \ref{jcost1} over its domain is $J(x)=0$ and occurs uniquely at $x=1$.
+\begin{proof}
+By direct evaluation,
+\begin{equation}
+    J(1) = \frac{1}{2}(1 + 1) - 1 = 0.\label{jmin}
+\end{equation}
+Further,
+\begin{equation}
+    J'(1)=\frac{1}{2}(1-\frac{1}{x^2})|_{x=1}=0
+\end{equation}
+and 
+\begin{equation}
+    J''(1)=\frac{1}{x^3}|_{x=1}=1
+\end{equation}
+so $x=1$ is a local minimum. 
+Recall that $J$ is defined over the domain $x\in(0,\infty)$. The second derivative is positive over the domain
+\begin{equation}
+    J''(x)=\frac{1}{x^3}>0\forall x\in(0,\infty)
+\end{equation}
+so $J$ is convex over its domain and the local minimum at $x=1$ is a unique global minimum.
+\end{proof}
+
+
+In this framework, the state $x=1$ represents perfect ratio match and is ``free.'' It is the ground state of the ontology. This is effectively a consequence of the cost axiom \textbf{A1}, or alternatively from \textbf{A2} and \ref{nonnegJ} via \ref{J1is0ornegative}. However, \textbf{T0} goes further than \textbf{A1} because it shows that $J(x)=0,x=1$ is the unique minimum over the domain.
+\subsection{Cost and identity in state and event spaces}
+What does \textbf{T0} imply for configurations and events? In standard formulations of logic, the Law of Identity ($A=A$) is posited as an axiom. In a recognition-first setting, identity at the observable level is supplied operationally: in Recognition Geometry \cite{RecognitionGeometry}, a recognizer induces an equivalence relation of observational indistinguishability and an observable quotient, where identity is equality of equivalence classes. 
+
+For concreteness, consider configurations $a,b,c...$ in the state space $C$, and a family of recognizers $R_1,R_2,...$ mapping the state space to the event spaces $E_1,E_2,...$.
+ For certain types of state spaces, there may only be a finite number of independent recognizers. One physical examples is electron states in atoms, which are determined by energy, squared angular momentum, z angular momentum, and spin. Another physical example is stationary isolated black hole spacetimes, which are classically fully determined by mass, charge, and angular momentum according to the no hair theorem. In these cases, a meaningful ``all properties" composite recognizer $R_{all}=R_1\otimes R_2\otimes...R_{max}$ exists.
+
+As previously mentioned, event spaces could consist of a variety of sorts of elements, such as tuples of real numbers (for instance, if the recognizer corresponds to Cartesian coordinates), integers (for instance, if the recognizer corresponds to electric charge), Boolean values (indicating presence or absence of an attribute) etc. However, the cannonical cost function $J(x)$ \ref{jcost1} is defined for $x\in\mathbb{R}_{>0}$. As such, we need to define positive definite scale  functions $\iota_n$ to map the results from $E_{na}=R_n(a)$ to $\mathbb{R}_{>0}$ such that the ratio 
+\begin{equation}
+ x_{nab}=\frac{\iota_n(R_n(a))}{\iota_n(R_n(b))}   \label{xdefined}
+\end{equation} 
+is valid as an input to $J$. This is similar to the state maps $\iota_s,\iota_o$ from \cite{EntropyInterface}, but here we are comparing two items from the same event space rather than an ``object" and a ``symbol". 
+\subsubsection{From zero cost to identity}
+Formally, we have
+\begin{align}
+    J(x_{nab})=0\Leftrightarrow x_{nab}=1 \Leftrightarrow \iota_n(R_n(a))=\iota_n(R_n(b)). \label{triplestatement}
+\end{align}
+where the first $\Leftrightarrow$ is because $J$ has a unique minimum at $1$ and the second is from \ref{xdefined}. If we also have that $\iota_n$ is injective, we can state
+\begin{equation}
+    R_n(a)=R_n(b)\Leftrightarrow a\sim_n b \label{simdef}
+\end{equation}
+for the definition of the $\sim$ equivalence class from \cite{RecognitionGeometry}. Note also that from our labeling of the event space, \ref{simdef}  gives equality of the events $E_{na}=E_{nb}$.
+
+If additionally we have that $a\sim_{all} b$ for a composite ``all properties" recognizer, then it is meaningful to say 
+\begin{equation}
+    a=b,
+\end{equation}
+in the configuration space itself because every possible property of $a$ and $b$ is the same.
+
+Notice that knowing $a\sim_m b$ for all $m$ in a proper subset of $M\subset[R_1..R_{max}]$, does not necessarily mean that $a=b$ because some $R_q\in[R_1..R_{max}]$ with $R_q\notin M$ may be able to distinguish them. Further, if $\iota_k$ is not injective for some $k\in[1,2,...n]$, then $x_{kab}=1$ does not require that $a\sim_k b$. 
+
+In summary, we can label the following as the ``Event space and equivalence class" reasoning pipeline
+\begin{equation}
+    (J(x_{nab})=0\Leftrightarrow x_{nab}=1)\land (\iota_n \text{ is injective})\implies R_n(a)=R_n(b)\Leftrightarrow E_{na}=E_{nb}\Leftrightarrow a\sim_n b \label{eventequivalence}
+\end{equation}
+so zero cost plus injective $\iota_n$ implies an equivalence class on the states and equality in the event space. A stronger ``state space equivalence" reasoning pipeline is
+\begin{align}
+    (\exists &R_{all})\land(J(x_{all,ab})=0\Leftrightarrow x_{all,ab}=1)\land(\iota_{all} \text{ is injective})\nonumber\\&\implies R_{all}(a)=R_{all}(b)\Leftrightarrow E_{all,a}=E_{all,b}\Leftrightarrow a\sim_{all} b\Leftrightarrow a=b \label{stateequivaence}
+\end{align}
+which requires the usage of an all properties recognizer, in addition to an injective $\iota_{all}$ and zero cost.
+\subsubsection{From identity to zero cost}
+Suppose instead we start with $a=b$. Then it is obvious that $R_n(a)=R_n(b)$ for any recognizer (because $R_n$ is a function) and that $\iota_n(R_n(a))=\iota_n(R_n(b))$ (because $\iota_n$ is a function) from which we can apply \ref{triplestatement} and get that the cost of the comparison is zero. 
+
+Formally,  this can be written
+\begin{equation}
+    a=b\implies a\sim_nb\Leftrightarrow E_{na}=E_{nb}\Leftrightarrow R_n(a)=R_n(b)\implies \frac{\iota_n(R_n(a))}{\iota_n(R_n(b))}=x_{nab}=1\Leftrightarrow J(x_{nab})=0
+\end{equation}
+Notice that the reasoning in this direction does not require the extra property that $\iota_n$ is injective, and it also requires only the usage of any single recognizer rather than the composite all properties recognizer. 
+
+
+\subsection{The Cost of Deviation}
+Consider a state of inconsistency, represented by any deviation $x \neq 1$. Due to the strict convexity of $J(x)$ on $\mathbb{R}_+$, we have:
+\begin{equation}
+    \forall x \neq 1, \quad J(x) > 0
+\end{equation}
+Any deviation from identity incurs a positive cost penalty. For small deviations $x = 1+\epsilon$, the cost rises quadratically ($J(x) \approx \epsilon^2/2$). For large deviations (gross contradictions), the cost grows linearly ($x>>1$) or as a simple pole ($0<x<<1$). In logarithmic coordinates $u=\ln(x)$, the divergence as $u\rightarrow\pm\infty$ in $\widetilde{J}(u)$ is exponential for $|u|>>1$, and still quadratic under small deviations $u=0+\delta$, $\widetilde{J}(u)\approx\delta^2/2$
+
+Therefore, within this model, identity-consistent recognition corresponds to the unique zero-cost equilibrium of the cost landscape. If physical evolution is cost-minimizing, descriptions that maintain self-match ($x=1$) are selected as stable equilibria, while inconsistent descriptions ($x\neq 1$) carry strictly positive cost and are selected against. However, the formal analysis of physical evolution through the cost function is outside the scope of this paper and left for future work.
+\iffalse
+\subsection{induced Boolean dynamics on RSTrue}
+NOTE: There is some analysis of this in one of the earlier logic from cost drafts, but it uses some of the older definitions of RSTrue. Does the reasoning go through with the new definitions?
+In the Logic from physical cost, it talks about induced Boolean dynamics on the RSTrue condition, for instance stating in theorem 3.8 that
+\begin{equation}
+   RSTrue(\neg P)\Leftrightarrow\neg RSTrue(P) 
+\end{equation}
+This DOES NOT FOLLOW from the new definitions. Specifically
+\begin{equation}
+    RSTrue(\neg P)\leftrightarrow\RSExists_{\Ccfg}(c_*)
+  \land \big(\neg P(c_*)\big)
+  \land\Big(\exists N\in\mathbb{N}\;\forall n\ge N,\; \neg P(B^n(c_0))=\neg P(c_*)\Big)
+\end{equation}
+in the modern notation, but 
+\begin{equation}
+    \neg RSTrue( P)\leftrightarrow \neg\RSExists_{\Ccfg}(c_*)
+  \lor \big(\neg P(c_*)\big)
+  \lor \neg\Big(\exists N\in\mathbb{N}\;\forall n\ge N,\; P(B^n(c_0))=P(c_*)\Big)
+\end{equation} 
+due to de Morgan's laws, so there could be a situation where $ RSTrue(\neg P)$  is not satisfied because the $\RSExists_{\Ccfg}(c_*)$ is not satisfied, but then $\neg RSTrue(P)$ would be satisfied. 
+This point needs to be resolved.
+\fi
+
+\subsection{Induced Boolean dynamics of predicates on RSTrue over the RS-decidable domain}
+The definition of RSTrue can be written as
+\begin{equation}
+    \RSTrue_{B,\chi,c_0}(P;c_*)
+  \;\Longleftrightarrow\;
+  \underbrace{\RSExists_\Ccfg(c_*)}_{(A)}
+  \;\land\;
+  \underbrace{P(c_*)=1}_{(B)}
+  \;\land\;
+  \underbrace{\Stab(B,P,c_0,c_*)}_{(C)}. \label{rstrueABC}
+\end{equation}  
+\subsubsection{Negation}
+\begin{proposition}\label{prop:oneway}
+Given state map $B$, cost bridge $\chi$, and reference $c_0$, for all $P$, $c_*$:
+\[
+  \RSTrue(\neg P;\,c_*)
+  \;\Longrightarrow\;
+  \neg\RSTrue(P;\,c_*).
+\]
+\end{proposition}
+\begin{proof}
+If $\RSTrue(\neg P;\,c_*)$, then $P(c_*)=0$.  But $\RSTrue(P;\,c_*)$
+requires $P(c_*)=1$, a contradiction.
+\end{proof}
+
+\begin{theorem}[Conditional negation law]\label{thm:neglaw}
+If $P$ is RS-decidable at $(c_*,B,c_0)$, then
+\[
+  \RSTrue(\neg P;\,c_*)
+  \;\Longleftrightarrow\;
+  \neg\RSTrue(P;\,c_*).
+\]
+\end{theorem}
+\begin{proof}
+$(\Rightarrow)$ is Proposition~\ref{prop:oneway}.
+
+$(\Leftarrow)$  Assume $\neg\RSTrue(P;\,c_*)$ and RS-decidability.
+By RS-decidability, $(A)$ and $(C)$ from \ref{rstrueABC} hold.  Since $\RSTrue(P;\,c_*)$
+is false but $(A)$ and $(C)$ hold, it must be $(B)$ that fails:
+$P(c_*)\ne 1$, hence $P(c_*)=0$ (the only other Boolean value).
+Then all three conjuncts of $\RSTrue(\neg P;\,c_*)$ hold:
+$(A)$ by assumption, $P(c_*)=0$ gives $(\neg B)$, and
+stabilization of $\neg P$ follows from stabilization of $P$.
+\end{proof}
+
+\subsubsection{Conjunction}
+
+\begin{theorem}[RSTrue distributes over conjunction]\label{thm:and}
+\[
+  \RSTrue(P\land Q;\,c_*)
+  \;\Longleftrightarrow\;
+  \RSTrue(P;\,c_*) \;\land\; \RSTrue(Q;\,c_*).
+\]
+\end{theorem}
+\begin{proof}
+$(\Rightarrow)$  Existence (A) is based on $c_*$ so it is shared.  $P(c_*)\land Q(c_*)=1$
+implies both $P(c_*)=1$ and $Q(c_*)=1$.  Stabilization of
+$P\land Q$ to the value at $c_*$ implies stabilization of each
+component (since $a\land b = a'\land b'$ with $a'=b'=1$ forces
+$a=1$ and $b=1$).
+
+$(\Leftarrow)$  Take $N=\max(N_P,N_Q)$.  For $n\ge N$, both
+$P(B^n(c_0))=P(c_*)$ and $Q(B^n(c_0))=Q(c_*)$, hence
+$(P\land Q)(B^n(c_0))=(P\land Q)(c_*)$.
+\end{proof}
+
+\subsubsection{Disjuntion}
+\begin{proposition}
+    Given Given state map $B$, cost bridge $\chi$, reference $c_0$, state $c_*$, and predicates $P$ and $Q$ \label{prop:or}
+\[
+  \RSTrue(P;\,c_*)\lor \RSTrue(Q;c_*)
+  \;\implies\;
+  \RSTrue(P\lor Q;\,c_*).
+\]
+\end{proposition}
+\begin{proof}
+Suppose $\RSTrue(P;\,c_*)$ holds. Then $\RSExists_{\mathcal{C}}(c_*)$ holds, $P(c_*)=1$, and $P(B^n(c_0))=1$ for $n>N$. $\RSExists_{\mathcal{C}}(c_*)$ is condition (A) of $\RSTrue(P\lor Q;\,c_*)$.  $P(c_*)=1$ requires $P\lor Q(c_*)=1$, i.e. condition (B) of $\RSTrue(P\lor Q;\,c_*)$, and $P(B^n(c_0))=1$ for $n>N$ requires $P\lor Q(B^n(c_0))=1$, i.e. condition (C) of $\RSTrue(P\lor Q;\,c_*)$. Since all three conjuncts apply, then  $\RSTrue(P\lor Q;\,c_*)$ must hold. 
+
+If $\RSTrue(P;\,c_*)$ does not hold, then $\RSTrue(Q;\,c_*)$ must hold, and the previous reasoning applies with $P$ replaced by $Q$ in the relevant locations.
+\end{proof}
+\begin{theorem}[Conditional disjunction law]\label{thm:orlaw}
+If $P$ and $Q$  are both RS-decidable at $(c_*,B,c_0)$, then
+    \[
+  \RSTrue(P;\,c_*)\lor \RSTrue(Q;c_*)
+  \;\Leftrightarrow\;
+  \RSTrue(P\lor Q;\,c_*).
+\]
+\end{theorem}
+\begin{proof}
+$(\Rightarrow)$ is Proposition~\ref{prop:or}.
+
+$(\Leftarrow)$ If $P$ and $Q$ are RS-decidible, then conditions (A) and (C) of $\RSTrue(P;\,c_*)$, $\RSTrue(Q;\,c_*)$ are satisfied, and  $\RSTrue(P;\,c_*)\lor \RSTrue(Q;c_*)$ becomes 
+\begin{equation}
+    (1\land (P(c_*)=1) \land 1)\lor(1\land(Q(c_*)=1)\land1)\Leftrightarrow (P(c_*)=1)\lor (Q(c_*)=1) \label{orreduction}
+\end{equation}
+ Condition (B) of $\RSTrue(P\lor Q;\,c_*)$ is $P\lor Q(c_*)=1$, from which $(P(c_*)=1)\lor (Q(c_*)=1)$. However, this is exactly the required condition from \ref{orreduction}.
+\end{proof}
+
+
+\section{Existence, Nothingness, and the Boundary(T1)}
+
+The most profound question in metaphysics is ``Why is there something rather than nothing?'' 
+
+The Meta-Principle of Recognition Science—\textit{``Nothing cannot recognize itself''} was historically developed through linguistic reasoning. The item ``nothing" cannot have properties. However, ``nothing" recognizing itself would give it properties (being a recognizer and being recognized). Therefore, ``nothing" cannot recognize itself.
+
+Alternatively (see \cite{CoherentComparisonLedger}), a recognition event is an ordered pair of a ``recognizer" $a$ from set $A$ and a ``recognized" $b$ from set $B$. The total set of recognition events is $\mathrm{Recognition}(A,B)=A\times B$. If either $A$ or $B$ is the empty set $\emptyset$, then the $\mathrm{Recognition}(A,B)$ set is also the empty set. In particular, $\mathrm{Recognition}(\emptyset,\emptyset)=\emptyset$.
+
+In this section we demonstrate that the Meta-Principle can be thought of through the lens of the cost function $J$.
+
+\subsection{The Definition of ``Nothing''}
+The formal definition of $\textbf{T1}$ is as follows:
+
+\textbf{Theorem (T1: Cost of the zero limit).}
+$ \lim_{x \to 0^+} J(x)=\infty$
+\begin{proof}
+\begin{equation}
+    \lim_{x \to 0^+} J(x) = \lim_{x \to 0^+} \left[ \frac{1}{2}\left(x + \frac{1}{x}\right) - 1 \right]
+\end{equation}
+The term $x$ vanishes, but the reciprocal term $\frac{1}{x}$ diverges:
+\begin{equation}
+    \lim_{x \to 0^+} \frac{1}{x} = \infty \implies \lim_{x \to 0^+} J(x) = \infty
+\end{equation}
+\end{proof}
+
+Heuristically, it seems natural to identify $x=0$ with ``nothing". 
+Therefore, under this heuristic, ``nothing" has infinite cost. 
+
+However, this is simply a heuristic. What does $x\rightarrow0$ actually mean? Looking at the definition \ref{xdefined}, and the fact that the $\iota$ functions are positive definite state maps, we can determine
+\begin{align}
+    x_{nab}\rightarrow0 \implies (\iota_n(R_n(a))\rightarrow0))\lor(\iota_n(R_n(a))\rightarrow\infty)
+\end{align}
+There are a few ways with which this could occur:
+
+1) Keep $a$. $b$, and $R_n$ constant, but re-parameterize the scale map $\iota_n$.
+
+2) Keep $a$ and $b$, but allow the recognizer to change $R_n\rightarrow R_m$. Notice that if the recognizer changes, the scale map must also change to $\iota_m$ because $\iota_n$ is defined to map from $E_n$ to $\mathbb{R}_{>0}$, not from $E_m$.
+
+3) Keep $R_n$ and $\iota_n$, but vary the state $a$ such that $\iota_n(R_n(a))\rightarrow0$
+
+4)Keep $R_n$ and $\iota_n$, but vary the state $b$ such that $\iota_n(R_n(b))\rightarrow\infty$
+
+5) A more complicated process where multiple variations occur simultaneously.
+
+Option 1 has the advantage that it would allow for a well defined continuous limit, but it involves neither the state space nor the event space. Option 2 could conceivably be interpreted as an approach to a configuration in event space, but it would involve the requirement on the $\iota$ functions that for event space configurations one of there occurs:
+\begin{align}
+   (E_{na}\rightarrow E_{nothing}\implies\iota_n(E_{na})\rightarrow0)\label{nothingcondition2a}\\
+   (E_{nb}\rightarrow E_{nothing}\implies\iota_n(E_{nb})\rightarrow\infty)\label{nothingcondition2b}.
+\end{align}
+We can think of \ref{nothingcondition2a} and \ref{nothingcondition2b} as ``nothing event compatibility constraints on $\iota_n$". It is important to distinguish that $E_{nothing}$ is a limit of a sequence in event space and need not correspond to an element actually present in the event space. Options 3 and 4 would involve $a$ or $b$ approaching specific configurations in the state space itself. This would require that
+\begin{equation}
+   a\rightarrow C_{nothing}\implies R_n(a)=E_{na}\rightarrow E_{nothing} \label{nothingcondition3}
+\end{equation}
+and \ref{nothingcondition2a} or
+\begin{equation}
+   b\rightarrow C_{nothing}\implies R_n(b)=E_{nb}\rightarrow E_{nothing} \label{nothingcondition4}
+\end{equation}
+and \ref{nothingcondition2b}. The conditions \ref{nothingcondition3} and \ref{nothingcondition4} are effectively `` nothing state compatibility constraints on $R_n$". Similarly to $E_{nothing}$, $C_{nothing}$ is the limit of a sequence in state space and need not be actually present in the state space.
+
+To summarize, a meaningful identification of the infinite cost, $x\rightarrow0^+$ limit with the limit of a sequence in event space involves an approach to $E_{nothing}$ and a scale map compatibility criterion (\ref{nothingcondition2a} or \ref{nothingcondition2b}). Extending this to the limit of a sequence in state space requires an approach to $C_{nothing}$  and a compatibility criterion on the recognizer (\ref{nothingcondition3} or \ref{nothingcondition4}). 
+
+ 
+
+
+
+\section{Deriving Structure (T2 \& T3)}
+
+Having established that something must exist ($x=1$)
+we now derive the fundamental structural properties of Discreteness and Conservation.
+
+\subsection{Discreteness (T2)}
+In this framework, discreteness is an operational consequence of recognition, not a claim about an underlying continuum. Recognition Geometry introduces locality via neighborhoods and postulates \emph{finite local resolution}: any recognizer can distinguish only finitely many outcomes within a local region \cite{RecognitionGeometry}. Observable space is therefore partitioned into finitely many \emph{resolution cells} at any fixed local scale, yielding a locally discrete quotient description.
+
+The cost landscape $J$ then governs stability across these cells. In particular, the calibrated curvature
+\begin{equation}
+    J''(1) = 1
+\end{equation}
+sets the local stiffness of the mismatch penalty near perfect match, so that transitions between distinct resolution cells away from equilibrium incur positive cost while variations within a cell are observationally invisible.
+
+It is easiest to illustrate this behavior with some examples. These examples will also allow us to examine the RS ontological states.
+
+$J(x)$ is a continuous function over $\mathbb{R}_{>0}$, but $x$, when treated as $x_{n A(t)b}$ is not typically continuous. This could be due to fundamental discreteness in the underlying state space $\mathcal{C}$, induced by the finite resolution of the recognizers $R_n$, or both. 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{sketch2.png}
+    \caption{graph for examples 1 and 2. This is a placeholder and will be replaced by something nicer}
+    \label{sketch1}
+\end{figure}
+
+\subsubsection{Example 1: Fundamental state space discreteness}
+Consider a configuration space as the graph isomorphic to the vertices of a cube in Figure \ref{sketch1}. Suppose the evolution is state space is 
+\begin{equation}
+    A(t_0)=\text{node }b, A(t_1)=\text{node }a, A(t_2)=\text{node }h,  A(t_3)=\text{node }g  A(t_3)=\text{node }f.
+    \label{states}
+\end{equation}
+Further, suppose the recognizer $R_1$ gives the letter of the node, and 
+\begin{align}
+    \iota_1(w)=\begin{cases}1,w=a\\
+    8,w=b\\
+    2,w=c\\
+    7,w=d\\
+    3,w=e\\
+    6,w=f\\
+    5,w=g\\
+    4,w=h\\
+    \end{cases}
+\end{align}
+allowing our reference configuration to be node $a$ makes it so that
+\begin{equation}
+    x_{1A(t)a}=\frac{\iota_1(R_1(A(t)))}{\iota_1(R_1(a))}=\iota_1(R_1(A(t))), \label{xexample1}
+\end{equation}
+we get the evolution described by Table \ref{tab:example1}.
+\begin{table}[h]
+    \centering
+    \begin{tabular}{c|c|c|c}
+         t &$R_1(A(t))$&$\iota_1(R_1(A(t)))=x_{1A(t)a}$ &$J(x_{1A(t)a})$ \\
+         $t_0$& b&8&$49/16 $\\
+         $t_1$&a&1&0\\
+         $t_2$&h&4&$9/8$\\
+        $t_3$&g&5&$8/5$\\
+         $t_4$&f&6&$25/12$
+    \end{tabular}
+    \caption{Evolution for example 1. Notice that the $t$ parameter, configuration space, event space, and cost all move in discrete jumps}
+    \label{tab:example1}
+\end{table}
+
+This example also allows us to examine the ontological states of RSExists and RSReal. Given the definition in \ref{xexample1}, $\RSExists(x_{1Aa})\implies A=a$, so the only configuration $c^*$ such that $\RSExists_{\mathcal{C}}(c^*)$ is satisfied is $c^*=a$. Because of the underlying discreteness of the graph in Figure \ref{sketch1}, a discrete skeleton $\mathcal{D}_U$ (the graph itself) naturally exists, and the composite synthesis map $F(u)=\iota_1(R_1(u))$ as in \ref{xexample1}. Then $\RSReal_{F,\mathcal{D}_U}(x_{1A(t)a})$ again requires $A=a$.
+\subsubsection{Example 2: Fundemental and Induced Discreteness}
+In this example, we still consider the same state space (the nodes from Figure \ref{sketch1}) and the same state evolution Eq.\ref{states}, but the recognizer is coarser: $R_2$ returns the classical Booleans ``true" if the node label is a vowel and ``false" if the node label is a consonant. The scale map is now
+\begin{align}
+    \iota_2(w)=\begin{cases}
+    1, w=\text{true}\\
+    2,w=\text{false},
+    \end{cases}
+\end{align}
+which is bijective, and hence injective.
+Keeping $a$ as our reference configuration and the same state sequence \ref{states}, the evolution table becomes
+\ref{tab:example2}, which has an important difference that there is no observed change between $t_2$ and $t_3$ for $R_2$.
+\begin{table}[h]
+    \centering
+    \begin{tabular}{c|c|c|c}
+         t &$R_2(A(t))$&$\iota_2(R_2(A(t)))=x_{2A(t)a}$ &$J(x_{2A(t)a})$ \\
+         $t_0$& False&2& $1/4$\\
+         $t_1$&True&1&0\\
+         $t_2$&False&2&$1/4$\\
+         $t_3$&False&2&$1/4$\\
+         $t_4$&False&2&$1/4$
+    \end{tabular}
+    \caption{Evolution for example 2. In this case, a change in the state space occurs as $t_2\rightarrow t_3$ and $t_3\rightarrow t_4$, but neither have observational consequences under $R_2$}
+    \label{tab:example2}
+\end{table}
+
+
+
+Because $R_2$ returns classical Booleans, we can use this example to illustrate some of the properties of the RSTrue condition. Define these three state to state maps
+\begin{align}
+    B_{-}&:\text{If at node a, stay at node a, Else, go to node with the letter that precedes the current node's letter}\\
+    B_{+}&:\text{If at node h, stay at node h, Else, go to node with the letter that succeeds the current node's letter}\\
+    B_{c}&: \text{If at node a, go to node h, Else, go to node with the letter that precedes the current node's letter}.
+\end{align}
+Further define
+\begin{equation}
+    \chi_{2p}(q)=\frac{\iota_2(R_2(q))}{\iota_2(R_2(p))}.
+\end{equation}
+
+Consider $\RSTrue_{B_{-},\chi_2,c_0}(R_2,q)$. The conditions for this to be satisfied are
+\begin{align}
+    \RSExists(\chi_{2p}(q))\Leftrightarrow\chi_{2p}(q)=1\Leftrightarrow\iota_2(R_2(q))=\iota_2(R_2(p))\Leftrightarrow R_2(q)=R_2(p)\label{dumfirst}\\
+    R_2(q)\label{dumsecond}\\
+    \exists N\in\mathbb{N}\;\forall n\ge N,\; R_2(B_{-}^n(c_0))=R_2(q)\label{dumthird}
+\end{align}
+where we have used the injectivity of $\iota_2$ in the final implication of \ref{dumfirst}. The condition \ref{dumfirst} is satisfied if $p$ and $q$ are the same type of node, i.e. both labeled by vowels or both labeled by consonants. From the definition of $R_2$, we have that $R_2(q)$ being true \ref{dumsecond} implies $q$ is a vowel node; node $a$ or node $e$. The condition \ref{dumthird} also requires $q$ to be a vowel node because $B_{-}^n(c_0)=\text{node a}$ for all $c_0$ on the graph and $n>7$. Taken together, $\RSTrue_{B_{-},\chi_2,c_0}(R_2,q)$ is satisfied when $q$ and $p$ are both vowel nodes and is not satisfied otherwise.
+
+The conditions for the modified version $\RSTrue_{B_{+},\chi_2,c_0}(R_2,q)$ to be satisfied are still \ref{dumfirst} and \ref{dumsecond}, with the modification to the third condition
+\begin{align}
+    \exists N\in\mathbb{N}\;\forall n\ge N,\; R_2(B_{+}^n(c_0))=R_2(q)\label{dumerthird}
+\end{align}
+Because $B_{+}^n(c_0)=\text{node h}$ for all $c_0$ on the graph and $n>7$, \ref{dumerthird} is now only satisfied if $q$ is a consonant node. This is potentially compatable with the RSExistance \ref{dumfirst} if $p$ is also a consonant node, but it is not compatible with  \ref{dumsecond}, so $\RSTrue_{B_{+},\chi_2,c_0}(R_2,q)$ fails. However, an altered condition $\RSTrue_{B_{+},\chi_2,c_0}(\neg R_2,q)$ would be satisfied if $p$ and $q$ are consonant nodes.
+
+Finally, $\RSTrue_{B_{c},\chi_2,c_0}(R_2,q)$ cannot be satisfied because $R_2(B_c^n(c_0))$ never stabilizes. We likewise cannot satisfy $\RSTrue_{B_{+},\chi_2,c_0}(\neg R_2,q)$ for the same reason.
+
+\subsubsection{Example 3: Purely induced Discreteness}
+In this case, we allow for a continuous state space $c\in\mathbb{R}$ and continuous trajectory parameter $0\le t<2$. The state evolution obeys
+\begin{equation}
+    c(t)=5t(t-1)(t-2)
+    \label{stateevolutionexample3}
+\end{equation}
+Further define a recognizer $R_3$ as the ``floor function"
+\begin{equation}
+    R_3(c)=\lfloor c\rfloor,
+\end{equation}
+which is compatible with the finite resolution. Further, let the scale map be
+\begin{align}
+    \iota_3(w)=\frac{2}{\pi}\arctan(w)+1 \label{iota3}
+\end{align}
+which is positive definite ( specifically, $\iota_3\in(0,2)$ for $w\in \mathbb{R}$), and let the reference configuration be $0$ such that 
+\begin{align}
+    x_{3 c0}=\frac{\iota_3(R_3(c))}{\iota_3(R_3(0))}=\iota_3(R_3(c)). 
+\end{align}
+For comparison, we can also define an unphysical infinite resolution recognizer and cost bridge
+\begin{equation}
+    R_\infty(c)=c,\quad\iota_\infty(w)=\iota_3(w), \quad x_{\infty c0}=\frac{\iota_\infty(R_\infty(c))}{\iota_\infty(R_\infty(0))}=\iota_\infty(R_\infty(c)) \label{Rinf}
+\end{equation}
+
+Plots of the configuration in state space $c$, event space $R_3$, recognition ratio $x_{3c0}$, and cost $J$ for this example are shown in Figure \ref{fig:example3plots}, with a table giving specific values and the relevant intervals of $t$ in Table\ref{tab:example3}.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.4\linewidth]{example3graph.pdf}
+     \includegraphics[width=0.4\linewidth]{example3R3.pdf}
+      \includegraphics[width=0.4\linewidth]{example3iota3.pdf}
+       \includegraphics[width=0.4\linewidth]{example3J.pdf}
+    \caption{Graphs of $c(t)$, $R_3(c(t))$, $x_{3c0}=\iota_3(R_r(c(t)))$, and $J(x_{3c0})$. Notice that, even though the state space $C=\mathbb{R}$ is continuous, the event space, x, and J cost all evolve through discrete jumps. The vertical lines on the plot of $c(t)$ show when the resolution cell changes.  }
+    \label{fig:example3plots}
+\end{figure}
+\begin{table}[h]
+    \centering
+    \begin{tabular}{c|c|c|c}
+         t &$R_3(c(t))$&$\iota_3(R_3(c(t)))=x_{3c0}$ &$J(x_{3c0})$ \\
+         $0\le t<0.121$& 0&1& 0\\
+         $0.121\le t<0.791$&1&3/2&1/12\\
+         $0.791\le t\le1$&0&1&0\\
+         $1<t<1.209$&-1&1/2&1/4\\
+         $1.209\le t<1.879$&-2&0.295&0.842\\
+         $1.879\le t<2$&-1&1/2&1/4
+    \end{tabular}
+    \caption{Evolution for example 3. While the state space undergoes continuous evolution, the finite resolution of the recognizer induces discrete ``jumps" in the event space, which extend to the recognition ratio and cost. Numbers without a simple rational form are rounded to 3 decimal places}
+    \label{tab:example3}
+\end{table}
+
+Dynamics therefore proceeds as a sequence of cell-to-cell updates (discrete observable evolution) even if the underlying configuration space admits continuous representatives. The associated cost difference for a cell to cell jump is finite (rather than infinitesimal). This is in contrast with the behavior of the unphysical infinite resolution recognition process \ref{Rinf}, where the event space is continuous and the cost barrier to migrate to a different event is infinitesimal.
+
+Notice that $\iota_3(R_3(c))$ naturally lies on a discrete skeleton isomorphic to the integers $\mathbb{Z}$, so the RSExistent configurations $c$ such that $x_{3c0}=1$, i.e. $c\in[0,1)$, are also RSReal with respect to the induced skeleton. However, the unphysical recognizer $R_\infty(c)$ can result in RSExistent configurations that aren't RSreal due to the lack of natural discrete skeleton.
+\subsection{The Ledger (T3)}
+The reciprocal symmetry
+\begin{equation}
+    J(x) = J(1/x)
+\end{equation}
+implies that a deviation by a ratio $x$ carries the same mismatch penalty as its inverse. To connect this reciprocity to conservation, we make explicit the balance invariant of a closed recognition network.
+
+Let a ledger state be a vector of ratios $X=(x_1,\dots,x_N)\in(\mathbb{R}_{>0})^N$ and define the \emph{balance functional}
+\begin{equation}
+    B(X):=\prod_{i=1}^N x_i.\label{balance}
+\end{equation}
+It is also helpful to examine ledger balance in terms of logarithmic coordinates $u=\log(x)$
+\begin{equation}
+    \widetilde{B}(U)=\sum_{i=1}^N u_i.
+\end{equation}
+
+A closed system is balanced when $B(X)=1$ or $\widetilde{B}(U)=0$. A local interaction of strength $r>0$ between two entries $i\neq j$ updates
+\begin{align}
+x_i&\mapsto x_i r,&&x_j\mapsto x_j/r,\\
+u_i&\mapsto u_i+\log( r),&&u_jx_j\mapsto u_j-\log(r)
+\end{align}
+leaving all other coordinates fixed. This update preserves balance: $B(X)$ and $\widetilde{B}(U)$ are invariant.
+In this sense every ``debit'' by $\delta x_i=r~\delta u_i=\log(r)$ is accompanied by a ``credit'' by $\delta x_j=1/r~\delta u_J=-\log(r)$, yielding a double-entry ledger form; standard conservation laws correspond to invariants of such balance-preserving updates. The RCL encodes how the associated recognition costs compose under the paired multiplicative operations $(x,y)\mapsto(xy,x/y)$.
+For a proof-bearing discrete-dynamics development of atomic ticks, balance-preserving ledger updates on graphs, and the $2^{d}$-tick hypercube period (including the $8$-tick $d=3$ case), see \cite{CoherentComparisonLedger}.
+\section{Interpretation}
+ In the RS interpretation, the cost functional is treated as ontologically primitive. Then (under injectivity of the scale functions), zero cost implies identity in the event space \ref{eventequivalence}. Logical consistency and mathematical structure are interpreted as a minimal, stable reference backbone induced by the cost function. Because Recognition Science postulates physical evolution is cost minimizing dynamics of the same cost function, physical reality then inherits a logical and mathematical character.
+
+However, the derivations in this paper are verified using standard mathematics (e.g.\ real analysis and graph theory). We use standard mathematics because it is the most compact, precise, and
+widely shared verification language available. No claim that ``cost is prior to mathematics'' is required within the derivation. Such claims belong to the RS interpretation, rather than the operational derivations and definitions.
+\subsection{Resolving the ``Something from Nothing'' Paradox}
+This framework offers a resolution to the ancient paradox of creation. The question ``Why is there something rather than nothing?'' assumes that ``nothing'' is a stable, low-energy state from which ``something'' must be miraculously created. However, when ``nothing'' can be identified as $x \to 0$, it is actually a state of \textbf{infinite cost} ($J \to \infty$) in this framework, from which any cost-minimizing dynamics will be repelled. 
+\section{Conclusion}
+The primary purpose of this paper was to present and formalize some results from the Recognition science reasoning chain.
+
+\begin{enumerate}
+    \item \textbf{The Primitive:} The Recognition Composition Law (RCL) is the unique functional equation governing consistent interaction.
+    \item \textbf{The Terrain:} Imposing normalization and calibration on the RCL uniquely forces the cost potential $J(x) = \frac{1}{2}(x + x^{-1}) - 1$.
+    \item \textbf{Identity (T0):} The ground state $J(1)=0$ defines logical consistency (identity) as the lowest cost state
+    \item \textbf{Existence (T1):} The singularity $J(0) \to \infty$ creates an infinite cost barrier to appropriately defined ``nothingness" events or configurations
+    \item \textbf{Structure (T2--T3):} Finite local resolution in recognition quotients yields discreteness at the observable level; reciprocity together with a balance-preserving update rule yields a double-entry ledger form (conservation laws). The curvature of $J$ sets the stability scale near perfect match.
+\end{enumerate}
+
+By replacing the assumption of a pre-existing universe with the derivation of a cost-minimizing one, Recognition Science offers a path to a truly fundamental theory of reality—one where the laws of physics are not just observed, but are shown to be inevitable.
+
+\section{Acknowledgments}
+We would like to thank Amir Rahnama for useful discussions about the scale maps and Anil Thapa for a careful reading of an earlier draft and ... (insert more depending on future events)
+
+\bibliographystyle{unsrt}
+\bibliography{main.bib}
+
+\end{document}
+\begin{thebibliography}{99}
+
+\bibitem{AlgebraOfReality}
+Washburn, J.; Zlatanović, M.; Allahyarov, E.
+The Algebra of Reality: A Recognition Science Derivation of Physical Law.
+\textit{Axioms} \textbf{2026}, \textit{15}, 90.
+\url{https://doi.org/10.3390/axioms15020090}
+
+\bibitem{DAlembertInevitability}
+Washburn, J.; Zlatanović, M.; Allahyarov, E.
+D'Alembert Inevitability: Polynomial Consistency Forces the Canonical Composition Law on $\mathbb{R}_{>0}$.
+\textit{Manuscript in preparation}, \textbf{2026}.
+
+
+
+\end{thebibliography}

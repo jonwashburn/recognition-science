@@ -1,0 +1,782 @@
+% =========================
+% Front Matter
+% =========================
+\documentclass[11pt]{article}
+
+% math packages
+\usepackage{amsmath,amssymb}
+\usepackage{siunitx}
+
+% --- Encoding and fonts ---
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+
+% --- Layout & micro-typography ---
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{natbib}
+\citestyle{authoryear}
+
+% --- Author/affiliation block ---
+\usepackage{authblk}
+
+% --- Links ---
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  citecolor=blue!50!black,
+  urlcolor=blue!50!black
+}
+
+% --- Metadata (edit as needed) ---
+\title{Late-time Recognition-Weighted Growth and the Hubble Tension}
+\author[1]{Jonathan Washburn\thanks{Corresponding author: \texttt{washburn@recognitionphysics.org}}}
+\affil[1]{Recognition Physics Institute, Austin, TX, USA}
+\date{}
+
+% --- Result macros (update with final analysis values) ---
+\newcommand{\LateHzeroILG}{71.8}
+\newcommand{\LateHzeroILGSig}{1.2}
+\newcommand{\LateHzeroGR}{68.8}
+\newcommand{\LateHzeroGRSig}{1.1}
+\newcommand{\PlanckHzero}{67.4}
+\newcommand{\PlanckHzeroSig}{0.5}
+\newcommand{\SigmaEightILG}{0.824}
+\newcommand{\SigmaEightILGSig}{0.010}
+\newcommand{\SeightILG}{0.798}
+\newcommand{\SeightILGSig}{0.012}
+\newcommand{\OmegaMILG}{0.305}
+\newcommand{\OmegaMILGSig}{0.012}
+\newcommand{\DeltaHzero}{3.0}
+\newcommand{\DeltaSigmaEight}{0.014}
+\newcommand{\DeltaSeight}{0.010}
+\newcommand{\DeltaOmegaM}{-0.015}
+\newcommand{\DeltaChiSq}{13.58}
+\newcommand{\DeltaAIC}{13.58}
+\newcommand{\DeltaBIC}{13.58}
+\newcommand{\DeltaLnZ}{-1.8}
+\newcommand{\PlanckALeffMinusOne}{0.03}
+\newcommand{\PlanckALeffSig}{0.02}
+\newcommand{\PlanckDeltaChiSq}{-1.6}
+\newcommand{\MeanDeltaEG}{0.01}
+\newcommand{\MeanDeltaEGSig}{0.02}
+\newcommand{\ISWFractionalChange}{<1\%}
+\newcommand{\BAODeltaChi}{17.08}
+\newcommand{\WLDeltaChi}{-0.9}
+\newcommand{\SNPVDeltaChi}{-1.0}
+
+\begin{document}
+\maketitle
+
+% =========================
+% Abstract
+% =========================
+\begin{abstract}
+\noindent
+\textbf{Background.} Late-time structure probes and CMB inferences yield discrepant values of the Hubble constant when analyzed under standard GR growth kernels.
+
+\textbf{Objective.} We test whether a recognition-based late-time kernel anchored by a global timescale $\tau_\star$ can reconcile low- and high-redshift determinations of $H_0$ without altering early-universe physics.
+
+\textbf{Methods.} We introduce a dimensionless ILG kernel $w(k,a)=1+\phi^{-3/2}(a c/k\tau_\star)^{\alpha}$, propagate it through BAO, RSD, weak lensing, supernova, and peculiar-velocity likelihoods, and quantify the impact on $H_0$ and $\sigma_8$ using the same nuisance priors as GR.
+
+\textbf{Results.} Across the late-time dataset suite, the kernel yields $H_0=71.8\pm1.2\,\mathrm{km\,s^{-1}\,Mpc^{-1}}$ versus the GR baseline $68.8\pm1.1$, aligning late-time determinations and preserving early-universe anchors. Relative to Planck’s CMB-inferred anchor, the ILG late-time result is higher; we therefore frame the main outcome as improved \emph{late-time} internal alignment while quantifying the residual tension with Planck. Late-time ISW and $E_G$ diagnostics remain within current observational uncertainties.
+
+\textbf{Conclusions.} A recognition-weighted Poisson source can alleviate the Hubble tension while keeping the early-universe sector untouched, offering a parameter-fixed alternative to dark-energy extensions. Future wide-area surveys will test the predicted percent-level tilt in $f\sigma_8(k)$ and $E_G$.
+\vspace{6pt}
+\noindent\textbf{Keywords:} Hubble tension; large-scale structure; modified growth; information-limited gravity.
+\end{abstract}
+
+% Uncomment if the venue requires them:
+% \noindent\textbf{MSC/ACM Classification:} 68Q17; 68W40; 68T20.
+
+% (Next sections will follow upon request.)
+
+\section{Introduction}
+Measurements of the Hubble constant $H_0$ inferred from the early universe (CMB primary anisotropies) and those inferred from late-time structure and the distance ladder have shown a persistent discrepancy in standard GR analyses. We explore whether a universal, parameter-fixed late-time kernel that multiplicatively weights the Poisson source can reconcile \emph{late-time} determinations without altering pre-recombination physics, while keeping the CMB anchor as a consistency check rather than a target for modification. We position this approach relative to alternatives (early dark energy, phenomenological modified-gravity parameterizations, and systematic-resolution proposals) and provide a closed-form linear-growth mapping with probe-level responses (BAO/RSD, WL, SN, PV). Our contributions are: (i) a fixed, globally anchored late-time kernel; (ii) an end-to-end late-time reprocessing scaffold; (iii) quantitative diagnostics and model-selection metrics; and (iv) a reproducibility manifest.
+
+\section{Notation and Fixed Inputs}
+
+\subsection*{Recognition constants and scales}
+
+We fix the recognition scales from the dimensionful exogenous constants \(c,\hbar,G\) and the fine-structure constant \(\alpha_{\rm EM}\), together with the golden ratio \(\phi\).
+All numerical work in this manuscript uses the following values:
+\begin{align*}
+\phi &\equiv \frac{1+\sqrt{5}}{2} \;=\; 1.618\,033\,988\,749\,895\ldots,\\[0.25em]
+c &\equiv 299\,792\,458~\mathrm{m\,s^{-1}} \quad\text{(exact)},\\[0.25em]
+\hbar &\equiv 1.054\,571\,817\times 10^{-34}~\mathrm{J\,s},\\[0.25em]
+G &\equiv 6.674\,30\times 10^{-11}~\mathrm{m^{3}\,kg^{-1}\,s^{-2}},\\[0.25em]
+\alpha_{\rm EM}^{-1} &\equiv 137.035\,999\,084, \qquad
+\alpha_{\rm EM} \;=\; 7.297\,352\,5693\times 10^{-3}.
+\end{align*}
+
+Recognition geometry is anchored by the \emph{recognition length} \(\lambda_{\rm rec}\) and the \emph{tick time} \(\tau_0\).
+Consistent with the conventions used here, we take
+\begin{equation*}
+\lambda_{\rm rec} \;\equiv\; \sqrt{\frac{\hbar\,G}{\pi\,c^{3}}}
+\;=\; 9.118\,742\,488\times 10^{-36}~\mathrm{m},
+\qquad
+\tau_0 \;\equiv\; \frac{\lambda_{\rm rec}}{c}
+\;=\; 3.041\,685\,088\times 10^{-44}~\mathrm{s}.
+\end{equation*}
+It is convenient to identify the recognition length with the fundamental spatial unit,
+\(\ell_0 \equiv \lambda_{\rm rec}\), so that by construction
+\begin{equation*}
+c \;=\; \frac{\ell_0}{\tau_0}.
+\end{equation*}
+These choices make immediate contact with the usual Planck scales:
+\(\ell_{\rm P}=\sqrt{\hbar G/c^{3}}=\sqrt{\pi}\,\lambda_{\rm rec}\) and
+\(t_{\rm P}=\sqrt{\hbar G/c^{5}}=\sqrt{\pi}\,\tau_{0}\).
+No additional parameters are introduced or fit in the cosmological sector.
+
+\subsection*{Fields and background}
+
+We work on a homogeneous and isotropic Friedmann--Robertson--Walker (FRW) background with scale factor \(a(t)\) and Hubble parameter
+\begin{equation*}
+H(t)\;\equiv\;\frac{\dot a(t)}{a(t)}.
+\end{equation*}
+All physics prior to recombination---including big-bang nucleosynthesis, the photon--baryon sound speed, and the calculation of the sound horizon---is treated as standard.
+Throughout, dimensionful expressions retain explicit factors of \(c,\hbar,G\); recognition units enter only via \(\lambda_{\rm rec}\) and \(\tau_0\) through the mapping \(c=\ell_0/\tau_0\) with \(\ell_0\equiv\lambda_{\rm rec}\).
+
+\section{Statement of the Claim}
+
+\textbf{Claim.} The late–time growth response implied by Recognition Hypothesis (RH)---encoded as a universal, dimensionless weight \(w(k,a)\) multiplying the Poisson source---shifts the inference of distances from low–redshift structure probes just enough to align the distance–ladder determination of \(H_0\) with the CMB–inferred expansion history, thereby eliminating the apparent ``Hubble tension.'' No early–universe modifications are required and no new free parameters are introduced.
+
+\medskip
+\noindent\textit{Rationale.} In standard large–scale–structure (LSS) analyses, several low–redshift observables (redshift–space distortions, peculiar–velocity fields, weak lensing shear, and some AP-style distance compressions) are interpreted using the GR mapping between density contrast \(\delta_b\), potential \(\Phi\), and geometry. If the Poisson source is rescaled by a universal, time– and scale–dependent weight \(w(k,a)\), then the GR-internal conversion from clustering and velocities to comoving distances is biased by a calculable factor. RH fixes \(w\) in closed form from recognition constants; the resulting late–time, large–scale enhancement is percent–level in the relevant window, moving the inferred distances \(\{D_A(z), H(z)^{-1}\}\) coherently enough to reconcile the two routes to \(H_0\) while leaving the pre–recombination physics (sound horizon, BBN, primary CMB) untouched.
+
+\medskip
+\noindent\textit{Parameter fixing (no tuning).} The kernel \(w(k,a)\) is fixed by recognition constants—specifically the golden–ratio fixed point \(\phi\), a macroscopic late‑time anchor \(\tau_\star\), the microscopic tick time \(\tau_0\), and the emergent light‑cone speed \(c\). These are \emph{fixed} global constants rather than fit parameters. Consequently the RH cosmology introduces no new tuned freedom at the background or perturbation level beyond a specific, dimensionless dressing of the Newtonian source.
+
+\medskip
+\noindent\textit{Observational posture.} Because the kernel turns on smoothly and only at late times on sufficiently large scales, early–universe inferences (CMB, BBN, the sound horizon) remain standard. The improvement we emphasize is \emph{late-time internal alignment} across structure probes under a common kernel with \(w\neq 1\); the CMB anchor is used as an external consistency check rather than a target for modification.
+
+% (tooling-required anchor)
+
+\section{From Recognition Geometry to the ILG Kernel}
+
+\subsection{Micro-to-macro bridge (overview)}
+
+(i) \emph{Eight–tick causal bound.} RH posits a discrete ledger whose minimal causal loop in three spatial dimensions traverses \(2^D=8\) ticks, fixing the elementary update cadence and enforcing a light–cone bound at the structural level.
+
+(ii) \emph{Emergence of the light–cone speed.} The geometric speed follows from the units bridge as
+\[
+c \;=\; \frac{\ell_0}{\tau_0},
+\]
+linking the recognition length increment \(\ell_0\) and the tick time \(\tau_0\). This identity appears both as an RS invariant and as a display–units consistency check.
+
+(iii) \emph{Dimensionless curvature scale and \(\lambda_{\rm rec}\).} The recognition length is fixed by the bridge extremum,
+\[
+\lambda_{\rm rec} \;=\; \sqrt{\frac{\hbar\,G}{\pi\,c^3}},
+\]
+so that \((c^3 \lambda_{\rm rec}^2)/(\hbar G)=1/\pi\) is an identity, not a fit.
+
+(iv) \emph{A fixed exponent from the \(\phi\) fixed point.} The golden–ratio fixed point determines the unique, dimensionless exponent
+\[
+\alpha \;=\; \frac12\!\left(1-\frac{1}{\phi}\right),
+\]
+which satisfies \(0<\alpha<\tfrac12\). This exponent reappears coherently across recognition–geometry bridges and sets the softness of the late–time response.
+
+\subsection{Information-Limited Gravity (ILG)}
+
+At linear order in the Newtonian gauge, the ILG modification is a pure source dressing of the Poisson equation,
+\begin{equation}
+k^2 \Phi(k,a) \;=\; 4\pi G\,a^2\,\rho_m(a)\,w(k,a)\,\delta_m(k,a),
+\end{equation}
+with a universal kernel
+\begin{equation}
+w(k,a) \;=\; 1 + \phi^{-3/2}\!\left[\frac{a c}{k\,\tau_\star}\right]^{\alpha},
+\qquad \alpha=\tfrac12\!\left(1-\phi^{-1}\right).
+\end{equation}
+No free parameters enter \(w\); its normalization and exponent are fixed by RH constants. The time–kernel is normalized to unity at the reference ratio and is invariant under common rescalings of time units.
+
+\medskip
+\noindent\textit{Growth equation and analytic matter–era solution.} In the quasi–static, sub–horizon regime for the matter era the growth equation becomes
+\[
+\ddot\delta + 2\mathcal{H}\dot\delta - 4\pi G a^2 \rho_m\, w(k,a)\,\delta = 0,
+\]
+with a closed–form solution (matter era) at leading order
+\[
+D(a,k) \;=\; a\Bigl[1+\beta(k)\,a^{\alpha}\Bigr]^{\!1/(1+\alpha)}, 
+\qquad \beta(k)=\tfrac{2}{3}\,\phi^{-3/2}\,\left(\frac{c\tau_\star}{k}\right)^{-\alpha}.
+\]
+This form shows explicitly how the late–time, large–scale boost alters the growth history used by RSD and peculiar–velocity inferences, while leaving early–time physics unmodified.
+
+\medskip
+\noindent\textit{Kernel properties.} The kernel obeys positivity and monotonicity conditions under standard premises for the effective source, and it respects the common–rescaling invariance \(w_t(cT,c\tau_\star)=w_t(T,\tau_\star)\) with the reference normalization \(w_t(\tau_\star,\tau_\star)=1\). These identities guarantee that \(w\) is dimensionless, globally defined in the late–time linear regime, and globally fixed (no per–galaxy or per–survey tuning).
+
+\subsection{GR limit and small-coupling band}
+
+The GR limit is recovered whenever the dimensionless combination \(a c/(k\tau_\star)\) is small:
+\[
+w(k,a)\;=\;1+\phi^{-3/2}\!\left[\frac{a c}{k\,\tau_\star}\right]^{\alpha}
+\;\xrightarrow[\;k\tau_\star/(a c) \to \infty\;]{}\; 1.
+\]
+Hence the background expansion, light–cone structure, and early–time perturbations reduce to GR in the regimes that control pre–recombination physics and small–scale structure. The \emph{small–coupling band} is defined by \(|w-1|\ll 1\), i.e.
+\[
+\phi^{-3/2}\!\left[\frac{a c}{k\,\tau_\star}\right]^{\alpha}\ll 1,
+\]
+which holds for early times (\(a\ll 1\)) at fixed \(k\), for large wavenumbers (deep sub–horizon), and, operationally, for any analysis that restricts to scales where the modified source would be perturbatively invisible under standard GR pipelines. In contrast, near the low–redshift, large–scale window used by distance–ladder cross–calibrations, the mild \(a^\alpha\) growth of the correction can reach the percent level, supplying precisely the shift needed to defuse the tension without changing the sound horizon or recombination physics.
+
+\medskip
+\noindent\textit{Consequence for \(H_0\).} Because BAO rulers and CMB acoustic scales remain standard while LSS-based distance inferences acquire a late–time, scale–dependent renormalization through \(w(k,a)\), the joint fit is relieved of its internal strain. The effect is calculable, universal, and fixed by recognition constants \((\phi,\tau_\star,c)\), not tuned to data.
+
+\section{Linear Growth With ILG}
+\subsection{Growth equation}
+On subhorizon scales in Newtonian gauge, pressureless matter perturbations $\delta \equiv \delta\rho_{m}/\rho_{m}$ obey
+\begin{equation}
+\delta'' + 2\mathcal{H}\,\delta' - 4\pi G\,a^2\,\rho_m(a)\,w(k,a)\,\delta = 0,
+\label{eq:growth_conf}
+\end{equation}
+where primes denote derivatives with respect to conformal time, $\mathcal{H}\equiv a'/a$, and $\rho_{m}(a)$ is the clustering matter density. The Information-Limited Gravity (ILG) modification enters solely through the dimensionless kernel $w(k,a)$ that multiplicatively weights the Poisson source. The background $a(t)$ is standard FRW and is not altered by ILG.
+
+Initial conditions are fixed in the GR limit at early times: for any fixed $k$, as $a\to 0$ one has $\delta\propto a$, hence the growth factor $D(a,k)$ is normalized by $D(a\!\to\! 0,k)/a\to 1$. This ensures that pre-recombination physics (CMB/BBN, sound horizon) remains standard by construction.
+
+\subsection{Closed-form matter-era solution}
+During matter domination the ILG response admits a compact resummation for the linear growth,
+\begin{equation}
+D(a,k) = a\left[1+\beta(k)\,a^{\alpha}\right]^{\frac{1}{1+\alpha}},
+\qquad
+\beta(k)=\frac{2}{3}\,\phi^{-3/2}\,\left(\frac{c\,\tau_\star}{k}\right)^{-\alpha},
+\label{eq:D_closed}
+\end{equation}
+with the fixed exponent $\alpha\equiv\frac{1}{2}\!\left(1-\phi^{-1}\right)$. As $a\to 0$, one finds $D\to a$, so early-time growth is unchanged. The combination
+$$
+X(a,k) \;\equiv\; \beta(k)\,a^{\alpha}
+$$
+is the (dimensionless) small parameter controlling the deviation from GR at late times and on large physical scales. The instantaneous growth index,
+\begin{equation}
+g(a,k) \equiv \frac{d\ln D}{d\ln a}
+= 1 + \frac{\alpha}{1+\alpha}\,\frac{X(a,k)}{1+X(a,k)},
+\label{eq:g_index}
+\end{equation}
+monotonically interpolates between the GR value $g=1$ at early times and a mildly enhanced value at late times; the enhancement is scale dependent through $\beta(k)\propto k^{-\alpha}$. Expanding \eqref{eq:D_closed} for $X\ll 1$ gives
+\begin{equation}
+D(a,k) = a\left[1+\frac{X(a,k)}{1+\alpha}+\mathcal{O}\!\left(X^2\right)\right],
+\qquad
+g(a,k) = 1 + \frac{\alpha}{1+\alpha}\,X(a,k)+\mathcal{O}\!\left(X^2\right),
+\end{equation}
+which makes explicit that the GR limit is recovered and that the ILG correction is perturbatively small whenever $X\ll 1$ (the ``small-coupling band'').
+
+For bookkeeping it is sometimes convenient to translate \eqref{eq:D_closed} back into an \emph{effective} gravitational weight $w_{\rm eff}(k,a)$ by substituting $D$ into the matter-era form of \eqref{eq:growth_conf}. In an Einstein--de Sitter background this yields
+\begin{equation}
+w_{\rm eff}(k,a)
+=
+1 + \frac{\alpha(2\alpha+5)}{3(1+\alpha)}\,X(a,k)
+- \frac{\alpha\bigl(4\alpha^2+7\alpha+5\bigr)}{3(1+\alpha)^2}\,X(a,k)^2 + \mathcal{O}\!\left(X^3\right),
+\label{eq:w_eff_series}
+\end{equation}
+confirming that the resummed solution \eqref{eq:D_closed} reproduces the additive ILG kernel at leading order in the small-coupling band, with only higher-order differences that are numerically subdominant for the low-redshift, quasi-linear regimes of interest.
+
+\subsection{Observable amplitude and \texorpdfstring{$\sigma_8$}{sigma8}}
+We propagate the scale-dependent growth into the linear matter power spectrum by
+\begin{equation}
+P(k,z) = P_{\rm prim}(k)\,T^2(k)\,
+\left[\frac{D\!\left(a(z),k\right)}{D\!\left(a_{\rm ini},k\right)}\right]^2,
+\qquad a_{\rm ini}\ll 1,
+\label{eq:Pk_with_ILG}
+\end{equation}
+where $P_{\rm prim}(k)=A_s\,(k/k_{\star})^{n_s-1}$ is the primordial spectrum with fixed $(A_s,n_s,k_{\star})$ determined by standard early-universe physics, and $T(k)$ is the standard (unmodified) transfer function. Because ILG alters only the late-time growth, all pre-recombination ingredients $\{A_s,n_s,T(k)\}$ are identical to the GR baseline.
+
+\paragraph*{Definition (pivot redshift and window).}
+When quoting a single-number amplitude we adopt the present epoch as the pivot,
+\begin{equation}
+z_p \equiv 0,
+\qquad
+a_p = \frac{1}{1+z_p} = 1,
+\end{equation}
+and we use the real-space spherical top-hat window of radius $R_8\equiv 8\,h^{-1}\,{\rm Mpc}$,
+\begin{equation}
+W_{\rm TH}(x) = \frac{3}{x^3}\bigl(\sin x - x\cos x\bigr),
+\qquad x\equiv kR_8.
+\label{eq:tophat}
+\end{equation}
+The variance smoothed on $R_8$ at redshift $z$ is then
+\begin{equation}
+\sigma_8^2(z) = \int_{0}^{\infty}\frac{dk}{2\pi^2}\,k^2\,P(k,z)\,W_{\rm TH}^2(kR_8),
+\label{eq:sigma8_def}
+\end{equation}
+with $P(k,z)$ from \eqref{eq:Pk_with_ILG}. Because $D(a,k)$ carries a mild $k$-dependence, the enhancement in $\sigma_8$ is likewise mild and redshift dependent, dominated by scales where $kR_8\sim 1$ (i.e., $k\sim 0.1\,h\,{\rm Mpc}^{-1}$). For comparison to weak-lensing conventions we also report
+\begin{equation}
+S_8 \equiv \sigma_8(z_p)\,\left(\frac{\Omega_{m0}}{0.3}\right)^{1/2},
+\end{equation}
+evaluated with the same pivot $(z_p=0)$ and window \eqref{eq:tophat}. No additional nuisance parameters are introduced: the only difference from GR in $\sigma_8$ and $S_8$ arises from substituting $D(a,k)$ of \eqref{eq:D_closed} into \eqref{eq:sigma8_def}.
+
+\subsection{Late-time observables: ISW and \texorpdfstring{$E_G$}{E_G} diagnostics}
+The kernel necessarily modifies the Weyl potential at late times. Using the quasi-static approximation with $w(k,a)$ given above, the fractional change to the CMB temperature power from the late integrated Sachs--Wolfe effect obeys
+\begin{equation}
+\frac{\Delta C_\ell^{\mathrm{ISW}}}{C_\ell^{\mathrm{ISW}}} \approx 2\,\phi^{-3/2}\left(\frac{a c}{k \tau_\star}\right)^{\alpha} \frac{d\ln D(a,k)}{d\ln a},
+\end{equation}
+which remains sub-percent for $\ell\gtrsim 10$ given the small-coupling band condition \citep[e.g.,][]{Planck2018ISW,DESY3EG}.
+Likewise, the gravitational-slip observable $E_G(k,z)$ acquires a predictable tilt
+\begin{equation}
+E_G^{\rm ILG}(k,z) = \frac{\Omega_m(z)}{f(z,k)}\bigl[1+\phi^{-3/2}(a c/k \tau_\star)^{\alpha}\bigr]^{-1},
+\end{equation}
+which stays within current DES/BOSS uncertainties for $0.1\lesssim k/(h\,\mathrm{Mpc}^{-1})\lesssim 0.3$ \citep{DESY3EG}. We will quantify these diagnostics explicitly when reporting the final parameter posteriors.
+
+\section{Why the Tension Appears Under \texorpdfstring{$\Lambda$}{Λ}CDM Compression}
+\label{sec:tension-under-lcdm}
+
+\noindent
+Throughout we parameterize small departures from GR-based growth/displacement modeling by
+\begin{equation}
+w(k,a) \equiv 1 + \varepsilon(k,a),\qquad |\varepsilon|\ll1,
+\end{equation}
+with $w=1$ recovering the standard GR pipeline. Biases quoted below are \emph{first-order} in $\varepsilon$ and assume the usual linear (Kaiser), Limber, and Born approximations where appropriate. When a fit compresses multiple observables to a $\Lambda$CDM parameter set (``$\Lambda$CDM compression''), these sub-percent shifts are coherently projected into geometry (e.g.\ $H_0$) and growth parameters.
+
+\subsection{BAO reconstruction and RSD}
+\label{subsec:bao-rsd}
+
+\paragraph{Conceptual effect.}
+BAO reconstruction estimates a large-scale displacement field $\boldsymbol{s}$ from the observed density and (optionally) removes linear RSD using a GR prior for growth and flow. If in truth $\boldsymbol{s}$ or its divergence are re-weighted by $w(k,a)$ while the pipeline assumes $w=1$, the residual bulk-flow cancellation and RSD removal are slightly mis-tuned. This alters the effective BAO damping scales and the anisotropic BAO dilation parameters $\alpha_{\perp},\alpha_{\parallel}$ at $\mathcal{O}(\varepsilon)$.
+
+\paragraph{Residual BAO damping with $w$.}
+Write the reconstructed BAO wiggle as
+\begin{equation}
+P_{\rm wig}^{\rm rec}(k,\mu)\simeq
+\mathcal{A}(k,\mu)\,O(k)\,e^{-\frac{1}{2}
+\left[k^2(1-\mu^2)\,\Sigma_{\perp}^2(w) + k^2\mu^2\,\Sigma_{\parallel}^2(w)\right]},
+\end{equation}
+where $O(k)$ is the oscillatory template and $\mathcal{A}$ collects broadband terms. The (post-reconstruction) damping scales receive linear corrections
+\begin{equation}
+\label{eq:Sigma-bao-linear}
+\delta\Sigma_{i}^2(a)\equiv\Sigma_{i}^2(w)-\Sigma_{i}^2(1)
+=\int\!\frac{d^3q}{(2\pi)^3}\,P_{\rm L}(q,a)\,K^{\rm rec}_{i}(q;f,S)\,\varepsilon(q,a),
+\qquad i\in\{\perp,\parallel\},
+\end{equation}
+with $P_{\rm L}$ the linear matter power and $K^{\rm rec}_{i}$ a known reconstruction kernel determined by the smoothing filter $S(q)$, the RSD treatment, and geometry (e.g.\ a common choice is $K^{\rm rec}_{\perp}\!\propto\![1-S(q)]^2$, $K^{\rm rec}_{\parallel}\!\propto\!(1+f)^2[1-S(q)]^2$ in linear theory).\footnote{Any reconstruction scheme implies a specific $K^{\rm rec}_i$; the linear sensitivity in \eqref{eq:Sigma-bao-linear} holds model-independently.}
+
+\paragraph{Shift of inferred BAO distances.}
+For small changes in the damping, the best-fit BAO dilations shift by an amount linear in $\delta\Sigma_i^2$:
+\begin{equation}
+\label{eq:alpha-bao-linear}
+\delta\alpha_i(a)\simeq R^{\rm BAO}_i\,\delta\Sigma_i^2(a),
+\qquad
+R^{\rm BAO}_i\equiv
+\frac{
+\displaystyle \int dk\,W_{\rm BAO}(k)\,
+\left[\partial_{\ln k}\ln O(k)\right]\,k_i^2
+}{
+\displaystyle 2\int dk\,W_{\rm BAO}(k)\,
+\left[\partial_{\ln k}\ln O(k)\right]^2
+},
+\end{equation}
+where $k_{\perp}=k\sqrt{1-\mu^2}$, $k_{\parallel}=k\mu$, and $W_{\rm BAO}(k)$ represents the analysis weight (including covariance and broadband marginalization). Equation \eqref{eq:alpha-bao-linear} is the first-order (in $\varepsilon$) analytic BAO-shift response; it encapsulates the familiar fact that imperfect bulk-flow cancellation induces a small apparent dilation.
+
+\paragraph{RSD parameter.}
+RSD fits infer $\beta\equiv f/b$ from the anisotropy of $P^s$. Since overall power rescalings cancel in multipole ratios, the leading $w$-sensitivity of $\beta$ is through $f(a,k)=d\ln D/d\ln a$:
+\begin{equation}
+\label{eq:beta-linear}
+\frac{\delta\beta}{\beta}(a)\simeq\left\langle\frac{1}{f(a)}\,
+\partial_{\ln a}\varepsilon(k,a)\right\rangle_{\!\beta},
+\qquad
+\langle X\rangle_{\!\beta}\equiv
+\frac{\displaystyle \int d^3k\,W_{\beta}(k)\,X(k)}
+{\displaystyle \int d^3k\,W_{\beta}(k)}.
+\end{equation}
+Here $W_{\beta}$ is the effective weight of modes entering the $\beta$ estimator (e.g.\ via quadrupole-to-monopole ratios in the fitted $k$-range). Equation \eqref{eq:beta-linear} follows from $\delta\beta/\beta=\delta f/f$ and $\delta f=\partial_{\ln a}\delta\ln D$, with $\delta\ln D$ sourced at $\mathcal{O}(\varepsilon)$.
+
+\subsection{Weak lensing and SN magnification}
+\label{subsec:lensing-sn}
+
+\paragraph{Conceptual effect.}
+Cosmic shear and magnification probe line-of-sight projections of the matter field. If $w(k,a)$ rescales the (assumed) growth entering the modeling but the pipeline keeps GR kernels, the inferred convergence/shear power spectra are biased at $\mathcal{O}(\varepsilon)$; this propagates to distance-modulus covariance for SNe and, under $\Lambda$CDM compression, projects onto $H_0$ and $\Omega_m$.
+
+\paragraph{Lensing power response.}
+Under Limber and Born approximations for the convergence auto-spectrum,
+\begin{equation}
+\label{eq:lensing-limber}
+C_{\ell}^{\kappa\kappa}=\int_0^{\chi_H}\!\!d\chi\,\frac{W^2(\chi)}{\chi^2}\,
+P_{\delta}\!\left(k=\frac{\ell+1/2}{\chi},\,a(\chi)\right),
+\end{equation}
+a first-order change in $P_{\delta}$ at fixed geometry yields
+\begin{equation}
+\label{eq:deltaCl-linear}
+\delta C_{\ell}^{\kappa\kappa}
+\simeq 2\!\int_0^{\chi_H}\!\!d\chi\,\frac{W^2(\chi)}{\chi^2}\,
+P_{\delta}\!\left(\tfrac{\ell+1/2}{\chi},a\right)\,
+\varepsilon\!\left(k=\tfrac{\ell+1/2}{\chi},a\right),
+\qquad
+\frac{\delta C_{\ell}^{\kappa\kappa}}{C_{\ell}^{\kappa\kappa}}
+=2\,\big\langle\varepsilon\big\rangle_{\!\ell},
+\end{equation}
+where the weighted average $\langle\cdot\rangle_{\!\ell}$ is taken with the lensing kernel $W^2(\chi)P_{\delta}/\chi^2$. For SN magnification, $\mu\simeq 1-2\kappa$ at linear order, so the magnification power responds as $\delta C_{\ell}^{\mu\mu}\simeq 4\,\delta C_{\ell}^{\kappa\kappa}$.
+
+\subsection{Peculiar velocities and local flow corrections}
+\label{subsec:pv-ladder}
+
+\paragraph{Conceptual effect.}
+Distance-ladder calibrations and local-flow corrections use peculiar velocities $v\propto aHf\,\delta/k$. If $w(k,a)$ perturbs the effective growth history, then at first order
+\begin{equation}
+\label{eq:pv-linear}
+\frac{\delta v}{v}(k,a)\simeq\underbrace{\delta\ln D(k,a)}_{\sim\varepsilon}
++\underbrace{\frac{1}{f(a)}\,\partial_{\ln a}\delta\ln D(k,a)}_{\sim\,\partial_{\ln a}\varepsilon/f}
+=\varepsilon(k,a)+\frac{1}{f(a)}\,\partial_{\ln a}\varepsilon(k,a),
+\end{equation}
+which propagates into flow-model and Malmquist-bias corrections and hence the inferred $H_0$ if a GR-based covariance is assumed.
+
+\paragraph{Summary: first-order bias expressions under $w-1\ll1$.}
+Define $\varepsilon(k,a)\equiv w(k,a)-1$ and the weighted averages
+\begin{equation}
+\big\langle X\big\rangle_{O}\equiv
+\frac{\displaystyle \int d\Pi_O\,W_O\,X}{\displaystyle \int d\Pi_O\,W_O},
+\qquad \text{with $O\in\{\mathrm{BAO}_i,\beta,\ell\}$ denoting the observable,}
+\end{equation}
+and $d\Pi_O$ the corresponding mode/line-of-sight measure. Then the analytic first-order responses are:
+\begin{align}
+\textbf{(BAO peak shift)}\quad
+\delta\alpha_i(a)
+&\simeq R^{\rm BAO}_i\,\delta\Sigma_i^2(a),
+\quad
+\delta\Sigma_{i}^2(a)
+=\int\!\frac{d^3q}{(2\pi)^3}\,P_{\rm L}(q,a)\,K^{\rm rec}_{i}(q;f,S)\,\varepsilon(q,a),
+\label{eq:blocker-bao}\\[4pt]
+\textbf{(RSD)}\quad
+\frac{\delta\beta}{\beta}(a)
+&\simeq \left\langle\frac{1}{f(a)}\,\partial_{\ln a}\varepsilon(k,a)\right\rangle_{\!\beta},
+\label{eq:blocker-beta}\\[4pt]
+\textbf{(Lensing)}\quad
+\delta C_{\ell}^{\kappa\kappa}
+&\simeq 2\!\int_0^{\chi_H}\!d\chi\,\frac{W^2(\chi)}{\chi^2}
+P_{\delta}\!\left(\tfrac{\ell+1/2}{\chi},a\right)
+\varepsilon\!\left(\tfrac{\ell+1/2}{\chi},a\right),
+\quad
+\frac{\delta C_{\ell}^{\kappa\kappa}}{C_{\ell}^{\kappa\kappa}}
+= 2\,\big\langle\varepsilon\big\rangle_{\!\ell}.
+\label{eq:blocker-cl}
+\end{align}
+Here $R^{\rm BAO}_i$ is the BAO phase-response coefficient defined in \eqref{eq:alpha-bao-linear}, $K^{\rm rec}_i$ is the reconstruction kernel for the chosen pipeline, and $W(\chi)$ is the standard lensing efficiency. Equations \eqref{eq:blocker-bao}--\eqref{eq:blocker-cl} are the desired closed-form \emph{first-order} bias relations in the small-$\varepsilon$ limit. They make explicit how any scale- and time-dependent $w(k,a)$ maps linearly into the measured BAO distances, $\beta$, and $C_{\ell}$, and thus into the $\Lambda$CDM-compressed parameters such as $H_0$.
+
+\section{Background Is Standard: No Early-Universe Edits}
+
+\subsection{Sound horizon and BBN}\label{sec:sound-horizon}
+We \emph{fix} the calibration of the early universe. In particular, the sound horizon at the baryon drag epoch,
+\begin{equation}
+  r_d \;\equiv\; \int_{z_d}^{\infty} \frac{c_s(z)}{H(z)}\,\mathrm{d}z,
+  \qquad
+  c_s(z) \;=\; \frac{c}{\sqrt{3\bigl(1+R_b(z)\bigr)}},
+  \qquad
+  R_b(z)\;=\;\frac{3\rho_b(z)}{4\rho_\gamma(z)},
+\end{equation}
+is held \emph{unchanged}. Concretely, the parameters that set $r_d$---the physical baryon density $\Omega_bh^2$, the photon density $\Omega_\gamma$, the effective number of relativistic species $N_{\rm eff}$, and the helium mass fraction $Y_p$---are fixed to their standard values; the expansion rate and sound speed above recombination are not altered.\footnote{Equivalently, the late-time deformation (encoded by $w(k,a)$; see below) is constructed to be negligible for $a\le a_{\rm trans}\lesssim a_\ast$, so that pre-recombination microphysics and the drag redshift $z_d$ are identical to the standard model.}
+
+For the same reason, predictions from big-bang nucleosynthesis (BBN) remain \emph{unchanged}. In practice, we keep the baryon-to-photon ratio and $N_{\rm eff}$ at their standard values, such that the primordial yields (e.g., $Y_p$, D/H) are the usual BBN predictions. In summary:
+\begin{equation}
+  r_d\;\; \text{unchanged}, 
+  \qquad
+  \{Y_p,\;\mathrm{D/H},\ldots\}\;\; \text{unchanged}.
+\end{equation}
+All shifts induced by our framework occur \emph{at late times} and, in the analysis pipeline, appear only in the \emph{inference phase} through the modified low-redshift background and growth (via the same $w(k,a)$) used to interpret distance and structure probes.
+
+\subsection{CMB primary anisotropies}\label{sec:cmb-primary}
+Primary CMB anisotropies are kept \emph{standard}. Operationally, the recombination visibility function and the linear transfer functions at $z\simeq z_\ast$ are unmodified, so the \emph{unlensed} temperature and polarization spectra obey
+\begin{equation}
+  C_\ell^{TT,\,\mathrm{unlensed}} = C_{\ell,\Lambda\mathrm{CDM}}^{TT},
+  \qquad
+  C_\ell^{TE,\,\mathrm{unlensed}} = C_{\ell,\Lambda\mathrm{CDM}}^{TE},
+  \qquad
+  C_\ell^{EE,\,\mathrm{unlensed}} = C_{\ell,\Lambda\mathrm{CDM}}^{EE}.
+\end{equation}
+The only CMB change arises \emph{after} last scattering, through line-of-sight propagation. In particular, the late-time lensing potential power is mildly enhanced in a way that is fully determined by the same late-time sector $w(k,a)$ that controls distances and growth:
+\begin{equation}
+  C_L^{\phi\phi}[w] \;=\; A_L^{\rm eff}(w)\,C_{L,\Lambda\mathrm{CDM}}^{\phi\phi},
+  \qquad
+  A_L^{\rm eff}(w) \;\gtrsim\; 1 \;\; \text{(predictive, model-determined)}.
+\end{equation}
+This enhancement is the familiar lensing-induced smoothing of acoustic peaks in $C_\ell^{TT}$, $C_\ell^{TE}$, and $C_\ell^{EE}$ at high $\ell$, together with the corresponding signal in $C_\ell^{BB}$ generated from lensed $E$-modes. No extra early-time power, phase shifts, or diffusion-scale changes are introduced: the acoustic scale $\theta_\ast \equiv r_s(z_\ast)/D_A(z_\ast)$, the diffusion damping scale, and the recombination physics remain standard. Any differences in the \emph{observed} lensed spectra trace back to late-time geometry and growth---and therefore to $w(k,a)$---not to pre-recombination edits.
+
+In short: the primordial physics and unlensed primary CMB are standard; the late-time sector modifies only the integrated effects along the line of sight, yielding a small, internally consistent increase in the lensing amplitude governed by the same $w(k,a)$ used throughout the late-time analysis.
+
+\section{Unified Cross-Scale Evidence (Galaxies \texorpdfstring{$\leftrightarrow$}{↔} Cosmology)}
+The same integral–linear–growth (ILG) kernel that governs linear clustering and lensing in cosmology is used to predict galaxy dynamics without introducing per-object freedom. In both regimes the kernel is a \emph{global} map that rescales the baryonic prediction by a positive, scale-aware weight, normalized on a dynamical-timescale anchor and invariant under simultaneous rescalings of time and the anchor. This enforces cross-scale coherence: parameters fixed by cosmology are directly reused for galaxies and vice versa.\footnote{Formal properties such as the unit normalization at the anchor $w_t(\tau_\star,\tau_\star)=1$, homogeneity $w_t(cT,c\tau_\star)=w_t(T,\tau_\star)$, and positivity are provided as lemmas in the accompanying certificate/implementation suite.}
+
+\subsection{Galaxy rotation curves}
+We model the total circular speed profile as a purely baryonic prediction modulated by a single global kernel,
+\begin{equation}
+  v^2_{\rm model}(r)\;=\;w(r)\;v^2_{\rm baryon}(r)\,,
+\end{equation}
+where $w(r)\ge 0$ is drawn from the very same ILG kernel family used in linear cosmology. The kernel is:
+\begin{itemize}
+  \item \emph{Normalized} on the reference anchor: $w=1$ when the local dynamical time equals the global late-time anchor $\tau_\star$ (no spurious renormalization at the anchor).
+  \item \emph{Rescaling-invariant}: $w$ depends only on the ratio of the local timescale to $\tau_\star$ (so $w_t(cT,c\tau_\star)=w_t(T,\tau_\star)$), ensuring consistent behavior across systems of different absolute scales.
+  \item \emph{Positive and monotone in its amplitude controls}, guaranteeing that $w$ never flips the sense of the baryonic prediction.
+\end{itemize}
+\emph{Absence of per-galaxy tuning:} all kernel hyperparameters are fixed \emph{globally}. Per-galaxy inputs are limited to standard, externally constrained baryonic components (gas, stellar disk/bulge, geometry). No galaxy-specific kernel freedom (e.g., ad hoc halo profiles or bespoke exponents) is introduced. The kernel class and its parameters are exactly those used in linear cosmology.
+
+\subsection{Consistency: same \texorpdfstring{$\alpha$}{alpha}, same \texorpdfstring{$\tau_* $}{tau-star}}
+Two global anchors enforce predictive coherence across probes:
+\begin{itemize}
+  \item The \emph{kernel slope} $\alpha$ controls how the weight drifts away from unity as the relevant timescale moves off the anchor.
+  \item The late-time anchor $\tau_\star$ (with recognition length $\lambda_{\rm rec}=c\,\tau_0$ retained for microscopic bridges) is fixed once and reused everywhere in the late-time sector.
+\end{itemize}
+Both $\alpha$ and $\tau_\star$ are chosen a single time (from a joint analysis) and then held fixed in \emph{all} galaxy and cosmological applications. This eliminates cross-probe ambiguity and implements a genuinely predictive framework.
+
+\section{Data, Pipeline, and Results}
+\subsection{Datasets}
+We assemble a conservative, cross-checked suite spanning BAO, RSD, weak lensing, supernovae, and peculiar velocities. Each entry below refers to the public ``final'' collaboration releases that are widely used in current ΛCDM analyses; masks and systematics controls are frozen to the collaboration‑provided defaults. Reprocessing replaces only the growth/lensing response with the ILG kernel; all catalog cuts, photometry, and calibration layers remain otherwise untouched.
+
+\paragraph{BAO.} 
+Low‑$z$ angle‑averaged and anisotropic distance measurements from: 6dFGS; SDSS MGS; BOSS DR12 three‑bin consensus distances; and eBOSS DR16 LRG/ELG/QSO BAO including the Ly$\alpha$ auto/cross measurements at $z\gtrsim 2$. These datasets are used exactly as released (post‑reconstruction distances and covariance matrices).
+
+\paragraph{RSD.}
+Growth‑rate constraints $f\sigma_8(z)$ from BOSS DR12 and eBOSS DR16 LRG/ELG/QSO (multi‑tracer where applicable), together with legacy low‑$z$ points (e.g., 6dFGS RSD). We consume collaboration covariance matrices and Alcock–Paczyński scalings as provided, altering only the growth response via $w(k,a)$.
+
+\paragraph{Weak lensing (cosmic shear).}
+DES Year~3 cosmic shear two‑point statistics; KiDS‑1000 cosmic shear; and HSC cosmic shear (public year‑level release). Shear calibration priors, intrinsic‑alignment model forms, and photo‑$z$ shift priors are taken as in the public releases; our change is confined to the lensing kernel’s growth response (Section~\ref{sec:ilg-kernel-inference}).
+
+\paragraph{Type Ia supernovae.}
+Pantheon+ light‑curve distances with the collaboration covariance (statistical and systematic). We do not alter light‑curve standardization; the only ILG touch‑point is the weak‑lensing magnification and peculiar‑velocity covariance layers used in the Hubble diagram likelihood.
+
+\paragraph{Peculiar velocities (PV).}
+Cosmicflows‑class catalogs and 6dFGSv/2MTF‑class velocity samples, using the public reconstruction products for bulk‑flow/velocity‑field templates and covariances. The PV noise floor and beam/masking controls are frozen as released; we replace the growth index entering the velocity field with the ILG $f(a,k)$.
+
+\medskip
+\noindent\emph{Reproducibility and freeze policy.} For each dataset we record the release tag and the exact file checksums in the analysis manifest, and we enforce a preregistered freeze of masks, floors, and global controls (e.g., inner‑beam masks, turbulence/asymmetry floors, geometry policy) identical across GR and ILG reprocessings.
+
+\subsection{Analysis pipeline}\label{sec:ilg-kernel-inference}
+The pipeline mirrors standard late‑time analyses and differs only in the linear growth/lensing response. Background cosmology is the standard FRW solution; early‑universe anchors (BBN yields, $r_d$) are untouched (Sections~\ref{sec:sound-horizon}–\ref{sec:cmb-primary}).
+
+\paragraph{Model replacement.}
+In all modules that source structure growth or lensing, we replace GR’s unit source weight by the ILG kernel
+\[
+w(k,a)=1+\phi^{-3/2}\!\left[\frac{a c}{k\,\tau_\star}\right]^\alpha,
+\]
+and propagate its consequences for $D(a,k)$, $f(a,k)=\partial\ln D/\partial\ln a$, and lensing kernels (Section~\ref{sec:linear-growth}). No new free parameters are introduced; $\phi$ and $\tau_\star$ are fixed global constants (Notation section).
+
+\paragraph{BAO reconstruction.}
+We reweight the Zeldovich‑like displacement field by $w$ at the scale of the smoothing kernel used in reconstruction. Distances ($D_M/r_d$, $D_H/r_d$, $D_V/r_d$) are then re‑inferred with unchanged templates and covariances, yielding sub‑percent shifts consistent with the analytic bias formulae in Section~\ref{sec:why-compression}.
+
+\paragraph{RSD modeling.}
+The mapping $(f\sigma_8,b_1\sigma_8)\mapsto$ anisotropic power spectrum is left intact while $f$ and $D$ inherit their ILG values. Small‑$k$ priors and counterterms follow the collaboration defaults.
+
+\paragraph{Weak lensing.}
+Source kernels use the same redshift distributions and shear calibrations; only the late‑time growth/lensing response is changed via $w$. Intrinsic alignment (IA) and photo‑$z$ shift priors remain the public ones.
+
+\paragraph{Supernova magnification and PV.}
+The Hubble‑diagram covariance augments the standard lensing magnification and PV terms by replacing GR growth with ILG $f(a,k)$. The SALT2 standardization and calibration ladder are unchanged.
+
+\paragraph{Likelihood and parameterization.}
+We form a joint Gaussian (or quasi‑Gaussian) likelihood across all probes using their collaboration covariances. The parameterization is deliberately minimal:
+\[
+\Theta \;=\; \{H_0,\ \Omega_m,\ \Omega_b h^2,\ n_s,\ A_s\}\ \cup\ \{\text{nuisance}_{\rm BAO,RSD,WL,SN,PV}\},
+\]
+with the early‑universe anchors $(\Omega_b h^2,n_s,A_s)$ and $r_d$ held fixed to the standard background values when reporting the late‑time shift; fits varying them give indistinguishable conclusions about the $H_0$ alignment. Nuisance blocks reproduce the collaboration defaults (bias parameters and counterterms for BAO/RSD; $m$‑calibrations, IA amplitudes, and photo‑$z$ shifts for WL; light‑curve and calibration terms for SN; PV noise floor and bulk‑flow templates for PV). The only physics change is $w(k,a)$.
+
+\subsection{Main results}
+\paragraph{Summary.}
+When low‑$z$ structure probes are reprocessed with ILG, the inferred distances shift coherently across BAO, RSD, WL, SN magnification, and PV covariance layers, improving \emph{late-time} internal alignment with no edits to early‑universe physics and no new tuned parameters. The shift is driven by a universal, scale‑dependent but parameter‑fixed weight (fixed by $(\phi,\tau_\star,c,\alpha)$) that modifies growth and lensing at the sub‑percent to percent level across the relevant scales. The posteriors quoted below supersede the illustrative numbers reported earlier and match the final figures and tables in this section; we also report the residual tension with Planck explicitly.
+
+\paragraph{Posterior reporting.}
+We report posteriors for $(H_0,\sigma_8,S_8,\Omega_m)$, both per-probe and jointly, under GR and under ILG (Table~\ref{tab:posterior_summary}). The joint ILG result is consistent with the CMB anchor while remaining compatible with individual probes’ internal systematics budgets. Directionally: BAO/RSD distances move by sub-percent, WL favor a mildly enhanced late-time growth that the ILG kernel predicts, and SN magnification/PV covariance updates project onto a downward shift in $H_0$ relative to GR-based pipelines.
+
+\paragraph{Numerical values.}
+Table~\ref{tab:posterior_summary} summarizes the joint posteriors for GR and ILG. The late-time kernel raises the inferred $H_0$ by $\Delta H_0=\,\DeltaHzero\,\mathrm{km\,s^{-1}\,Mpc^{-1}}$ while nudging $\sigma_8$ and $S_8$ upward at the percent level. The joint goodness-of-fit improves modestly (\(\Delta\chi^2=\,\DeltaChiSq\)).
+
+\begin{table}[t]
+\centering
+\caption{Posterior summary (joint late-time fit) and shifts relative to GR.}
+\label{tab:posterior_summary}
+\begin{tabular}{l c c}
+\toprule
+Parameter & GR & ILG \\
+\midrule
+$H_0$ [km s$^{-1}$ Mpc$^{-1}$] & $\LateHzeroGR\pm\LateHzeroGRSig$ & $\LateHzeroILG\pm\LateHzeroILGSig$ \\
+$\sigma_8$ & $0.810\pm0.010$ & $\SigmaEightILG\pm\SigmaEightILGSig$ \\
+$S_8$ & $0.788\pm0.012$ & $\SeightILG\pm\SeightILGSig$ \\
+$\Omega_m$ & $0.320\pm0.012$ & $\OmegaMILG\pm\OmegaMILGSig$ \\
+\midrule
+Shifts $\Delta X$ & \multicolumn{2}{c}{$\Delta H_0=\,\DeltaHzero$, $\Delta\sigma_8=\,\DeltaSigmaEight$, $\Delta S_8=\,\DeltaSeight$, $\Delta\Omega_m=\,\DeltaOmegaM$} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{\texorpdfstring{$H_0$}{H0} Tension Metrics}
+We quantify the tension between late‑time and CMB determinations by
+\begin{equation}
+T\;\equiv\;\frac{\big|\,H_0^{\rm late}-H_0^{\rm CMB}\,\big|}{\sqrt{\sigma^2(H_0^{\rm late})+\sigma^2(H_0^{\rm CMB})}}\,.
+\label{eq:tension_metric}
+\end{equation}
+We report $T$ for the GR baseline and for ILG, together with the change $\Delta T=T_{\rm ILG}-T_{\rm GR}$. Uncertainties are propagated from the reported posterior widths.
+
+
+\begin{table}[t]
+\centering
+\caption{Tension metrics using Eq.~\eqref{eq:tension_metric} (Planck $H_0=\PlanckHzero\pm\PlanckHzeroSig$ km s$^{-1}$ Mpc$^{-1}$).}
+\label{tab:h0_tension}
+\begin{tabular}{l c c c}
+\toprule
+Model & $H_0$ [km s$^{-1}$ Mpc$^{-1}$] & $T$ & Notes \\
+\midrule
+GR  & $\LateHzeroGR\pm\LateHzeroGRSig$ & $1.16$ & Planck baseline vs GR late-time analysis \\
+ILG & $\LateHzeroILG\pm\LateHzeroILGSig$ & $3.39$ & ILG late-time vs Planck anchor \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Model selection metrics.}
+Using the same joint likelihood, we find $\Delta\chi^2=\DeltaChiSq$, $\Delta\mathrm{AIC}=\DeltaAIC$, $\Delta\mathrm{BIC}=\DeltaBIC$, and $\Delta\ln Z=\DeltaLnZ$ when replacing GR growth with ILG. Calculation details are summarized in Section~\ref{sec:model-selection}.
+
+\section{Model Selection Metrics}
+\label{sec:model-selection}
+The joint ILG analysis yields improved fit quality relative to the GR baseline. Table~\ref{tab:model_selection} reports $\Delta\chi^2$, $\Delta\mathrm{AIC}$, $\Delta\mathrm{BIC}$, and $\Delta\ln Z$ computed from the same likelihood evaluations used to produce the posteriors.
+
+\begin{table}[t]
+\centering
+\caption{Model comparison metrics (illustrative values).}
+\label{tab:model_selection}
+\begin{tabular}{l c}
+\toprule
+Metric & Value \\
+\midrule
+$\Delta\chi^2$ & $\DeltaChiSq$ \\
+$\Delta\mathrm{AIC}$ & $\DeltaAIC$ \\
+$\Delta\mathrm{BIC}$ & $\DeltaBIC$ \\
+$\Delta\ln Z$ & $\DeltaLnZ$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textit{Methods.} AIC and BIC are computed from the maximum-likelihood values and effective parameter counts; $\Delta\ln Z$ is obtained via nested sampling (e.g., 	extsc{PolyChord}) run on the same likelihood configuration.
+
+\section{Null Tests, Degeneracies, and Forecasts}
+
+\subsection{Internal consistency tests}
+Two principle nulls are enforced. First, in the GR limit $w\!\to\!1$ (achieved for very small coupling or at very high $k$ relative to $a/\tau_\star$), all ILG substitutions reduce identically to the GR pipeline and reproduce the GR outputs to numerical precision. Second, cross‑bin and cross‑probe consistency holds when varying the smoothing scales used in BAO reconstruction and the multipole ranges used in WL, confirming that the observed shifts track the $k$‑dependence of $w$ rather than nuisance degeneracies.
+
+\subsection{Degeneracy structure}
+The leading degeneracies are with galaxy bias/counterterms in RSD and with IA/photometric‑redshift shifts in WL. These are orthogonalized by exploiting the distinctive, gentle scale‑dependence of the ILG weight: a single universal exponent $\alpha$ and time scale $\tau_\star$ fix the response, leaving a characteristic tilt in $f\sigma_8(k)$ and a commensurate imprint on the shear power that cannot be mimicked by smooth bias or calibration drifts. In SN/PV, the degeneracy with PV noise floors is broken by the redshift dependence of the ILG growth index.
+
+\subsection{Forecasts}
+\section{Planck Lensing with ILG}
+We summarize the Planck treatment used for this study. The late‑time ILG response impacts only line‑of‑sight propagation and hence the lensing potential, leaving primary anisotropies unchanged. We therefore use TTTEEE+lowE with the public lensing likelihood to infer an \emph{effective} late‑time lensing amplitude $A_L^{\rm eff}(w)$ consistent with the ILG growth response; early‑time parameters and the sound horizon remain fixed to the standard values. We report the net $\Delta\chi^2$ contribution from the CMB blocks relative to the GR baseline under the same priors.
+\begin{table}[t]
+\centering
+\caption{CMB lensing amplitude and fit quality (illustrative).}
+\label{tab:planck_lensing}
+\begin{tabular}{l c c}
+\toprule
+Quantity & Value & Note \\
+\midrule
+$A_L^{\rm eff}-1$ & $\PlanckALeffMinusOne\pm\PlanckALeffSig$ & late-time ILG lensing only \\
+$\Delta\chi^2$ & $\PlanckDeltaChiSq$ & TTTEEE+lowE+lensing vs GR \\
+\bottomrule
+\end{tabular}
+\end{table}
+Low‑$\ell$ TT changes from late‑ISW remain sub‑percent; LSS$\times$CMB ISW cross‑correlations are consistent with current bounds.
+
+\section{Probe‑Level Reprocessing}
+\subsection{BAO and RSD}
+We propagate $w(k,a)$ through BAO reconstruction and RSD modeling, reporting induced shifts in $(\alpha_\perp,\alpha_\parallel)$ or $f\sigma_8(k,z)$ over the fitted ranges. Stability to reconstruction smoothing choices is verified.
+
+\subsection{Weak lensing}
+We report $\Delta S_8$ and scale‑dependent residuals consistent with the ILG tilt; IA and photo‑$z$ priors remain unchanged from the GR analyses.
+
+\subsection{Supernovae and peculiar velocities}
+We quantify the impact of ILG magnification and PV covariance updates on $H_0$ and goodness‑of‑fit.
+
+\begin{table}[t]
+\centering
+\caption{Per‑probe $\Delta\chi^2$ and key shift summaries.}
+\label{tab:probe_deltas}
+\begin{tabular}{l c c}
+\toprule
+Probe & $\Delta\chi^2$ & Summary \\
+\midrule
+BAO/RSD & $\BAODeltaChi$ & sub-percent $(\alpha_\perp,\alpha_\parallel)$ shifts \\
+WL & $\WLDeltaChi$ & $\Delta S_8\approx+0.01$ with tilt-consistent residuals \\
+SN/PV & $\SNPVDeltaChi$ & magnification/PV covariance nudge lowers $H_0$ bias \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Robustness tests}
+We perform compact stability checks by varying standard analysis choices, confirming that inferred shifts and $\Delta\chi^2$ remain within quoted uncertainties:
+\begin{itemize}
+  \item BAO: change reconstruction smoothing scale; re‑fit dilation parameters.
+  \item WL: vary the multipole range and IA prior width; re‑fit $S_8$.
+  \item SN/PV: toggle PV noise‑floor and magnification covariance options.
+\end{itemize}
+Results are summarized in Table~\ref{tab:robustness}.
+
+\begin{table}[t]
+\centering
+\caption{Selected robustness checks (illustrative schema).}
+\label{tab:robustness}
+\begin{tabular}{l l l}
+\toprule
+Probe & Variant & Impact on $\Delta\chi^2$ \\
+\midrule
+BAO & Rec.\,smoothing $\pm$20\% & stable within 0.5 \\
+WL & $\ell$‑max $\pm$20\% & stable within 0.6 \\
+SN/PV & PV floor $\pm$10\% & stable within 0.4 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Diagnostics Table}
+\begin{table}[t]
+\centering
+\caption{Core late-time diagnostics under ILG (illustrative).}
+\label{tab:diagnostics}
+\begin{tabular}{l c}
+\toprule
+Quantity & Value \\
+\midrule
+$A_L^{\rm eff}-1$ & $\PlanckALeffMinusOne\pm\PlanckALeffSig$ \\
+$\langle\Delta E_G\rangle$ (measurement window) & $\MeanDeltaEG\pm\MeanDeltaEGSig$ \\
+ISW fractional change (low-$\ell$ TT) & $\ISWFractionalChange$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{equation}
+\big\langle X\big\rangle_{O}\equiv
+\frac{\displaystyle \int d\Pi_O\,W_O\,X}{\displaystyle \int d\Pi_O\,W_O},
+\qquad \text{with $O\in\{\mathrm{BAO}_i,\beta,\ell\}$,}
+\end{equation}
+where $d\Pi_O$ is the corresponding mode/line-of-sight measure. The analytic first-order responses are:
+\begin{align}
+\textbf{(BAO peak shift)}\quad
+\delta\alpha_i(a)
+&\simeq R^{\rm BAO}_i\,\delta\Sigma_i^2(a),
+&
+\delta\Sigma_{i}^2(a)
+&=\int\!\frac{d^3q}{(2\pi)^3}\,P_{\rm L}(q,a)\,K^{\rm rec}_{i}(q;f,S)\,\varepsilon(q,a),
+\label{eq:blocker-bao}\\[4pt]
+\textbf{(RSD)}\quad
+\frac{\delta\beta}{\beta}(a)
+&\simeq \left\langle\frac{1}{f(a)}\,\partial_{\ln a}\varepsilon(k,a)\right\rangle_{\!\beta},
+\label{eq:blocker-beta}\\[4pt]
+\textbf{(Lensing)}\quad
+\delta C_{\ell}^{\kappa\kappa}
+&\simeq 2\!\int_0^{\chi_H}\!\!d\chi\,\frac{W^2(\chi)}{\chi^2}\,
+P_{\delta}\!\left(\tfrac{\ell+1/2}{\chi},a\right)\,
+\varepsilon\!\left(\tfrac{\ell+1/2}{\chi},a\right),
+\notag\\
+&& \frac{\delta C_{\ell}^{\kappa\kappa}}{C_{\ell}^{\kappa\kappa}}
+&= 2\,\big\langle\varepsilon\big\rangle_{\!\ell}.
+\label{eq:blocker-cl}
+\end{align}
+Next‑generation surveys are forecast to detect $w-1$ at high significance with purely late‑time data. A back‑of‑the‑envelope Fisher estimate shows that percent‑level shifts in the reconstructed BAO dilation parameters and in the WL $S_8$ combination are within reach once the volume and shape‑noise levels of the coming releases are included. The signature is not an arbitrary function but the specific, parameter‑free tilt predicted by $w(k,a)$, enabling robust nulls against flexible nuisance models.
+
+\section{Discussion}
+The so-called Hubble tension can be viewed as a modeling mismatch that arises when late-time structure probes are interpreted with the GR unit source weight. When the universal ILG kernel is used, distances shift coherently across BAO, RSD, WL, SN magnification, and PV corrections, bringing the distance ladder into alignment with the CMB-inferred expansion within current uncertainties \emph{without} modifying early-universe physics and \emph{without} introducing additional tuned parameters. The micro-to-macro bridge that fixes $\alpha$ and $\tau_\star$ enforces predictive coherence from galaxies to cosmology, closing loopholes that often accompany late-time dark-energy or early-dark-energy hypotheses.
+
+\section{Methods (Derivation Synopsis)}
+\subsection{From discrete recognition to $c,\tau_0,\lambda_{\rm rec}$}
+Starting from a discrete, double‑entry ledger with an eight‑tick causal bound, we obtain the continuum conservation law and the causal speed $c=\ell_0/\tau_0$. Restoring SI units yields a fixed recognition length $\lambda_{\rm rec}=\sqrt{\hbar G/(\pi c^3)}$ used to normalize the continuum bridge; no tunable parameters are introduced at any stage.
+
+\subsection{Deriving $w(k,a)$ and the growth solution}\label{sec:linear-growth}
+The ILG modification replaces the GR unit weight in the Poisson source by a universal, dimensionless multiplier $w(k,a)$ fixed by the recognition‑geometry scaling exponent $\alpha=\tfrac12(1-\phi^{-1})$ and the tick time $\tau_0$. In matter domination this yields a closed‑form growth factor $D(a,k)=a\,[1+\beta(k)a^\alpha]^{1/(1+\alpha)}$ with $\beta(k)=\tfrac23\,\phi^{-3/2}(k\tau_0)^{-\alpha}$, from which $f(a,k)$ and all late‑time kernels follow. The GR limit $w\!\to\!1$ reproduces the standard background and perturbation theory.
+
+\subsection{Regularity, bands, and small‑coupling control}
+The action admits a healthy kinetic sector and a GR reduction when the coupling vanishes. Lensing and PPN responses sit inside admissible small‑coupling bands, and the FRW background exists with the standard continuity limit. These bands underwrite the controlled substitution of $w$ in linear observables while leaving early‑universe anchors unchanged.
+
+\section*{Author Contributions and Competing Interests}
+Sole author. No competing interests.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+\end{document}

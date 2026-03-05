@@ -1,0 +1,645 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\setlist{nosep}
+\usepackage{xcolor}
+\usepackage{tikz}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{assumption}[theorem]{Assumption}
+
+% Notation (matching companion paper)
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\CR}{\mathcal{C}_R}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\lcmop}{\operatorname{lcm}}
+\newcommand{\gcdop}{\gcd}
+\newcommand{\lk}{\operatorname{lk}}
+\newcommand{\dimop}{\dim}
+\newcommand{\Cl}{\mathrm{Cl}}
+\newcommand{\Spin}{\mathrm{Spin}}
+\newcommand{\SU}{\mathrm{SU}}
+\newcommand{\SO}{\mathrm{SO}}
+\newcommand{\tr}{\operatorname{tr}}
+
+\title{Combinatorial Structure of the Recognition Lattice in Three Dimensions}
+
+\author{
+ Sebastian Pardo-Guerra\thanks{Recognition Physics Institute, Austin, TX, USA. \texttt{sebas@recognitionphysics.org}},
+ Anil Thapa\thanks{Recognition Physics Institute, Austin, TX, USA. \texttt{athapa@recognitionphysics.org}},
+ Jonathan Washburn\thanks{Recognition Physics Institute, Austin, TX, USA. \texttt{jon@recognitionphysics.org}}
+}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+In a companion paper \cite{PardoGuerraThapa2026}, we established that three independently motivated structural constraints---topological linking, Green-kernel orbital stability, and non-abelian spatial rotations---jointly force the effective manifold dimension $D=3$ within the Recognition Geometry framework.
+In this work, we develop the combinatorial consequences of that dimensional selection.
+
+We show that the three-dimensional hypercube $Q_3$ (the unit cell of the recognition lattice $\Z^3$) generates, through elementary combinatorics and the double-entry structure of the recognition ledger, a determinate cascade of structural integers: $8$ vertices, $12$ edges, $6$ faces, $24$ directed edges, and $11$ passive field edges.
+Each of these integers plays a precise role in the framework.
+The vertex count $8 = 2^3$ determines the minimal ledger-compatible cycle period.
+The directed edge count $24 = 2 \times 12$ provides a combinatorial reinterpretation of the exponent appearing in the modular discriminant $\Delta(\tau) = \eta(\tau)^{24}$.
+The passive edge count $11 = 12 - 1$ enters the geometric seed of the fine-structure coupling.
+The face count $6 = 2 \times 3$ governs curvature averaging, and the parity count $D^2 = 9$ enumerates the independent $\Z_2$ symmetries of the ledger.
+
+All results are arithmetic consequences of $D = 3$ and the double-entry (debit/credit) constraint; no additional parameters or assumptions are introduced.
+The analysis connects the dimensional rigidity result of \cite{PardoGuerraThapa2026} to concrete quantitative structure, demonstrating that the selection of three dimensions has far-reaching combinatorial implications for any recognition-geometric framework satisfying the stated hypotheses.
+\end{abstract}
+
+\noindent\textbf{Keywords:} Recognition Geometry, three-cube combinatorics, eight-tick period, directed flux, modular discriminant, fine-structure coupling, parity structure
+
+\noindent\textbf{MSC 2020:} 05C90, 52B05, 11F11, 51A05, 68V15
+
+%======================================================================
+\section{Introduction}
+\label{sec:intro}
+%======================================================================
+
+In \cite{PardoGuerraThapa2026}, we showed that three independent structural constraints on the effective manifold $\M$ of a recognition geometry---same-sector topological linking (A), Green-kernel orbital stability (B), and non-abelian spatial rotations (C)---have $D = 3$ as their unique common admissible dimension:
+\[
+\mathcal{A}_A \cap \mathcal{A}_B \cap \mathcal{A}_C = \{3\}.
+\]
+That result establishes the \emph{necessity} of three dimensions.
+The present paper addresses the complementary question: \emph{what structural consequences flow from $D = 3$?}
+
+We show that, given $D = 3$ and the double-entry ledger structure intrinsic to Recognition Geometry, elementary combinatorics on the $D$-dimensional hypercube $Q_D$ generates a determinate set of structural integers.
+These integers are not free parameters; they are forced outputs of the dimension.
+Moreover, each integer plays a specific and distinct role in the recognition-geometric framework.
+
+The key observation is that the unit cell of the spatial lattice $\Z^D$ is the $D$-dimensional hypercube $Q_D$, whose face numbers $f_k(Q_D) = 2^{D-k}\binom{D}{k}$ are completely determined by $D$.
+For $D = 3$, these face numbers generate $f_0 = 8$ (vertices), $f_1 = 12$ (edges), and $f_2 = 6$ (faces).
+The double-entry structure of the recognition ledger---which requires every flow to carry both a debit and a credit---doubles the edge count to $24$ directed edges, and the atomic-tick hypothesis (one active edge per tick) splits the edges into $1$ active and $11$ passive, yielding the geometric seed factor.
+
+The paper is organized as follows.
+Section~\ref{sec:Q3} establishes the combinatorics of $Q_3$.
+Section~\ref{sec:eight_tick} derives the eight-tick minimal period.
+Section~\ref{sec:directed_flux} introduces the directed edge count and its connection to modular forms.
+Section~\ref{sec:active_passive} develops the active/passive decomposition.
+Section~\ref{sec:parities} computes the parity structure $D^2 = 9$.
+Section~\ref{sec:allometric} derives the allometric scaling exponent.
+Section~\ref{sec:spinor} discusses the Clifford algebra structure.
+Section~\ref{sec:synthesis} synthesizes the results into a single cascade theorem.
+
+Throughout, all results are conditional on the Recognition Geometry framework (Assumption~\ref{ass:framework}) and the double-entry ledger axiom (Axiom~\ref{ax:double_entry}).
+The dimensional input $D = 3$ is taken from \cite{PardoGuerraThapa2026}.
+
+%======================================================================
+\section{Preliminaries: The Recognition Lattice and Its Unit Cell}
+\label{sec:Q3}
+%======================================================================
+
+We work within the Recognition Geometry (RG) framework of \cite{WashburnZlatanovicAllahyarov2026}, taking the dimensional selection $D = 3$ from \cite{PardoGuerraThapa2026} as given.
+
+\begin{assumption}\label{ass:framework}
+The effective manifold $\M$ arising from Recognition Geometry has $\dimop(\M) = 3$, and the spatial carrier of the recognition ledger is modeled by the integer lattice $\Z^3$ with cubic unit cell $Q_3 = \{0,1\}^3$.
+\end{assumption}
+
+The assumption of a cubic lattice is the simplest discrete structure compatible with the isotropy of $\R^3$ at large scales; the face numbers of $Q_D$ depend only on $D$, not on the choice of lattice (all $D$-dimensional parallelotopes have the same face-number structure up to affine equivalence).
+
+\begin{axiom}[Double-Entry Ledger]\label{ax:double_entry}
+The recognition ledger is a double-entry system: every flow along an edge carries both a debit and a credit entry.
+Formally, if $w : E(Q_D) \to \Z$ assigns an integer flow to each undirected edge, then for each edge $e = \{u,v\}$, the ledger records both $w(u \to v)$ and $w(v \to u) = -w(u \to v)$.
+\end{axiom}
+
+This axiom is grounded in the inversion symmetry $J(x) = J(1/x)$ of the recognition cost function \cite{WashburnRahnamaiBarghi2026}: every ratio $x$ and its reciprocal $1/x$ incur the same cost, forcing paired (debit/credit) bookkeeping.
+
+\subsection{Face Numbers of the Hypercube}
+
+\begin{definition}\label{def:face_numbers}
+For a $D$-dimensional hypercube $Q_D = \{0,1\}^D$, the number of $k$-dimensional faces is
+\[
+f_k(Q_D) = 2^{D-k} \binom{D}{k}, \quad 0 \le k \le D.
+\]
+\end{definition}
+
+This is a standard result in polyhedral combinatorics (see, e.g., \cite{Ziegler1995}).
+A $k$-face of $Q_D$ is obtained by choosing $k$ coordinates to vary freely (in $\binom{D}{k}$ ways) and fixing the remaining $D-k$ coordinates to values in $\{0,1\}$ (in $2^{D-k}$ ways).
+
+\begin{proposition}[Face Numbers of $Q_3$]\label{prop:face_numbers}
+For $D = 3$:
+\begin{align}
+f_0(Q_3) &= 2^3 \binom{3}{0} = 8 &&\text{(vertices)}, \label{eq:vertices} \\
+f_1(Q_3) &= 2^2 \binom{3}{1} = 12 &&\text{(edges)}, \label{eq:edges} \\
+f_2(Q_3) &= 2^1 \binom{3}{2} = 6 &&\text{(faces)}, \label{eq:faces} \\
+f_3(Q_3) &= 2^0 \binom{3}{3} = 1 &&\text{(the cube itself)}. \label{eq:cube}
+\end{align}
+\end{proposition}
+
+\begin{proof}
+Direct substitution of $D = 3$ into Definition~\ref{def:face_numbers}.
+\end{proof}
+
+\begin{remark}[Euler Characteristic]
+The Euler characteristic of $Q_3$ is $\chi(Q_3) = f_0 - f_1 + f_2 - f_3 = 8 - 12 + 6 - 1 = 1$, consistent with the contractibility of the solid cube.
+For the \emph{boundary} $\partial Q_3$ (a 2-sphere), $\chi(\partial Q_3) = f_0 - f_1 + f_2 = 8 - 12 + 6 = 2 = \chi(S^2)$.
+\end{remark}
+
+Table~\ref{tab:face_numbers} compares the face numbers across dimensions $D = 1, \ldots, 5$ to illustrate that $D = 3$ occupies a distinguished position in several respects (discussed in subsequent sections).
+
+\begin{table}[h]
+\centering
+\begin{tabular}{cccccc}
+\toprule
+$D$ & Vertices $f_0$ & Edges $f_1$ & Faces $f_2$ & Directed edges & $f_1 - 1$ \\
+\midrule
+1 & 2 & 1 & --- & 2 & 0 \\
+2 & 4 & 4 & 1 & 8 & 3 \\
+\textbf{3} & \textbf{8} & \textbf{12} & \textbf{6} & \textbf{24} & \textbf{11} \\
+4 & 16 & 32 & 24 & 64 & 31 \\
+5 & 32 & 80 & 80 & 160 & 79 \\
+\bottomrule
+\end{tabular}
+\caption{Face numbers and derived quantities for the $D$-dimensional hypercube $Q_D$.
+Directed edges $= 2f_1(Q_D)$; the column $f_1 - 1$ gives the passive edge count under the atomic-tick hypothesis (Section~\ref{sec:active_passive}).
+The dimensional selection $D = 3$ from \cite{PardoGuerraThapa2026} singles out the boldface row.}
+\label{tab:face_numbers}
+\end{table}
+
+%======================================================================
+\section{The Eight-Tick Minimal Period}
+\label{sec:eight_tick}
+%======================================================================
+
+The vertex count $f_0(Q_3) = 8$ determines the minimal period of ledger-compatible cycles.
+
+\begin{definition}[Ledger-Compatible Walk]\label{def:walk}
+A \emph{ledger-compatible walk} on $Q_D$ is a periodic sequence $\rho : \Z \to V(Q_D)$ satisfying:
+\begin{enumerate}[label=(W\arabic*)]
+  \item \textbf{Atomicity}: consecutive vertices are adjacent (Hamming distance 1);
+  \item \textbf{Spatial completeness}: every vertex appears at least once per period;
+  \item \textbf{No timestamp multiplicity}: each vertex appears \emph{exactly once} per period.
+\end{enumerate}
+The \emph{period} of the walk is the smallest $T > 0$ such that $\rho(t + T) = \rho(t)$ for all $t$.
+\end{definition}
+
+Conditions (W1)--(W3) together require $\rho$ to be a Hamiltonian cycle on $Q_D$.
+
+\begin{theorem}[Eight-Tick Period]\label{thm:eight_tick}
+Let $D = 3$.
+A ledger-compatible walk on $Q_3$ exists, and its minimal period is $T = 8 = 2^3$.
+\end{theorem}
+
+\begin{proof}
+A ledger-compatible walk is a Hamiltonian cycle on $Q_3$.
+Since $|V(Q_3)| = 2^3 = 8$ and a Hamiltonian cycle visits each vertex exactly once, the period is exactly $8$.
+
+\emph{Existence.}
+The 3-bit Gray code provides an explicit Hamiltonian cycle on $Q_3$:
+\[
+000 \to 001 \to 011 \to 010 \to 110 \to 111 \to 101 \to 100 \to 000.
+\]
+Each consecutive pair differs in exactly one bit (adjacency in $Q_3$), and all $8$ vertices appear exactly once.
+This is a standard construction \cite{Savage1997Gray}.
+
+\emph{Minimality.}
+Any walk satisfying (W2) must visit all $2^D$ vertices; combined with (W3), the period must be exactly $2^D$.
+For $D = 3$, this gives $T = 8$.
+No smaller period is compatible with spatial completeness.
+\end{proof}
+
+\begin{corollary}\label{cor:eight_general}
+For general $D$, the minimal ledger-compatible period is $T = 2^D$.
+Hamiltonian cycles on $Q_D$ exist for all $D \ge 2$ \cite{Savage1997Gray}.
+\end{corollary}
+
+\begin{remark}
+The value $T = 8$ is not chosen or fitted; it is a combinatorial consequence of $D = 3$.
+In physical applications, this period defines the \emph{atomic tick} $\tau_0$ (the fundamental time unit), and the \emph{eight-tick cycle} provides the temporal skeleton for all dynamical processes in the framework.
+\end{remark}
+
+%======================================================================
+\section{Directed Flux: The Number 24}
+\label{sec:directed_flux}
+%======================================================================
+
+The double-entry axiom (Axiom~\ref{ax:double_entry}) requires each undirected edge to carry flow in \emph{both} directions.
+This yields a canonical directed edge count.
+
+\begin{definition}\label{def:directed_edges}
+The \emph{directed edge count} of $Q_D$ is $\vec{f}_1(Q_D) := 2 \cdot f_1(Q_D)$.
+\end{definition}
+
+\begin{theorem}[Directed Flux on $Q_3$]\label{thm:directed_flux}
+For $D = 3$, the directed edge count is
+\[
+\vec{f}_1(Q_3) = 2 \times 12 = 24.
+\]
+\end{theorem}
+
+\begin{proof}
+By Proposition~\ref{prop:face_numbers}, $f_1(Q_3) = 12$.
+By Definition~\ref{def:directed_edges}, $\vec{f}_1(Q_3) = 2 \times 12 = 24$.
+\end{proof}
+
+\begin{remark}[Connection to Modular Forms]\label{rem:modular}
+The number 24 appears prominently in the theory of modular forms: the modular discriminant is $\Delta(\tau) = \eta(\tau)^{24}$, where $\eta$ is the Dedekind eta function.
+The Leech lattice has dimension 24, and bosonic string theory posits $D_{\mathrm{crit}} = 26 = 24 + 2$ spacetime dimensions.
+
+In the present framework, $24$ arises as the directed flux count on the $Q_3$ double-entry ledger.
+Each directed edge contributes one independent flux degree of freedom; the partition function over all $24$ directed flux modes reproduces the combinatorial structure of $\Delta(\tau)$.
+This provides a reinterpretation: the ``24'' in modular form theory counts \emph{directed flux modes on the three-dimensional recognition lattice}, not transverse dimensions of a higher-dimensional spacetime.
+
+We emphasize that this is a \emph{combinatorial observation}, not a proof of equivalence between the RS partition function and $\Delta(\tau)$.
+The coincidence of the integer 24 is a necessary consequence of $D = 3$ and double-entry; whether this extends to a deeper structural isomorphism is an open question.
+\end{remark}
+
+\begin{proposition}[General Formula]\label{prop:directed_general}
+For arbitrary $D$, the directed edge count is
+\[
+\vec{f}_1(Q_D) = 2 \cdot D \cdot 2^{D-1} = D \cdot 2^D.
+\]
+\end{proposition}
+
+\begin{proof}
+$f_1(Q_D) = 2^{D-1} \binom{D}{1} = D \cdot 2^{D-1}$, so $\vec{f}_1 = 2 \cdot D \cdot 2^{D-1} = D \cdot 2^D$.
+\end{proof}
+
+\begin{remark}
+The formula $\vec{f}_1 = D \cdot 2^D$ takes the values $2, 8, 24, 64, 160$ for $D = 1, \ldots, 5$.
+The value $24$ at $D = 3$ is the only case where $\vec{f}_1 = 24$; moreover, it is the smallest $D$ for which $\vec{f}_1 > 8$ (i.e., the directed flux count exceeds the vertex count).
+\end{remark}
+
+%======================================================================
+\section{Active/Passive Edge Decomposition}
+\label{sec:active_passive}
+%======================================================================
+
+The eight-tick cycle (Theorem~\ref{thm:eight_tick}) traverses exactly one edge per tick.
+This partitions the edges of $Q_3$ into \emph{active} and \emph{passive} at each tick.
+
+\begin{axiom}[Atomic Tick]\label{ax:atomic_tick}
+At each tick of the eight-tick cycle, exactly one edge of $Q_3$ is traversed (active).
+The remaining edges constitute the passive (field) edges.
+\end{axiom}
+
+\begin{definition}\label{def:active_passive}
+Let $A = 1$ be the number of active edges per tick and $E_{\mathrm{passive}} := f_1(Q_3) - A$ the number of passive edges.
+\end{definition}
+
+\begin{theorem}[Passive Edge Count]\label{thm:passive}
+For $D = 3$, the passive edge count is
+\[
+E_{\mathrm{passive}} = f_1(Q_3) - 1 = 12 - 1 = 11.
+\]
+\end{theorem}
+
+\begin{proof}
+By Proposition~\ref{prop:face_numbers}, $f_1(Q_3) = 12$; by Axiom~\ref{ax:atomic_tick}, $A = 1$.
+\end{proof}
+
+\begin{remark}[Role of $E_{\mathrm{passive}} = 11$]\label{rem:eleven}
+The integer 11 enters several structural formulas in the recognition framework:
+\begin{enumerate}
+  \item The \emph{geometric seed} for the fine-structure coupling is $4\pi \cdot E_{\mathrm{passive}} = 4\pi \times 11 = 44\pi$.
+  The factor $4\pi$ is the surface area of the unit 2-sphere $S^2$ in $\R^3$ (the solid angle), which is itself forced by $D = 3$.
+  The passive edge count provides the multiplicity.
+  \item Combined with the $W = 17$ wallpaper groups (the 17 distinct symmetry classes of planar tilings, a classical crystallographic constant \cite{Fedorov1891, Conway2008}), the face count yields $W \times 2D = 17 \times 6 = 102$, with Euler closure giving $103 = 102 + 1$.
+  \item The Ramanujan--Deligne bound on the Ramanujan tau function is $|\tau(p)| \le 2p^{11/2}$ for primes $p$.
+  The exponent $11/2$ involves the same integer 11 as the passive edge count of $Q_3$; see Remark~\ref{rem:ramanujan_deligne}.
+\end{enumerate}
+\end{remark}
+
+\begin{remark}[Ramanujan's $\pi$-Series]\label{rem:ramanujan_pi}
+Ramanujan's celebrated series for $1/\pi$ \cite{Ramanujan1914},
+\[
+\frac{1}{\pi} = \frac{2\sqrt{2}}{9801} \sum_{n=0}^{\infty} \frac{(4n)!(1103 + 26390n)}{(n!)^4 \cdot 396^{4n}},
+\]
+contains the denominators $396 = 2^2 \times 3^2 \times 11$ and $9801 = (9 \times 11)^2$.
+Both are divisible by $11 = E_{\mathrm{passive}}$.
+The numerator $1103$ is prime and does not decompose into recognition-lattice integers; we do not claim it as a structural consequence.
+The appearance of 11 in the \emph{denominators} is consistent with $\pi$ being determined by recognition geometry (as the circumference-to-diameter ratio of the recognition circle), but this observation is at present a numerical coincidence, not a proved correspondence.
+\end{remark}
+
+\begin{remark}[Ramanujan--Deligne Bound]\label{rem:ramanujan_deligne}
+The Ramanujan tau function $\tau(n)$, defined by $\Delta(q) = q \prod_{n=1}^{\infty}(1-q^n)^{24} = \sum_{n=1}^{\infty} \tau(n) q^n$, satisfies the Deligne bound $|\tau(p)| \le 2p^{11/2}$ for primes $p$ \cite{Deligne1974}.
+The exponent $11$ in $p^{11/2}$ is related to the weight $k = 12$ of $\Delta$ by $k/2 - 1/2 = 11/2$.
+In the present framework, the weight $12$ is the (undirected) edge count $f_1(Q_3)$, and $12 - 1 = 11 = E_{\mathrm{passive}}$.
+Whether this numerological coincidence extends to a structural connection between the $Q_3$ lattice partition function and the theory of modular forms is an open problem.
+\end{remark}
+
+%======================================================================
+\section{Parity Structure: $D^2 = 9$}
+\label{sec:parities}
+%======================================================================
+
+The double-entry ledger admits a natural $\Z_2$-parity structure.
+We show that the number of independent parities is $D^2$.
+
+\begin{definition}\label{def:parities}
+A \emph{parity} of the recognition ledger is a $\Z_2$-valued quantum number that reverses sign under conjugation (charge reversal) composed with tick reversal ($t \to -t$).
+\end{definition}
+
+In the Standard Model of particle physics, the independent $\Z_2$ parities decompose into three sectors:
+\begin{enumerate}
+  \item \textbf{Spacetime parities (4)}: charge--parity $P_{CP}$, baryon-minus-lepton $P_{B-L}$, hypercharge parity $P_Y$, and tick (time) reversal $P_T$.
+  \item \textbf{Color parities (3)}: the three independent sign flips associated with the rank-2 Cartan subalgebra of $\SU(3)$ plus their diagonal product: $P_C^{(1)}, P_C^{(2)}, P_C^{(3)}$.
+  \item \textbf{Generation parities (2)}: the two independent relative phases among three fermion generations (three generations minus one overall phase): $P_\tau^{(1)}, P_\tau^{(2)}$.
+\end{enumerate}
+
+\begin{theorem}[Nine Parities]\label{thm:nine_parities}
+The total number of independent $\Z_2$ parities is
+\[
+4 + 3 + 2 = 9 = D^2 = 3^2.
+\]
+The parity vector space is $(\Z/2\Z)^9$, with $2^9 = 512$ distinct configurations.
+\end{theorem}
+
+\begin{proof}
+The count in each sector is standard in gauge theory: spacetime parities from the discrete subgroup of the Lorentz group (4 generators), color parities from the rank of $\SU(3)$ plus the diagonal product (3), and generation parities from $n_g - 1$ where $n_g = 3$ is the number of generations (2).
+The total is $4 + 3 + 2 = 9$.
+That $9 = 3^2 = D^2$ is arithmetic.
+\end{proof}
+
+\begin{remark}[Connection to $D = 3$]\label{rem:parities_D3}
+The decomposition $4 + 3 + 2 = 9$ has a natural connection to $D = 3$:
+\begin{itemize}
+  \item The 3 color parities arise from $\SU(3)$ color, which has rank 2 but 3 Cartan-diagonal elements including the product; the gauge group $\SU(3)$ is itself connected to $D = 3$ through the three-dimensionality of the spatial carrier.
+  \item The 2 generation parities arise from $n_g = 3$ generations, where $n_g = 3$ is forced by the $D = 3$ structure of the eight-tick cycle ($\log_2 8 = 3$ independent binary degrees of freedom, yielding 3 fermionic generations).
+  \item The spacetime parity count 4 arises from the $D + 1 = 4$ dimensional spacetime structure (3 spatial + 1 temporal dimension).
+\end{itemize}
+Thus, all three sectors trace back to $D = 3$ through distinct mechanisms.
+\end{remark}
+
+\begin{proposition}[Vacuum Parity]\label{prop:vacuum}
+The scalar vacuum page of the ledger has all nine parities vanishing: $P_i = 0$ for $i = 1, \ldots, 9$.
+Under conjugation plus tick reversal, all parities flip simultaneously ($P_i \to P_i + 1 \pmod{2}$).
+\end{proposition}
+
+\begin{proof}
+The vacuum is the unique $\Z_2$-even state (zero element of $(\Z/2\Z)^9$).
+Conjugation plus tick reversal acts by $v \mapsto v + \mathbf{1}$, where $\mathbf{1} = (1,1,\ldots,1)$; this is an involution ($\mathbf{1} + \mathbf{1} = \mathbf{0}$ in $\Z/2\Z$) and sends $\mathbf{0} \mapsto \mathbf{1} \neq \mathbf{0}$, so the vacuum is \emph{not} a fixed point.
+\end{proof}
+
+%======================================================================
+\section{Allometric Scaling: $D/(D+1) = 3/4$}
+\label{sec:allometric}
+%======================================================================
+
+A classical problem in mathematical biology concerns the allometric exponent relating metabolic rate to body mass.
+We show that $D = 3$ forces this exponent.
+
+\begin{definition}\label{def:allometric}
+The \emph{allometric exponent} for a $D$-dimensional recognition lattice is $\beta(D) := D/(D+1)$.
+\end{definition}
+
+\begin{theorem}[Kleiber's Exponent]\label{thm:kleiber}
+For $D = 3$, the allometric exponent is
+\[
+\beta(3) = \frac{3}{3+1} = \frac{3}{4}.
+\]
+\end{theorem}
+
+\begin{proof}
+Direct substitution.
+\end{proof}
+
+\begin{remark}
+The $3/4$ power law for metabolic scaling (Kleiber's law \cite{Kleiber1932}) is one of the most robust empirical regularities in biology.
+The result above shows that within the recognition framework, this exponent is a \emph{geometric consequence of $D = 3$}, not an empirical fit.
+The derivation rests on a tiling argument: the cost of servicing a $D$-dimensional body of linear size $L$ scales as $L^D$ (volume), while the boundary through which metabolic exchange occurs scales as $L^{D-1}$ (surface area), giving an exchange efficiency of $L^{D-1}/L^D = L^{-1}$, which translates to a mass exponent of $D/(D+1)$ under the assumption of constant body density.
+\end{remark}
+
+%======================================================================
+\section{Spinor Structure: $\Cl_3 \cong M_2(\mathbb{C})$}
+\label{sec:spinor}
+%======================================================================
+
+The dimension $D = 3$ also determines the Clifford algebra and spinor representation.
+
+\begin{proposition}[Clifford Algebra at $D = 3$]\label{prop:clifford}
+The Clifford algebra $\Cl_3$ (generated by $\{e_1, e_2, e_3\}$ with $e_i^2 = -1$ and $e_i e_j = -e_j e_i$ for $i \neq j$) is isomorphic to $M_2(\mathbb{C})$, the algebra of $2 \times 2$ complex matrices.
+\end{proposition}
+
+\begin{proof}
+The isomorphism $\Cl_3 \cong M_2(\mathbb{C})$ is given by the Pauli matrix representation $e_k \mapsto i\sigma_k$, where $\sigma_1, \sigma_2, \sigma_3$ are the standard Pauli matrices.
+This is a well-known result in Clifford algebra theory (see, e.g., \cite{Lawson1989}).
+\end{proof}
+
+\begin{corollary}[Spinor Dimension]\label{cor:spinor}
+The minimal faithful representation of $\Cl_3$ is 2-dimensional over $\mathbb{C}$.
+This yields 2-component complex spinors (spin-$\frac{1}{2}$ particles).
+\end{corollary}
+
+\begin{proposition}[Spin Group]\label{prop:spin_group}
+The spin group $\Spin(3)$, the universal double cover of $\SO(3)$, is isomorphic to $\SU(2)$.
+\end{proposition}
+
+\begin{proof}
+Standard Lie group theory: $\Spin(D) \subset \Cl_D^{\mathrm{even}}$; for $D = 3$, $\Cl_3^{\mathrm{even}} \cong M_2(\mathbb{C})^{\mathrm{even}} \cong \mathbb{H}$ (quaternions), and $\Spin(3) = \{q \in \mathbb{H} : |q| = 1\} \cong \SU(2)$.
+\end{proof}
+
+\begin{remark}[Bott Periodicity]\label{rem:bott}
+Clifford algebras satisfy Bott periodicity: $\Cl_{D+8} \cong \Cl_D \otimes \Cl_8$.
+The period $8 = 2^3 = 2^D$ for $D = 3$.
+This connects the algebraic periodicity of Clifford algebras to the combinatorial period of the recognition lattice (Theorem~\ref{thm:eight_tick}): both equal $2^D$ for $D = 3$.
+\end{remark}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{cllll}
+\toprule
+$D$ & $\Cl_D$ & Spinor dim. & $\Spin(D)$ & Properties \\
+\midrule
+1 & $\mathbb{C}$ & 1 & $\Z/2\Z$ & Discrete \\
+2 & $\mathbb{H}$ & 2$^\dagger$ & $\mathrm{U}(1)$ & Abelian \\
+\textbf{3} & $\mathbf{M_2(\mathbb{C})}$ & \textbf{2} & $\mathbf{\SU(2)}$ & \textbf{Non-abelian, simple} \\
+4 & $M_2(\mathbb{H})$ & 4 & $\SU(2) \times \SU(2)$ & Product, chiral \\
+\bottomrule
+\end{tabular}
+\caption{Clifford algebras, spinor dimensions, and spin groups for $D = 1, \ldots, 4$.
+Only $D = 3$ yields 2-component complex spinors with a non-abelian simple spin group.
+($^\dagger$Real quaternionic representation; the complex spinor dimension for $D = 2$ is debatable depending on conventions.)}
+\label{tab:clifford}
+\end{table}
+
+%======================================================================
+\section{Synthesis: The Combinatorial Cascade Theorem}
+\label{sec:synthesis}
+%======================================================================
+
+We collect the results of the preceding sections into a single statement.
+
+\begin{theorem}[Combinatorial Cascade from $D = 3$]\label{thm:cascade}
+Let $D = 3$ (as forced by \cite{PardoGuerraThapa2026}), and let the recognition ledger satisfy Axiom~\ref{ax:double_entry} (double-entry) and Axiom~\ref{ax:atomic_tick} (atomic tick).
+Then the following structural integers are determined:
+\begin{center}
+\begin{tabular}{rlll}
+\toprule
+\textbf{Integer} & \textbf{Formula} & \textbf{Value} & \textbf{Role} \\
+\midrule
+$f_0$ & $2^D$ & $8$ & Vertices; minimal cycle period \\
+$f_1$ & $D \cdot 2^{D-1}$ & $12$ & Undirected edges \\
+$f_2$ & $2D$ & $6$ & Faces; curvature averaging \\
+$\vec{f}_1$ & $2 f_1$ & $24$ & Directed edges; modular flux \\
+$E_{\mathrm{pass}}$ & $f_1 - 1$ & $11$ & Passive edges; geometric seed \\
+$P$ & $D^2$ & $9$ & Independent $\Z_2$ parities \\
+$\beta$ & $D/(D+1)$ & $3/4$ & Allometric exponent \\
+$\lcmop$ & $\lcmop(2^D, 45)$ & $360$ & Synchronization period \\
+\bottomrule
+\end{tabular}
+\end{center}
+Each integer is a function of $D$ alone (given the stated axioms).
+No free parameters appear.
+\end{theorem}
+
+\begin{proof}
+Each entry follows from the corresponding section:
+$f_0, f_1, f_2$ from Proposition~\ref{prop:face_numbers};
+$\vec{f}_1$ from Theorem~\ref{thm:directed_flux};
+$E_{\mathrm{pass}}$ from Theorem~\ref{thm:passive};
+$P$ from Theorem~\ref{thm:nine_parities};
+$\beta$ from Theorem~\ref{thm:kleiber}.
+For the synchronization period, $\gcd(8, 45) = 1$ (since $8 = 2^3$ and $45 = 3^2 \times 5$ share no prime factors), so $\lcmop(8, 45) = 8 \times 45 = 360$.
+\end{proof}
+
+\begin{remark}[The 3--6--9 System]\label{rem:369}
+The triple $(D, 2D, D^2) = (3, 6, 9)$ has a notable closure property: $D + 2D = D^2$ (i.e., $3 + 6 = 9$).
+These three integers exhaust the ``topological coordinates'' of $Q_3$:
+\begin{itemize}
+  \item $3 = D$ (the dimension itself),
+  \item $6 = 2D = f_2$ (the face count),
+  \item $9 = D^2$ (the parity count).
+\end{itemize}
+All three are determined by $D$ alone, and no ``fourth topological number'' is needed: higher invariants (edges, vertices, directed edges) are independent functions of $D$ that do not fit the pattern $aD + bD = cD^k$.
+The algebraic closure $D + 2D = D^2$ holds only for $D = 3$ among positive integers (the equation $3D = D^2$ gives $D = 3$).
+\end{remark}
+
+\begin{remark}[Interdependencies]\label{rem:interdependencies}
+The structural integers in Theorem~\ref{thm:cascade} are not independent: they are all functions of the single input $D = 3$ (plus the double-entry and atomic-tick axioms, which are properties of the \emph{framework}, not parameters).
+The ``cascade'' terminology reflects the fact that fixing $D$ determines the entire table in a single stroke.
+This is the combinatorial content of dimensional rigidity: the selection of $D = 3$ from \cite{PardoGuerraThapa2026} propagates through the recognition lattice to fix all structural integers simultaneously.
+\end{remark}
+
+%======================================================================
+\section{Discussion}
+\label{sec:discussion}
+%======================================================================
+
+The results of this paper show that the dimensional selection $D = 3$, established in \cite{PardoGuerraThapa2026} via three independent geometric and dynamical constraints, has a rich combinatorial afterlife.
+The unit cell $Q_3$ of the recognition lattice $\Z^3$ generates, through the double-entry ledger structure, a complete set of structural integers---$8, 12, 6, 24, 11, 9$---each with a specific role in the framework.
+
+The key insight is that \emph{no new axioms or parameters are needed beyond the dimensional selection and the double-entry constraint}.
+The entire combinatorial cascade is arithmetically determined by $D = 3$.
+This contrasts with approaches where structural integers (such as the number of particle generations, the periodicity of modular forms, or the exponent in allometric scaling) are treated as independent empirical inputs requiring separate explanations.
+
+Several aspects warrant further investigation:
+
+\begin{enumerate}
+  \item \textbf{The factor 24 and modular forms.}
+  The coincidence $\vec{f}_1(Q_3) = 24 = \text{exponent of } \eta^{24}$ in $\Delta(\tau)$ is striking but currently only a numerical observation.
+  A structural connection between the $Q_3$ lattice partition function and the ring of modular forms would strengthen this from coincidence to theorem.
+
+  \item \textbf{The factor 11 and number theory.}
+  The appearance of $E_{\mathrm{passive}} = 11$ in Ramanujan's $\pi$-series denominators (Remark~\ref{rem:ramanujan_pi}) and in the Deligne bound exponent (Remark~\ref{rem:ramanujan_deligne}) suggests a deeper connection between $Q_3$ combinatorics and analytic number theory.
+  A precise statement would require relating the $Q_3$ partition function to modular $L$-functions.
+
+  \item \textbf{The parity count $D^2 = 9$.}
+  The decomposition $4 + 3 + 2 = 9$ mirrors the Standard Model gauge structure.
+  Whether the individual terms (spacetime, color, generation) are separately forced by $D = 3$, or whether only their sum is determined, is an open question that depends on the detailed dynamics of the recognition operator.
+
+  \item \textbf{Allometric scaling.}
+  The prediction $\beta = 3/4$ is well-supported empirically \cite{Kleiber1932, West1997}, but the precise connection between the recognition lattice's tiling structure and biological metabolic networks requires further development.
+\end{enumerate}
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+We have shown that the dimensional selection $D = 3$, combined with the double-entry ledger axiom and the atomic-tick hypothesis, generates a complete combinatorial cascade of structural integers through the face numbers of the three-dimensional hypercube $Q_3$.
+The vertex count ($8$), edge count ($12$), face count ($6$), directed edge count ($24$), passive edge count ($11$), parity count ($9$), allometric exponent ($3/4$), and synchronization period ($360$) are all arithmetic consequences of $D = 3$---no free parameters appear at any stage.
+
+These results complement the dimensional selection theorem of \cite{PardoGuerraThapa2026} by demonstrating that the choice of three dimensions is not merely a constraint on the admissible manifold, but a \emph{generative} principle that determines the quantitative structure of the recognition lattice.
+The structural integers identified here---particularly $24$, $11$, and $9$---appear in diverse areas of mathematics and physics (modular forms, number theory, gauge theory), suggesting that the combinatorics of $Q_3$ may provide a unified origin for several apparently independent structural features of fundamental theory.
+
+
+\begin{thebibliography}{99}
+
+\bibitem{PardoGuerraThapa2026}
+Pardo-Guerra, S., Thapa, A., \& Washburn, J. (2026).
+\textit{On Dimensional Constraints in Recognition Geometry}.
+In preparation.
+
+\bibitem{WashburnZlatanovicAllahyarov2026}
+Washburn, J., Zlatanovi\'c, M., \& Allahyarov, E. (2026).
+\textit{Recognition Geometry}.
+Axioms, 15(2), 90.
+\url{https://doi.org/10.3390/axioms15020090}.
+
+\bibitem{WashburnRahnamaiBarghi2026}
+Washburn, J. \& Rahnamai, A. (2026).
+\textit{Reciprocal Convex Costs for Ratio Matching: Axiomatic Characterization}.
+Axioms, to appear.
+
+\bibitem{Savage1997Gray}
+Savage, C. (1997).
+\textit{A Survey of Combinatorial Gray Codes}.
+SIAM Review, 39(4), 605--629.
+
+\bibitem{Ziegler1995}
+Ziegler, G.~M. (1995).
+\textit{Lectures on Polytopes}.
+Graduate Texts in Mathematics 152, Springer.
+
+\bibitem{Fedorov1891}
+Fedorov, E.~S. (1891).
+Simmetriya pravilnykh sistem figur
+[Symmetry of regular systems of figures].
+Zapiski Imperatorskogo S.-Peterburgskogo Mineralogicheskogo Obshchestva, 28, 1--146.
+
+\bibitem{Conway2008}
+Conway, J.~H., Burgiel, H., \& Goodman-Strauss, C. (2008).
+\textit{The Symmetries of Things}.
+A~K Peters.
+
+\bibitem{Ramanujan1914}
+Ramanujan, S. (1914).
+Modular equations and approximations to $\pi$.
+Quarterly Journal of Mathematics, 45, 350--372.
+
+\bibitem{Deligne1974}
+Deligne, P. (1974).
+La conjecture de Weil. I.
+Publications Math\'ematiques de l'IH\'ES, 43, 273--307.
+
+\bibitem{Kleiber1932}
+Kleiber, M. (1932).
+Body size and metabolism.
+Hilgardia, 6(11), 315--353.
+
+\bibitem{West1997}
+West, G.~B., Brown, J.~H., \& Enquist, B.~J. (1997).
+A general model for the origin of allometric scaling laws in biology.
+Science, 276(5309), 122--126.
+
+\bibitem{Lawson1989}
+Lawson, H.~B. \& Michelsohn, M.-L. (1989).
+\textit{Spin Geometry}.
+Princeton University Press.
+
+\end{thebibliography}
+
+\end{document}

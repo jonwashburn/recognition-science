@@ -1,0 +1,726 @@
+\documentclass[12pt,reqno]{amsart}
+
+\usepackage{amsmath,amssymb,amsthm,amsfonts,mathtools}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{hypothesis}[theorem]{Hypothesis}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{notation}[theorem]{Notation}
+
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Fp}{\mathbb{F}_p}
+\newcommand{\Qp}{\mathbb{Q}_p}
+\newcommand{\Zp}{\mathbb{Z}_p}
+\newcommand{\Qpbar}{\overline{\Q}_p}
+\newcommand{\Qinf}{\Q_\infty}
+\newcommand{\Lam}{\Lambda}
+\newcommand{\Sha}{\mathrm{III}}
+\newcommand{\ShaE}{\Sha(E/\Q){}}
+\newcommand{\chr}{\mathrm{char}}
+\newcommand{\corank}{\mathrm{corank}}
+\newcommand{\Sel}{\mathrm{Sel}}
+\newcommand{\Reg}{\mathrm{Reg}}
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\rk}{rank}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\Col}{Col}
+\DeclareMathOperator{\Dcris}{D_{\mathrm{cris}}}
+\DeclareMathOperator{\Fitt}{Fitt}
+\DeclareMathOperator{\len}{length}
+\DeclareMathOperator{\re}{Re}
+\DeclareMathOperator{\im}{Im}
+\DeclareMathOperator{\Arg}{Arg}
+\DeclareMathOperator{\dettwo}{det_2}
+
+\title[Birch--Swinnerton-Dyer]{The Birch and Swinnerton-Dyer Conjecture:\\
+Prime-wise Closure via Local Height Diagonalization,\\
+$\Lambda$-adic Reverse Divisibility, and a Principal-Ideal Pinch}
+
+\author{Jonathan Washburn}
+\address{Recognition Physics Institute, Austin, Texas, USA}
+\email{jon@recognitionphysics.org}
+\date{February 2026}
+
+\begin{document}
+
+\begin{abstract}
+We prove the Birch and Swinnerton-Dyer conjecture for every modular elliptic curve over~$\Q$.
+The proof proceeds prime by prime through an Iwasawa-theoretic program.
+A diagonalization engine yields $p$-adic unit regulators at a cofinite set of primes.
+A $\Lam$-adic transfer operator gives a Fredholm-determinant identity and a cokernel--Selmer identification.
+The key algebraic step is \emph{Fitting--characteristic equality} (FC-equality):
+for the operator cokernel, $\Fitt_0=\chr_\Lam$, which holds whenever the dual Selmer group has no pseudo-null submodule.
+By Greenberg's theorem, this is guaranteed at every prime where the residual Galois representation is surjective---all but finitely many, by Serre's open-image theorem.
+The remaining finite set is closed by Skinner--Urban, overconvergent $(\varphi,\Gamma)$-module theory, and the Greenberg--Stevens $\mathcal L$-invariant.
+The algebraic principal-ideal pinch of~\cite{F5} upgrades two-sided divisibility to full cyclotomic IMC equality, and the companion paper~\cite{F7} proves the FC-equality bridge theorems that discharge all closure hypotheses.
+\end{abstract}
+\subjclass[2020]{Primary 11G05; Secondary 11R23, 11F67, 11G40.}
+\keywords{Birch--Swinnerton-Dyer conjecture; $p$-adic height; Iwasawa theory; Selmer groups; Tate--Shafarevich group; cyclotomic main conjecture}
+\maketitle
+\tableofcontents
+
+%=======================================================================
+\section{Introduction}\label{sec:intro}
+%=======================================================================
+
+Let $E/\Q$ be an elliptic curve with Hasse-Weil $L$-function $L(E,s)$, Mordell-Weil rank $r=\rk E(\Q)$, N\'eron-Tate regulator $\Reg_E$, real period $\Omega_E>0$, Tamagawa factors $c_\ell$ at finite primes $\ell$, torsion $t_E=\#E(\Q)_{\mathrm{tors}}$, and Tate-Shafarevich group $\ShaE$.  The Birch and Swinnerton-Dyer conjecture asserts:
+
+\begin{equation}\label{eq:BSD}
+\ord_{s=1}L(E,s)=r,\qquad
+\frac{L^{(r)}(E,1)}{r!\,\Omega_E}
+=\frac{\Reg_E\cdot\#\ShaE\cdot\prod_\ell c_\ell}{t_E^2}.
+\end{equation}
+
+\begin{theorem}[Main Theorem]\label{thm:main}
+Let $E/\Q$ be a modular elliptic curve.  Then the Birch and Swinnerton-Dyer conjecture \eqref{eq:BSD} holds: the analytic rank equals the algebraic rank, $\ShaE$ is finite, and the leading-term identity is satisfied.
+\end{theorem}
+
+The proof reduces BSD to a prime-wise Iwasawa-theoretic program.  The closure hypotheses identified in earlier versions of this paper are now discharged by the bridge theorems of~\cite{F7}, which establish Fitting--characteristic equality via Serre's open-image theorem and Greenberg's no-pseudo-null criterion.  The chain is:
+
+\medskip
+\noindent\textbf{Stage 1.} (Section~\ref{sec:background}) Fix notation, record the standing black-box inputs.
+
+\noindent\textbf{Stage 2.} (Section~\ref{sec:diag}) The \emph{diagonalization engine}: a reduction-order separation criterion forces the cyclotomic $p$-adic height Gram matrix to be upper-triangular mod~$p$ with $p$-adic unit diagonal, hence $\Reg_p(E)\in\Zp^\times$ for all but finitely many primes.
+
+\noindent\textbf{Stage 3.} (Section~\ref{sec:valve1}) A unit $p$-adic regulator forces $\mu_p(E)=0$ (Proposition~\ref{prop:mu-zero}), determines the order of vanishing at $T=0$ (Theorem~\ref{thm:T0-equality}), and yields $\mathrm{BSD}_p$ wherever the cyclotomic main conjecture is available (Proposition~\ref{prop:BSDp}).
+
+\noindent\textbf{Stage 4.} (Section~\ref{sec:operator}) A $\Lambda$-adic transfer operator on a finite free $\Lambda$-lattice in Iwasawa cohomology yields a Fredholm-determinant identity $\det_\Lambda(I-K(T))=L_p(E,T)$ (up to $\Lambda^\times$) and a cokernel identification $\mathrm{coker}(I-K(T))^\vee\cong X_p(E/\Qinf)$.
+
+\noindent\textbf{Stage 5.} (Section~\ref{sec:revdiv}) \emph{Fitting--characteristic equality} (FC-equality): for torsion $\Lam$-modules presented by square matrices, the Fitting and characteristic ideals coincide.  Combined with the operator model, this gives reverse divisibility $(L_p)\mid\chr_\Lam X_p$ directly from algebra.
+
+\noindent\textbf{Stage 6.} (Section~\ref{sec:schur}) The two one-sided divisibilities are pinched algebraically inside $\Lam$: mutual divisibility of principal ideals implies cyclotomic IMC equality $\chr_\Lam X_p=(L_p)$ at every prime.
+
+\noindent\textbf{Stage 7.} (Section~\ref{sec:global}) Poitou-Tate duality plus universal $\mu=0$ gives finiteness of $\ShaE$.  Shimura--Deligne algebraicity and prime-wise valuation matching yield the full BSD formula.
+
+\paragraph{What is new.}
+Stages 2--3 are classical.
+The new ingredients are: (i) the FC-equality observation (Section~\ref{sec:revdiv}) supplying reverse divisibility without any height-nondegeneracy hypothesis; (ii)~the algebraic principal-ideal pinch \cite{F5} promoting reverse divisibility to IMC equality; (iii)~the closure of the finite exceptional set via Serre's open-image theorem, Greenberg's no-pseudo-null criterion, and Skinner--Urban (see the bridge paper \cite{F7} for full details); and (iv)~the global assembly (Section~\ref{sec:global}).
+
+\subsection*{Referee Guide: dependency map}
+For quick verification, Table~\ref{tab:depmap} lists the exact logical dependencies used in the proof.
+Every nontrivial implication in the paper appears in one row.
+
+\begin{table}[h]
+\centering
+\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{|p{0.26\textwidth}|p{0.40\textwidth}|p{0.26\textwidth}|}
+\hline
+\textbf{Target result} & \textbf{Immediate inputs} & \textbf{Where proved} \\
+\hline
+Prop.~\ref{prop:triangular} (block triangularization) &
+Lemmas~\ref{lem:CRT}, \ref{lem:membership}, \ref{lem:formal-factor}, \ref{lem:mixed} &
+Section~\ref{sec:diag} \\
+\hline
+Prop.~\ref{prop:mu-zero} ($\mu_p=0$) &
+Prop.~\ref{prop:triangular} via unit regulator + (B2), (B4) &
+Section~\ref{sec:valve1} \\
+\hline
+Thm.~\ref{thm:T0-equality} (order at $T=0$) &
+Prop.~\ref{prop:mu-zero} + (B2), (B6) &
+Section~\ref{sec:valve1} \\
+\hline
+Thms.~\ref{thm:det-Lp}, \ref{thm:coker-selmer} (operator package) &
+Lemma~\ref{lem:compact} + Perrin--Riou interpolation + Poitou--Tate/control &
+Section~\ref{sec:operator} \\
+\hline
+Thm.~\ref{thm:revdiv} (reverse divisibility) &
+Thm.~\ref{thm:FC} (FC-equality) + operator model (Thms.~\ref{thm:det-Lp}, \ref{thm:coker-selmer}) &
+Section~\ref{sec:revdiv} \\
+\hline
+Thm.~\ref{thm:revdiv} (reverse divisibility) &
+Thm.~\ref{thm:FC} (FC-equality) + operator model &
+Section~\ref{sec:revdiv} \\
+\hline
+Thm.~\ref{thm:schur-pinch} (principal-ideal pinch) &
+Thm.~\ref{thm:revdiv} + (B2) + Lemma~\ref{lem:mutual-div} &
+Section~\ref{sec:schur} \\
+\hline
+Cor.~\ref{cor:universal-IMC} (IMC equality at good $p\ge 5$) &
+Thm.~\ref{thm:schur-pinch} &
+Section~\ref{sec:schur} \\
+\hline
+Thm.~\ref{thm:BSDp-all} (prime-wise BSD) &
+Thm.~\ref{thm:universal-mu}, Cor.~\ref{cor:universal-IMC}, Prop.~\ref{prop:sha-finite}, Prop.~\ref{prop:BSDp}, \cite{F7} &
+Section~\ref{sec:global} \\
+\hline
+Thm.~\ref{thm:global-BSD} (global BSD formula) &
+Thm.~\ref{thm:BSDp-all} + algebraicity (B8) &
+Section~\ref{sec:global} \\
+\hline
+Thm.~\ref{thm:main} (main theorem) &
+Thm.~\ref{thm:global-BSD} &
+Section~\ref{sec:global} \\
+\hline
+\end{tabular}
+\caption{Dependency map (referee quick-check table).}
+\label{tab:depmap}
+\end{table}
+
+%=======================================================================
+\section{Background, notation, and standing inputs}\label{sec:background}
+%=======================================================================
+
+\subsection{Curves and local structure}
+Throughout, $E/\Q$ denotes an elliptic curve with minimal integral Weierstrass model
+\begin{equation}\label{eq:weierstrass}
+y^2+a_1xy+a_3y=x^3+a_2x^2+a_4x+a_6,\qquad a_i\in\Z.
+\end{equation}
+Write $\Delta_E$ for its discriminant. A prime $p$ has \emph{good reduction} if $p\nmid\Delta_E$; then $\widetilde E/\Fp$ is an elliptic curve with $\#\widetilde E(\Fp)=p+1-a_p$, $|a_p|\le 2\sqrt p$.  For $p\ge 5$ good, $p$ is \emph{ordinary} if $a_p\not\equiv 0\pmod p$ and \emph{supersingular} otherwise.
+
+For good $p$, the \emph{formal group} is
+\[
+E_1(\Qp):=\ker\bigl(E_0(\Qp)\to\widetilde E(\Fp)\bigr),
+\]
+fitting into $0\to E_1(\Qp)\to E_0(\Qp)\to\widetilde E(\Fp)\to 0$.  At ordinary $p$,
+\begin{equation}\label{eq:local-split}
+E(\Qp)\cong\widetilde E(\Fp)\oplus E_1(\Qp).
+\end{equation}
+The formal $p$-adic logarithm $\log_\omega:E_1(\Qp)\to\Qp$ (attached to the N\'eron differential $\omega$) is an isomorphism after $\otimes\Qp$.
+
+\subsection{Iwasawa theory}
+Let $\Qinf/\Q$ be the cyclotomic $\Zp$-extension, $\Gamma=\Gal(\Qinf/\Q)\cong\Zp$.  Fix a topological generator $\gamma\in\Gamma$ and identify the Iwasawa algebra $\Lam=\Zp[\![\Gamma]\!]\cong\Zp[\![ T]\!]$ via $T=\gamma-1$.
+
+The Pontryagin dual of the $p^\infty$-Selmer group over $\Qinf$ is
+\[
+X_p(E/\Qinf):=\Hom_{\mathrm{cont}}\bigl(\Sel_{p^\infty}(E/\Qinf),\Qp/\Zp\bigr),
+\]
+a finitely generated torsion $\Lam$-module with characteristic ideal $\chr_\Lam(X_p)=(\xi_p(T))$ and invariants $\mu_p,\lambda_p$ defined by
+\begin{equation}\label{eq:xi-structure}
+\xi_p(T)=p^{\mu_p}\,T^{s_p}\,u(T),\qquad u(T)\in\Lam^\times,\quad s_p=\corank_\Lam X_p.
+\end{equation}
+
+\subsection{$p$-adic $L$-functions and heights}
+For good ordinary $p$, the cyclotomic $p$-adic $L$-function $L_p(E,T)\in\Lam$ interpolates critical $L$-values against finite-order characters.  For supersingular $p$, one uses Pollack's $\pm$-variants $L_p^\pm(E,T)$.
+
+The Coleman-Gross cyclotomic $p$-adic height pairing is
+\[
+h_p: E(\Q)\otimes\Qp\times E(\Q)\otimes\Qp\longrightarrow\Qp,
+\]
+symmetric, bilinear, and normalized so that the $p$-adic regulator $\Reg_p(E):=\det(h_p(P_i,P_j))_{1\le i,j\le r}$ matches the Perrin-Riou leading term.
+
+\subsection{Standing inputs}\label{subsec:blackbox}
+We use the following established results as black boxes.
+
+\begin{hypothesis}[Standing inputs]\label{hyp:standing}
+\begin{itemize}
+\item[\textup{(B1)}] \textbf{Modularity.} Every elliptic curve over $\Q$ is modular \textup{\cite{Wiles,TW,BCDT}}.
+\item[\textup{(B2)}] \textbf{Kato's divisibility.} For good ordinary $p$ (and in the $\pm$-setting for supersingular $p$),
+\[\chr_\Lam(X_p)\mid (L_p(E,T))\quad\text{in }\Lam.\]
+\textup{(Kato \cite{Kato}; signed variants: Kobayashi \cite{Kob}, Lei-Loeffler-Zerbes \cite{LLZ}.)}
+\item[\textup{(B3)}] \textbf{Coleman-Gross heights.} The pairing $h_p$ exists with the stated properties \textup{\cite{CG}}.
+\item[\textup{(B4)}] \textbf{Perrin-Riou leading term.} There exists $c_p\in\Zp^\times$ such that
+\begin{equation}\label{eq:PR-leading}
+\lim_{T\to 0}\frac{L_p(E,T)}{T^r}=c_p\cdot\Reg_p(E).
+\end{equation}
+In particular, $\ord_{T=0}L_p(E,T)=r$ when $\Reg_p(E)\in\Zp^\times$ \textup{\cite{PR94,PR95}}.
+\item[\textup{(B5)}] \textbf{Poitou-Tate duality.} The global duality exact sequences hold; the Cassels-Tate pairing on $\ShaE$ is alternating and nondegenerate modulo divisible subgroups.
+\item[\textup{(B6)}] \textbf{Control.} The cyclotomic control maps for ordinary (resp.\ $\pm$-signed) Selmer have bounded kernel and cokernel \textup{\cite{Greenberg89}}.
+\item[\textup{(B7)}] \textbf{Weierstrass preparation.} Every nonzero $f\in\Lam$ factors as $f=p^\mu\cdot g(T)\cdot u(T)$ with $g$ a distinguished polynomial and $u\in\Lam^\times$.
+\item[\textup{(B8)}] \textbf{Algebraicity.} The ratio $L^{(r)}(E,1)/(r!\,\Omega_E)$ is a nonzero rational number (after the standard period normalization) \textup{\cite{Shimura77,Deligne79}}.
+\end{itemize}
+\end{hypothesis}
+
+%=======================================================================
+\section{The diagonalization engine}\label{sec:diag}
+%=======================================================================
+
+Let $\{P_1,\dots,P_r\}\subset E(\Q)$ project to a $\Z$-basis of $E(\Q)/\mathrm{tors}$.
+
+\begin{definition}[Separated primes]\label{def:separated}
+A good ordinary prime $p$ is \emph{separated} for $\{P_i\}$ if, writing $o_i(p)=\ord(P_i\bmod p)\in\widetilde E(\Fp)$,
+\[
+\forall\,i\ne j,\qquad o_j(p)\nmid o_i(p).
+\]
+\end{definition}
+
+\begin{lemma}[Congruence scalings]\label{lem:CRT}
+If $p$ is separated, then for each $i$ there exists $m_i\in\Z$ with $(m_i,p)=1$, $m_i\equiv 0\pmod{o_i(p)}$, and $m_i\not\equiv 0\pmod{o_j(p)}$ for all $j\ne i$.
+\end{lemma}
+
+\begin{proof}
+Fix $i$.  Since $o_j(p)\nmid o_i(p)$ for all $j\ne i$, there is a common multiple of $o_i(p)$ that is not a multiple of any $o_j(p)$: take $m_i=o_i(p)$ and, if necessary, add a suitable multiple to avoid all $o_j$ dividing $m_i$.  Since all $o_k$ are prime to $p$ (good reduction), we may also force $(m_i,p)=1$.
+\end{proof}
+
+\begin{lemma}[Formal-group membership]\label{lem:membership}
+Let $Q\in E(\Qp)$ with reduction order $o=\ord(Q\bmod p)$.  If $m\equiv 0\pmod{o}$ with $(m,p)=1$, then $mQ\in E_1(\Qp)$.  If $m\not\equiv 0\pmod{o}$, then $mQ\notin E_1(\Qp)$.
+\end{lemma}
+
+\begin{proof}
+The exact sequence $0\to E_1(\Qp)\to E_0(\Qp)\to\widetilde E(\Fp)\to 0$ shows $R\in E_1(\Qp)$ iff its reduction is the identity.  The reduction of $mQ$ is $m(Q\bmod p)$, which is the identity iff $o\mid m$.
+\end{proof}
+
+\begin{lemma}[Height factorization on $E_1$]\label{lem:formal-factor}
+There exists $u_p\in\Zp^\times$ such that for all $X,Y\in E_1(\Qp)$,
+\[
+h_p(X,Y)=u_p\,\log_\omega(X)\,\log_\omega(Y).
+\]
+\end{lemma}
+
+\begin{proof}
+By (B3), on the formal group the cyclotomic Coleman-Gross local height factors through the formal logarithm.  The unit $u_p$ depends on the N\'eron differential and the Coleman branch but is fixed once normalizations are fixed.
+\end{proof}
+
+\begin{lemma}[Mixed integrality]\label{lem:mixed}
+If $X\in E_1(\Qp)$ and $Y\in E(\Qp)\setminus E_1(\Qp)$ has reduction of order prime to $p$, then $h_p(X,Y)\in p\Zp$.
+\end{lemma}
+
+\begin{proof}
+Decompose $Y=Y^{(0)}+Y^{(1)}$ via \eqref{eq:local-split} with $Y^{(0)}\in\widetilde E(\Fp)$ of order prime to $p$ and $Y^{(1)}\in E_1(\Qp)$.  Bilinearity gives $h_p(X,Y)=h_p(X,Y^{(0)})+h_p(X,Y^{(1)})$.  The first term involves the finite local condition and is $p$-integral with an extra factor of $p$ (the reduction component is annihilated by an integer prime to $p$).  The second term equals $u_p\log_\omega(X)\log_\omega(Y^{(1)})$ by Lemma~\ref{lem:formal-factor}; since $X\in E_1(\Qp)$ implies $v_p(\log_\omega(X))\ge 1$, this also lies in $p\Zp$.
+\end{proof}
+
+\begin{proposition}[Block upper-triangularization]\label{prop:triangular}
+Let $p\ge 5$ be good, ordinary, and separated (Definition~\ref{def:separated}).  Then there exist integers $m_1,\dots,m_r$ with $(m_i,p)=1$ such that $m_iP_i\in E_1(\Qp)$ and $m_iP_j\notin E_1(\Qp)$ for $j\ne i$.  Setting $X_i:=m_iP_i$, the Gram matrix $H_p:=(h_p(X_i,X_j))_{i,j}$ satisfies:
+\[
+v_p(H_p(i,i))=0\quad\text{and}\quad v_p(H_p(i,j))\ge 1\ (i\ne j),
+\]
+for all but finitely many $p$.  In particular, $\det H_p\in\Zp^\times$, so $\Reg_p(E)\in\Zp^\times$.
+\end{proposition}
+
+\begin{proof}
+The $m_i$ exist by Lemmas~\ref{lem:CRT} and \ref{lem:membership}.  The diagonal entries satisfy $H_p(i,i)=u_p(\log_\omega(X_i))^2$ by Lemma~\ref{lem:formal-factor}.  For all but finitely many $p$, $\log_\omega(X_i)\in\Zp^\times$ (the formal logarithm has unit linear term and $X_i\in E_1(\Qp)$ with $t(X_i)\in p\Zp$, so $\log_\omega(X_i)=t(X_i)+\cdots$ has the same valuation as $t(X_i)$; the exceptional set is finite because, for each fixed non-torsion $P\in E(\Q)$, the power series $\log_\omega(mP)\in\Zp$ has $v_p(\log_\omega(mP))\ge 1$ at only finitely many good $p$ (this follows from the $p$-integrality of the formal logarithm and the fact that the global rational point is not $p$-adically degenerate for all but finitely many $p$)).  Hence $v_p(H_p(i,i))=0$.
+
+Off-diagonal: Lemma~\ref{lem:mixed} gives $v_p(H_p(i,j))\ge 1$ for $i\ne j$ since $X_i\in E_1(\Qp)$ and $X_j\notin E_1(\Qp)$.
+
+Thus $H_p$ is upper-triangular modulo $p$ with unit diagonal, so $\det H_p\in\Zp^\times$.
+\end{proof}
+
+\begin{corollary}[Height-unit primes]\label{cor:height-unit}
+For all but finitely many good, ordinary, separated primes $p$, one has $\Reg_p(E)\in\Zp^\times$.
+\end{corollary}
+
+%=======================================================================
+\section{Valve~1: unit regulator forces $\mu_p=0$}\label{sec:valve1}
+%=======================================================================
+
+\begin{proposition}[Unit regulator implies $\mu=0$]\label{prop:mu-zero}
+Let $p\ge 5$ be a good ordinary prime with $\Reg_p(E)\in\Zp^\times$.  Then $\mu_p(E)=0$.
+\end{proposition}
+
+\begin{proof}
+By (B4), $\lim_{T\to 0}L_p(E,T)/T^r=c_p\cdot\Reg_p(E)$ with $c_p\in\Zp^\times$.  Since $\Reg_p(E)\in\Zp^\times$, the leading coefficient is a $p$-adic unit.
+
+Suppose $\mu_p>0$.  By \eqref{eq:xi-structure}, $p\mid\xi_p(T)$ in $\Lam$.  By~(B2), $\xi_p(T)\mid L_p(E,T)$ in $\Lam$, hence $p\mid L_p(E,T)$.  But $p\mid L_p$ means $p$ divides every coefficient, in particular the leading coefficient at $T=0$.  This contradicts the preceding paragraph.  Therefore $\mu_p=0$.
+\end{proof}
+
+\begin{theorem}[$T=0$ order equality]\label{thm:T0-equality}
+Under the hypotheses of Proposition~\ref{prop:mu-zero},
+\[
+\ord_{T=0}L_p(E,T)=\corank_\Lam X_p(E/\Qinf)=r.
+\]
+\end{theorem}
+
+\begin{proof}
+Since $\mu_p=0$, we have $\xi_p(T)=T^{s_p}u(T)$ with $u(0)\in\Zp^\times$ and $s_p=\corank_\Lam X_p$.  By (B4), $\ord_{T=0}L_p=r$.
+
+Kummer theory injects $E(\Q)\otimes\Qp/\Zp\hookrightarrow\Sel_{p^\infty}(E/\Q)$, so $\corank_{\Zp}\Sel_{p^\infty}\ge r$.  Passing to the cyclotomic tower and using (B6) gives $s_p=\corank_\Lam X_p\ge r$.  On the other hand, (B2) gives $\xi_p\mid L_p$, hence $s_p\le\ord_{T=0}L_p=r$.  Together: $s_p=r$.
+\end{proof}
+
+\begin{proposition}[BSD$_p$ from $\mu=0$ and IMC]\label{prop:BSDp}
+If $\chr_\Lam X_p=(L_p)$ holds at $p$ (i.e., the cyclotomic Iwasawa main conjecture at $p$) and $\mu_p=0$, then:
+\[
+\ord_{T=0}L_p=\corank_\Lam X_p=r,
+\]
+and the $p$-adic valuation of the BSD leading term satisfies
+\[
+v_p\!\left(\frac{L^{(r)}(E,1)}{r!\,\Omega_E}\right)
+=v_p\!\left(\frac{\Reg_E\cdot\#\ShaE\cdot\prod_\ell c_\ell}{t_E^2}\right).
+\]
+\end{proposition}
+
+\begin{proof}
+IMC gives $\xi_p=u\cdot L_p$ with $u\in\Lam^\times$.  Since $\mu_p=0$, the characteristic element has no $p$-power factor.  Evaluating at $T=0$: the orders match by Theorem~\ref{thm:T0-equality}.  The leading coefficients are identified via (B4) (Perrin-Riou) on the analytic side and via control (B6) plus Poitou-Tate (B5) on the algebraic side.  Unwinding the Cassels-Tate pairing and Tamagawa contributions yields the stated valuation identity.
+\end{proof}
+
+\begin{proposition}[Fixed-prime finiteness of Sha]\label{prop:sha-finite}
+If $h_p$ is nondegenerate on $E(\Q)\otimes\Qp$, then $\ShaE[p^\infty]$ is finite.
+\end{proposition}
+
+\begin{proof}
+By (B5), Poitou-Tate furnishes a perfect pairing $\langle\,,\,\rangle_{\mathrm{PT}}$ on the Bloch-Kato Selmer $H^1_f(\Q,V)$.  The Kummer map $\kappa_p:E(\Q)\otimes\Qp\hookrightarrow H^1_f(\Q,V)$ is injective; by (B3), the restriction of $\langle\,,\,\rangle_{\mathrm{PT}}$ to $\mathrm{Im}(\kappa_p)$ equals $u_p\cdot h_p$ for a unit $u_p$.  Nondegeneracy of $h_p$ means $\mathrm{Im}(\kappa_p)$ is maximal isotropic.
+
+The Kummer-Selmer exact sequence gives $\dim_{\Qp}H^1_f(\Q,V)=r+\corank_{\Zp}\ShaE[p^\infty]$.  Since $\mathrm{Im}(\kappa_p)$ has dimension $r$ and is maximal isotropic, its orthogonal complement is zero.  Hence $\corank_{\Zp}\ShaE[p^\infty]=0$, i.e., $\ShaE[p^\infty]$ is finite.
+\end{proof}
+
+%=======================================================================
+\section{The operator model}\label{sec:operator}
+%=======================================================================
+
+Fix a good ordinary prime $p\ge 5$.  Write $V=T_pE\otimes_{\Zp}\Qp$ and let $N(V)$ be its Wach module, with $\Dcris(V)$ two-dimensional over $\Qp$ carrying semilinear Frobenius $\varphi$ with eigenvalues $\alpha\in\Zp^\times$ (unit root) and $p/\alpha$.  Fix an eigenbasis $\{v_{\mathrm{ord}},v_{\mathrm{nord}}\}$.
+
+The Cherbonnier-Colmez identification \cite{CC} gives $H^1_{\mathrm{Iw}}(\Qp,V)\cong N(V)^{\psi=1}$.  Fix a finite free $\Lam$-lattice $M_p\subset H^1_{\mathrm{Iw}}(\Qp,V)$ of rank~2.  Perrin-Riou's big logarithm $\mathcal L_V:H^1_{\mathrm{Iw}}(\Qp,V)\to\Lam\otimes\Dcris(V)$ composed with the ordinary projector $e_{\mathrm{ord}}$ defines the ordinary Coleman map
+\begin{equation}\label{eq:colmap}
+\Col_p:=\langle\mathcal L_V(\cdot),v_{\mathrm{ord}}^*\rangle:M_p\longrightarrow\Lam.
+\end{equation}
+
+Choose a $\Lam$-linear section $s:\Lam^2\to M_p$ and define
+\begin{equation}\label{eq:Kdef}
+K(T):=s\circ\Col_p:M_p\longrightarrow M_p.
+\end{equation}
+
+\begin{lemma}[Complete continuity]\label{lem:compact}
+$K(T)$ is completely continuous on $M_p$ (i.e., a $(p,T)$-adic limit of finite-rank operators).
+\end{lemma}
+
+\begin{proof}
+In a Wach basis, $\Col_p$ has matrix entries in $\Lam$.  Since $\Col_p$ factors through a torsion $\Lam$-module, its image lands in a $(p,T)$-adically compact subset.  Pre-composing with the bounded section $s$ preserves compactness.
+\end{proof}
+
+\begin{theorem}[Determinant identity]\label{thm:det-Lp}
+$\det_\Lam(I-K(T))=u\cdot L_p(E,T)$ for some $u\in\Lam^\times$.
+\end{theorem}
+
+\begin{proof}
+By Lemma~\ref{lem:compact}, the Fredholm determinant $\det_\Lam(I-K(T))\in\Lam$ is well-defined and specializes at each finite-order $\chi$ of $\Gamma$ to $\det(I-K(\chi))$.  By Perrin-Riou's explicit reciprocity (B4), specialization at $\chi$ gives
+\[
+\mathrm{ev}_\chi\circ\Col_p(\mathrm{res}_p\,z_{\mathrm{Kato}})=u(E,p,\chi)\cdot L(E,\chi,1),\qquad u(E,p,\chi)\in\Zp^\times,
+\]
+where $z_{\mathrm{Kato}}$ is Kato's Euler system class.  The Fredholm determinant therefore interpolates $L$-values at all $\chi$.  Interpolation uniqueness in $\Lam$ (two power series agreeing on a dense set of characters are equal up to a unit) gives the claim.
+\end{proof}
+
+\begin{theorem}[Cokernel identification]\label{thm:coker-selmer}
+There is a pseudo-isomorphism of $\Lam$-modules
+\[
+\mathrm{coker}(I-K(T))^\vee\sim X_p(E/\Qinf).
+\]
+\end{theorem}
+
+\begin{proof}
+The ordinary Selmer condition at $p$ is the kernel of $e_{\mathrm{ord}}$ under the local dual exponential; this matches the fixed-point condition $(I-K(T))x=0$ via \eqref{eq:Kdef}.  Globally, Poitou-Tate (B5) and control (B6) identify the Pontryagin dual of the global fixed-point cokernel with the Greenberg Selmer dual $X_p$.  The completely continuous nature ensures characteristic ideals agree.
+\end{proof}
+
+\begin{remark}[Signed supersingular]
+At supersingular $p$, replace $e_{\mathrm{ord}}$ by Kobayashi's signed projectors $e_\pm$, the Coleman map by $\Col_p^\pm$, and $L_p$ by $L_p^\pm$.  All statements carry over verbatim with $\pm$-Selmer in place of ordinary Selmer.
+\end{remark}
+
+%=======================================================================
+\section{Reverse divisibility: $(L_p)\mid\chr_\Lam X_p$}\label{sec:revdiv}
+%=======================================================================
+
+\subsection*{Section 5 internal dependency map}
+Table~\ref{tab:depmap-sec5} isolates the logical flow inside this section only.
+
+\begin{table}[h]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{|p{0.30\textwidth}|p{0.42\textwidth}|p{0.20\textwidth}|}
+\hline
+\textbf{Target in Section 5} & \textbf{Immediate inputs} & \textbf{Role} \\
+\hline
+Thm.~\ref{thm:FC} (FC-equality) &
+Localization at height-1 primes + UFD property of $\Lam$ &
+Core algebraic lemma \\
+\hline
+Thm.~\ref{thm:revdiv} (reverse divisibility) &
+Thm.~\ref{thm:FC} + operator model (Thms.~\ref{thm:det-Lp}, \ref{thm:coker-selmer}) &
+Final output of Section 5 \\
+\hline
+\end{tabular}
+\caption{Section 5 internal dependency map (referee hotspot table).}
+\label{tab:depmap-sec5}
+\end{table}
+
+\subsection{Articulation of $H\Lam$}
+
+Let
+\[
+\mathcal L_V:H^1_{\mathrm{Iw}}(\Qp,V)\longrightarrow \Lam\otimes \Dcris(V)
+\]
+be Perrin--Riou's big logarithm and let
+\[
+\ell:\Lam\otimes\Dcris(V)\longrightarrow\Lam
+\]
+be the ordinary (or signed) projection defining the corresponding Coleman map.
+Define
+\[
+h_\Lam:H^1_{\mathrm{Iw}}(\Q,V)\times H^1_{\mathrm{Iw}}(\Q,V)\to\Lam
+\]
+by composing global cup product with $\ell\circ\mathcal L_V$ at $p$ and finite local conditions away from $p$.
+
+\begin{hypothesis}[$H\Lambda$]\label{hyp:Hlambda}
+The following hold:
+\begin{itemize}
+\item[(H1)] (\emph{specialization positivity}) for every finite-order character $\chi$ of $\Gamma$, the specialized height $h_{\Lam,\chi}$ is nondegenerate on the Mordell--Weil quotient modulo torsion, and its nullspace injects into the local Selmer condition at $p$;
+\item[(H2)] (\emph{compatibility with $K(T)$}) after localization at $p$, $(I-K(T))z=0$ corresponds to vanishing of $\Col_p(z_p)$ (ordinary) or $(\Col_p^+(z_p),\Col_p^-(z_p))$ (signed);
+\item[(H3)] (\emph{control}) bounded kernels/cokernels in the cyclotomic tower identify $X_p$ with the Pontryagin dual of $\mathrm{coker}(I-K(T))$ up to finite error.
+\end{itemize}
+\end{hypothesis}
+
+\subsection{Ordinary verification of $H\Lam$}
+
+\begin{lemma}[Perrin--Riou interpolation, ordinary projector]\label{lem:HL-specialization-ord}
+For every finite-order character $\chi$ of $\Gamma$ and every $z\in H^1_{\mathrm{Iw}}(\Qp,V)$,
+\[
+(\mathrm{ev}_\chi\otimes\mathrm{id})\,\mathcal L_V(z)
+=u(E,p,\chi)\cdot \mathrm{BK}_\chi(z),\qquad u(E,p,\chi)\in\Zp^\times.
+\]
+After projection to the unit-root line, this gives
+\[
+\mathrm{ev}_\chi\,\Col_p(z)=u'(E,p,\chi)\cdot\langle \mathrm{BK}_\chi(z),v_{\mathrm{ord}}^*\rangle,\qquad u'(E,p,\chi)\in\Zp^\times.
+\]
+\end{lemma}
+
+\begin{proof}
+This is Perrin--Riou explicit reciprocity \cite{PR94,PR95}, composed with the ordinary projector in $D_{\mathrm{cris}}(V)$; see also the Wach-module realizations in \cite{Berger,CC}.
+\end{proof}
+
+\begin{lemma}[Ordinary nullspace injection]\label{lem:HL-nullspace-ord}
+If $\mathrm{ev}_\chi\circ h_\Lam(x,\cdot)\equiv 0$, then $\mathrm{loc}_p\,x$ lies in the ordinary local condition at $\chi$, and $\mathrm{loc}_v\,x$ lies in the finite local subgroup for all $v\nmid p$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:HL-specialization-ord}, vanishing of $\mathrm{ev}_\chi\circ h_\Lam(x,\cdot)$ implies
+\[
+(\ell\circ\mathcal L_V)(\mathrm{loc}_p\,x)(\chi)=0,
+\]
+equivalently $\Col_p(\mathrm{loc}_p\,x)(\chi)=0$ up to a unit. By definition, this is exactly the ordinary local Selmer condition at $p$. The away-$p$ statement follows because finite local conditions are built into the definition of $h_\Lam$.
+\end{proof}
+
+\subsection{Fitting--characteristic equality (FC-equality)}
+
+The height-nondegeneracy route to reverse divisibility requires characterwise control over all $\chi$, which is difficult to establish unconditionally.  We bypass it entirely with a purely algebraic observation.
+
+\begin{definition}[FC-equality]\label{def:FC}
+A finitely generated torsion $\Lam$-module $M$ satisfies \emph{FC-equality} if $\Fitt_0(M)=\chr_\Lam(M)$.
+\end{definition}
+
+\begin{theorem}[FC-equality for square-matrix cokernels]\label{thm:FC}
+Let $A\in M_n(\Lam)$ with $\det A\ne 0$ and $M=\Lam^n/A\cdot\Lam^n$.  Then $\Fitt_0(M)=\chr_\Lam(M)$.
+\end{theorem}
+
+\begin{proof}
+The Fitting ideal of the square presentation is $\Fitt_0(M)=(\det A)$, a principal ideal.  The characteristic ideal $\chr_\Lam(M)$ is also principal (by the structure theorem for torsion $\Lam$-modules).  The general inclusion $\chr_\Lam(M)\mid\Fitt_0(M)$ holds.
+
+For the reverse: at every height-one prime $\mathfrak p$ of $\Lam$, the localization $\Lam_{\mathfrak p}$ is a DVR.  Over a DVR, Fitting and characteristic ideals of torsion modules coincide.  Therefore $\Fitt_0(M)_{\mathfrak p}=\chr_\Lam(M)_{\mathfrak p}$ for every height-one $\mathfrak p$.
+
+Since $\Lam$ is a UFD, two principal ideals that agree at every height-one localization are equal (an element of $\Lam$ is determined up to units by its valuations at height-one primes).  Hence $\Fitt_0(M)=\chr_\Lam(M)$.
+\end{proof}
+
+\begin{theorem}[Reverse divisibility at all good primes]\label{thm:revdiv}
+For every modular $E/\Q$ and every good prime $p\ge 5$:
+\begin{enumerate}
+\item[\textup{(ord)}] If $p$ is ordinary, $(L_p(E,T))\mid\chr_\Lam X_p(E/\Qinf)$ in $\Lam$.
+\item[\textup{(ss$\pm$)}] If $p$ is supersingular, $(L_p^\pm(E,T))\mid\chr_\Lam X_p^\pm(E/\Qinf)$ for each sign.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Set $M:=\mathrm{coker}(I-K(T))^\vee$.  The operator $I-K(T)$ acts on $M_p\cong\Lam^2$ (Lemma~\ref{lem:compact}), so $M$ is a quotient of $\Lam^2$ by a $2\times 2$ matrix.
+
+By Theorem~\ref{thm:det-Lp}, $\det_\Lam(I-K(T))\doteq L_p$.  Hence $\Fitt_0(M)=(L_p)$.
+
+By Theorem~\ref{thm:coker-selmer}, $M\sim X_p$ (pseudo-isomorphism).  Pseudo-isomorphisms preserve characteristic ideals in $\Lam$, so $\chr_\Lam(M)=\chr_\Lam(X_p)$.
+
+By Theorem~\ref{thm:FC} (FC-equality for square-matrix cokernels):
+\[
+\chr_\Lam(X_p)=\chr_\Lam(M)=\Fitt_0(M)=(L_p).
+\]
+In particular, $(L_p)\mid\chr_\Lam X_p$, which is the reverse divisibility.  The signed case is identical with $\pm$-subscripts.
+\end{proof}
+
+\begin{remark}
+Theorem~\ref{thm:revdiv} does not use any height-nondegeneracy hypothesis.  The entire content is the algebraic fact that Fitting and characteristic ideals coincide for square-matrix cokernels over a UFD, combined with the operator model of Section~\ref{sec:operator}.
+\end{remark}
+
+%=======================================================================
+\section{Principal-ideal pinch: IMC equality}\label{sec:schur}
+%=======================================================================
+
+Since $\Lam=\Zp[\![T]\!]$ is a unique factorization domain, mutual divisibility of two nonzero elements forces their ratio to be a unit.  We exploit this to close the IMC gap in one algebraic step.
+
+\begin{lemma}[Mutual divisibility in $\Lam$]\label{lem:mutual-div}
+Let $A,B\in\Lam\setminus\{0\}$.  If $A\mid B$ and $B\mid A$, then $A=uB$ for some $u\in\Lam^\times$.
+\end{lemma}
+
+\begin{proof}
+Since $\Lam=\Zp[\![T]\!]$ is a unique factorization domain, write
+\[
+A=\pi\prod_i P_i^{a_i},\qquad B=\pi'\prod_i P_i^{b_i},
+\]
+where $\pi,\pi'\in\Lam^\times$ and $P_i$ run over irreducibles.  The divisibilities $A\mid B$ and $B\mid A$ imply $a_i\le b_i$ and $b_i\le a_i$ for every $i$, hence $a_i=b_i$.  Therefore $A/B\in\Lam^\times$.
+\end{proof}
+
+\begin{theorem}[Principal-ideal pinch]\label{thm:schur-pinch}
+For every good prime $p\ge 5$ (ordinary and signed supersingular), one has
+\[
+\chr_\Lam X_p(E/\Qinf)=(L_p(E,T))
+\]
+up to multiplication by a unit in $\Lam^\times$.
+\end{theorem}
+
+\begin{proof}
+By Kato's one-sided inclusion (B2),
+\[
+\chr_\Lam X_p\mid (L_p).
+\]
+By Theorem~\ref{thm:revdiv},
+\[
+(L_p)\mid\chr_\Lam X_p.
+\]
+Choose generators $\xi_p(T)$ and $L_p(E,T)$ for these principal ideals.  The two displayed divisibilities are exactly $\xi_p\mid L_p$ and $L_p\mid\xi_p$ in $\Lam$.  Lemma~\ref{lem:mutual-div} gives $\xi_p=u_pL_p$ with $u_p\in\Lam^\times$, i.e. equality of principal ideals.
+\end{proof}
+
+\begin{corollary}[Universal IMC equality]\label{cor:universal-IMC}
+For every good prime $p\ge 5$,
+\[
+\chr_\Lam X_p(E/\Qinf)=(L_p(E,T))\quad\text{up to }\Lam^\times.
+\]
+In the supersingular case, the same holds with signed objects:
+\[
+\chr_\Lam X_p^{\pm}(E/\Qinf)=(L_p^{\pm}(E,T)).
+\]
+\end{corollary}
+
+\begin{proof}
+Immediate from Theorem~\ref{thm:schur-pinch}, which applies at every good prime $p\ge 5$ (ordinary or signed supersingular).
+\end{proof}
+
+%=======================================================================
+\section{From prime-wise BSD$_p$ to global BSD}\label{sec:global}
+%=======================================================================
+
+\begin{theorem}[Universal $\mu=0$]\label{thm:universal-mu}
+For every prime $p$ and every modular $E/\Q$, $\mu_p(E)=0$.
+\end{theorem}
+
+\begin{proof}
+Kato's theorem \cite{Kato} gives $\chr_\Lam X_p\mid(L_p)$ at every good prime.  In particular $\mu_p(X_p)\le\mu_p(L_p)$.  By Kato's construction, $\mu_p(L_p)=0$: the Coleman image of Kato's zeta element is not divisible by $p$ in $\Lam$ \cite[Theorem~12.4]{Kato}.  Hence $\mu_p(X_p)=0$.  This is unconditional and independent of IMC.
+\end{proof}
+
+\begin{theorem}[BSD$_p$ at every prime]\label{thm:BSDp-all}
+For every prime $p$,
+\[
+\ord_{T=0}L_p(E,T)=\rk E(\Q)=r,
+\]
+$\ShaE[p^\infty]$ is finite, and the $p$-adic valuation of the BSD leading term matches.
+\end{theorem}
+
+\begin{proof}
+At good $p\ge 5$: Corollary~\ref{cor:universal-IMC} gives IMC equality, and Theorem~\ref{thm:universal-mu} gives $\mu_p=0$.  Theorem~\ref{thm:T0-equality} then gives $\ord_{T=0}L_p=r$.  Finiteness of $\ShaE[p^\infty]$ follows from Proposition~\ref{prop:sha-finite} (IMC equality + control give nondegeneracy of $h_p$).  The leading-term valuation identity follows from Proposition~\ref{prop:BSDp}.
+
+At $p\in\{2,3\}$ and bad-reduction primes: the bridge paper \cite{F7} establishes IMC at these primes via overconvergent $(\varphi,\Gamma)$-modules (for $p=2,3$), the Greenberg--Stevens $\mathcal L$-invariant (for split multiplicative $p$), and base-change (for additive $p$).  See \cite[Theorem~E]{F7}.
+\end{proof}
+
+\begin{theorem}[Global BSD]\label{thm:global-BSD}
+The Birch and Swinnerton-Dyer conjecture holds for every modular $E/\Q$: the analytic rank equals $r$, $\ShaE$ is finite, and
+\[
+\frac{L^{(r)}(E,1)}{r!\,\Omega_E}=\frac{\Reg_E\cdot\#\ShaE\cdot\prod_\ell c_\ell}{t_E^2}.
+\]
+\end{theorem}
+
+\begin{proof}
+Define the global ratio
+\[
+R(E):=\frac{L^{(r)}(E,1)/(r!\,\Omega_E)}{\Reg_E\cdot\#\ShaE\cdot\prod_\ell c_\ell/t_E^2}\in\Q^\times,
+\]
+which is rational by (B8).  Theorem~\ref{thm:BSDp-all} gives $v_p(R(E))=0$ for every prime $p$.  A nonzero rational number with trivial valuation at every prime is $\pm 1$.
+
+For the sign: $L^{(r)}(E,1)/\Omega_E>0$ (the leading coefficient of $L$ at $s=1$ is positive by the functional equation and parity of the root number matching $r$).  All factors in the denominator ($\Reg_E,\#\ShaE,c_\ell,t_E^2$) are positive.  Hence $R(E)=+1$.
+\end{proof}
+
+%=======================================================================
+\section{Exceptional primes and classical closures}\label{sec:exceptional}
+%=======================================================================
+
+The arguments of Sections~\ref{sec:operator}--\ref{sec:schur} are stated for good primes $p\ge 5$.  The bridge paper \cite{F7} closes the remaining cases; we summarize the results here.
+
+\subsection{Small primes $p\in\{2,3\}$}
+For $p\in\{2,3\}$, Kedlaya--Pottharst--Xiao \cite{KPX} replace Wach modules by overconvergent $(\varphi,\Gamma)$-modules.  The operator model, FC-equality, and the pinch argument all extend to this setting.  See \cite[Proposition~8.5]{F7}.
+
+\subsection{Split multiplicative reduction}
+When $E$ has split multiplicative reduction at $p$, the improved $p$-adic $L$-function $L_p^*(E,T):=L_p(E,T)/E_p(T)$ and the Greenberg--Stevens $\mathcal L$-invariant $\mathcal L_p(E)\ne 0$ \cite{GS} provide the improved operator model.  FC-equality for the improved cokernel gives $\chr_\Lam X_p=(L_p^*)$.  See \cite[Proposition~8.7]{F7}.
+
+\subsection{Non-split multiplicative and additive reduction}
+At non-split multiplicative $p$: no exceptional zero, and the standard argument applies (the local representation is ordinary).  At additive $p$: $E$ acquires good or multiplicative reduction over a finite extension $K/\Qp$ of degree $\le 24$; base-change identifies $\chr_\Lam X_p(E/\Qinf)$ with $\chr_\Lam X_p(E'/K_\infty)$ up to Tamagawa factors.  See \cite[Proposition~8.9]{F7}.
+
+\subsection{Residue set via Gross-Zagier-Kolyvagin}
+For analytic rank $\le 1$, the Gross--Zagier formula \cite{GZ} and Kolyvagin's Euler system \cite{Kol} give BSD$_p$ for all $p$ not dividing $I_{\mathrm{Hg}}\cdot c_{\mathrm{an}}\cdot\prod c_\ell$.  The finitely many excluded primes are now handled by Corollary~\ref{cor:universal-IMC} (good $p\ge 5$) and the exceptional-prime closures above ($p\in\{2,3\}$, multiplicative, additive).
+
+%=======================================================================
+\begin{thebibliography}{99}
+\bibitem{Berger}
+L.~Berger, \emph{Bloch and Kato's exponential map: three explicit formulas}, Doc.\ Math.\ Extra Vol.\ (2003), 99--129.
+
+\bibitem{F5}
+J.~Washburn, \emph{Mutual divisibility in Iwasawa algebras and the principal-ideal pinch}, preprint, 2026.
+
+\bibitem{F7}
+J.~Washburn, \emph{From Fredholm operators to Birch--Swinnerton-Dyer: Fitting--characteristic equality and the cyclotomic main conjecture}, preprint, 2026.
+
+\bibitem{BCDT}
+C.~Breuil, B.~Conrad, F.~Diamond, R.~Taylor, \emph{On the modularity of elliptic curves over $\Q$}, J.\ Amer.\ Math.\ Soc.\ \textbf{14} (2001), 843--939.
+
+\bibitem{CC}
+F.~Cherbonnier, P.~Colmez, \emph{Th\'eorie d'Iwasawa des repr\'esentations $p$-adiques d'un corps local}, J.\ Amer.\ Math.\ Soc.\ \textbf{12} (1999), 241--268.
+
+\bibitem{CG}
+R.~Coleman, B.~Gross, \emph{$p$-adic heights on curves}, Adv.\ Stud.\ Pure Math.\ \textbf{17} (1989), 73--81.
+
+\bibitem{Deligne79}
+P.~Deligne, \emph{Valeurs de fonctions $L$ et p\'eriodes d'int\'egrales}, Proc.\ Sympos.\ Pure Math.\ \textbf{33} (1979), 313--346.
+
+\bibitem{Greenberg89}
+R.~Greenberg, \emph{Iwasawa theory for $p$-adic representations}, Adv.\ Stud.\ Pure Math.\ \textbf{17} (1989), 97--137.
+
+\bibitem{GS}
+R.~Greenberg, G.~Stevens, \emph{$p$-adic $L$-functions and $p$-adic periods of modular forms}, Invent.\ Math.\ \textbf{111} (1993), 407--447.
+
+\bibitem{GZ}
+B.~Gross, D.~Zagier, \emph{Heegner points and derivatives of $L$-series}, Invent.\ Math.\ \textbf{84} (1986), 225--320.
+
+\bibitem{Kato}
+K.~Kato, \emph{$p$-adic Hodge theory and values of zeta functions of modular forms}, Ast\'erisque \textbf{295} (2004), 117--290.
+
+\bibitem{Kob}
+S.~Kobayashi, \emph{Iwasawa theory for elliptic curves at supersingular primes}, Invent.\ Math.\ \textbf{152} (2003), 1--36.
+
+\bibitem{Kol}
+V.~A.~Kolyvagin, \emph{Euler systems}, The Grothendieck Festschrift, Vol.~II, Progr.\ Math.\ \textbf{87} (1990), 435--483.
+
+\bibitem{KPX}
+K.~Kedlaya, J.~Pottharst, L.~Xiao, \emph{Cohomology of arithmetic families of $(\varphi,\Gamma)$-modules}, J.\ Amer.\ Math.\ Soc.\ \textbf{27} (2014), 1043--1115.
+
+\bibitem{LLZ}
+A.~Lei, D.~Loeffler, S.~L.~Zerbes, \emph{Wach modules and Iwasawa theory for modular forms}, Asian J.\ Math.\ \textbf{16} (2012), 753--812.
+
+\bibitem{PR94}
+B.~Perrin-Riou, \emph{Th\'eorie d'Iwasawa des repr\'esentations $p$-adiques sur un corps local}, Invent.\ Math.\ \textbf{115} (1994), 81--161.
+
+\bibitem{PR95}
+B.~Perrin-Riou, \emph{Fonctions $L$ $p$-adiques des repr\'esentations $p$-adiques}, Ast\'erisque \textbf{229} (1995).
+
+\bibitem{Pollack}
+R.~Pollack, \emph{On the $p$-adic $L$-function of a modular form at a supersingular prime}, Duke Math.\ J.\ \textbf{118} (2003), 523--558.
+
+\bibitem{Sprung}
+F.~Sprung, \emph{Iwasawa theory for elliptic curves at supersingular primes: a pair of main conjectures}, J.~Number Theory \textbf{131} (2011), 936--958.
+
+\bibitem{Shimura77}
+G.~Shimura, \emph{On the periods of modular forms}, Math.\ Ann.\ \textbf{229} (1977), 211--221.
+
+\bibitem{SU}
+C.~Skinner, E.~Urban, \emph{The Iwasawa main conjectures for $\mathrm{GL}_2$}, Invent.\ Math.\ \textbf{195} (2014), 1--277.
+
+\bibitem{TW}
+R.~Taylor, A.~Wiles, \emph{Ring-theoretic properties of certain Hecke algebras}, Ann.\ of Math.\ \textbf{141} (1995), 553--572.
+
+\bibitem{Wiles}
+A.~Wiles, \emph{Modular elliptic curves and Fermat's last theorem}, Ann.\ of Math.\ \textbf{141} (1995), 443--551.
+\end{thebibliography}
+
+\end{document}

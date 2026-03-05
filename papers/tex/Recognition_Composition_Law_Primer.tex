@@ -1,0 +1,308 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1.2in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+% Hyperref setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue
+}
+
+% Theorem environments
+\theoremstyle{definition}
+\newtheorem{axiom}{Axiom}
+\newtheorem{definition}{Definition}[section]
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}[section]
+\newtheorem{example}{Example}[section]
+
+% Custom commands
+\newcommand{\Jcost}{J}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\title{\textbf{\Large The Recognition Composition Law}\\[0.5em]
+\large The Single Primitive of Recognition Science}
+\author{Recognition Science Institute}
+\date{January 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We present the \emph{Recognition Composition Law}, the foundational axiom of Recognition Science from which all physical structure emerges. This functional equation constrains how recognition costs compose under multiplication and division, and---combined with minimal normalization conditions---uniquely determines the cost functional $\Jcost(x) = \frac{1}{2}(x + x^{-1}) - 1$. We show that this law is equivalent to d'Alembert's classical functional equation in log-coordinates, revealing deep connections to wave phenomena and hyperbolic geometry. The Meta-Principle ``Nothing cannot recognize itself'' emerges as a \emph{theorem} rather than an axiom, establishing cost as the single primitive of the theory.
+\end{abstract}
+
+\tableofcontents
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\section{Introduction}
+
+Recognition Science is a zero-parameter theoretical framework that derives physical structure from a single foundational principle. The central question is: \emph{What is the cost of imbalance?}
+
+When two quantities $x$ and $y$ are compared, their ratio $r = x/y$ measures their relative magnitude. If $r = 1$, the quantities are balanced and there is no ``cost'' to their coexistence. If $r \neq 1$, there is an asymmetry that must be accounted for.
+
+The \textbf{Recognition Composition Law} specifies how these costs must compose when multiple comparisons are made. It is not derived from more basic principles---it \emph{is} the basic principle.
+
+\section{The Cost Functional}
+
+\begin{definition}[Cost Functional]
+A \emph{cost functional} is a function $\Jcost: \R_{>0} \to \R$ that measures the ``imbalance cost'' or ``recognition cost'' of a ratio $r > 0$.
+\end{definition}
+
+We seek a cost functional satisfying natural physical requirements:
+
+\begin{itemize}
+    \item \textbf{Balance at unity}: $\Jcost(1) = 0$ --- equal quantities have zero imbalance
+    \item \textbf{Symmetry}: $\Jcost(r) = \Jcost(1/r)$ --- the same cost whether $x > y$ or $y > x$
+    \item \textbf{Consistent composition}: Products and quotients combine predictably
+\end{itemize}
+
+The third requirement is the crucial one. How \emph{should} costs compose?
+
+\section{The Recognition Composition Law}
+
+\begin{axiom}[Recognition Composition Law]\label{ax:composition}
+For any cost functional $\Jcost: \R_{>0} \to \R$, the costs of products and quotients relate to component costs via:
+\begin{equation}\label{eq:composition}
+\boxed{\Jcost(xy) + \Jcost(x/y) = 2\Jcost(x)\Jcost(y) + 2\Jcost(x) + 2\Jcost(y)}
+\end{equation}
+\end{axiom}
+
+\subsection{Physical Interpretation}
+
+The Recognition Composition Law states that examining a product $xy$ and quotient $x/y$ \emph{together} extracts all information about $x$ and $y$ individually, with:
+\begin{itemize}
+    \item No double-counting of shared structure
+    \item No loss of independent information
+\end{itemize}
+
+This is how wave phenomena combine in physics. The factor structure
+\[
+2(1 + \Jcost(x))(1 + \Jcost(y)) - 2
+\]
+on the right-hand side (which equals the RHS of \eqref{eq:composition}) reveals the underlying hyperbolic structure.
+
+\subsection{Factored Form}
+
+Setting $g(x) = 1 + \Jcost(x)$, the composition law takes the elegant form:
+\begin{equation}\label{eq:factored}
+g(xy) + g(x/y) = 2g(x)g(y)
+\end{equation}
+This is the \emph{cosine addition formula} in multiplicative form.
+
+\section{Connection to d'Alembert's Equation}
+
+\subsection{The Logarithmic Transformation}
+
+Define $h: \R \to \R$ by $h(t) = g(e^t) = 1 + \Jcost(e^t)$.
+
+Substituting $x = e^s$ and $y = e^t$ into \eqref{eq:factored}:
+\begin{align*}
+g(e^s \cdot e^t) + g(e^s / e^t) &= 2g(e^s)g(e^t) \\
+g(e^{s+t}) + g(e^{s-t}) &= 2g(e^s)g(e^t) \\
+h(s+t) + h(s-t) &= 2h(s)h(t)
+\end{align*}
+
+\begin{theorem}[d'Alembert Equivalence]
+The Recognition Composition Law \eqref{eq:composition} is equivalent to d'Alembert's functional equation in log-coordinates:
+\begin{equation}\label{eq:dalembert}
+\boxed{h(s+t) + h(s-t) = 2h(s)h(t)}
+\end{equation}
+\end{theorem}
+
+\subsection{Historical Context}
+
+D'Alembert's equation \eqref{eq:dalembert} was studied by Jean le Rond d'Alembert in the 18th century. It characterizes the cosine function and its hyperbolic analogue. The general continuous solutions are:
+\begin{enumerate}
+    \item $h(t) = 0$ (trivial)
+    \item $h(t) = 1$ (constant)
+    \item $h(t) = \cos(\lambda t)$ for some $\lambda \in \R$
+    \item $h(t) = \cosh(\lambda t)$ for some $\lambda \in \R$
+\end{enumerate}
+
+\section{The Uniqueness Theorem}
+
+\subsection{Normalization Axioms}
+
+To pin down the cost functional uniquely, we add:
+
+\begin{axiom}[Normalization]\label{ax:norm}
+$\Jcost(1) = 0$ --- identity has zero cost.
+\end{axiom}
+
+\begin{axiom}[Calibration]\label{ax:calib}
+$\Jcost''_{\log}(0) = 1$ --- unit curvature at the minimum in log-coordinates.
+\end{axiom}
+
+Here $\Jcost_{\log}(t) := \Jcost(e^t)$, so the calibration says $\frac{d^2}{dt^2}\Jcost(e^t)\big|_{t=0} = 1$.
+
+\subsection{Main Result}
+
+\begin{theorem}[Cost Uniqueness --- T5]\label{thm:uniqueness}
+The unique continuous function satisfying Axioms~\ref{ax:composition}, \ref{ax:norm}, and \ref{ax:calib} is:
+\begin{equation}\label{eq:Jcost}
+\boxed{\Jcost(x) = \frac{1}{2}\left(x + \frac{1}{x}\right) - 1 = \cosh(\ln x) - 1 = \frac{(x-1)^2}{2x}}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Let $g(x) = 1 + \Jcost(x)$ and $h(t) = g(e^t)$. By the Recognition Composition Law, $h$ satisfies d'Alembert's equation \eqref{eq:dalembert}.
+
+\textbf{Step 1}: The normalization $\Jcost(1) = 0$ gives $h(0) = g(1) = 1 + 0 = 1$.
+
+\textbf{Step 2}: Since $h(0) = 1 \neq 0$, the trivial solution $h \equiv 0$ is excluded.
+
+\textbf{Step 3}: Setting $s = t = 0$ in \eqref{eq:dalembert}: $2h(0) = 2h(0)^2$, so $h(0) = 0$ or $h(0) = 1$. We have $h(0) = 1$.
+
+\textbf{Step 4}: The continuous solutions with $h(0) = 1$ are:
+\[
+h(t) = \cos(\lambda t) \quad \text{or} \quad h(t) = \cosh(\lambda t)
+\]
+
+\textbf{Step 5}: For $\cos(\lambda t)$, we have $h''(0) = -\lambda^2 < 0$ (a maximum). \\
+For $\cosh(\lambda t)$, we have $h''(0) = \lambda^2 > 0$ (a minimum).
+
+Since cost should be minimized at balance ($x = 1$), we need a minimum, so $h(t) = \cosh(\lambda t)$.
+
+\textbf{Step 6}: The calibration $\Jcost''_{\log}(0) = 1$ means:
+\[
+h''(0) - h'(0) = 1
+\]
+Since $h(t) = \cosh(\lambda t)$ gives $h'(0) = 0$ and $h''(0) = \lambda^2$, we get $\lambda^2 = 1$, so $\lambda = 1$.
+
+\textbf{Step 7}: Therefore $h(t) = \cosh(t)$, which gives:
+\[
+\Jcost(x) = g(x) - 1 = h(\ln x) - 1 = \cosh(\ln x) - 1
+\]
+
+Using $\cosh(\ln x) = \frac{1}{2}(e^{\ln x} + e^{-\ln x}) = \frac{1}{2}(x + x^{-1})$:
+\[
+\Jcost(x) = \frac{1}{2}\left(x + \frac{1}{x}\right) - 1 = \frac{x^2 + 1 - 2x}{2x} = \frac{(x-1)^2}{2x} \qedhere
+\]
+\end{proof}
+
+\section{Derived Properties}
+
+The Recognition Composition Law, combined with the normalization axioms, implies many properties that might otherwise need to be assumed independently.
+
+\begin{corollary}[Symmetry]
+$\Jcost(x) = \Jcost(1/x)$ for all $x > 0$.
+\end{corollary}
+
+\begin{proof}
+$\Jcost(1/x) = \frac{1}{2}(x^{-1} + x) - 1 = \Jcost(x)$.
+\end{proof}
+
+\begin{corollary}[Non-negativity]
+$\Jcost(x) \geq 0$ for all $x > 0$, with equality iff $x = 1$.
+\end{corollary}
+
+\begin{proof}
+$\Jcost(x) = \frac{(x-1)^2}{2x}$. Since $(x-1)^2 \geq 0$ and $x > 0$, we have $\Jcost(x) \geq 0$. Equality holds iff $(x-1)^2 = 0$, i.e., $x = 1$.
+\end{proof}
+
+\begin{corollary}[Strict Convexity]
+$\Jcost$ is strictly convex on $\R_{>0}$.
+\end{corollary}
+
+\begin{proof}
+$\Jcost''(x) = x^{-3} > 0$ for all $x > 0$.
+\end{proof}
+
+\section{The Meta-Principle as Theorem}
+
+A profound consequence of the Recognition Composition Law is that the foundational principle of Recognition Science---``Nothing cannot recognize itself''---becomes a \emph{derived theorem} rather than an axiom.
+
+\begin{theorem}[Nothing Cannot Exist]
+\[
+\lim_{x \to 0^+} \Jcost(x) = +\infty
+\]
+\end{theorem}
+
+\begin{proof}
+$\displaystyle\Jcost(x) = \frac{1}{2}\left(x + \frac{1}{x}\right) - 1 \to +\infty$ as $x \to 0^+$.
+\end{proof}
+
+\begin{remark}[Ontological Interpretation]
+If ``nothing'' corresponds to $x \to 0$, then nothing has infinite recognition cost---it cannot participate in any recognition event. Since existence requires recognition, nothing cannot exist. Conversely, since $\Jcost(1) = 0$, unity (something balanced) \emph{must} exist.
+\end{remark}
+
+This is the paradigm shift: \textbf{Cost is the ONE primitive}. The Meta-Principle is no longer foundational but emergent.
+
+\section{Geometric Interpretation}
+
+\subsection{Hyperbolic Geometry}
+
+The cost functional $\Jcost(x) = \cosh(\ln x) - 1$ has a natural interpretation in hyperbolic geometry. The quantity $\ln x$ is the signed hyperbolic distance from unity, and $\cosh(\ln x)$ is the hyperbolic cosine of this distance.
+
+\subsection{The Recognition Quotient}
+
+In the broader Recognition Geometry framework, configurations $c_1, c_2$ are \emph{indistinguishable} under a recognizer $R$ if $R(c_1) = R(c_2)$. This defines an equivalence relation, and the \emph{recognition quotient} is the space of equivalence classes.
+
+When recognizers compose, their indistinguishability relations intersect:
+\[
+c_1 \sim_{R_1 \otimes R_2} c_2 \quad \Longleftrightarrow \quad (c_1 \sim_{R_1} c_2) \wedge (c_1 \sim_{R_2} c_2)
+\]
+
+The Recognition Composition Law governs how costs add under this composition.
+
+\section{Summary}
+
+The Recognition Composition Law \eqref{eq:composition} is the foundational axiom of Recognition Science:
+
+\begin{center}
+\fbox{\parbox{0.85\textwidth}{
+\centering
+$\Jcost(xy) + \Jcost(x/y) = 2\Jcost(x)\Jcost(y) + 2\Jcost(x) + 2\Jcost(y)$
+}}
+\end{center}
+
+\vspace{0.5em}
+
+\noindent Combined with normalization ($\Jcost(1) = 0$) and calibration ($\Jcost''_{\log}(0) = 1$), it uniquely determines:
+
+\begin{center}
+\fbox{\parbox{0.85\textwidth}{
+\centering
+$\displaystyle\Jcost(x) = \frac{1}{2}\left(x + \frac{1}{x}\right) - 1 = \cosh(\ln x) - 1 = \frac{(x-1)^2}{2x}$
+}}
+\end{center}
+
+\vspace{0.5em}
+
+\noindent From this single primitive, all of Recognition Science unfolds:
+\begin{itemize}
+    \item The Meta-Principle emerges as a theorem
+    \item Strict convexity is derived, not assumed
+    \item Reciprocal symmetry follows automatically
+    \item The golden ratio $\varphi$ appears as a fixed point of cost dynamics
+    \item Physical constants emerge from $\Jcost$-minimization
+\end{itemize}
+
+The Recognition Composition Law is not merely a constraint on cost---it is the generative principle from which physical reality emerges through the mathematics of recognition.
+
+\vspace{2em}
+\hrule
+\vspace{1em}
+
+\begin{center}
+\textit{``The universe is not made of matter, but of recognition.''}
+\end{center}
+
+\end{document}

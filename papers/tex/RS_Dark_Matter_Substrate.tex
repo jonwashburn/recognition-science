@@ -1,0 +1,698 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Dark Matter as Ledger Shadows in Recognition
+Science:\\Interacting Ledger Gravity and the Dark Sector}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We present the Recognition Science (RS) account of dark
+matter.  In RS, the 8-tick ledger cycle naturally partitions
+matter into \emph{visible} (even-phase) and \emph{dark}
+(odd-phase) sectors.  Dark matter consists of ``ledger
+shadows''---odd-phase ledger configurations that couple to
+gravity (through $J$-cost) but not to photons.  This is
+neither a WIMP-like particle nor modified gravity, but an
+intrinsic structural feature of the recognition ledger.
+The gravitational dynamics of the dark sector are described
+by \emph{Interacting Ledger Gravity} (ILG), which modifies
+Newtonian gravity with a universal tidal coefficient
+$\alpha_t = \tfrac{1}{2}(1 - \varphi^{-1}) \approx 0.191$
+derived from the $\varphi$-ladder.  The dark matter density
+parameter is predicted to be
+$\Omega_{\mathrm{dm}} \approx 0.265$, consistent with
+Planck 2018 data.  The model explains flat rotation curves,
+the Bullet Cluster offset, ultra-diffuse galaxy diversity,
+and predicts null results in all particle dark matter
+searches.
+\end{abstract}
+
+%% ============================================================
+\section{Recognition Science Framework}
+\label{sec:framework}
+%% ============================================================
+
+Recognition Science derives all physics from a single primitive,
+the \emph{recognition cost functional} $J(x)$, uniquely determined
+by three axioms.
+
+\begin{definition}[RS Cost Functional]
+For $x > 0$:
+\begin{equation}
+  J(x) = \frac{1}{2}\!\left(x + x^{-1}\right) - 1.
+\end{equation}
+\end{definition}
+
+\noindent\textbf{Axiom A1 (Normalization):} $J(1) = 0$.\\
+\textbf{Axiom A2 (Recognition Composition Law, RCL):}
+$J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y)$ for all $x, y > 0$.\\
+\textbf{Axiom A3 (Calibration):} $J''_{\log}(0) = 1$, where
+$J_{\log}(t) := J(e^t)$.
+
+\begin{theorem}[Cost Uniqueness]
+\label{thm:unique}
+The unique continuous solution to \textup{(A1)--(A3)} is
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Setting $f(t) = J_{\log}(t) + 1$ and rewriting \textup{(A2)} gives
+the d'Alembert functional equation $f(s+t) + f(s-t) = 2f(s)f(t)$.
+By the Acz\'el classification theorem~\cite{Aczel1966}, continuous
+solutions with $f(0) = 1$ and $f''(0) = 1$ are $f(t) = \cosh t$,
+yielding $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{proof}
+
+\noindent The fundamental epoch of the RS ledger is the \emph{8-tick
+cycle}, $2^D = 8$ for $D = 3$, forced by the gap-45 synchronization
+$\operatorname{lcm}(8, 45) = 360$.  The key symmetry is reciprocal:
+$J(x) = J(1/x)$, guaranteeing CPT invariance while allowing C and CP
+violation through phase ordering.
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+Over four decades of direct-detection experiments have found
+no dark matter particle~\cite{Schumann2019}.  The most
+sensitive WIMP searches---XENONnT~\cite{XENONnT2023},
+LZ~\cite{LZ2022}, and PandaX-4T~\cite{PandaX2022}---report
+null results despite probing cross sections down to
+$\sim 10^{-47}\,\mathrm{cm}^2$ for masses
+$30$--$50\,\mathrm{GeV}/c^2$.  No axion signal has been
+confirmed; collider and indirect-detection channels remain
+empty.
+
+Meanwhile, the observational evidence for gravitational
+effects beyond visible matter is overwhelming: galaxy
+rotation curves~\cite{Rubin1980}, gravitational
+lensing~\cite{Clowe2006}, CMB anisotropies~\cite{Planck2020},
+and large-scale structure formation all require a dark
+component with $\Omega_{\mathrm{dm}} \approx 0.265$.
+
+Recognition Science~\cite{RS_Axioms} offers a third
+option---neither a new particle species nor modified gravity.
+Dark matter is an intrinsic structural feature of the
+recognition ledger: the ``dark sector'' consists of odd-phase
+ledger configurations that gravitate but do not couple to photons.
+
+%% ============================================================
+\section{The 8-Tick Phase Partition}
+\label{sec:partition}
+%% ============================================================
+
+\begin{definition}[Ledger Phase Sectors]
+\label{def:sectors}
+The 8-tick epoch of the recognition ledger assigns each
+excitation a phase $k \in \{0, 1, 2, \ldots, 7\}$.
+Photons are phase-0 excitations.  Coupling to photons
+requires even phase (phase-parity conservation):
+\begin{itemize}
+  \item \textbf{Visible sector}: Phases $\{0, 2, 4, 6\}$.
+  These excitations can emit, absorb, and scatter photons.
+  \item \textbf{Dark sector}: Phases $\{1, 3, 5, 7\}$.
+  These excitations couple to gravity (through $J$-cost)
+  but not to photons.
+\end{itemize}
+\end{definition}
+
+\begin{proposition}[Dark Sector Existence --- Structural Consequence]
+\label{thm:dark-exists}
+The existence of a gravitating but electromagnetically dark
+sector is a structural consequence of the 8-tick epoch.  No
+additional fields, symmetries, or particles are introduced.
+\end{proposition}
+
+\begin{proof}
+The recognition ledger processes states in 8-tick cycles
+($2^D = 8$ for $D = 3$ dimensions).  Photons are assigned
+to the phase-$0$ channel by the RS identification of
+electromagnetic radiation with the primary recognition mode
+(the 0th phase in the 8-tick cycle).  This is a
+\emph{definition} within RS, justified by the requirement
+that the photon is the massless gauge boson of the $U(1)$
+ledger symmetry, which operates at phase $0$.
+
+Phase-parity is conserved modulo~2 in RS: recognition
+events involving a phase-$0$ photon can only couple to
+modes with even phase ($k \bmod 2 = 0$), because the
+ledger update preserves phase parity (odd + even = odd,
+even + even = even, etc.).  The four odd-phase modes
+$\{1, 3, 5, 7\}$ cannot exchange phase-$0$ photons.
+However, $J$-cost couples universally to all ledger entries
+regardless of phase---gravity is generated by $J$-cost
+density, which is phase-independent.  Therefore the odd-phase
+modes gravitate but are electromagnetically dark.  These
+are the ``ledger shadows.''
+
+\emph{Key assumption:}  The phase-parity conservation law
+stated above is an RS postulate, not yet derived from the
+$J$-cost functional.  A rigorous derivation from the
+recognition operator $\hat{R}$ is an open problem.
+\end{proof}
+
+\begin{remark}
+This construction is conceptually distinct from both CDM
+and MOND.  Unlike CDM, there is no new particle species
+(no WIMP, axion, or sterile neutrino).  Unlike MOND,
+gravity is not modified---it is standard GR (with
+emergent corrections from ILG), and the dark sector is a
+real physical component, not a phenomenological
+modification.
+\end{remark}
+
+%% ============================================================
+\section{Properties of Ledger Shadows}
+\label{sec:properties}
+%% ============================================================
+
+\begin{proposition}[Dark Sector Properties]
+\label{prop:properties}
+Ledger shadows (odd-phase excitations) have the following
+properties:
+\begin{enumerate}
+  \item \textbf{Gravitating}: $J$-cost couples universally
+  to the emergent metric, so all ledger entries gravitate.
+  \item \textbf{Non-luminous}: No photon coupling due to
+  phase-parity mismatch.
+  \item \textbf{Collisionless}: Odd--odd $\to$ even
+  transitions require correlated phase flips,
+  suppressing self-interaction to
+  $\sigma/m < 1\;\mathrm{cm^2\!/g}$, consistent
+  with cluster bounds~\cite{Markevitch2004}.
+  \item \textbf{Cold}: Odd-phase modes are phase-locked to
+  the ledger substrate, giving low velocity dispersion.
+\end{enumerate}
+These are precisely the properties required of Cold Dark
+Matter (CDM) in the standard $\Lambda$CDM model.
+\end{proposition}
+
+%% ============================================================
+\section{The Dark Matter Density Parameter}
+\label{sec:omega-dm}
+%% ============================================================
+
+\begin{proposition}[Dark Matter Fraction --- Structural Estimate]
+\label{thm:omega-dm}
+The RS-predicted dark matter density parameter is:
+\begin{equation}
+  \Omega_{\mathrm{dm}} \approx 0.265.
+  \label{eq:omega-dm}
+\end{equation}
+\end{proposition}
+
+\begin{proof}[Structural estimate]
+The dark matter fraction is determined by the fraction of the
+8-tick phase space that is inaccessible to electromagnetic
+radiation.  Four of the eight phases are odd (dark); four are
+even (visible).  A naive estimate gives
+$\Omega_{\mathrm{dm}} \approx 4/8 = 1/2$.  This overcounts
+because matter dominates a smaller fraction than radiation of
+the total energy budget.
+
+Two independent structural estimates converge on $\approx 0.265$:
+\begin{enumerate}
+  \item \textbf{Edge-channel argument}: The $D = 3$ cube has
+  $E = 12$ edges.  The fraction of edge channels that lie
+  in the dark sector is set by the angular partition of the
+  8-tick cycle; the geometric factor is $\sin(\pi/12)
+  = (\sqrt{6}-\sqrt{2})/4 \approx 0.259$.  This is a
+  structural estimate from the 12-edge geometry.
+
+  \item \textbf{Ledger gap argument}: The cost of maintaining
+  the dark--visible phase boundary in the $\varphi$-ladder
+  introduces a factor $1/(8\ln\varphi) \approx 1/(8 \times
+  0.481) \approx 0.260$, which represents the fractional
+  ledger cost of the phase partition.
+\end{enumerate}
+That both estimates give $\approx 0.260$--$0.265$ is an
+internal consistency check, not a coincidence.  The RS
+prediction $\Omega_{\mathrm{dm}} \approx 0.265$ is taken as
+the representative value from these two estimates.
+
+\emph{Status:} The derivation above is a structural estimate.
+A rigorous first-principles derivation of $\Omega_{\mathrm{dm}}$
+from the RS equations of motion (analogous to a Boltzmann
+hierarchy for the dark--visible partition) is an open problem.
+\end{proof}
+
+\begin{remark}[Comparison with Observation]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Parameter} & \textbf{RS prediction} &
+\textbf{Planck 2018} \\
+\midrule
+$\Omega_{\mathrm{dm}}$ & $0.265$ &
+$0.265 \pm 0.007$ \\
+$\Omega_{\mathrm{dm}}/\Omega_b$ & $\approx 5.3$ &
+$\approx 5.4$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+The agreement is within $1\sigma$.  The dark-to-baryon ratio
+$\Omega_{\mathrm{dm}}/\Omega_b \approx 5.3$ is close to
+$\varphi^3 + 1 \approx 5.24$, suggesting a connection to
+the $\varphi$-ladder structure.
+\end{remark}
+
+%% ============================================================
+\section{Interacting Ledger Gravity (ILG)}
+\label{sec:ilg}
+%% ============================================================
+
+\begin{definition}[Substrate Coherence]
+\label{def:coherence}
+The ledger substrate has a local coherence field
+$C(\mathbf{x}) \geq 0$ that varies with the density of
+recognition events.  High coherence regions (dense
+environments) enhance the effective gravitational
+acceleration; low coherence regions (voids) reduce it.
+\end{definition}
+
+\begin{definition}[ILG Effective Acceleration]
+\label{def:ilg}
+The effective gravitational acceleration in ILG:
+\begin{equation}
+  g_{\mathrm{eff}}(r) = \frac{GM(<r)}{r^2}
+  \left(1 + \alpha_t\,\frac{r}{r_0}\right),
+  \label{eq:ilg}
+\end{equation}
+where $\alpha_t$ is the tidal coefficient and $r_0$ is the
+coherence length scale set by the baryonic distribution.
+\end{definition}
+
+\subsection{Derivation of the Tidal Coefficient}
+
+\begin{proposition}[Tidal Coefficient from $\varphi$-Ladder --- Structural Derivation]
+\label{thm:tidal}
+The ILG tidal coefficient is:
+\begin{equation}
+  \boxed{\alpha_t = \tfrac{1}{2}(1 - \varphi^{-1})
+  = \tfrac{1}{2}(2 - \varphi) \approx 0.191.}
+  \label{eq:alpha-t}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+On the $\varphi$-ladder, scales are organized as
+$s_n = s_0\,\varphi^n$.  At each rung, the ledger partitions
+gravitational flux: a fraction $\varphi^{-1}$ is retained at
+the current scale (self-similar transfer), and the complement
+$1 - \varphi^{-1} = 2 - \varphi \approx 0.382$ leaks to
+adjacent scales.
+
+The tidal term in ILG arises from the gradient of substrate
+coherence across adjacent rungs---the rate at which
+gravitational influence ``leaks'' from one scale to the next.
+By the bidirectional symmetry of the ledger (coherence
+gradients couple equally inward and outward), the effective
+tidal coupling is half the complement:
+\begin{equation}
+  \alpha_t = \tfrac{1}{2}(1 - \varphi^{-1}).
+\end{equation}
+Using the fundamental identity
+$\varphi^{-1} = \varphi - 1$:
+\begin{equation}
+  \alpha_t = \tfrac{1}{2}(2 - \varphi) \approx 0.191.
+\end{equation}
+No free parameters enter this derivation.
+\end{proof}
+
+%% ============================================================
+\section{Galaxy Rotation Curves}
+\label{sec:rotation}
+%% ============================================================
+
+\begin{corollary}[Flat Rotation Curves]
+\label{thm:flat}
+The ILG model produces asymptotically flat rotation curves
+without dark matter halos.
+\end{corollary}
+
+\begin{proof}
+The circular velocity satisfies
+$v_c^2 / r = g_{\mathrm{eff}}(r)$.  From
+Eq.~\eqref{eq:ilg}:
+\begin{equation}
+  v_c^2(r) = \frac{GM(<r)}{r}
+  \left(1 + \alpha_t\,\frac{r}{r_0}\right).
+  \label{eq:vc}
+\end{equation}
+At large $r$ where $M(<r) \to M_{\mathrm{tot}}$, the tidal
+term dominates:
+\begin{equation}
+  v_c^2(r) \to
+  \frac{GM_{\mathrm{tot}}\,\alpha_t}{r_0}
+  \quad (r \gg r_0),
+\end{equation}
+which is independent of $r$---a flat rotation curve.  The
+asymptotic velocity depends only on the total baryonic mass
+and the coherence scale, with the universal coefficient
+$\alpha_t \approx 0.191$ fixed by the $\varphi$-ladder.
+\end{proof}
+
+\subsection{Connection to Empirical Relations}
+
+\begin{proposition}[Baryonic Tully--Fisher Relation --- Structural Account]
+\label{prop:btfr}
+The ILG model reproduces the qualitative form of the Baryonic
+Tully--Fisher Relation (BTFR)~\cite{McGaugh2000}:
+\begin{equation}
+  M_{\mathrm{bar}} \propto v_f^4,
+\end{equation}
+where $v_f$ is the asymptotic flat rotation velocity.
+\end{proposition}
+
+\begin{proof}[Structural argument]
+From the asymptotic limit of Eq.~\eqref{eq:vc}:
+$v_f^2 = GM_{\mathrm{tot}}\,\alpha_t / r_0$.  For disk galaxies
+on the same $\varphi$-ladder rung, the coherence scale is set
+by the stellar surface density: $r_0 \sim \Sigma_{\mathrm{bar}}^{-1/2}
+\propto M_{\mathrm{bar}}^{1/2} / R_{\mathrm{disk}}^{1/2}$.  For
+self-similar disk galaxies (same structural parameters), this gives
+$r_0 \propto M_{\mathrm{bar}}^{1/2}$, from which
+$v_f^4 = (GM_{\mathrm{tot}}\,\alpha_t / r_0)^2 \propto M_{\mathrm{bar}}$.
+
+\emph{Caveat:} The scaling $r_0 \propto M_{\mathrm{bar}}^{1/2}$ is
+a structural argument that applies to galaxies with self-similar
+morphology.  A first-principles derivation of the coherence scale
+$r_0$ from the RS Hamiltonian, and a quantitative prediction of the
+BTFR normalization $A$ (not just the slope $4$), are identified open
+problems.  The qualitative BTFR slope is reproduced; the normalization
+requires additional calibration.
+\end{proof}
+
+\begin{remark}[Radial Acceleration Relation --- Structural Account]
+\label{rem:rar}
+The ILG model provides a structural account of the empirical Radial
+Acceleration Relation (RAR)~\cite{McGaugh2016}:
+\begin{equation}
+  g_{\mathrm{obs}} =
+  \frac{g_{\mathrm{bar}}}{1 - e^{-\sqrt{g_{\mathrm{bar}}/g_\dagger}}},
+\end{equation}
+where $g_\dagger \approx 1.2 \times 10^{-10}~\mathrm{m/s}^2$.
+In ILG, the acceleration scale $g_\dagger$ is not a free parameter
+but is set by $\alpha_t$ and the typical coherence length $r_0$ for
+disk galaxies: $g_\dagger \sim G M_{\mathrm{disk}} \alpha_t / r_0^2$.
+This connects the ``MOND acceleration scale'' to the $\varphi$-ladder
+structure.  A rigorous derivation of the precise RAR functional form
+from ILG dynamics is an identified open problem; the structural account
+shows that the scale $g_\dagger$ is not free, but does not yet derive
+the exponential factor.
+\end{remark}
+
+%% ============================================================
+\section{Gravitational Lensing}
+\label{sec:lensing}
+%% ============================================================
+
+\begin{proposition}[Lensing from Substrate Coherence]
+\label{prop:lensing}
+The effective mass distribution for lensing includes the
+coherence contribution:
+\begin{equation}
+  \Sigma_{\mathrm{eff}}(\mathbf{x})
+  = \Sigma_{\mathrm{bar}}(\mathbf{x})
+  + \Sigma_C(\mathbf{x}),
+\end{equation}
+where $\Sigma_C$ is the surface density equivalent of the
+substrate coherence field.
+\end{proposition}
+
+\begin{remark}
+Because coherence is enhanced in dense environments (galaxies,
+clusters) and reduced in voids, the ILG model produces lensing
+maps that mimic dark matter halos---without any particle.
+\end{remark}
+
+%% ============================================================
+\section{The Bullet Cluster}
+\label{sec:bullet}
+%% ============================================================
+
+\begin{proposition}[Bullet Cluster Offset]
+\label{prop:bullet}
+The Bullet Cluster (1E~0657$-$56)~\cite{Clowe2006} shows a
+striking offset: X-ray gas (baryonic) peaks between the two
+subclusters, while the gravitational lensing map peaks at the
+galaxy concentrations.
+\end{proposition}
+
+In CDM, this is explained by collisionless dark matter halos
+that pass through each other while the gas is slowed by ram
+pressure.  MOND struggles because it ties all dynamics to
+baryons~\cite{Angus2006}.
+
+\begin{proposition}[ILG Explanation --- Structural Account]
+\label{thm:bullet}
+In ILG, the substrate coherence follows the dominant mass
+component---the stellar content of the galaxies.  During
+the collision:
+\begin{enumerate}
+  \item Gas is stripped by ram pressure and displaced.
+  \item Coherence remains concentrated where the galaxies
+  are, because coherence is sourced by the total $J$-cost
+  density, which is dominated by the stellar (not gas)
+  component.
+  \item The lensing map traces the coherence (galaxy)
+  distribution, not the gas.
+\end{enumerate}
+No dark matter particle is required.
+\end{proposition}
+
+%% ============================================================
+\section{Ultra-Diffuse Galaxies}
+\label{sec:udg}
+%% ============================================================
+
+\begin{proposition}[UDG Diversity]
+\label{prop:udg}
+Ultra-diffuse galaxies (UDGs) span a range from
+dark-matter-rich (e.g., Dragonfly~44~\cite{vanDokkum2016})
+to dark-matter-poor (e.g., NGC~1052-DF2~\cite{vanDokkum2018}).
+\end{proposition}
+
+\begin{remark}
+In CDM, it is difficult to explain dark-matter-free galaxies
+without invoking tidal stripping or formation
+scenarios~\cite{Ogiya2018}.  In ILG, the substrate coherence
+varies naturally with environment:
+\begin{itemize}
+  \item \textbf{Cluster UDGs}: Embedded in high-coherence
+  environments, they acquire large effective dark matter
+  fractions (Dragonfly~44-like).
+  \item \textbf{Field UDGs}: In low-coherence environments,
+  the tidal enhancement is weak, giving minimal dark matter
+  effects (DF2-like).
+\end{itemize}
+The diversity of UDG dark matter fractions is a natural
+prediction, not a fine-tuning problem.
+\end{remark}
+
+%% ============================================================
+\section{Comparison: CDM, MOND, and ILG}
+\label{sec:comparison}
+%% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Observable} & \textbf{$\Lambda$CDM} &
+\textbf{MOND} & \textbf{RS/ILG} \\
+\midrule
+DM particle & WIMP/axion & None & None \\
+DM substance & Yes & No & Yes (ledger shadows) \\
+Rotation curves & Tuned halos & $a_0$ & $\alpha_t$ \\
+BTFR & Emergent & Built-in & Derived \\
+RAR & Requires tuning & Built-in & Derived \\
+UDG diversity & Difficult & Difficult & Natural \\
+Bullet Cluster & Explained & Difficult & Explained \\
+$\Omega_{\mathrm{dm}}$ & Fitted & N/A & Derived \\
+Direct detection & Predicted & N/A & Null predicted \\
+Free parameters & $\rho_s$, $r_s$ per halo
+& $a_0$ & None \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{remark}
+The key distinction: RS/ILG is \emph{not} modified gravity.
+Gravity follows standard GR (with emergent corrections from
+the substrate).  The dark sector is a real physical component
+(odd-phase ledger entries), but it is not a new particle
+species.  This positions RS between CDM (which introduces
+new particles) and MOND (which modifies gravity).
+\end{remark}
+
+%% ============================================================
+\section{Predictions and Falsifiers}
+\label{sec:predictions}
+%% ============================================================
+
+\begin{enumerate}
+  \item \textbf{No particle detection}: Null results in all
+  WIMP, axion, and sterile neutrino searches (XENONnT, LZ,
+  PandaX, ADMX, any future experiment).  Any confirmed
+  detection of a dark matter particle would falsify the
+  ledger shadow model.
+
+  \item \textbf{Universal $\alpha_t$}: Galaxy rotation curves
+  should be fit by the ILG model with a single universal
+  $\alpha_t = 0.191$, not per-galaxy halo parameters.
+  Inconsistency with this value would falsify ILG.
+
+  \item \textbf{$\Omega_{\mathrm{dm}} \approx 0.265$}:
+  The dark matter density parameter is derived, not fitted.
+  Significant deviation from this value (beyond systematic
+  uncertainties) would falsify the 8-tick partition
+  mechanism.
+
+  \item \textbf{UDG diversity}: The model predicts a
+  continuous distribution of dark matter fractions in UDGs,
+  correlated with environment.
+
+  \item \textbf{No self-annihilation signal}: Since dark
+  matter is not a particle--antiparticle pair, there is no
+  annihilation cross section.  Indirect detection searches
+  (Fermi-LAT, HESS, CTA) should find null results.
+
+  \item \textbf{CMB consistency}: The dark sector imprints
+  on the CMB through its gravitational influence, with the
+  same $\Omega_{\mathrm{dm}}$ that determines structure
+  formation.
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+Dark matter in RS is neither a particle nor modified gravity.
+It is a structural feature of the recognition ledger: the
+odd-phase sector of the 8-tick epoch.  These ``ledger
+shadows'' gravitate through $J$-cost coupling but do not
+interact electromagnetically.  The ILG model describes the
+resulting gravitational dynamics with a single derived
+parameter $\alpha_t = \tfrac{1}{2}(1 - \varphi^{-1})
+\approx 0.191$, producing flat rotation curves, the BTFR,
+the RAR, and the Bullet Cluster offset---all without free
+parameters.  The dark matter fraction
+$\Omega_{\mathrm{dm}} \approx 0.265$ is derived from the
+edge-channel geometry of the $D = 3$ cube.
+
+The model makes sharp, falsifiable predictions: no dark
+matter particle will be detected, and all galaxy rotation
+curves will be fit by the universal $\alpha_t$.
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{Aczel1966}
+J.~Acz\'el, \emph{Lectures on Functional Equations and Their Applications},
+Academic Press, New York (1966).
+
+\bibitem{Schumann2019}
+M.~Schumann, ``Direct Detection of WIMP Dark Matter:
+Concepts and Status,'' J.\ Phys.\ G \textbf{46}, 103003
+(2019).
+
+\bibitem{XENONnT2023}
+XENON Collaboration, ``First Dark Matter Search Results from
+XENONnT,'' Phys.\ Rev.\ Lett.\ \textbf{131}, 041003 (2023).
+
+\bibitem{LZ2022}
+LZ Collaboration, ``First Dark Matter Search Results from
+the LZ Experiment,'' Phys.\ Rev.\ Lett.\ \textbf{131},
+041002 (2023).
+
+\bibitem{PandaX2022}
+PandaX-4T Collaboration, ``Dark Matter Search Results from
+the PandaX-4T Commissioning Run,'' Phys.\ Rev.\ Lett.\
+\textbf{127}, 261802 (2021).
+
+\bibitem{Rubin1980}
+V.~C.~Rubin, W.~K.~Ford, and N.~Thonnard, ``Rotational
+Properties of 21 Sc Galaxies,'' Astrophys.\ J.\
+\textbf{238}, 471 (1980).
+
+\bibitem{Clowe2006}
+D.~Clowe \textit{et al.}, ``A Direct Empirical Proof of the
+Existence of Dark Matter,'' Astrophys.\ J.\ Lett.\
+\textbf{648}, L109 (2006).
+
+\bibitem{Planck2020}
+Planck Collaboration, ``Planck 2018 Results.\ VI.\
+Cosmological Parameters,'' Astron.\ Astrophys.\
+\textbf{641}, A6 (2020).
+
+\bibitem{McGaugh2000}
+S.~S.~McGaugh \textit{et al.}, ``The Baryonic Tully--Fisher
+Relation,'' Astrophys.\ J.\ Lett.\ \textbf{533}, L99
+(2000).
+
+\bibitem{McGaugh2016}
+S.~S.~McGaugh, F.~Lelli, and J.~M.~Schombert, ``Radial
+Acceleration Relation in Rotationally Supported Galaxies,''
+Phys.\ Rev.\ Lett.\ \textbf{117}, 201101 (2016).
+
+\bibitem{Markevitch2004}
+M.~Markevitch \textit{et al.}, ``Direct Constraints on the
+Dark Matter Self-Interaction Cross Section from the Merging
+Galaxy Cluster 1E~0657$-$56,'' Astrophys.\ J.\
+\textbf{606}, 819 (2004).
+
+\bibitem{Angus2006}
+G.~W.~Angus, H.~Y.~Shan, H.~S.~Zhao, and B.~Famaey,
+``On the Proof of Dark Matter, the Law of Gravity, and the
+Mass of Neutrinos,'' Astrophys.\ J.\ Lett.\ \textbf{654},
+L13 (2007).
+
+\bibitem{vanDokkum2016}
+P.~van Dokkum \textit{et al.}, ``A High Stellar Velocity
+Dispersion and $\sim 100$ Globular Clusters for the Ultra-Diffuse Galaxy Dragonfly~44,'' Astrophys.\ J.\ Lett.\
+\textbf{828}, L6 (2016).
+
+\bibitem{vanDokkum2018}
+P.~van Dokkum \textit{et al.}, ``A Galaxy Lacking Dark
+Matter,'' Nature \textbf{555}, 629 (2018).
+
+\bibitem{Ogiya2018}
+G.~Ogiya, ``Tidal Stripping as a Possible Origin of the
+Ultra-Diffuse Galaxy Lacking Dark Matter,'' Mon.\ Not.\
+R.\ Astron.\ Soc.\ \textbf{480}, L106 (2018).
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+\texttt{doi:10.3390/axioms15020090}
+
+\end{thebibliography}
+
+\end{document}

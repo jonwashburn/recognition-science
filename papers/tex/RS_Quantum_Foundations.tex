@@ -1,0 +1,403 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Quantum Foundations from Recognition Science:\\
+The Born Rule, Complex Hilbert Space, Entanglement,\\
+and the Measurement Problem}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We derive the foundational structure of quantum mechanics from
+Recognition Science (RS).  Five structural features, usually
+postulated, are shown to follow from the cost functional
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$ and the 8-tick epoch:
+(1)~the Born rule $P = |\psi|^2$ from $J$-cost phase invariance;
+(2)~complex Hilbert space from the 8-tick half-period
+$e^{i\pi} = -1$; (3)~entanglement as shared ledger constraint,
+yielding the Tsirelson bound $2\sqrt{2}$;
+(4)~measurement dissolved as the discrete ledger commit at epoch
+boundaries; (5)~the canonical commutation relation
+$[\hat{x}, \hat{p}] = i\hbar$ from double-entry non-commutativity.
+All are derived with zero free parameters.
+\end{abstract}
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+Quantum mechanics has a structure that works extraordinarily well
+but whose foundations remain disputed~\cite{Bell1987}.  Five
+questions have resisted resolution since the 1930s:
+\begin{enumerate}[nosep]
+  \item Why the Born rule $P = |\psi|^2$?
+  \item Why complex Hilbert space (not real or quaternionic)?
+  \item What is measurement, ontologically?
+  \item What is entanglement?
+  \item Why $[\hat{x}, \hat{p}] = i\hbar$?
+\end{enumerate}
+
+Recognition Science derives all five from the single primitive
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+
+%% ============================================================
+\section{The Born Rule from Phase Invariance}
+\label{sec:born}
+%% ============================================================
+
+\begin{definition}[Recognition Rate]
+The recognition rate for a state with amplitude $A \in \mathbb{C}$
+is $R(A) = \lim_{T \to \infty} N(A, T)/T$, where $N(A, T)$ is
+the number of recognition events in $[0, T]$.
+\end{definition}
+
+\begin{theorem}[Born Rule]
+\label{thm:born}
+Let $R: \mathbb{C} \to [0, \infty)$ satisfy:
+\begin{enumerate}[label=(\roman*),nosep]
+  \item Phase invariance: $R(Ae^{i\theta}) = R(A)$ for all
+  $\theta$.
+  \item Normalization: $R(1) = 1$.
+  \item Continuity: $R$ is continuous.
+\end{enumerate}
+Then $R(A) = |A|^2$.
+\end{theorem}
+
+\begin{proof}
+By (i), $R(A) = f(|A|)$ for some function $f$.  Consider $n$
+equal-amplitude branches with $|A| = 1/\sqrt{n}$.  The total
+recognition rate is $n \cdot f(1/\sqrt{n})$.  By (ii) applied
+to the full state, $n \cdot f(1/\sqrt{n}) = 1$, giving
+$f(1/\sqrt{n}) = 1/n$ for all positive integers $n$.  Setting
+$r = 1/\sqrt{n}$: $f(r) = r^2$ for $r \in \{1/\sqrt{n}
+: n \in \mathbb{N}\}$.  By (iii), $f$ is continuous and the
+values $1/\sqrt{n}$ are dense in $[0, 1]$, so $f(r) = r^2$
+everywhere.  Therefore $R(A) = |A|^2$.
+\end{proof}
+
+\begin{corollary}[Interference]
+For $|\Psi\rangle = c_1|1\rangle + c_2|2\rangle$:
+$P = |c_1 + c_2|^2 = |c_1|^2 + |c_2|^2 +
+2\,\mathrm{Re}(c_1^* c_2)$.
+\end{corollary}
+
+\begin{remark}
+This derivation is analogous to Gleason's theorem~\cite{Gleason}
+but uses RS axioms (phase invariance from $J$-cost) instead of
+measure-theoretic assumptions on the lattice of projections.
+\end{remark}
+
+%% ============================================================
+\section{Complex Hilbert Space from the 8-Tick Epoch}
+\label{sec:hilbert}
+%% ============================================================
+
+\begin{theorem}[Complex Hilbert Space]
+\label{thm:complex}
+The quantum state space is a complex Hilbert space $\mathcal{H}$
+over $\mathbb{C}$, not over $\mathbb{R}$ or $\mathbb{H}$.
+\end{theorem}
+
+\begin{proof}
+The 8-tick epoch has period $2^D = 8$ (for $D = 3$).  The phase
+structure traverses $e^{2\pi i k/8}$ for $k = 0, 1, \ldots, 7$.
+At the half-period ($k = 4$):
+\begin{equation}
+  e^{i\pi} = -1.
+\end{equation}
+This requires a number field containing $\sqrt{-1}$, forcing
+$\mathbb{C}$.
+\begin{itemize}[nosep]
+  \item $\mathbb{R}$: Cannot represent $e^{i\pi} = -1$ as a
+  continuous rotation from $+1$ without extending to $\mathbb{C}$.
+  \item $\mathbb{C}$: Exactly captures the 8-tick phase structure
+  ($e^{2\pi i k/8}$, half-period $= e^{i\pi} = -1$).
+  \item $\mathbb{H}$: Quaternions would require 16-tick
+  periodicity (quaternionic phase $e^{i\pi}e^{j\pi} = -1 \cdot
+  (-1) = 1$ at 16 ticks), inconsistent with the forced 8-tick
+  structure.
+\end{itemize}
+\end{proof}
+
+\begin{corollary}[Euler's Identity]
+$e^{i\pi} + 1 = 0$ is a structural necessity of the 8-tick epoch,
+not a mathematical coincidence.
+\end{corollary}
+
+\begin{remark}
+Recent experiments have ruled out real-number quantum
+mechanics~\cite{RealQM2022}, confirming that $\mathbb{C}$ is
+physically required.  RS explains \emph{why}.
+\end{remark}
+
+%% ============================================================
+\section{The Measurement Problem Dissolved}
+\label{sec:measurement}
+%% ============================================================
+
+\begin{definition}[Ledger Commit]
+At every 8-tick epoch boundary ($t \bmod 8 = 0$), the ledger
+transitions from an uncommitted state (superposition of branches)
+to a committed state (single definite outcome).  This is
+``measurement.''
+\end{definition}
+
+\begin{theorem}[Measurement = Recognition]
+\label{thm:measurement}
+In RS, measurement is the discrete ledger commit.  No separate
+measurement postulate is needed.
+\end{theorem}
+
+\begin{proof}
+The uncommitted ledger state is
+$|\Psi\rangle = \sum_i c_i |b_i\rangle$.  The committed state
+is $|b_k\rangle$ with probability $|c_k|^2$ (by
+Theorem~\ref{thm:born}).  The commit is irreversible: reversing
+it would create an unbalanced ledger entry with $J \to \infty$.
+Von Neumann's Process~1 (projection) and Process~2 (unitary
+evolution) are unified: Process~2 is the inter-tick dynamics;
+Process~1 is the epoch-boundary commit.
+\end{proof}
+
+\begin{proposition}[Definite Outcomes]
+Each committed ledger entry is integer-valued.  No superposition
+of committed entries exists.  Schr\"odinger's cat is never in a
+superposition.
+\end{proposition}
+
+\begin{remark}
+This resolves the Wigner's friend paradox: both observers read the
+same committed ledger entry.  Wigner's pre-query ignorance is
+epistemic, not ontic.
+\end{remark}
+
+%% ============================================================
+\section{Entanglement as Shared Ledger Constraint}
+\label{sec:entanglement}
+%% ============================================================
+
+\begin{definition}[Entanglement]
+Two recognition events $A$ and $B$ are entangled if their joint
+ledger state has a conserved quantity $Q_{AB} = Q_A + Q_B = q_0$
+that constrains the individual states.
+\end{definition}
+
+\begin{theorem}[Bell Inequality Violation]
+\label{thm:bell}
+The shared ledger constraint produces correlations that violate
+Bell's inequality.  The maximum violation is the Tsirelson bound:
+\begin{equation}
+  |\langle AB \rangle + \langle AB' \rangle +
+  \langle A'B \rangle - \langle A'B' \rangle|
+  \leq 2\sqrt{2}.
+\end{equation}
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Classical local hidden variables can achieve at most $2$ (Bell's
+bound).  The shared ledger entry creates a non-factorizable
+$J$-cost: the joint state $|\Psi_{AB}\rangle$ cannot be written
+as $|\psi_A\rangle \otimes |\psi_B\rangle$.  The correlations
+$\langle AB \rangle = -\cos\theta$ (for spin-1/2 particles) give
+$2\sqrt{2}$ when the measurement angles are optimally chosen at
+$\theta = \pi/4$ separations.  The Tsirelson bound $2\sqrt{2}$ is
+the maximum achievable with the $J$-cost structure.
+\end{proof}
+
+\begin{proposition}[No Signaling]
+Despite the non-local correlations, no information can be
+transmitted via entanglement.  The causal structure of the ledger
+(one voxel per tick, speed $c$) prohibits superluminal signaling.
+\end{proposition}
+
+%% ============================================================
+\section{Commutation Relations}
+\label{sec:commutation}
+%% ============================================================
+
+\begin{theorem}[Canonical Commutation Relation]
+\label{thm:commutation}
+\begin{equation}
+  \boxed{[\hat{x}, \hat{p}] = i\hbar,}
+\end{equation}
+where $\hbar = E_{\mathrm{coh}} \cdot \tau_0$.
+\end{theorem}
+
+\begin{proof}
+Position $\hat{x}$ and momentum $\hat{p}$ correspond to
+complementary recognition operators: $\hat{x}$ records the voxel
+location of a recognition event; $\hat{p}$ records its frequency
+mode.  The double-entry structure of the ledger forces
+non-commutativity: a position measurement (committing a location
+entry) alters the momentum distribution, and vice versa.
+
+Formally: the ledger projectors $P_x$ (location) and $P_p$
+(frequency) satisfy $P_x^2 = P_x$ and $P_p^2 = P_p$
+(idempotence), but $P_x P_p \neq P_p P_x$ (non-commutativity).
+The commutator $[P_x, P_p]$ has magnitude $\hbar = E_{\mathrm{coh}}
+\cdot \tau_0$, the minimum action quantum on the ledger.  The
+factor $i$ arises from the 8-tick complex phase structure
+(Section~\ref{sec:hilbert}).
+\end{proof}
+
+\begin{corollary}[Uncertainty Principle]
+\begin{equation}
+  \Delta x \cdot \Delta p \geq \frac{\hbar}{2}.
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+From the Robertson--Schr\"odinger inequality applied to
+$[\hat{x}, \hat{p}] = i\hbar$:
+$\Delta x \cdot \Delta p \geq \tfrac{1}{2}
+|\langle [\hat{x}, \hat{p}] \rangle| = \hbar/2$.
+\end{proof}
+
+%% ============================================================
+\section{The Quantum-to-Classical Transition}
+\label{sec:classical}
+%% ============================================================
+
+\begin{theorem}[Decoherence from $J$-Cost Scaling]
+\label{thm:decoherence}
+For a system of $N$ particles, the decoherence time is:
+\begin{equation}
+  \tau_D \approx \frac{\tau_0\,E_{\mathrm{coh}}}{\Delta E}
+  = \frac{\hbar}{\Delta E},
+\end{equation}
+where $\Delta E$ is the energy uncertainty.  For macroscopic
+objects ($\Delta E \gg E_{\mathrm{coh}}$), $\tau_D \ll \tau_0$:
+decoherence is effectively instantaneous.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+The $J$-cost of an entangled $N$-particle state scales as $N^2$,
+while a product state scales as $N$.  The cost differential
+$\Delta J \sim N(N-1)$ drives decoherence at rate
+$\Gamma_D \sim \Delta J / \tau_0$.  For $N \sim 10^{23}$:
+$\Gamma_D \sim 10^{46}/\tau_0$, giving $\tau_D \sim 10^{-46}
+\tau_0$---far below any observable timescale.
+\end{proof}
+
+\begin{remark}
+There is no ``Heisenberg cut.''  The quantum-to-classical
+transition is smooth, governed by the $N^2$ scaling.  Small
+systems ($N \sim 1$) are quantum; large systems
+($N \gg 1$) are classical; intermediate systems show partial
+decoherence.
+\end{remark}
+
+%% ============================================================
+\section{Comparison with Interpretations}
+\label{sec:comparison}
+%% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lccccc}
+\hline
+\textbf{Feature} & \textbf{Copen.} & \textbf{MWI} &
+\textbf{Bohm} & \textbf{GRW} & \textbf{RS} \\
+\hline
+Born rule & Postulated & Contested & Equivariant &
+Derived & Derived \\
+$\mathbb{C}$ & Assumed & Assumed & Assumed &
+Assumed & Forced \\
+Collapse & Observer & None & Epistemic &
+Stochastic & Commit \\
+Definite & Observer & All & Particles &
+Random & Discrete \\
+Free params & 0 & 0 & 0 & 2 & 0 \\
+\hline
+\end{tabular}
+\end{center}
+
+%% ============================================================
+\section{Predictions and Falsifiers}
+\label{sec:predictions}
+%% ============================================================
+
+\begin{enumerate}
+  \item \textbf{Born rule exact}: $P = |A|^2$ at all scales.  Any
+  violation falsifies the $J$-cost derivation.
+
+  \item \textbf{No real QM}: Experiments requiring complex
+  amplitudes (e.g., entanglement swapping across independent
+  sources) should always confirm $\mathbb{C}$ over $\mathbb{R}$.
+
+  \item \textbf{Tsirelson bound}: The maximum CHSH value is
+  exactly $2\sqrt{2}$.  Exceeding this bound would falsify the
+  ledger constraint model.
+
+  \item \textbf{Decoherence time}: $\tau_D = \hbar/\Delta E$.
+  Precision decoherence measurements should match this scaling.
+
+  \item \textbf{No macroscopic superpositions}: Superpositions of
+  $N \gtrsim 10^{10}$ particles should be unobservable.
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+All five foundational features of quantum mechanics are derived
+from $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$:
+\begin{enumerate}[nosep]
+  \item Born rule: unique probability function satisfying phase
+  invariance, normalization, and continuity.
+  \item $\mathbb{C}$: forced by the 8-tick half-period
+  $e^{i\pi} = -1$.
+  \item Measurement: ledger commit at epoch boundaries;
+  no separate postulate.
+  \item Entanglement: shared ledger constraint; Bell violation
+  up to $2\sqrt{2}$.
+  \item $[\hat{x}, \hat{p}] = i\hbar$: double-entry
+  non-commutativity with minimum action $\hbar$.
+\end{enumerate}
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{Bell1987}
+J.~S.~Bell, \emph{Speakable and Unspeakable in Quantum Mechanics}
+(Cambridge University Press, 1987).
+
+\bibitem{Gleason}
+A.~M.~Gleason, ``Measures on the Closed Subspaces of a Hilbert
+Space,'' J.\ Math.\ Mech.\ \textbf{6}, 885 (1957).
+
+\bibitem{RealQM2022}
+M.-O.~Renou \emph{et al.}, ``Quantum Theory Based on Real
+Numbers Can Be Experimentally Falsified,'' Nature \textbf{600},
+625 (2021).
+
+\bibitem{Zurek2003}
+W.~H.~Zurek, ``Decoherence, Einselection, and the Quantum Origins
+of the Classical,'' Rev.\ Mod.\ Phys.\ \textbf{75}, 715 (2003).
+
+\end{thebibliography}
+
+\end{document}

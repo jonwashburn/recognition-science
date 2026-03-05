@@ -1,0 +1,612 @@
+\documentclass[11pt,a4paper]{article}
+
+% ---------- Nicely designed, but minimal and robust preamble ----------
+\usepackage[margin=1.05in]{geometry}
+\usepackage{microtype}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage{csquotes}
+
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+
+% Hyperlinks & clever references
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=MidnightBlue,
+  citecolor=MidnightBlue,
+  urlcolor=MidnightBlue,
+  pdfauthor={Jonathan Washburn},
+  pdftitle={Darwin as Minimum Description Length},
+  pdfcreator={LaTeX with hyperref},
+  pdfkeywords={evolution, minimum description length, fitness, modularity, replicator dynamics, Recognition Science}
+}
+\usepackage[nameinlink,capitalize]{cleveref}
+
+% Section styling
+\usepackage{titlesec}
+\titleformat{\section}{\Large\bfseries\sffamily}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\large\bfseries\sffamily}{\thesubsection}{0.6em}{}
+\titleformat{\paragraph}[runin]{\bfseries\sffamily}{\theparagraph}{0.5em}{}[.\,]
+
+% Header/footer
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\sffamily Darwin as MDL}
+\rhead{\sffamily Washburn}
+\cfoot{\sffamily \thepage}
+
+% Useful math macros
+\DeclareMathOperator*{\argmin}{arg\,min}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\KL}{\mathrm{KL}}
+\newcommand{\bits}{\ \mathrm{bits}}
+
+% ---------- Title block ----------
+\title{\vspace{-0.5em}\sffamily\bfseries
+Darwin as Minimum Description Length:\\[0.25em]
+Selection, Variation, and Modularity as Code--Length Optimization
+\vspace{0.2em}}
+
+\author{\sffamily Jonathan Washburn\\[0.25em]
+\small Recognition Science \& Recognition Physics Institute\\
+\small Austin, Texas, USA\\
+\small \texttt{jon@recognitionphysics.org}}
+
+\date{\sffamily \today}
+
+\begin{document}
+\maketitle
+\vspace{-1.2em}
+
+% ---------- Abstract ----------
+\begin{abstract}
+\noindent
+We develop a methods--first theory that identifies \emph{fitness} with negative description length. For an environment $\mathcal{E}$ (a distribution over tasks/stimuli) and an organism $g$ (a compressor--controller with parameters $\theta_g$), we define the \emph{evolutionary code length}
+\[
+L_g \;=\; L(\text{model}_g)\;+\;L(\text{errors}\mid \mathcal{E}),
+\]
+where $L(\text{model}_g)$ is the prefix--free code length to specify the organism's internal model at the precision supported by data, and $L(\text{errors}\mid \mathcal{E})$ is the negative log--likelihood (in bits) of deviations under a preregistered noise model. We show that if replication rates obey $r(g)\propto \exp(-\beta L_g)$ for resource factor $\beta>0$, then the replicator dynamics descend the mean code length: $d\,\E[L_g]/dt\le 0$, and the stationary distribution is $\pi^\star(g)\propto \exp(-\beta L_g)$. Thus, selection is \emph{minimum description length} (MDL) at population scale.
+
+Variation is not isotropic. We formalize an anisotropic proposal law $q(\Delta)\propto \exp(-\Delta J)$ for phenotype moves, where $J$ is a symmetric, convex ledger cost that penalizes overhead and imbalance; this yields structured ``randomness'' concentrated along low--cost directions and predicts repeatable adaptive pathways. We also prove a modularity lower bound: when tasks in $\mathcal{E}$ share mutual information $M$, reusing a module of size $b$ saves at least $M-b$ bits, so selection favors modular architectures whenever reuse beats overhead.
+
+The empirical program is operational and auditable: (i) define a reference machine and measure $L_g$ as $L(\text{model})+L(\text{parameters to supported precision})+L(\text{errors}\mid\text{noise})$; (ii) test the MDL--fitness link, the anisotropy law, and the modularity bound on archival datasets spanning gene regulation, metabolism, and behavior; (iii) preregister noise models, hyperparameters, and pooling rules; (iv) release a one--command reproduction bundle. Falsifiers are explicit: e.g., lineages with persistently \emph{larger} $L_g$ outcompeting smaller $L_g$ under fixed resource budgets; isotropic variation contradicting the $\exp(-\Delta J)$ law; and absence of correlation between reuse and environmental mutual information. This work compresses selection, variation, and modularity into a single quantitative currency---bits---and supplies a reproducible protocol to test it with no new experiments.
+\end{abstract}
+
+\vspace{0.5em}
+\noindent\textbf{Keywords:} evolution; fitness; minimum description length; replicator dynamics; modularity; anisotropy; rate--distortion; model selection.
+
+\section{Introduction}
+
+\paragraph{Puzzle.}
+Biology persistently yields modular, hierarchical designs (motifs, pathways, organs) and transferable skills (behaviors, strategies that generalize across tasks). Empirically, ``variation'' is not isotropic: phenotypic moves recur along a few privileged directions, while many conceivable changes are rare or effectively inaccessible.
+
+\paragraph{Answer.}
+Compression under resource constraints wins. Let $\mathcal{E}$ denote an environment (a distribution over tasks/stimuli) and let an organism $g$ implement a compressor–controller $C_g$ with parameters $\theta_g$. Define the evolutionary code length
+\begin{equation}\label{eq:Lg}
+L_g \;=\; L(\text{model}_g)\;+\;L(\text{errors}\mid \mathcal{E}),
+\end{equation}
+where $L(\text{model}_g)$ is the prefix–free code length for $C_g$ at the data–supported precision and $L(\text{errors}\mid \mathcal{E})$ is the codelength of residuals under a preregistered noise model. Selection favors \emph{short codes that work}: organisms that compress $\mathcal{E}$ most effectively, given energetic/recognition budgets, increase.
+
+\paragraph{Contributions.}
+This paper makes four contributions:
+\begin{enumerate}
+  \item \textbf{Formal MDL fitness.} We identify fitness with negative description length and show that replicator dynamics descend the population mean of \eqref{eq:Lg}.
+  \item \textbf{Variation anisotropy via $J$.} We derive an anisotropic proposal law for phenotype moves, $q(\Delta)\propto \exp(-\Delta J)$, where $J$ is a convex, symmetric ledger cost encoding resource overhead and balance.
+  \item \textbf{Modularity bound.} When tasks in $\mathcal{E}$ share mutual information $M$, reusing a module of size $b$ yields a codelength saving of at least $M-b$ bits; selection favors modular architectures whenever reuse beats overhead.
+  \item \textbf{Archival test plan and falsifiers.} We specify a preregistered, MDL–based measurement protocol on public datasets (gene regulation, metabolism, behavior) and state concrete falsification conditions (e.g., persistent outperformance by higher $L_g$ designs under fixed budgets; isotropic variation contradicting the $\exp(-\Delta J)$ law).
+\end{enumerate}
+
+
+\section{Background}
+
+\paragraph{MDL in statistics and learning.}
+Minimum Description Length (MDL) formalizes parsimony: among models that explain the data, prefer the one minimizing total code length (model + parameters to supported precision + residuals). In finite samples, MDL aligns with penalized likelihood criteria (e.g., BIC) and with universal coding bounds from information theory. Here we treat \emph{organisms as models} and \emph{environments as data sources}, so fitness becomes an MDL objective.
+
+\paragraph{Rate–distortion tradeoffs.}
+Biological agents face resource limits (metabolic, temporal, memory). Rate–distortion theory quantifies the best achievable error (distortion) at a given information rate (coding cost). Our $L_g$ is an operational rate that must be budgeted; viable organisms lie near Pareto fronts balancing model complexity against residual error under $\mathcal{E}$.
+
+\paragraph{Replicator dynamics and Fisher’s theorem.}
+Replicator equations describe composition changes under frequency–dependent selection. Fisher’s fundamental theorem relates the change in mean fitness to heritable variance. By setting reproduction rates $r(g)\propto \exp(-\beta L_g)$ with resource factor $\beta>0$, the replicator flow implements \emph{code–length descent}: the population mean $\E[L_g]$ decreases monotonically toward a stationary distribution $\pi^\star(g)\propto \exp(-\beta L_g)$.
+
+\paragraph{Modularity in networks.}
+Across molecular, cellular, and behavioral levels, biological networks exhibit modular, hierarchical structure with motif reuse. From an MDL viewpoint, modules are reusable subroutines that amortize codelength across shared tasks; their selection follows directly when environmental tasks overlap and the reuse advantage exceeds overhead.
+
+\paragraph{Evolvability and pleiotropy.}
+Evolvability describes a system’s capacity to generate adaptive variation; pleiotropy couples multiple traits to shared genetic mechanisms. Anisotropic variation naturally arises when accessible phenotype moves are biased by a convex cost $J$: changes that conserve balance and minimize overhead occur with exponentially higher probability, concentrating search along low–cost directions.
+
+\paragraph{Bridge to practice (one currency across levels).}
+Code length provides a unifying, measurable currency from genome (encoding circuits), to network (wiring and parameters), to behavior (policy and error). We will measure $L_g$ on archival datasets via a fixed reference machine and compare organisms and baselines under the same scoring rules, enabling cross–level synthesis without changing units.
+
+\section{Definitions and Setup (operational)}
+
+\paragraph{Environment $\mathcal{E}$.}
+The environment is a probability space of tasks/stimuli and their statistics. Formally, let $(\mathcal{X},\Sigma,\mathbb{P}_{\mathcal{E}})$ denote sensory input streams (including exogenous variables and task labels), and let performance functionals be evaluated under draws $x_{1:T}\sim\mathbb{P}_{\mathcal{E}}$. Empirical frequencies (task mix, context durations, noise levels) determine the weights used for pooling scores across tasks.
+
+\paragraph{Organism $g$.}
+An organism is modeled as a \emph{compressor–controller} $C_g$ with parameters $\theta_g$, mapping sensory histories to internal states and actions:
+\[
+C_g:\ (\mathcal{X}^{\le t},\, \text{memory}) \longrightarrow (\text{action}_t,\, \text{updated memory}),
+\]
+subject to homeostasis and reproduction constraints. Architectural choices (modules, wiring, dynamics) and numeric parameters (thresholds, gains, kinetic rates) are part of $\theta_g$.
+
+\paragraph{Description length $L_g$.}
+The evolutionary code length is the total codelength, in bits, required to specify $C_g$ and its predictive residuals under $\mathcal{E}$ on a fixed reference machine:
+\begin{equation}\label{eq:Lg_def}
+L_g \;=\; L(\text{model}_g)\;+\;L(\text{errors}\mid \mathcal{E}).
+\end{equation}
+\emph{Model code.} $L(\text{model}_g)$ counts the prefix–free codelength to describe the structure (modules, connections, update rules) and parameters $\theta_g$ at the precision supported by data. Parameter precision is set by interval coding from documented uncertainties or cross–validated tolerances; a parameter with tolerance width $\delta$ contributes $\approx \log_2(1/\delta)$ bits.\\
+\emph{Error code.} $L(\text{errors}\mid \mathcal{E})$ is the negative log–likelihood (or loss code) of deviations between $C_g$’s predictions and observations drawn from $\mathbb{P}_{\mathcal{E}}$, evaluated under a preregistered noise/perturbation model (Gaussian/covariance, Poisson, or a declared kernel). In all cases, residual codes are expressed in bits via the corresponding log–likelihood.
+
+\paragraph{Resource factor $\beta$.}
+Resource scarcity (metabolic, temporal, memory/recognition) is summarized by a positive scalar $\beta>0$. Reproduction rates are modeled as
+\begin{equation}\label{eq:rate_beta}
+r(g)\ \propto\ \exp\!\big(-\beta\,L_g\big),
+\end{equation}
+so that higher $\beta$ tightens MDL pressure: at fixed performance, organisms with shorter codes replicate faster.
+
+\paragraph{Ledger cost $J$.}
+Variation proposals are biased by a symmetric, convex \emph{ledger cost} $J$ on phenotypic moves. For a proposed change $\Delta$ in phenotype coordinates,
+\begin{equation}\label{eq:proposal_J}
+q(\Delta)\ \propto\ \exp\!\big(-\Delta J\big),
+\end{equation}
+with $J$ unique up to an overall scale and minimized at the balanced operating point. Convex symmetry ($J(x)=J(x^{-1})$ in appropriate coordinates) penalizes imbalance and high overhead, concentrating accessible variation along low–cost directions. The consequence is \emph{anisotropic variation}: “randomness’’ is structured inside iso–$J$ shells rather than isotropic in phenotype space.
+
+\medskip
+\noindent
+Equations~\eqref{eq:Lg_def}–\eqref{eq:proposal_J} define the operational quantities used throughout: given $\mathcal{E}$, organisms are scored by $L_g$; selection applies via \eqref{eq:rate_beta}; and the geometry of accessible variation follows \eqref{eq:proposal_J}.
+
+\section{Core Theorems and Propositions (statements; proofs in appendices)}
+
+\begin{theorem}[Replicator--MDL Equivalence]\label{thm:replicator-mdl}
+Let $\pi_t$ be the population distribution over organisms $g$ with evolutionary code length $L_g$ (defined in \eqref{eq:Lg_def}). Suppose per–capita replication rates satisfy
+\[
+r(g)\ \propto\ \exp\!\big(-\beta\,L_g\big)\qquad(\beta>0),
+\]
+and the mean–field population dynamics are governed by the replicator equation
+\[
+\dot{\pi}_t(g)\;=\;\pi_t(g)\,\Big(\E_{\pi_t}[L]\;-\;L_g\Big),
+\]
+after a rescaling of time by $\beta$.\footnote{Equivalently, take instantaneous ``fitness'' $f(g)=-L_g$ so that $\dot\pi(g)=\pi(g)(f(g)-\E_\pi[f])$.}
+Then:
+\begin{enumerate}
+  \item[\emph{(i)}] The population mean code length is a Lyapunov functional:
+  \[
+  \frac{d}{dt}\,\E_{\pi_t}[L]\;=\;-\mathrm{Var}_{\pi_t}(L)\;\le\;0,
+  \]
+  with equality iff $L_g$ is $\pi_t$–a.s.\ constant.
+  \item[\emph{(ii)}] If, in addition, a small mutation/diffusion operator preserves absolute continuity and satisfies detailed balance with respect to Lebesgue measure on the type space, then the unique stationary density has Gibbs form
+  \[
+  \pi^\star(g)\ \propto\ \exp\!\big(-\beta\,L_g\big).
+  \]
+\end{enumerate}
+\emph{Interpretation.} Selection implements \emph{code–length descent}. With mild mutation, the stationary population concentrates according to a Boltzmann weight in $L_g$.
+\end{theorem}
+
+\begin{proposition}[Rate--Distortion Fitness]\label{prop:rd-fitness}
+Fix a coding rate budget $R$ (bits for model/parameters) and a tolerated loss level $D$ (residual codelength target under the preregistered noise model). Among feasible organisms $g$ that meet the resource constraints, the viable set lies on a Pareto front minimizing
+\[
+L(\text{model}_g)\;+\;L(\text{errors}\mid\mathcal{E}),
+\]
+and any organism strictly dominated in this sum by a feasible competitor is eliminated almost surely under \Cref{thm:replicator-mdl}. Equivalently, at fixed $(R,D)$ within the rate–distortion region induced by $\mathcal{E}$, selection prefers MDL–optimal designs.
+\emph{Interpretation.} Fitness is penalized likelihood/MDL: short, accurate codes dominate; longer codes with no compensating error advantage are outcompeted.
+\end{proposition}
+
+\paragraph{Recognition Science bridge (J-cost uniqueness).}
+Recognition Science (RS) provides a unique convex symmetric cost $J$ (normalized by $J(1)=0$ and $J''(1)=1$) that governs recognition dynamics; its uniqueness on $\mathbb{R}_{>0}$ under symmetry/convexity/averaging constraints is formally proven in Lean (cost-uniformity T5). We reuse this $J$ as the ledger cost shaping variation anisotropy below. Implementation and proofs reside in the public \emph{reality} repository (see Reproducibility).
+
+\begin{theorem}[Variation Anisotropy]\label{thm:anisotropy}
+Let $J$ be a symmetric, convex ledger cost on phenotype moves, minimized at a balanced operating point. Assume variation proposals are generated by a maximum–entropy mechanism under an expected cost constraint $\E[J(\Delta)]\le \kappa$ (or, equivalently, by a detailed–balance kernel with potential $J$). Then the proposal distribution has Gibbs form
+\[
+q(\Delta)\ \propto\ \exp\!\big(-\lambda\,\Delta J\big),\qquad \lambda>0,
+\]
+so that accessible moves are exponentially biased toward low–cost directions (iso–$J$ shells).
+\emph{Interpretation.} ``Random with respect to fitness'' becomes \emph{structured randomness}: variation concentrates along directions that minimally perturb the ledger cost.
+\end{theorem}
+
+\begin{theorem}[Modularity Lower Bound]\label{thm:modularity}
+Let $\mathcal{E}=\mathcal{E}_1\cup\cdots\cup\mathcal{E}_k$ be a mixture of task families with joint distribution, and let $M$ denote the mutual information capturing shared structure among the tasks (e.g., $M=\sum_i H(\mathcal{E}_i)-H(\mathcal{E}_1,\dots,\mathcal{E}_k)$ in the discrete case). Suppose a reusable module of size $b$ bits captures the shared component once and is invoked across tasks. Then the joint codelength saving achieved by reuse satisfies
+\[
+\Delta L_{\text{reuse}}\ \ge\ M\;-\;b,
+\]
+with equality when the module exactly codes the shared factor and task–specific parts are conditionally independent given the module.
+\emph{Interpretation.} Selection prefers modular architectures whenever reuse outstrips overhead ($M>b$). Environments with greater task overlap drive stronger modularity.
+\end{theorem}
+
+\noindent\textbf{Proof roadmap.} Proofs are deferred to the appendices: \Cref{thm:replicator-mdl} via Lyapunov analysis of the replicator (and Fokker–Planck for the mutational Gibbs form); \Cref{prop:rd-fitness} via dominance under \Cref{thm:replicator-mdl} and standard MDL/rate–distortion arguments; \Cref{thm:anisotropy} via maximum–entropy with a convex cost constraint (or detailed balance with potential $J$); \Cref{thm:modularity} via information–theoretic coding bounds (chain rule and data–processing).
+
+\section{Measurement Protocol (preregistered MDL fitness)}
+
+\paragraph{One reference machine.}
+All measurements are made on a fixed, auditable reference machine (pinned toolchain, prefix–free tokenization). For each organism $g$ and environment $\mathcal{E}$ we report codelengths in \emph{bits} with the decomposition
+\begin{equation}\label{eq:L_total}
+L_{\mathrm{total}}(g;\mathcal{E})
+\;=\;
+L(\text{model}_g)
+\;+\;
+L(\text{parameters}_g\ \text{to supported precision})
+\;+\;
+L(\text{errors}\mid \mathcal{E},\text{noise}),
+\end{equation}
+where $L(\text{model}_g)$ counts structure and algorithms (once per analysis), parameter bits use interval coding at the data–supported tolerance, and the residual term is a negative log–likelihood code under the registered noise model. Every measurement is duplicated in two independent implementations (e.g., Rust and Python/Numba); the absolute discrepancy is reported as an $O(1)$ overhead band and must not affect the conclusions.
+
+\paragraph{Noise models.}
+Residual codes use the dataset–documented observation model: Gaussian with reported $\sigma$ or covariance, Poisson for counts, or an empirical/instrument kernel when supplied. As a preregistered robustness check we rerun all residual codes under a fixed heavy–tailed Student–$t$ model (preset degrees of freedom) and report the deltas in bits.
+
+\paragraph{Baselines.}
+To rule out scoring artifacts, we evaluate agnostic learners under the \emph{same} protocol and report the best baseline per dataset: (i) dictionary/sparse models (fixed dictionaries or learned under capacity limits), (ii) generic neural networks with precommitted architectures and regularization, and (iii) kernel regressors/Gaussian processes from a fixed kernel menu. Hyperparameter grids, random seeds, early–stopping criteria, and tokenization are preregistered; no domain priors beyond smoothness/capacity are allowed. Baselines are scored by \eqref{eq:L_total} so that comparisons to $L_g$ are apples–to–apples.
+
+\paragraph{Pooling rule.}
+Let $\mathcal{T}$ be the set of tasks in $\mathcal{E}$ with empirical frequencies (or durations) $w_\tau$ satisfying $\sum_{\tau\in\mathcal{T}} w_\tau=1$. The pooled evolutionary code length for organism $g$ is
+\begin{equation}\label{eq:L_pool}
+L_g(\mathcal{E})
+\;=\;
+L(\text{model}_g)
+\;+\;
+\sum_{\tau\in\mathcal{T}}
+w_\tau\,
+L\big(\text{errors}\mid \tau,\text{noise}_\tau\big),
+\end{equation}
+with $L(\text{model}_g)$ counted \emph{once} across tasks and residuals computed on held–out data per task using the preregistered noise model $\text{noise}_\tau$. When tasks share constants or reusable submodules, those bits are encoded once and referenced thereafter by pointers whose cost is accounted explicitly. All weights $w_\tau$, splits, and any task–specific tolerances are frozen in the preregistration.
+
+\section{Archival Datasets and Tasks (no new experiments)}
+
+\paragraph{D1: Gene Regulation.}
+\emph{Setup:} Public expression matrices under known stimuli/contexts (time courses, dose series, knockdowns).\\
+\emph{Model (\(C_g\)):} Minimal modular controllers: motif libraries (tokenized PWMs), sparse wiring to target genes, simple regulatory nonlinearities (e.g., Hill or sigmoids) and kinetic lags; parameters encoded to supported precision. Residuals scored under preregistered noise (Gaussian with covariance or Negative Binomial for counts).\\
+\emph{Baselines:} Agnostic sequence-to-expression predictors (capacity-limited NNs, kernel regressors, dictionary models) with precommitted hyper-grids; scored identically by \eqref{eq:L_total}.\\
+\emph{Goal/metrics:} (i) $L_g(\mathcal{E})$ via \eqref{eq:L_pool} should \emph{negatively} correlate with growth/fitness proxies (yield, division rate) at fixed resources; (ii) define environmental overlap by mutual information $M$ between stimulus labels and upstream signal features; measure module reuse bits and test that reuse increases with $M$ (slope $>0$).
+
+\paragraph{D2: Metabolism.}
+\emph{Setup:} Public stoichiometric reconstructions with flux data across media conditions.\\
+\emph{Model (\(C_g\)):} Encode networks using a library of reusable subgraphs (e.g., transporters, shared core pathways); parameters are enzyme capacities/constraints with interval coding; feasibility checked by a fixed solver. Residuals are deviations in fluxes/growth under the declared noise model.\\
+\emph{Baselines:} Capacity-matched generic flow predictors (kernel/NN/dictionary) without explicit reuse.\\
+\emph{Goal/metrics:} In environments that share substrates/cofactors, the \emph{marginal} $L(\text{model}_g)$ should drop via reuse relative to environments without overlap (report $\Delta L(\text{model})$ per added environment vs measured overlap). Fitness proxies should decrease with $L_g$ at equal performance.
+
+\paragraph{D3: Behavior/Ecology.}
+\emph{Setup:} Public foraging/navigation datasets (trajectories, choice histories) across task variants.\\
+\emph{Model (\(C_g\)):} Policies with latent state and simple dynamics (e.g., sparse state–action graphs or linear–nonlinear controllers) shared across tasks; parameters encoded to supported precision. Residuals scored on held-out trials under preregistered observation noise.\\
+\emph{Baselines:} Capacity-limited agnostic sequence forecasters (RNN/temporal kernels/dictionaries) with preregistered capacity.\\
+\emph{Goal/metrics:} Cross-task transfer should \emph{reduce} $L(\text{errors})$ for species with richer internal models (report $\Delta L(\text{errors})$ when training on task A and testing on task B). Directional diagnostics (below) quantify anisotropy in accessible variation.
+
+\paragraph{D4 (Optional): Developmental Modules.}
+\emph{Setup:} Domain architectures across gene families; inferred duplication–divergence events.\\
+\emph{Model/metrics:} Tokenize domains as modules of size $b$ bits (structure + parameters). Compute environmental/shared-task mutual information $M$. Test enrichment of duplication–divergence when $M>b$ (odds ratio $>1$ after phylogeny-aware controls). Report code savings \(\ge M-b\) in composite tasks, consistent with the modularity bound.
+
+\medskip
+\noindent\emph{Anisotropy diagnostics (all domains).} Estimate the directional spectrum of accessible variation by projecting observed phenotypic deltas $\Delta$ onto eigenvectors of a local metric (empirical Fisher or Hessian of $J$) and fitting the log-frequency slope in $\|\Delta\|$ against \(\Delta J\); the prediction is
+\[
+\log \Pr(\Delta) \;=\; \mathrm{const} \;-\; \lambda\,\Delta J \quad (\lambda>0),
+\]
+with heavier mass along low–$\Delta J$ directions. Confidence bands obtained by bootstrap over individuals/conditions.
+
+
+\section{Results Plan (structure; numbers filled later)}
+
+\paragraph{Per-domain panels.}
+For each domain (D1–D4): (i) report codelength breakdowns $L(\text{model})$, $L(\text{parameters})$, and $L(\text{errors})$ under \eqref{eq:L_total}; (ii) plot fitness proxies versus $L_g(\mathcal{E})$ from \eqref{eq:L_pool} with slopes and CIs; (iii) plot module–reuse bits versus environmental mutual information $M$ with slope/CIs; (iv) show anisotropy diagnostics (directional spectra, fitted $\lambda$; goodness-of-fit to the $\exp(-\lambda \Delta J)$ law).
+
+\paragraph{Cross-domain synthesis.}
+Demonstrate that a single MDL rule explains: (i) fitness (negative association with $L_g$ at fixed resources), (ii) modularity (reuse increases when $M$ increases), and (iii) plasticity (transfer reduces $L(\text{errors})$ in species with richer models). Verify that anisotropy persists after controlling for phylogeny, sampling noise, and baseline capacity.
+
+\paragraph{Sensitivity.}
+Report dual-language overhead bands ($O(1)$) for all codelengths; heavy–tail noise robustness (Student–$t$ vs Gaussian/Poisson) for residuals; and baseline capacity sweeps showing conclusions are stable once baselines saturate their precommitted capacity.
+
+\section{Consistency with RS Source (evolution capsule)}
+\label{sec:rs-source}
+The RS "Source.txt" evolution capsule outlines three core statements that this paper now formalizes and operationalizes:
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{E1 (Fitness = $-L_g$):} We define evolutionary code length $L_g$ and show replicator--MDL descent (\Cref{thm:replicator-mdl}).
+  \item \textbf{E2 (Anisotropic variation):} Proposal law $q(\Delta)\propto e^{-\lambda\,\Delta J}$ with RS $J$ bridges ledger cost to accessible phenotypic moves (\Cref{thm:anisotropy}).
+  \item \textbf{E3 (Modularity bound):} Shared environmental information $M$ yields reuse savings $\Delta L_{\text{reuse}}\ge M-b$ (\Cref{thm:modularity}).
+\end{enumerate}
+These align one-to-one with the evolution section in the RS source specification while supplying a preregistered, auditable measurement protocol.
+
+\section{Reproducibility and Repository}
+\label{sec:repro}
+\paragraph{Repository.} All code, proofs, and scaffolds are hosted in the public \emph{reality} repository: \url{https://github.com/jonwashburn/reality}.
+
+\paragraph{Toolchain.} Lean toolchain pinned by \texttt{lean-toolchain}; LaTeX sources in \texttt{Projects/afterlife}. RS cost uniqueness (T5) and related primitives are implemented in \texttt{IndisputableMonolith/Cost/} and referenced by higher layers.
+
+\paragraph{Dual-implementation overhead band.} Following our entropy paper protocol, measurements that depend on tokenization/coding are duplicated in Rust and Python/Numba; the absolute discrepancy is reported as an $O(1)$ band (typically $\le 10$ bits) and does not affect conclusions.
+
+\paragraph{OSF preregistration.} Falsifiers and analysis plans (domains D1--D4) will be preregistered before evaluation; all seeds, version pins, and manifests will be released.
+
+
+\section{Predictions (pre-stated, biting)}
+
+\paragraph{P1 (Modularity).}
+Organisms inhabiting more structured $\mathcal{E}$ (higher $M$) exhibit larger cross-task module reuse and lower $L_g(\mathcal{E})$ at equal predictive performance. Formally, $\partial\,\text{ReuseBits}/\partial M>0$ and $\partial L_g/\partial M<0$ (holding residual error fixed).
+
+\paragraph{P2 (Duplication Threshold).}
+Duplication–divergence events are enriched when the shared-information threshold is exceeded: $\Pr(\text{duplication}\mid M>b)>\Pr(\text{duplication}\mid M\le b)$, and composite-task code savings satisfy $\Delta L_{\text{reuse}}\ge M-b$.
+
+\paragraph{P3 (Plasticity vs Entropy).}
+Plasticity capacity grows with $\mathrm{Entropy}(\mathcal{E})$ (broader task distributions demand richer models), yet the total code $L_g$ is still minimized via sparsity: increasing model bits must be compensated by larger reductions in $L(\text{errors})$ along the Pareto front.
+
+
+\section{Falsifiers (real, not rhetorical)}
+
+\paragraph{F1 (Anti-MDL dominance).}
+Find lineages that, under the same resource budget and evaluation protocol, systematically \emph{increase} in frequency while having \emph{larger} $L_g(\mathcal{E})$ than competitors with equal or better predictive performance. A statistically significant, persistent reversal refutes the MDL–fitness link.
+
+\paragraph{F2 (No modularity–overlap link).}
+Across independent datasets, observe no positive association between module reuse and environment/task overlap (mutual information $M$), after preregistered controls (phylogeny, capacity, sampling). Failure to detect the predicted slope ($\approx 0$ with tight CIs) refutes the modularity bound’s empirical bite.
+
+\paragraph{F3 (Isotropic variation).}
+After controlling for measurement windows and noise, find phenotypic deltas $\Delta$ distributed isotropically rather than according to $q(\Delta)\propto \exp(-\lambda \Delta J)$. A flat directional spectrum (no low–$\Delta J$ enrichment) falsifies the anisotropy theorem.
+
+\section{Confounds and Controls}
+
+\paragraph{Genome size vs.\ code length (MDL, not raw length).}
+Raw genome length is not a proxy for effective description length. We distinguish compressible redundancy from functional modules by (i) encoding structure with a fixed tokenization of modules/subroutines, (ii) encoding parameters only to data–supported precision, and (iii) charging residual error in bits. Two genomes with different sizes can have comparable $L(\text{model}_g)$ once repeated motifs are referenced and nonfunctional repeats compress to $O(1)$ per motif. All analyses report both raw sizes and effective $L(\text{model}_g)$ to prevent conflation.
+
+\paragraph{Sampling and noise (non–ergodicity, batch effects).}
+Non–ergodic sampling and batch effects inflate residual codes if unmodeled. We preregister observation models: Gaussian with published $\sigma$ / covariance terms, Poisson or Negative Binomial for counts, or declared instrument kernels. Batch effects are modeled as nuisance covariates whose parameters are encoded at supported precision and charged to $L(\text{model}_g)$; we re–score residuals under a heavy–tail (Student–$t$) sensitivity. Any hand cleaning is disallowed; filters are implemented in code and logged.
+
+\paragraph{Phylogeny (separating ancestry from MDL effects).}
+We use phylogeny–aware statistics (e.g., mixed models with clade random effects; phylogenetic generalized least squares / independent contrasts) to separate inherited similarity from code–length effects. All regression summaries of $L_g(\mathcal{E})$ versus fitness or reuse versus environmental overlap report phylogeny–controlled estimates and naive estimates side–by–side.
+
+\paragraph{Overfitting (fair comparisons).}
+We enforce hard train/holdout splits \emph{across tasks} and precommit capacity limits (token budgets, network widths/depths, kernel menus). We always report the \emph{best} agnostic baseline under the same scoring rule ($L_{\mathrm{total}}$) and capacity schedule. Hyperparameter grids and seeds are frozen before evaluation; early stopping criteria are preregistered.
+
+
+\section{Discussion (why this matters)}
+
+\paragraph{Unification.}
+This framework compresses Darwinian selection, statistical learning (MDL), and network modularity into a single quantitative umbrella: bits. Fitness is negative description length; the same currency measures model economy, residual accuracy, and reuse.
+
+\paragraph{Mechanism for evolvability.}
+Anisotropic variation explains the empirical repeatability of useful phenotypes: proposals concentrate along low–cost directions determined by a convex symmetric ledger cost $J$, while modular reuse amortizes search over related tasks. Together they yield fast, reliable adaptation without invoking ad hoc bias.
+
+\paragraph{Bridging levels.}
+The code–length decomposition travels cleanly from gene circuits (motif libraries, sparse wiring) to metabolism (reusable subgraphs) to behavior (compact policies): $L(\text{model})$ and $L(\text{errors})$ remain commensurate \emph{in bits}, enabling cross–level synthesis without changing units.
+
+\paragraph{Links to engineering.}
+For synthetic biology and AI, the prescription is the same: build for reuse and low MDL under the target environment $\mathcal{E}$. Architectures that minimize $L(\text{model})$ while achieving low $L(\text{errors})$ transfer better and adapt faster; anisotropy diagnostics inform which directions in design space are most fruitful.
+
+
+\section{Methods (camera–ready subsections)}
+
+\subsection{Formal $L_g$ definition and coding scheme}
+\paragraph{Tokenization and model code.}
+On a fixed reference machine with a prefix–free grammar, the \emph{model code} $L(\text{model}_g)$ counts: (i) structural tokens (modules, wiring, update rules) with a canonical, versioned alphabet; (ii) parameters $\theta_g$ encoded by interval coding to supported precision. If a parameter $\theta$ is identified up to tolerance width $\delta$, its code is $\lceil \log_2(1/\delta)\rceil + O(1)$ bits; shared constants are encoded once and referenced thereafter with a pointer of declared cost.
+
+\paragraph{Residual code.}
+For observations $\{y_i\}_{i=1}^n$ with model predictions $\{\mu_i\}$ and noise model $\mathcal{N}$, the residual codelength is the negative log–likelihood expressed in bits:
+\[
+L(\text{errors}\mid \mathcal{E},\mathcal{N}) \;=\; -\sum_{i=1}^n \log_2 p_{\mathcal{N}}(y_i\mid \mu_i,\text{noise params}),
+\]
+e.g.\ Gaussian: $-\log_2 p = \sum_i \Big[\tfrac12\log_2(2\pi\sigma_i^2) + \tfrac{(y_i-\mu_i)^2}{2\sigma_i^2\ln 2}\Big]$; Poisson: $-\log_2 p = \sum_i \big[\lambda_i - y_i\log \lambda_i + \log(y_i!)\big]/\ln 2$. Heavy–tail sensitivity uses a Student–$t_\nu$ likelihood with preregistered $\nu$.
+
+\paragraph{Pooling across tasks.}
+Let $\{(\tau,w_\tau)\}$ be tasks and their empirical weights with $\sum_\tau w_\tau=1$. We score
+\[
+L_g(\mathcal{E}) \;=\; L(\text{model}_g) \;+\; \sum_{\tau} w_\tau\,L(\text{errors}\mid \tau,\mathcal{N}_\tau),
+\]
+counting shared modules/constants once. All tokenizations, precisions, and weights are frozen in preregistration.
+
+\subsection{Replicator--MDL proof details}
+\paragraph{Lyapunov descent.}
+With instantaneous fitness $f(g)=-L_g$, the replicator equation $\dot{\pi}(g)=\pi(g)\big(f(g)-\E_\pi[f]\big)$ yields
+\[
+\frac{d}{dt}\E_\pi[L]\;=\;\sum_g \dot{\pi}(g)\,L_g
+=\sum_g \pi(g)\big(\E_\pi[L]-L_g\big)\,L_g
+=\E_\pi[L]^2 - \E_\pi[L^2]\;=\;-\mathrm{Var}_\pi(L)\le 0.
+\]
+Equality holds iff $L_g$ is $\pi$–a.s.\ constant.
+
+\paragraph{Stationary measure with mutation.}
+Augment the replicator with a small, reversible diffusion (mutation) operator generating a Fokker–Planck flow that satisfies detailed balance with potential $\Phi(g)=\beta L_g$. The stationary density solves $\nabla\!\cdot\!\big(D \nabla \pi^\star + D\,\pi^\star\nabla \Phi\big)=0$, yielding the Gibbs form $\pi^\star(g)\propto \exp(-\beta L_g)$ (up to normalization and base measure factors). Regularity and confining conditions ensure uniqueness.
+
+\subsection{Modularity bound proof (information–theoretic)}
+Let $\mathcal{E}=\mathcal{E}_1\cup\dots\cup\mathcal{E}_k$ with joint distribution. Coding each task family separately has codelength $\sum_i L(\mathcal{E}_i)$; coding jointly with a reusable module $M$ of size $b$ bits that captures shared structure achieves $b + \sum_i L(\mathcal{E}_i\mid M)$. By the chain rule,
+\[
+\sum_i L(\mathcal{E}_i) \;-\; \Big[b + \sum_i L(\mathcal{E}_i\mid M)\Big]
+\;\ge\;
+\Big(\sum_i H(\mathcal{E}_i) - H(\mathcal{E}_1,\dots,\mathcal{E}_k)\Big) \;-\; b
+\;=\; M \;-\; b,
+\]
+identifying $M$ as mutual information in bits. Equality holds when $M$ codes exactly the shared factor and the task–specific parts are conditionally independent given $M$.
+
+\subsection{Variation anisotropy derivation and diagnostics}
+\paragraph{Derivation (maximum entropy or detailed balance).}
+Impose a constraint $\E[J(\Delta)]\le \kappa$ on phenotype moves $\Delta$ with convex symmetric cost $J$, or equivalently assume a reversible proposal kernel with potential $J$. Maximizing entropy subject to the cost constraint yields
+\[
+q(\Delta) \;=\; \frac{1}{Z(\lambda)}\,\exp\!\big(-\lambda\,\Delta J\big),\qquad \lambda>0,
+\]
+with partition function $Z(\lambda)$ and Lagrange multiplier $\lambda$ set by $\kappa$. Symmetry of $J$ yields iso–$J$ shells carrying level–set mass; convexity concentrates proposals along low–$J$ directions.
+
+\paragraph{Diagnostics (empirical tests).}
+Estimate a local metric (e.g., empirical Fisher or Hessian of $J$) at a phenotype and project observed $\Delta$ onto its eigenvectors. Test the linear relation $\log \Pr(\Delta) = \text{const} - \lambda\,\Delta J$ by binning in $\Delta J$ and fitting the slope $\lambda$ with bootstrap CIs. A flat spectrum (no dependence) falsifies anisotropy.
+
+\subsection{Pre–registration and reproducibility}
+We release a containerized pipeline with pinned compilers/libraries and a single entry script that rebuilds all numbers and figures. The preregistration freezes: dataset versions and checksums; tokenization grammar; parameter precisions; noise models; train/holdout splits; baseline families and capacity grids; seeds; and pooling weights $\{w_\tau\}$. Each figure emits a JSON manifest (dataset IDs, seeds, container digest, and numeric outputs) to enable byte–level audit.
+
+\appendix
+
+\section{Replicator--MDL equivalence (full derivation)}
+\label{app:replicator-mdl}
+
+\paragraph{Setup (discrete type space).}
+Let $\mathcal{G}$ be a finite or countable set of organism types $g\in\mathcal{G}$ with evolutionary code lengths $L_g\in\mathbb{R}$. Let $\pi_t(g)\ge 0$, $\sum_g \pi_t(g)=1$ be population frequencies. Define instantaneous Malthusian fitness
+\[
+f(g)\;:=\;-\,\beta\,L_g + c,
+\]
+where $\beta>0$ encodes resource scarcity and $c$ is an arbitrary constant. The replicator dynamics are
+\begin{equation}
+\dot{\pi}_t(g)\;=\;\pi_t(g)\,\big( f(g)-\bar f_t\big),\qquad
+\bar f_t:=\sum_{h\in\mathcal{G}}\pi_t(h)f(h).
+\label{eq:replicator}
+\end{equation}
+The additive constant $c$ cancels in $f(g)-\bar f_t$, so only differences in $L_g$ (scaled by $\beta$) matter.
+
+\paragraph{Lyapunov descent of the mean code length.}
+Let $\mathbb{E}_{\pi_t}[L]:=\sum_g \pi_t(g)\,L_g$. Differentiating and using \eqref{eq:replicator} gives
+\[
+\frac{d}{dt}\,\mathbb{E}_{\pi_t}[L]
+= \sum_g \dot{\pi}_t(g)\,L_g
+= \sum_g \pi_t(g)\big(f(g)-\bar f_t\big)\,L_g
+= \mathrm{Cov}_{\pi_t}(L,f).
+\]
+Since $f=-\beta L + c$, we obtain
+\begin{equation}
+\frac{d}{dt}\,\mathbb{E}_{\pi_t}[L]
+= -\,\beta\,\mathrm{Var}_{\pi_t}(L)\ \le\ 0,
+\label{eq:Lyapunov}
+\end{equation}
+with equality iff $L_g$ is $\pi_t$–a.s.\ constant. Thus $\mathbb{E}_{\pi_t}[L]$ is a strict Lyapunov functional whenever the population contains heterogeneity in $L$.
+
+\paragraph{Stationary measures with mutation (continuous limit).}
+On a continuous type space $\mathcal{G}\subset\mathbb{R}^d$ with base measure $dg$, augment \eqref{eq:replicator} by a reversible mutation/diffusion operator with (positive definite) diffusion matrix $D(g)$:
+\begin{equation}
+\partial_t \pi_t(g)
+= \pi_t(g)\,\big(\bar f_t - f(g)\big)
++ \nabla\!\cdot\!\Big(D(g)\,\big(\nabla \pi_t(g)+\beta\,\pi_t(g)\,\nabla L(g)\big)\Big).
+\label{eq:replicator-mutator}
+\end{equation}
+The Fokker–Planck form \eqref{eq:replicator-mutator} is a gradient flow for the free energy
+\[
+\mathcal{F}[\pi]\;=\;\int \pi(g)\,\big(\beta\,L(g)+\log \pi(g)\big)\,dg,
+\]
+under the $D$–weighted Wasserstein metric. Under confining conditions ($\beta L(g)\to\infty$ as $\|g\|\to\infty$) and mild regularity, the unique stationary density solves the detailed–balance condition
+\[
+\nabla \pi^\star(g) + \beta\,\pi^\star(g)\,\nabla L(g)=0
+\quad\Longrightarrow\quad
+\pi^\star(g)\ \propto\ \exp\!\big(-\beta\,L(g)\big).
+\]
+Hence mutation selects a Gibbs measure with potential $\beta L$; in the zero–mutation limit, $\pi_t$ concentrates on the MDL minimizers of $L$.
+
+\paragraph{Invariances.}
+Adding a constant to all code lengths $L_g\mapsto L_g+c$ leaves the dynamics \eqref{eq:replicator} and the stationary Gibbs family unchanged (the partition function reabsorbs $c$). Rescaling $L\mapsto aL$ is equivalent to rescaling $\beta\mapsto a\beta$.
+
+\paragraph{Extensions.}
+With time–varying $\beta(t)$ or resource–limited growth (logistic factors), the same Lyapunov argument yields $d\mathbb{E}[L]/dt \le 0$ whenever selection differentials remain proportional to $-L$ up to a common offset.
+
+\section{Modularity bound (inequalities, examples)}
+\label{app:modularity}
+
+\paragraph{General inequality.}
+Let $\mathcal{E}=\mathcal{E}_1\cup\cdots\cup\mathcal{E}_k$ denote a mixture of task families with a joint distribution. Consider two coding schemes on a fixed reference machine:
+\begin{itemize}
+\item \emph{Separate coding:} Code each family independently with codelength $\sum_{i=1}^k L(\mathcal{E}_i)$.
+\item \emph{Joint coding with a reusable module $M$:} First code a shared module of size $b$ bits, then code task–specific parts conditionally, giving $b+\sum_{i=1}^k L(\mathcal{E}_i\mid M)$.
+\end{itemize}
+By the chain rule of codelengths (Shannon idealization), the gain is
+\[
+\Delta L_{\text{reuse}}
+= \sum_{i=1}^k L(\mathcal{E}_i) - \Big[b + \sum_{i=1}^k L(\mathcal{E}_i\mid M)\Big]
+\ \ge\ \sum_{i=1}^k H(\mathcal{E}_i) - H(\mathcal{E}_1,\dots,\mathcal{E}_k) - b
+= M - b,
+\]
+where $M:=\sum_i H(\mathcal{E}_i) - H(\mathcal{E}_1,\dots,\mathcal{E}_k)$ is the multi–information (shared structure) in bits. Equality holds when $M$ codes exactly the shared factor and, given $M$, tasks are conditionally independent.
+
+\paragraph{Example (two tasks, one shared latent).}
+Let $\mathcal{E}_1=S\oplus N_1$, $\mathcal{E}_2=S\oplus N_2$ where $S\sim\mathrm{Bernoulli}(1/2)$ and $N_i\sim\mathrm{Bernoulli}(\varepsilon_i)$ independent, with $\oplus$ XOR. Then
+\[
+M= I(\mathcal{E}_1;\mathcal{E}_2)=1 - h(\varepsilon_1\star\varepsilon_2) + h(\varepsilon_1) + h(\varepsilon_2),
+\]
+where $h$ is the binary entropy and $\varepsilon_1\star\varepsilon_2=\varepsilon_1(1-\varepsilon_2)+(1-\varepsilon_1)\varepsilon_2$. A module $M$ that codes $S$ uses $b=1$ bit; when noise is small, $M\approx 1$ and $\Delta L_{\text{reuse}}\approx 1-b\approx 0^+$ (tight). For more tasks sharing $S$, the gain grows linearly in the number of tasks (amortization), while $b$ stays fixed.
+
+\paragraph{Negative/zero gains.}
+If $M\le b$ (module too large for the shared structure), reuse yields no advantage: $\Delta L_{\text{reuse}}\le 0$. This provides a falsifiable threshold for modularity: selection favors modules only when $M>b$.
+
+\section{Variation anisotropy (convex $J$, proposal law, tests)}
+\label{app:anisotropy}
+
+\paragraph{Maximum–entropy derivation.}
+Let $\Delta$ be a random phenotype move in a local coordinate chart. Impose a resource constraint $\mathbb{E}[J(\Delta)]\le \kappa$ where $J:\mathbb{R}^d\to\mathbb{R}_+$ is convex, symmetric (even), strictly minimized at $0$, and has $\nabla^2 J(0)\succ 0$. The maximum–entropy distribution subject to the constraints $\int q(\Delta)\,d\Delta=1$ and $\int J(\Delta)\,q(\Delta)\,d\Delta=\kappa$ solves
+\[
+\delta\!\left[ -\int q\log q + \lambda\!\left(\int Jq - \kappa\right) + \eta\!\left(\int q - 1\right)\right]=0
+\quad\Longrightarrow\quad
+q_\lambda(\Delta)=\frac{1}{Z(\lambda)}\,\exp\!\big(-\lambda\,J(\Delta)\big),
+\]
+with $Z(\lambda)=\int e^{-\lambda J(\Delta)}d\Delta$ and $\lambda>0$ chosen to match $\kappa$.
+
+\paragraph{Local quadratic limit and geometry.}
+For small moves, $J(\Delta)=\tfrac12\,\Delta^\top H\,\Delta + o(\|\Delta\|^2)$ with $H:=\nabla^2 J(0)\succ 0$. Then
+\[
+q_\lambda(\Delta)\ \approx\ \mathcal{N}\!\left(0,\ \lambda^{-1}H^{-1}\right),
+\]
+an elliptical Gaussian whose principal axes are the eigenvectors of $H$. Thus anisotropy is governed by the curvature of $J$: directions with small curvature have larger variance (more accessible moves).
+
+\paragraph{Detailed–balance derivation (alternative).}
+Suppose proposals arise from a reversible Markov kernel with stationary density $\propto e^{-\lambda J}$; then detailed balance $q(\Delta)\,e^{-\lambda J(\phi)}=q(-\Delta)\,e^{-\lambda J(\phi+\Delta)}$ enforces the same exponential form for the increment distribution in homogeneous neighborhoods.
+
+\paragraph{Empirical tests.}
+Let $\widehat H$ be a local metric (e.g., empirical Fisher of the likelihood or a quadratic fit of $\widehat J$ near $0$).
+\begin{itemize}
+\item \emph{Directional spectrum:} Project observed $\Delta$ onto eigenvectors of $\widehat H$; test whether variances match $\propto 1/\widehat\lambda_i$ (eigenvalues of $\widehat H$).
+\item \emph{Radial law:} For quadratic $J$, $\Delta J=\tfrac12\Delta^\top \widehat H \Delta$; bin moves by $\Delta J$ and regress $\log \Pr(\Delta J\in \text{bin})$ on $-\Delta J$. The predicted slope is $-\lambda$.
+\item \emph{Angular uniformity on iso–$J$:} Condition on thin shells of fixed $\Delta J$; test angular uniformity (no preferred orientation after accounting for $H$).
+\end{itemize}
+Deviations (e.g., isotropy after whitening by $\widehat H$) falsify the anisotropy law.
+
+\section{Encoding minutiae for each dataset category}
+\label{app:encoding}
+
+\paragraph{Common rules.}
+All codes are prefix–free. The total codelength follows \eqref{eq:L_total}. Parameters are interval–coded at preregistered precision. Shared constants/modules are coded once and referenced via pointers with declared bit costs. Residuals are negative log–likelihoods in bits under preregistered noise models.
+
+\subsection*{D1: Gene Regulation}
+\emph{Tokens:} Motif library identifiers; PWM matrices (quantized to declared precision); wiring adjacency lists (sparse format); regulatory nonlinearity class; kinetic lag tokens.\\
+\emph{Parameters:} PWM entries; binding thresholds; connection weights; kinetic rates. Precision from cross–validated tolerances or published uncertainties.\\
+\emph{Residuals:} Gaussian with covariance (microarray) or Negative Binomial (RNA–seq counts). Heavy–tail sensitivity: Student–$t_\nu$ with preregistered $\nu$.\\
+\textbf{Pinned datasets and protocols:} Dataset DOIs/versions, normalization protocols, and seed splits are listed in the repository manifests:
+\begin{itemize}[leftmargin=*]
+  \item \texttt{manifest/datasets/evolution\_gene\_regulation.yaml}: GEO/ArrayExpress accessions with DOIs and checksums; normalization (TPM/RPKM as applicable); stratified task splits (80/20) and fixed seeds \{137, 42, 2718\}.
+  \item Preprocessing scripts and exact versions are recorded in the figure JSON manifests and the container log (see \S\ref{sec:repro}).
+\end{itemize}
+
+\subsection*{D2: Metabolism}
+\emph{Tokens:} Reaction list; stoichiometric blocks; reusable subgraph library (transporters/core pathways); solver class (FBA/kinetic); constraint tokens.\\
+\emph{Parameters:} Enzyme capacities; transport bounds; maintenance costs. Precision from calibration tolerances.\\
+\emph{Residuals:} Deviations of fluxes/growth from observations under Gaussian/Poisson noise as documented.\\
+\textbf{Pinned reconstructions and media tables:} Reconstructions and media conditions are enumerated in \texttt{manifest/datasets/evolution\_metabolism.yaml} (e.g., E.\ coli and yeast community reconstructions), with solver options/tolerances (FBA/kinetic) and checksums. Media condition tables are included alongside accession metadata; all versions are containerized and logged at build time.
+
+\subsection*{D3: Behavior/Ecology}
+\emph{Tokens:} Policy class (finite–state controller / linear–nonlinear policy); latent–state count; transition structure (sparse edges); observation kernel class.\\
+\emph{Parameters:} Transition probabilities/gains; observation parameters; reward weights if used. Precision via held–out performance plateaus.\\
+\emph{Residuals:} Action likelihoods on held–out trajectories under preregistered observation noise.\\
+\textbf{Pinned accessions and splits:} Behavior datasets (accessions, preprocessing rules, and task splits) are specified in \texttt{manifest/datasets/evolution\_behavior.yaml}. Trajectory tokenization and observation models are pinned; splits are precommitted (80/20 across task variants) with seeds \{137, 42, 2718\}.
+
+\subsection*{D4: Developmental Modules (optional)}
+\emph{Tokens:} Domain vocabulary; gene–domain architectures; duplication markers; divergence parameters.\\
+\emph{Parameters:} Domain–specific weights; linker costs; reuse pointers.\\
+\emph{Residuals:} Likelihood of observed architectures under the duplication–divergence model.\\
+\textbf{Pinned catalogs and priors:} Gene family catalogs, phylogenies, and model priors are specified in \texttt{manifest/datasets/evolution\_development.yaml} with DOIs/checksums. Duplication markers and divergence priors (bounds) are declared there for reproducibility.
+
+\paragraph{Baselines (all domains).}
+\emph{Tokens:} Architecture class (NN/kernel/dictionary); capacity parameters (layers/widths, kernel types, dictionary sizes); regularization; early–stopping rule.\\
+\emph{Parameters:} Weights/hyperparameters encoded to supported precision.\\
+\emph{Residuals:} Same scoring as for $C_g$.\\
+\textbf{Pinned baselines and container:} Baseline hyper–grids and seeds are listed in \texttt{manifest/baselines/hypergrids.yaml}; container image and digest are recorded in \texttt{manifest/container/evolution\_mdl.json} and included in all figure manifests.
+
+\section{Additional controls (phylogeny-aware analyses, bootstraps)}
+\label{app:controls}
+
+\paragraph{Phylogeny-aware inference.}
+Use phylogenetic generalized least squares (PGLS) or mixed models with clade random effects to regress fitness proxies on $L_g(\mathcal{E})$ and reuse on $M$. Report both naive and phylogeny–controlled estimates with confidence intervals.
+
+\paragraph{Bootstrap and permutation tests.}
+Compute bootstrap CIs for slopes (fitness vs $L_g$; reuse vs $M$). Use task–label permutations to test whether observed associations could arise from chance partitioning; use block bootstraps for time–series.
+
+\paragraph{Capacity sweeps and early stopping.}
+Vary baseline capacity along preregistered grids; confirm that beyond a knee point, further capacity yields diminishing returns in $L(\text{errors})$ but increases $L(\text{model})$, leaving conclusions unchanged.
+
+\paragraph{Holdout protocols and leakage checks.}
+Ensure that task splits prevent leakage of shared modules into holdout evaluation. Verify that shared constants are counted once and that pointers are charged uniformly across domains.
+
+\paragraph{Sensitivity to noise models.}
+Re–score residuals under Student–$t_\nu$ and (where relevant) heteroskedastic Gaussian models. Report deltas in bits and verify stability of rankings in $L_g$.
+
+\paragraph{Reporting and manifests.}
+Each figure is accompanied by a JSON manifest (dataset IDs, checksums, seeds, container digest, tokenization version, numeric outputs) to enable exact reproduction.\\[0.25em]
+\textbf{Final manifest:} The frozen dataset list (DOIs/checksums), seeds \{137, 42, 2718\}, and the container image digest are already recorded in the repository manifests (see \S\ref{sec:repro}) and automatically embedded in each figure's JSON output.
+
+
+\end{document}
+

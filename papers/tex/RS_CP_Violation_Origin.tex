@@ -1,0 +1,374 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The Origin of CP Violation from Recognition Science:\\
+CPT Invariance, Ledger Phase Structure, and the 8-Tick Epoch}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We derive the origin of $CP$ violation from the Recognition
+Science (RS) ledger structure~\cite{RS_Axioms}.  $CPT$ invariance is automatic:
+the combined operation of charge conjugation ($C$: charge $\to$
+$-$charge), parity ($P$: position $\to$ $-$position), and time
+reversal ($T$: tick $\to (7 - \mathrm{tick}) \bmod 8$) preserves
+the cost functional $J(x)$ and ledger balance.  $CPT$ is
+involutive ($\mathrm{CPT}^2 = \mathrm{id}$).  $CP$ violation
+arises because $C$ and $P$ individually preserve cost but their
+product $CP$ does not preserve the 8-tick phase ordering: the
+forward and backward phase sequences are inequivalent when
+weak-sector entries carry complex phases from the three-generation
+CKM matrix.  Since $CPT$ is exact, $CP$ violation is the
+complement of $T$ violation.  The $CPT$ mass bound
+$|\Delta m/m| < 10^{-9}$ is satisfied automatically.  We prove
+that $CP$ violation requires $N_{\mathrm{gen}} \geq 3$ (two
+generations give no $CP$-odd phase), connecting this result to the
+RS prediction $N_{\mathrm{gen}} = 3$.  The \emph{existence} of $CP$
+violation is a structural consequence; the \emph{magnitude}
+$\mathcal{J} \approx 3.2 \times 10^{-5}$ is an open calculation.
+\end{abstract}
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+$CP$ violation---matter--antimatter asymmetry in weak interactions---was
+discovered in 1964 in neutral kaon decays~\cite{Christenson1964}.
+The Standard Model accommodates $CP$ violation through the
+Kobayashi--Maskawa mechanism: with $N_{\rm gen} \geq 3$, the quark
+mixing matrix carries an irreducible complex phase~\cite{KM1973}.
+
+However, the Standard Model does not explain:
+\begin{itemize}
+  \item Why $CP$ is violated (why the phase is non-zero).
+  \item Why $CPT$ is preserved (the $CPT$ theorem relies on
+  Lorentz invariance, locality, and unitarity---assumptions
+  about the continuum).
+  \item Why there are exactly three generations.
+\end{itemize}
+
+RS answers all three from the ledger structure.
+
+%% ============================================================
+\section{Recognition Science Framework}
+\label{sec:framework}
+%% ============================================================
+
+RS derives all physical law from three axioms~\cite{RS_Axioms}:
+\begin{enumerate}[label=(A\arabic*),nosep]
+  \item $J(1) = 0$ \hfill\textit{(Normalization)}
+  \item $J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y)$ for all $x,y>0$
+  \hfill\textit{(Recognition Composition Law)}
+  \item $J''_{\log}(0) = 1$, where $J_{\log}(t) := J(e^t)$
+  \hfill\textit{(Calibration)}
+\end{enumerate}
+
+\begin{theorem}[Cost Uniqueness~\cite{RS_Axioms}]
+\label{thm:J}
+The unique continuous solution is $J(x) = \tfrac{1}{2}(x+x^{-1})-1$,
+satisfying $J(x) \geq 0$ (equality iff $x=1$) and $J(x) = J(x^{-1})$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+$H(t) := 1+J(e^t)$ satisfies the d'Alembert equation $H(s+t)+H(s-t)=2H(s)H(t)$
+with $H(0)=1$, $H''(0)=1$.  By the Acz\'el classification, $H(t)=\cosh t$,
+giving $J(x) = \tfrac{1}{2}(x+x^{-1})-1$.
+\end{proof}
+
+Each ledger entry $e$ carries a positive ratio $x_e > 0$ (the recognition
+scale ratio between debit and credit).  The discrete symmetries act on
+these ratios and on the phase structure of the 8-tick epoch.
+
+%% ============================================================
+\section{Discrete Symmetries on the Ledger}
+\label{sec:symmetries}
+%% ============================================================
+
+\begin{definition}[Charge Conjugation $C$]
+On the recognition ledger, $C$ maps charge $q \to -q$
+(equivalently, it swaps debit and credit entries).  Since
+$J(x)$ depends on $|q|$ through the gap weight, $J$ is
+invariant: $J(C(e)) = J(e)$.
+\end{definition}
+
+\begin{definition}[Parity $P$]
+$P$ maps spatial position $\mathbf{x} \to -\mathbf{x}$.  The
+cost functional depends on $|\mathbf{x}|$ (distance), not
+direction, so $J(P(e)) = J(e)$.
+\end{definition}
+
+\begin{definition}[Time Reversal $T$]
+On the 8-tick epoch, $T$ maps tick $t \to (7 - t) \bmod 8$.
+This reverses the phase sequence within the epoch.
+$T$ preserves cost: $J(T(e)) = J(e)$.
+\end{definition}
+
+%% ============================================================
+\section{$CPT$ Invariance}
+\label{sec:cpt}
+%% ============================================================
+
+\begin{theorem}[$CPT$ Preservation]
+\label{thm:cpt}
+$CPT$ preserves cost:
+\begin{equation}
+  J(\mathrm{CPT}(e)) = J(e)
+\end{equation}
+for every ledger entry $e$.  $CPT$ also preserves ledger balance
+(total charge conservation).
+\end{theorem}
+
+\begin{proof}
+We verify cost-preservation for each transformation individually.
+
+\textit{Charge conjugation $C$}: $C$ negates the charge $q \to -q$,
+which at the ratio level maps $x_e \to x_e^{-1}$ (debits become credits
+and vice versa).  By Theorem~\ref{thm:J}, $J(x^{-1}) = J(x)$, so
+$J(C(e)) = J(x_e^{-1}) = J(x_e) = J(e)$.
+
+\textit{Parity $P$}: $P$ maps $\mathbf{x} \to -\mathbf{x}$.  The cost
+functional $J(x_e)$ depends on the scale ratio $x_e > 0$, not on the
+spatial position.  Hence $J(P(e)) = J(e)$.
+
+\textit{Time reversal $T$}: $T$ maps tick $t \to (7-t)\bmod 8$, reversing
+the epoch phase ordering.  $J(x_e)$ depends on $x_e$, not on the tick
+index.  Hence $J(T(e)) = J(e)$.
+
+Composition: since all three preserve $J$, so does their product:
+$J(\mathrm{CPT}(e)) = J(e)$.
+
+Ledger balance is preserved because $C$ swaps debits and credits
+(preserving the total), $P$ and $T$ do not alter charge values.
+\end{proof}
+
+\begin{theorem}[$CPT$ Involutive]
+\label{thm:involutive}
+$\mathrm{CPT}^2 = \mathrm{id}$.
+\end{theorem}
+
+\begin{proof}
+$C^2 = \mathrm{id}$ (charge double-negation: $q \to -q \to q$).
+$P^2 = \mathrm{id}$ (position double-negation:
+$\mathbf{x} \to -\mathbf{x} \to \mathbf{x}$).
+$T^2 = \mathrm{id}$ (tick reversal:
+$t \to (7-t) \to (7-(7-t)) = t \bmod 8$).
+Since $C$, $P$, $T$ act on independent degrees of freedom (charge, position, and tick, respectively), they commute: $CPT = CTP = PCT = \ldots$.  Therefore
+$(\mathrm{CPT})^2 = C^2 P^2 T^2 = \mathrm{id}$.
+\end{proof}
+
+\begin{corollary}[$CPT$ Consequences]
+$CPT$ invariance implies:
+\begin{enumerate}[label=(\roman*)]
+  \item $m_{\mathrm{particle}} = m_{\mathrm{antiparticle}}$.
+  \item $\tau_{\mathrm{particle}} = \tau_{\mathrm{antiparticle}}$
+  (equal lifetimes).
+  \item $q_{\mathrm{particle}} = -q_{\mathrm{antiparticle}}$
+  (opposite charges).
+\end{enumerate}
+\end{corollary}
+
+%% ============================================================
+\section{Why $CP$ Is Violated}
+\label{sec:cp-violation}
+%% ============================================================
+
+\begin{proposition}[$CP$ Violation from Phase Structure]
+\label{prop:cp}
+When weak-sector ledger entries carry complex CKM phases (imported from
+the Standard Model), $CP$ does not preserve the 8-tick phase ordering:
+the forward phase sequence and the $CP$-transformed sequence are
+inequivalent whenever $N_{\mathrm{gen}} \geq 3$.
+\end{proposition}
+
+\begin{proof}
+The 8-tick epoch has a natural forward direction: ticks proceed
+$0, 1, 2, \ldots, 7$ with phases $e^{2\pi i k/8}$ for
+$k = 0, \ldots, 7$.  Under $CP$, the charge and spatial parity
+are reversed, but the tick ordering is preserved.  The weak-sector
+entries carry generation-dependent phases from the CKM matrix:
+$V_{ij} = |V_{ij}| e^{i\delta_{ij}}$.  Under $CP$:
+$V_{ij} \to V_{ij}^*$ (complex conjugation).  If
+$\mathrm{Im}(V_{ij}) \neq 0$ (which requires $N_{\mathrm{gen}}
+\geq 3$), then $V_{ij} \neq V_{ij}^*$, and the forward phase
+sequence differs from the $CP$-transformed sequence.  This phase
+mismatch is $CP$ violation.
+\end{proof}
+
+\begin{proposition}[$CP$ Requires Three Generations]
+\label{prop:three-gen}
+$CP$ violation vanishes for $N_{\mathrm{gen}} < 3$.
+\end{proposition}
+
+\begin{proof}
+For $N_{\mathrm{gen}} = 2$, the $2 \times 2$ CKM matrix has one
+real parameter (the Cabibbo angle $\theta_C$) and no complex
+phase.  $V_{ij} = V_{ij}^*$ for all $i, j$, so $CP$ is
+preserved.
+
+For $N_{\mathrm{gen}} = 3$, the $3 \times 3$ CKM matrix has
+three angles and one irreducible phase $\delta$, giving
+$\mathcal{J} = \mathrm{Im}(V_{us} V_{cb} V_{ub}^* V_{cs}^*)
+\neq 0$.  (This is the Kobayashi--Maskawa theorem \cite{KM1973}.)
+\end{proof}
+
+\begin{remark}[Status of the RS derivation of $CP$ violation]
+\label{rem:cp-status}
+RS forces $N_{\mathrm{gen}} = 3$ from the face-pair count of the
+$D = 3$ cube (three pairs of opposite faces).  Since the minimum
+number of generations for a non-trivial CKM phase is $N_{\mathrm{gen}}
+= 3$ (Kobayashi--Maskawa theorem), $CP$ violation is a \emph{structural
+consequence} of the RS dimension-forcing.
+
+However, this argument has two levels:
+\begin{enumerate}[label=(\roman*)]
+  \item RS derives $N_{\mathrm{gen}} = 3$ (via $D = 3$ cube geometry).
+  \item The KM theorem (standard group theory) then implies that a
+  $3 \times 3$ unitary matrix generically has one irreducible complex
+  phase.
+\end{enumerate}
+Step (i) is the RS content; step (ii) is imported from the Standard Model.
+The RS framework predicts the \emph{existence} of $CP$ violation (because
+3 generations are forced and 3 is the minimum for KM phases), but does
+not independently derive the \emph{magnitude} of the Jarlskog invariant
+$\mathcal{J} \approx 3.2 \times 10^{-5}$.  Predicting $\mathcal{J}$
+from the RS CKM matrix structure (rungs, gap weights, and three-generation
+ladder structure) is an identified open problem.
+\end{remark}
+
+%% ============================================================
+\section{$T$ Violation as the Complement}
+\label{sec:t-violation}
+%% ============================================================
+
+\begin{corollary}[$CP$ Violation $\Leftrightarrow$ $T$ Violation]
+\label{cor:cp-t}
+Since $CPT$ is exact (Theorem~\ref{thm:cpt}), $CP$ violation implies
+$T$ violation, and conversely.
+\end{corollary}
+
+\begin{proof}
+If $CPT$ is a symmetry but $CP$ is not, then $T = (CP)^{-1}(CPT)$
+cannot be a symmetry either (the composition of a non-symmetry with a
+symmetry is not a symmetry).  Conversely, if $T$ is a symmetry and
+$CPT$ is a symmetry, then $CP = (CPT) \cdot T^{-1}$ would also be a
+symmetry, contradicting $CP$ violation.  Hence $CP$ non-invariance
+$\Leftrightarrow$ $T$ non-invariance.
+\end{proof}
+
+\begin{remark}
+The CPLEAR experiment~\cite{CPLEAR1998} and the BaBar/Belle
+$B$-factories have directly observed $T$ violation in the neutral
+kaon and $B$-meson systems, confirming this complementarity.
+\end{remark}
+
+%% ============================================================
+\section{$CPT$ Tests}
+\label{sec:tests}
+%% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Test} & \textbf{Experimental bound} & \textbf{RS prediction} \\
+\midrule
+$|m_p - m_{\bar{p}}|/m_p$ & $< 7 \times 10^{-10}$~\cite{PDG2024} &
+  0 (exact) \\
+$|q_p + q_{\bar{p}}|/e$ & $< 7 \times 10^{-10}$~\cite{PDG2024} &
+  0 (exact) \\
+$|\tau_{\mu^+} - \tau_{\mu^-}|/\tau$ & $< 2 \times 10^{-5}$~\cite{PDG2024} &
+  0 (exact) \\
+$|m_{K^0} - m_{\bar{K}^0}|/m_{K^0}$ &
+  $< 6 \times 10^{-19}$~\cite{PDG2024} & 0 (exact) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%% ============================================================
+\section{Predictions}
+\label{sec:predictions}
+%% ============================================================
+
+\begin{enumerate}
+  \item \textbf{$CPT$ exact}: All $CPT$ tests should yield null
+  results.  Any $CPT$ violation would falsify RS.
+
+  \item \textbf{$CP$ violation requires 3 generations}: Confirmed
+  experimentally.
+
+  \item \textbf{$T$ violation observed}: Confirmed by CPLEAR and
+  $B$-factories.
+
+  \item \textbf{No $CPT$-violating Lorentz violation}: SME
+  (Standard Model Extension) coefficients for $CPT$ violation are
+  all zero.
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+$CPT$ invariance is automatic on the recognition ledger, following
+from the individual cost-preserving nature of $C$, $P$, and $T$.
+$CP$ violation arises because the 8-tick phase structure is not
+preserved under $CP$ when weak-sector entries carry complex CKM
+phases, which require $N_{\mathrm{gen}} \geq 3$.  Since RS forces
+$N_{\mathrm{gen}} = 3$, $CP$ violation is a structural consequence:
+three generations are necessary and sufficient for the KM mechanism
+to produce an irreducible phase (see Remark~\ref{rem:cp-status}).
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{Christenson1964}
+J.~H.~Christenson, J.~W.~Cronin, V.~L.~Fitch, and R.~Turlay,
+``Evidence for the $2\pi$ Decay of the $K_2^0$ Meson,''
+Phys.\ Rev.\ Lett.\ \textbf{13}, 138 (1964).
+
+\bibitem{KM1973}
+M.~Kobayashi and T.~Maskawa, ``CP-Violation in the
+Renormalizable Theory of Weak Interaction,'' Prog.\ Theor.\
+Phys.\ \textbf{49}, 652 (1973).
+
+\bibitem{CPLEAR1998}
+CPLEAR Collaboration, ``First Direct Observation of
+Time-Reversal Non-Invariance in the Neutral-Kaon System,''
+Phys.\ Lett.\ B \textbf{444}, 43 (1998).
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+\texttt{doi:10.3390/axioms15020090}
+
+\bibitem{PDG2024}
+S.~Navas \textit{et al.}\ (Particle Data Group),
+``Review of Particle Physics,'' Phys.\ Rev.\ D \textbf{110}, 030001
+(2024).
+
+\end{thebibliography}
+
+\end{document}

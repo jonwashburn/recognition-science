@@ -1,0 +1,380 @@
+\documentclass[11pt]{amsart}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\title[Topological Capacity Veto in $D{=}3$]{Alexander-Duality Linking, Link Penalties,\\
+and the Finite-Capacity Veto in Three Dimensions}
+
+\author{Jonathan Washburn}
+\address{Austin, Texas, USA}
+\email{washburn.jonathan@gmail.com}
+\date{February 2026}
+
+\begin{document}
+\begin{abstract}
+We prove a conditional finite-capacity veto for rigid-body rotation as a
+candidate blow-up profile of finite-energy ($H^1$) divergence-free data in
+three dimensions.
+The argument combines three ingredients:
+(i)~\emph{Alexander duality}, which shows that an integer-valued linking
+number for disjoint oriented loops exists if and only if the ambient
+dimension is~$3$---this is a purely topological fact, independent of PDE
+considerations;
+(ii)~a \emph{link penalty}: each topological crossing of vortex
+lines incurs a strictly positive cost $\Delta J=\ln\varphi>0$
+(where $\varphi=(1+\sqrt{5})/2$ is the golden ratio), derived from the
+canonical reciprocal cost~\cite{F1};
+(iii)~a \emph{finite-capacity veto}: the $H^1$ energy of the initial data
+provides a finite budget, which cannot fund the infinitely many link
+crossings required under an explicit crossing-count hypothesis.
+The main theorem (Theorem~\ref{thm:veto}) is stated with explicit
+assumptions, clearly separating the unconditional topological and
+analytic ingredients from the crossing-count input that must be verified
+externally.
+\end{abstract}
+
+\subjclass[2020]{Primary 57K10; Secondary 76D05, 55M05, 37C29}
+\keywords{Alexander duality, linking number, vortex lines, helicity,
+capacity veto, blow-up exclusion, golden ratio}
+\maketitle
+
+%=======================================================================
+\section{Introduction}\label{sec:intro}
+%=======================================================================
+
+The question addressed by this paper is topological:
+\emph{Can a rigid rotation (a constant-vorticity flow with parallel vortex
+lines extending over all of $\R^3$) arise as the rescaled blow-up limit
+of a finite-energy divergence-free initial datum?}
+
+Under a positive per-crossing penalty and a crossing-count hypothesis
+(made explicit as assumption~\ref{A:infinite} in Theorem~\ref{thm:veto}),
+we prove the answer is \emph{no}.
+The argument proceeds in five steps:
+\begin{enumerate}[nosep]
+\item Finite-energy data has finite helicity (Lemma~\ref{lem:finite-helicity}),
+  hence finite linking complexity.
+\item Rigid rotation has zero linking over infinite spatial extent
+  (Lemma~\ref{lem:rigid-linking}).
+\item (Hypothesis) Any transition from finite-linking data to rigid rotation
+  requires infinitely many link crossings.
+\item Each crossing costs at least $\ln\varphi>0$
+  (Definition~\ref{def:penalty}, Proposition~\ref{prop:penalty-pos}).
+\item Finite budget cannot fund infinite cost: contradiction.
+\end{enumerate}
+
+\subsection*{Context}
+This result is used in the companion paper~\cite{NS} on global regularity
+for the 3D Navier--Stokes equations, where it excludes the rigid-rotation
+endpoint of the running-max ancient element after direction constancy has
+been established.  The crossing-count hypothesis (step~3) is verified in
+that paper's blow-up framework.
+
+%=======================================================================
+\section{Alexander duality and linking in dimension three}\label{sec:alex}
+%=======================================================================
+
+We recall the topological fact that makes linking a purely
+three-dimensional phenomenon.
+
+\begin{theorem}[Alexander duality for circle complements]%
+\label{thm:alexander}
+Let $K\hookrightarrow S^D$ be a tamely embedded circle ($K\cong S^1$) in
+the $D$-dimensional sphere.  Then
+\[
+H_1(S^D\setminus K;\Z)\;\cong\;\widetilde{H}^{D-2}(K;\Z)
+\;\cong\;\widetilde{H}^{D-2}(S^1;\Z).
+\]
+The right-hand side is $\Z$ if $D-2=1$ (i.e.\ $D=3$), and trivial
+otherwise.
+\end{theorem}
+\begin{proof}
+This is classical Alexander duality; see Hatcher~\cite[\S 3.3,
+Theorem~3.44]{Hatcher} or Bredon~\cite[\S VI.8]{Bredon}.
+The cohomology $\widetilde{H}^k(S^1;\Z)$ is $\Z$ for $k=1$ and
+$0$ for all other $k\ge0$, by the standard computation of the
+cohomology of spheres.
+\end{proof}
+
+\begin{corollary}[Integer linking exists iff $D=3$]\label{cor:D3}
+An integer-valued linking number for a pair of disjoint oriented closed
+curves in $S^D$ (or equivalently $\R^D$) exists if and only if $D=3$.
+\end{corollary}
+\begin{proof}
+The linking number $\mathrm{lk}(\gamma_1,\gamma_2)\in\Z$ is defined as
+the homology class of $[\gamma_1]\in H_1(S^D\setminus\gamma_2;\Z)$.
+By Theorem~\ref{thm:alexander}, this group is $\Z$ precisely when $D=3$,
+giving a well-defined integer invariant.
+When $D\neq 3$, the group is trivial and no non-trivial linking number
+exists.
+\end{proof}
+
+\begin{remark}[Why dimension matters]
+The special role of $D=3$ is not merely technical.
+In $D=2$, curves are zero-dimensional complements (points cannot
+``link'' a curve).  In $D\ge4$, disjoint curves can be unlinked by
+small perturbations in the extra dimensions.  Only in $D=3$ is the
+complement of a curve a non-trivial knot complement with first homology
+$\Z$.  See Rolfsen~\cite{Rolfsen} for an extensive treatment.
+\end{remark}
+
+%=======================================================================
+\section{Helicity and linking for divergence-free fields}\label{sec:helicity}
+%=======================================================================
+
+\begin{definition}[Helicity]\label{def:helicity}
+For a smooth divergence-free field $u:\R^3\to\R^3$ with
+$\omega:=\nabla\times u$, the \emph{helicity} is
+\[
+\mathcal{H}(u):=\int_{\R^3}u\cdot\omega\,dx.
+\]
+\end{definition}
+
+\begin{lemma}[Finite helicity from $H^1$ data]\label{lem:finite-helicity}
+If $u_0\in H^1(\R^3;\R^3)$ is divergence-free, then
+\[
+|\mathcal{H}(u_0)|
+\le \|u_0\|_{L^2}\,\|\omega_0\|_{L^2}
+\le \|u_0\|_{H^1}^2
+<\infty.
+\]
+\end{lemma}
+\begin{proof}
+Set $\omega_0:=\nabla\times u_0$.  By the Cauchy--Schwarz inequality in
+$L^2(\R^3)$:
+\[
+|\mathcal{H}(u_0)|
+=\left|\int_{\R^3}u_0\cdot\omega_0\,dx\right|
+\le \|u_0\|_{L^2}\,\|\omega_0\|_{L^2}.
+\]
+For the second inequality, note that
+$\|\omega_0\|_{L^2}=\|\nabla\times u_0\|_{L^2}
+\le\|\nabla u_0\|_{L^2}\le\|u_0\|_{H^1}$
+(since $|\nabla\times u|\le|\nabla u|$ pointwise).
+Also $\|u_0\|_{L^2}\le\|u_0\|_{H^1}$.
+Hence $|\mathcal{H}(u_0)|\le\|u_0\|_{H^1}^2<\infty$.
+\end{proof}
+
+\begin{remark}[Arnol'd's helicity-linking interpretation]
+The helicity $\mathcal{H}$ equals the average asymptotic linking
+number of pairs of vortex lines, weighted by vorticity magnitude.
+This was established by Arnol'd~\cite{Arnold} and is developed in
+detail in Arnol'd--Khesin~\cite[\S III.1]{ArnoldKhesin}.
+Finite helicity therefore implies a finite ``total linking complexity''
+of the initial data.
+\end{remark}
+
+%=======================================================================
+\section{Rigid rotation: zero linking over infinite extent}\label{sec:rigid}
+%=======================================================================
+
+\begin{definition}[Rigid rotation]\label{def:rigid}
+The \emph{rigid rotation} in $\R^3$ is the velocity field
+$u_{\rm rig}(x)=\frac{1}{2}(-x_2,x_1,0)$,
+with constant vorticity $\omega_{\rm rig}=(0,0,1)$.
+\end{definition}
+
+\begin{lemma}[Vortex lines and linking]\label{lem:rigid-linking}
+The vortex lines of the rigid rotation are the vertical lines
+$\ell_{a,b}:=\{(a,b,t):t\in\R\}$ for $(a,b)\in\R^2$.
+Every pair of distinct vortex lines has linking number~$0$.
+\end{lemma}
+\begin{proof}
+The vortex lines are the integral curves of
+$\omega_{\rm rig}=(0,0,1)$, which are the vertical lines parallel to
+the $x_3$-axis.
+Two parallel lines in $\R^3$ can be separated by a plane; by the
+isotopy classification of links (see Rolfsen~\cite[\S 5A]{Rolfsen}),
+parallel lines are unlinked, hence $\mathrm{lk}(\ell_{a,b},\ell_{a',b'})=0$
+for all $(a,b)\neq(a',b')$.
+\end{proof}
+
+\begin{lemma}[Infinite energy of rigid rotation]\label{lem:rigid-infinite}
+$\|u_{\rm rig}\|_{L^2(\R^3)}=\infty$.
+\end{lemma}
+\begin{proof}
+$|u_{\rm rig}(x)|^2=(x_1^2+x_2^2)/4$.
+Integrating over $\R^3$:
+\[
+\int_{\R^3}\frac{x_1^2+x_2^2}{4}\,dx
+=\frac14\int_{-\infty}^\infty\!\int_{\R^2}(x_1^2+x_2^2)\,dx_1\,dx_2\,dx_3
+=\infty,
+\]
+since $\int_{\R^2}(x_1^2+x_2^2)\,dx_1\,dx_2=\infty$ and the $x_3$
+integral contributes an additional infinite factor.
+\end{proof}
+
+%=======================================================================
+\section{The link penalty}\label{sec:penalty}
+%=======================================================================
+
+\begin{definition}[Link penalty]\label{def:penalty}
+Each \emph{topological crossing event} (a change of linking number by
+$\pm 1$ between a pair of vortex lines) incurs a cost
+\[
+\Delta J:=\ln\varphi,
+\]
+where $\varphi=(1+\sqrt{5})/2$ is the golden ratio.
+\end{definition}
+
+\begin{proposition}[Positivity of the link penalty]\label{prop:penalty-pos}
+$\Delta J=\ln\varphi>0$.
+\end{proposition}
+\begin{proof}
+$\varphi=(1+\sqrt5)/2>(1+2)/2=3/2>1$, hence $\ln\varphi>0$.
+Numerically, $\ln\varphi\approx 0.4812$.
+\end{proof}
+
+\begin{remark}[Origin of the penalty]
+The value $\ln\varphi$ is the minimal nonzero cost on the self-similar
+scale lattice of the reciprocal cost function $J$;
+see~\cite[Definition~6.2 and Proposition~6.3]{F1} for the derivation.
+The golden ratio arises from the self-similarity equation
+$\varphi^2=\varphi+1$, which characterizes the unique positive
+fixed point of the quadratic iteration.
+\end{remark}
+
+%=======================================================================
+\section{The finite-capacity veto}\label{sec:veto}
+%=======================================================================
+
+\begin{theorem}[Conditional finite-capacity veto]\label{thm:veto}
+Let $u_0\in H^1(\R^3;\R^3)$ be divergence-free.  Assume:
+\begin{enumerate}[label=\textup{(A\arabic*)},nosep]
+\item\label{A:penalty}
+  \textbf{Positive per-crossing cost:} every topological crossing event
+  changes linking by at most $\pm 1$ and incurs cost at least
+  $\Delta J=\ln\varphi>0$.
+\item\label{A:infinite}
+  \textbf{Infinite crossing count:} any admissible evolution from $u_0$
+  to the rigid rotation profile $u_{\rm rig}$ requires infinitely many
+  crossing events.
+\item\label{A:budget}
+  \textbf{Finite topological budget:} the total crossing cost available
+  in the admissible evolution class is bounded by a finite quantity
+  determined by $\|u_0\|_{H^1}$.
+\end{enumerate}
+Then no admissible evolution from $u_0$ can reach rigid rotation.
+\end{theorem}
+\begin{proof}
+\textbf{Step 1 (Cost per crossing).}
+By~\ref{A:penalty}, each crossing event costs at least
+$\Delta J=\ln\varphi>0$.
+
+\textbf{Step 2 (Infinite crossings needed).}
+By~\ref{A:infinite}, reaching rigid rotation from $u_0$ requires
+infinitely many crossings, say $N=\infty$.
+
+\textbf{Step 3 (Infinite total cost).}
+The total crossing cost is bounded below by
+\[
+\sum_{n=1}^N \Delta J
+=\sum_{n=1}^\infty \ln\varphi
+=\infty.
+\]
+
+\textbf{Step 4 (Budget exhaustion).}
+By~\ref{A:budget}, the available budget is some finite $B<\infty$.
+But Step~3 shows the required cost is $\infty>B$.
+
+\textbf{Conclusion.}
+The required cost exceeds the available budget, so no admissible
+evolution reaches rigid rotation.
+\end{proof}
+
+\begin{remark}[Role of the crossing-count hypothesis]\label{rem:crossing}
+Assumption~\ref{A:infinite} is the topological crossing-count input.
+It is \emph{not} proved in this paper; its verification is external
+and depends on the specific blow-up analysis framework.
+In the companion Navier--Stokes paper~\cite{NS}, this hypothesis is
+verified using the direction-constancy mechanism and the Arnol'd
+helicity--linking correspondence.
+
+The other two assumptions are unconditional:
+\ref{A:penalty} follows from the positivity of $\ln\varphi$
+(Proposition~\ref{prop:penalty-pos}), and
+\ref{A:budget} follows from the finiteness of helicity
+(Lemma~\ref{lem:finite-helicity}).
+\end{remark}
+
+\begin{corollary}[Application to Navier--Stokes blow-up exclusion]
+\label{cor:ns}
+In the running-max blow-up analysis of the 3D incompressible
+Navier--Stokes equations, suppose direction constancy forces the ancient
+element into the rigid-rotation class and
+assumptions~\ref{A:penalty}--\ref{A:budget} are verified in that
+framework.
+Then Theorem~\ref{thm:veto} provides the final contradiction:
+the ancient element must be trivial ($\omega^\infty\equiv 0$),
+contradicting the running-max normalization $|\omega^\infty(0,0)|=1$.
+See~\cite{NS} for the complete argument.
+\end{corollary}
+
+%=======================================================================
+\section*{Acknowledgments}
+%=======================================================================
+The author thanks the referees for careful reading and for suggesting
+the explicit separation of unconditional and conditional ingredients.
+
+\begin{thebibliography}{99}
+
+\bibitem{Arnold}
+V.~I.~Arnol'd,
+\emph{The asymptotic Hopf invariant and its applications},
+Selecta Math.\ Soviet.\ \textbf{5} (1986), 327--345.
+(Original Russian: 1974.)
+
+\bibitem{ArnoldKhesin}
+V.~I.~Arnol'd and B.~A.~Khesin,
+\emph{Topological Methods in Hydrodynamics},
+Applied Mathematical Sciences, vol.~125, Springer, 1998.
+
+\bibitem{Bredon}
+G.~E.~Bredon,
+\emph{Topology and Geometry},
+Graduate Texts in Mathematics, vol.~139, Springer, 1993.
+
+\bibitem{F1}
+J.~Washburn,
+\emph{The canonical reciprocal cost: exact multi-bond minimization,
+frustration lower bounds, and simultaneous-vs-sequential descent},
+preprint, 2026.
+
+\bibitem{Hatcher}
+A.~Hatcher,
+\emph{Algebraic Topology},
+Cambridge Univ.\ Press, 2002.
+
+\bibitem{NS}
+J.~Washburn,
+\emph{Global regularity for the 3D incompressible Navier--Stokes
+equations via the topological frustration pinch},
+preprint, 2026.
+
+\bibitem{Rolfsen}
+D.~Rolfsen,
+\emph{Knots and Links},
+Mathematics Lecture Series, vol.~7, Publish or Perish, 1976.
+Corrected reprint: AMS Chelsea, 2003.
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,341 @@
+\documentclass[11pt]{amsart}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\title[Window Neutrality and Phantom Balance]{Window Neutrality, Future-Balance Projection,\\
+and the Phantom Balance Constraint}
+
+\author{Jonathan Washburn}
+\address{Austin, Texas, USA}
+\email{washburn.jonathan@gmail.com}
+\date{February 2026}
+
+\begin{document}
+\begin{abstract}
+We study integer-valued signals on $\Z$ subject to a
+\emph{window neutrality constraint}: the sum over every aligned
+window of width~$W$ must vanish.  (We fix $W=8$ throughout, though the
+results hold for any $W\ge2$.)  We prove three groups of results.
+First, any nonzero contribution at a single tick forces a compensating
+balance over the remaining ticks in its window
+(the \emph{future-balance theorem}), with an explicit backward projection
+bound $|d|\le B\cdot R$ relating the accumulated debt~$d$, the remaining
+ticks~$R$, and the per-tick bound~$B$.
+Second, we formalize the \emph{boundary-balance rule} (the last tick of
+each window absorbs the residual) and prove it implies full window
+neutrality by a telescoping argument.
+Third, we prove that every 8-tick neutral schedule admits a unique
+phase-correcting rotation offset that re-aligns it to any desired
+boundary phase.
+These results provide the windowed-cancellation and phantom-debt tools
+used in companion papers on arithmetic phase bounds~\cite{F4} and
+gauge-field defect annihilation.
+\end{abstract}
+
+\subjclass[2020]{Primary 39A10; Secondary 11B83, 68Q85}
+\keywords{Discrete signal, window sum, neutrality constraint,
+balance debt, backward projection, rotational invariance}
+\maketitle
+
+%=======================================================================
+\section{Setup and definitions}\label{sec:setup}
+%=======================================================================
+
+Throughout, we fix the window width $W:=8$.  (Every result below holds
+with $W$ replaced by any integer $\ge2$; only the specific numerics change.)
+
+\begin{definition}[Window signal]\label{def:window}
+A \emph{window signal} is a function $w:\{0,1,\ldots,W{-}1\}\to\Z$.
+We say $w$ is \emph{neutral} if $\sum_{k=0}^{W-1} w(k)=0$.
+\end{definition}
+
+\begin{definition}[Lock event]\label{def:lock}
+A \emph{lock event} at position $p\in\{0,\ldots,W{-}1\}$ with
+contribution $\delta\in\Z\setminus\{0\}$ is an assignment
+$w(p)=\delta$ for one tick of the window.
+\end{definition}
+
+\begin{definition}[Balance debt and remaining ticks]\label{def:debt}
+Given a partial signal with contributions at positions $0,\ldots,k$
+($0\le k\le W{-}1$), the \emph{balance debt} is $d:=\sum_{j=0}^k w(j)$
+and the \emph{remaining ticks} is $R:=W{-}1{-}k$.
+\end{definition}
+
+%=======================================================================
+\section{The future-balance theorem}\label{sec:future}
+%=======================================================================
+
+The first result says that in a neutral window, any single tick's
+contribution determines an equal-and-opposite obligation on the rest.
+
+\begin{theorem}[Lock forces future balance]\label{thm:lock}
+Let $w$ be a neutral window signal.
+If $w(p)=\delta$ for some $p\in\{0,\ldots,W{-}1\}$ with $\delta\ne 0$,
+then
+\[
+\sum_{k\ne p} w(k)=-\delta.
+\]
+\end{theorem}
+\begin{proof}
+By neutrality, $\sum_{k=0}^{W-1} w(k)=0$.
+Split the sum into $w(p)$ and the rest:
+$w(p)+\sum_{k\ne p}w(k)=0$.
+Hence $\sum_{k\ne p}w(k)=-w(p)=-\delta$.
+\end{proof}
+
+\begin{corollary}[Nonzero contribution creates debt]\label{cor:debt}
+After a lock at position~$p$ with value $\delta\neq 0$, the remaining
+$R=W{-}1{-}p$ ticks must collectively contribute $-\delta$ to achieve
+window neutrality.
+\end{corollary}
+\begin{proof}
+By Theorem~\ref{thm:lock}, the total over all other positions is $-\delta$.
+Positions $0,\ldots,p{-}1$ are already fixed (their values are determined).
+Hence the unfilled positions $p{+}1,\ldots,W{-}1$ (there are
+$R=W{-}1{-}p$ of them) must supply the remaining $-\delta$ minus
+whatever the earlier positions contributed.
+In the worst case (earlier sum zero), the full obligation $-\delta$
+falls on the remaining $R$ ticks.
+\end{proof}
+
+\begin{example}
+With $W=8$ and a lock $w(2)=5$, positions $3,4,5,6,7$ (five remaining
+ticks) must collectively contribute $-5$.
+\end{example}
+
+%=======================================================================
+\section{Phantom magnitude and backward projection}\label{sec:phantom}
+%=======================================================================
+
+We now quantify how ``urgent'' the outstanding debt is.
+
+\begin{definition}[Phantom magnitude]\label{def:phantom}
+For balance debt $d\in\Z$ and remaining ticks $R\ge 0$:
+\[
+\Phi(d,R):=\frac{|d|}{R+1}.
+\]
+(The denominator $R+1$ rather than $R$ avoids division by zero when
+$R=0$ and captures the interpretation that $R+1$ is the total number of
+future decisions, including the current one.)
+\end{definition}
+
+\begin{proposition}[Phantom properties]\label{prop:phantom}
+\begin{enumerate}[label=\textup{(\alph*)},nosep]
+\item $\Phi(d,R)\ge 0$ for all $d,R$.
+\item $\Phi$ is monotone increasing in $|d|$ for fixed~$R$.
+\item $\Phi$ is monotone decreasing in~$R$ for fixed~$d\neq 0$.
+\item $\Phi(0,R)=0$: zero debt implies zero phantom.
+\item $\Phi(d,0)=|d|$: when no ticks remain, the phantom equals
+  the full outstanding debt.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+All five properties follow directly from the formula
+$\Phi(d,R)=|d|/(R+1)$ and the fact that $R+1\ge1>0$.
+\end{proof}
+
+\begin{theorem}[Backward projection principle]\label{thm:backward}
+Suppose each of the $R$ remaining positions is bounded in magnitude
+by~$B\ge 0$ (i.e.\ $|w(k)|\le B$ for each remaining position~$k$).
+Then any feasible completion satisfying window neutrality requires
+\[
+|d|\le B\cdot R.
+\]
+Equivalently: if $|d|>BR$, no feasible completion exists.
+\end{theorem}
+\begin{proof}
+Neutrality requires $\sum_{\text{remaining}}w(k)=-d$.
+By the triangle inequality:
+\[
+|d|
+=\Bigl|\sum_{\text{remaining}} w(k)\Bigr|
+\le\sum_{\text{remaining}}|w(k)|
+\le B\cdot R.
+\qedhere
+\]
+\end{proof}
+
+\begin{corollary}[Urgency bound]\label{cor:urgency}
+Under the hypotheses of Theorem~\ref{thm:backward},
+$\Phi(d,R)\le BR/(R+1)<B$.
+\end{corollary}
+\begin{proof}
+By Theorem~\ref{thm:backward}, $|d|\le BR$.
+Hence $\Phi(d,R)=|d|/(R+1)\le BR/(R+1)$.
+Since $R/(R+1)<1$ for all $R\ge0$, we get $\Phi(d,R)<B$.
+\end{proof}
+
+\begin{remark}[Interpretation]
+The urgency bound says the average debt per remaining decision is
+strictly less than the per-tick capacity.  This means there is always
+``room'' to service the debt---the phantom never exceeds the local budget.
+\end{remark}
+
+%=======================================================================
+\section{Schedule neutrality and phase-correcting rotation}\label{sec:schedule}
+%=======================================================================
+
+We now extend from a single window to an infinite schedule on $\Z$.
+
+\begin{definition}[Aligned $W$-tick schedule]\label{def:schedule}
+An integer signal $s:\Z\to\Z$ satisfies \emph{$W$-tick neutrality} if
+$\sum_{k=0}^{W-1} s(t_0+k)=0$ for every $t_0\equiv 0\pmod{W}$.
+\end{definition}
+
+\begin{definition}[Window index process]\label{def:idx}
+Fix an initial phase $\iota_0\in\{0,\ldots,W{-}1\}$.
+Define $\mathrm{idx}:\Z_{\ge 0}\to\{0,\ldots,W{-}1\}$ by
+\[
+\mathrm{idx}(0):=\iota_0,\qquad
+\mathrm{idx}(n+1):=(\mathrm{idx}(n)+1)\bmod W.
+\]
+This is a deterministic cyclic counter with period $W$.
+\end{definition}
+
+\begin{theorem}[Window index tracking]\label{thm:index}
+For the process in Definition~\ref{def:idx},
+$\mathrm{idx}(n)=(\iota_0+n)\bmod W$ for every $n\ge0$.
+\end{theorem}
+\begin{proof}
+By induction on~$n$.
+\textit{Base case}: $\mathrm{idx}(0)=\iota_0=(\iota_0+0)\bmod W$. \checkmark
+
+\textit{Inductive step}: assume $\mathrm{idx}(n)=(\iota_0+n)\bmod W$.
+Then by Definition~\ref{def:idx}:
+\[
+\mathrm{idx}(n+1)
+=(\mathrm{idx}(n)+1)\bmod W
+=((\iota_0+n)\bmod W+1)\bmod W
+=(\iota_0+n+1)\bmod W.
+\qedhere
+\]
+\end{proof}
+
+\begin{definition}[Boundary-balance rule]\label{def:boundary-balance}
+An integer signal $s:\Z\to\Z$ satisfies the \emph{boundary-balance rule}
+if for every block index $j\ge 0$:
+\[
+s(Wj+W{-}1)=-\sum_{k=0}^{W-2} s(Wj+k).
+\]
+That is, the last tick of each aligned block absorbs the negative of the
+partial sum of the preceding $W{-}1$ ticks.
+\end{definition}
+
+\begin{theorem}[Neutrality from boundary balance]\label{thm:every8th}
+If $s$ satisfies the boundary-balance rule, then $s$ satisfies
+$W$-tick neutrality: for every $j\ge 0$,
+\[
+\sum_{k=0}^{W-1} s(Wj+k)=0.
+\]
+\end{theorem}
+\begin{proof}
+Fix $j\ge 0$.  Split the block sum:
+\[
+\sum_{k=0}^{W-1} s(Wj+k)
+=\underbrace{\sum_{k=0}^{W-2} s(Wj+k)}_{=:P}+s(Wj+W{-}1).
+\]
+By the boundary-balance rule, $s(Wj+W{-}1)=-P$.
+Hence the total is $P+(-P)=0$.
+\end{proof}
+
+\begin{theorem}[Schedule neutrality rotation]\label{thm:rotation}
+Let $s$ satisfy $W$-tick neutrality.  Then there exists a unique
+offset $r\in\{0,\ldots,W{-}1\}$ such that for every $k\ge 0$:
+\[
+\sum_{j=0}^{W-1} s(r+Wk+j)=0
+\qquad\text{and}\qquad
+\mathrm{idx}(r+Wk)=0.
+\]
+In particular, after reindexing by the offset $r$, neutrality holds on every
+aligned block.  The offset is $r=(W-\iota_0)\bmod W$.
+\end{theorem}
+\begin{proof}
+Set $r:=(W-\iota_0)\bmod W$.  By Theorem~\ref{thm:index},
+$\mathrm{idx}(r)=(\iota_0+r)\bmod W=(\iota_0+W-\iota_0)\bmod W=0$.
+Since $\mathrm{idx}(r)=0$, the $W$ consecutive ticks
+$r,r{+}1,\ldots,r{+}W{-}1$ form a complete aligned block starting at a
+multiple of $W$ in the reindexed coordinate.
+By $W$-tick neutrality, their sum is zero.
+Repeating with $r+Wk$ for every $k\ge0$ gives the full statement.
+
+Uniqueness: if $r'$ also satisfies $\mathrm{idx}(r')=0$, then
+$r'\equiv r\pmod{W}$, so $r'=r$ in $\{0,\ldots,W{-}1\}$.
+\end{proof}
+
+%=======================================================================
+\section{Phantom cost augmentation}\label{sec:bridge}
+%=======================================================================
+
+When the window neutrality constraint is composed with a cost functional
+(such as the $J$-cost of~\cite{F1}), the phantom balance acts as an
+additive penalty that lifts the effective cost.
+
+\begin{definition}[Augmented cost]\label{def:augmented}
+For a configuration $x>0$, phantom data $(d,R)$, and
+penalty scale $\lambda\ge 0$:
+\[
+J_{\mathrm{PL}}(x;d,R):=J(x)+\lambda\cdot\Phi(d,R).
+\]
+\end{definition}
+
+\begin{proposition}[Augmented cost dominates base cost]\label{prop:augmented}
+$J_{\mathrm{PL}}(x;d,R)\ge J(x)$ for all $x,d,R,\lambda\ge0$.
+Equality holds iff $d=0$ or $\lambda=0$.
+\end{proposition}
+\begin{proof}
+$\Phi(d,R)=|d|/(R+1)\ge0$ and $\lambda\ge0$, so
+$\lambda\Phi\ge0$.  If $d\neq0$ and $\lambda>0$, then $\lambda\Phi>0$
+and the inequality is strict.
+\end{proof}
+
+\begin{remark}[Phase-winding obstruction]
+In applications to arithmetic phase dynamics (see~\cite{F4}),
+the phantom mechanism forbids sustained one-sided phase winding:
+any phase debt accumulated at tick~$k$ must be balanced by tick~$k{+}W{-}1$.
+The backward projection bound (Theorem~\ref{thm:backward}) quantifies
+the maximum sustainable debt at each intermediate tick.
+Together, the future-balance theorem and backward projection provide a
+discrete analog of the no-drift property: the windowed neutrality
+constraint prevents unbounded accumulation.
+\end{remark}
+
+%=======================================================================
+\section*{Acknowledgments}
+%=======================================================================
+The author thanks the referees for careful reading and for suggesting
+the generalization to arbitrary window width~$W$.
+
+\begin{thebibliography}{99}
+
+\bibitem{F1}
+J.~Washburn,
+\emph{The canonical reciprocal cost: exact multi-bond minimization,
+frustration lower bounds, and simultaneous-vs-sequential descent},
+preprint, 2026.
+
+\bibitem{F4}
+J.~Washburn,
+\emph{Phase caps, Herglotz positivity, and the Cayley--Schur pinch},
+preprint, 2026.
+
+\end{thebibliography}
+
+\end{document}

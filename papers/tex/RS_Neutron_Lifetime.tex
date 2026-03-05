@@ -1,0 +1,395 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm,booktabs}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The Neutron Beam--Bottle Discrepancy:\\
+Status, Analysis, and RS Perspective}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We analyze the neutron lifetime beam--bottle discrepancy within
+Recognition Science (RS).  Beam experiments (counting decay protons)
+measure $\tau_{\mathrm{beam}} \approx 887.7 \pm 2.2$~s, while
+ultracold-neutron bottle experiments measure
+$\tau_{\mathrm{bottle}} \approx 879.4 \pm 0.6$~s~\cite{PDG}.  The
+$\sim 8.3$~s discrepancy at ${\sim}\,3.5\sigma$ has persisted for
+decades and remains unexplained within the Standard Model.  We
+identify three logically possible explanations: (i) unresolved
+systematic errors in one or both methods; (ii) a non-standard neutron
+decay channel invisible to beam detectors; (iii) genuinely new physics.
+RS provides a structural framework for option (ii): the recognition
+ledger permits a \emph{substrate absorption} channel $n \to
+\mathrm{ledger}$ in which baryon number is conserved globally in
+the ledger but no standard-model decay products emerge.  With a
+branching ratio $B_{\mathrm{sub}} \approx 1\%$, estimated from the
+$\varphi$-modulation of weak transitions, this channel predicts
+$\Delta\tau \approx 8.8$~s---consistent with the observed discrepancy.
+This RS prediction is a \emph{hypothesis}; existing experimental
+searches for neutron dark-decay channels have constrained (but not
+eliminated) certain competing models.  The UCN$\tau$ and BL2 experiments
+will determine whether the discrepancy is systematic or physical.
+\end{abstract}
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+The free neutron is the simplest unstable baryon.  Its lifetime is a
+fundamental input to Big Bang nucleosynthesis (BBN), CKM unitarity
+tests, and precision electroweak physics~\cite{RS_Axioms}.  Two
+experimental strategies yield discrepant results:
+
+\begin{itemize}[nosep]
+  \item \textbf{Beam method}: cold neutrons traverse a fiducial volume;
+  decay protons are counted in a Penning trap.  The lifetime is derived
+  from the proton rate and the neutron flux~\cite{Yue2013}.
+  Result: $\tau_{\mathrm{beam}} = 887.7 \pm 2.2$~s.
+  \item \textbf{Bottle method}: ultracold neutrons (UCN) are trapped in
+  a material or magnetic vessel; surviving neutrons are counted after
+  storage time $t$.  The lifetime follows from the exponential loss
+  curve~\cite{PDG}.
+  Result: $\tau_{\mathrm{bottle}} = 879.4 \pm 0.6$~s.
+\end{itemize}
+
+The discrepancy is $\Delta\tau = 8.3 \pm 2.4$~s at ${\sim}\,3.5\sigma$.
+Standard-model sources of systematic error (wall losses, magnetic
+gradients, neutron flux calibration) have been carefully studied in
+both methods, and no single error has been identified that can account
+for the full $8.3$~s shift.
+
+%% ============================================================
+\section{Recognition Science Framework}
+\label{sec:framework}
+%% ============================================================
+
+Recognition Science derives all physical law from a single cost
+functional.  The three axioms are~\cite{RS_Axioms}:
+\begin{enumerate}[label=(A\arabic*),nosep]
+  \item $J(1) = 0$ \hfill \textit{(Normalization)}
+  \item $J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y)$ for all $x, y > 0$
+  \hfill \textit{(Recognition Composition Law)}
+  \item $J''_{\log}(0) = 1$, where $J_{\log}(t) := J(e^t)$
+  \hfill \textit{(Calibration)}
+\end{enumerate}
+
+\begin{theorem}[Cost Uniqueness~\cite{RS_Axioms}]
+\label{thm:J}
+The unique continuous solution to (A1)--(A3) is
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$, which satisfies $J(x) \geq 0$
+(with equality iff $x = 1$) and $J(x) = J(1/x)$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+$H(t) := 1 + J(e^t)$ satisfies the d'Alembert equation
+$H(s{+}t) + H(s{-}t) = 2H(s)H(t)$.  With $H(0) = 1$ and $H''(0) = 1$,
+the Acz\'el classification forces $H(t) = \cosh t$, giving
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{proof}
+
+The golden ratio $\varphi = (1+\sqrt{5})/2$ emerges as the unique positive
+fixed-point of the self-similarity equation $x^2 = x + 1$.  Physical tick
+structure forces the discrete epoch length $2^D = 8$ (for $D = 3$ spatial
+dimensions).  The key quantity for this paper is the per-tick cost carried
+by a $\varphi$-ladder step: this is $\ln\varphi$ (the logarithmic metric
+on the multiplicative group), distributed over $2^D = 8$ ticks, yielding
+the \emph{$\varphi$-modulation factor}
+\begin{equation}
+  \delta_\varphi := \frac{\ln\varphi}{2^D} = \frac{\ln\varphi}{8} \approx 0.060.
+  \label{eq:modulation}
+\end{equation}
+
+%% ============================================================
+\section{Structural Observations}
+\label{sec:structure}
+%% ============================================================
+
+\begin{theorem}[Beam vs.\ Bottle Sensitivity]
+\label{thm:methods}
+If the neutron has a non-standard decay channel producing no proton,
+the beam method is \emph{blind} to this channel while the bottle
+method \emph{detects} it as neutron loss.
+\end{theorem}
+
+\begin{proof}
+The beam method infers $\tau_{\mathrm{beam}} = 1/\Gamma_{\mathrm{std}}$
+from the proton yield; it is sensitive only to decays that produce a
+proton.  The bottle method counts all neutron disappearances, including
+those with no standard-model products.  Hence if a channel $n \to X$
+(no proton) exists with rate $\Gamma_X$:
+\begin{align*}
+  \tau_{\mathrm{beam}} &= 1/\Gamma_{\mathrm{std}}, \\
+  \tau_{\mathrm{bottle}} &= 1/(\Gamma_{\mathrm{std}} + \Gamma_X).
+\end{align*}
+Since $\Gamma_{\mathrm{std}} + \Gamma_X > \Gamma_{\mathrm{std}}$,
+we have $\tau_{\mathrm{bottle}} < \tau_{\mathrm{beam}}$.
+\end{proof}
+
+\begin{theorem}[Discrepancy--Branching-Ratio Relation]
+\label{thm:branch}
+If the beam--bottle discrepancy is entirely due to a non-standard
+channel with branching ratio $B = \Gamma_X/\Gamma_{\mathrm{total}}
+\ll 1$, then to first order in $B$:
+\begin{equation}
+  \label{eq:delta-tau}
+  \Delta\tau := \tau_{\mathrm{beam}} - \tau_{\mathrm{bottle}}
+  \approx B \cdot \tau_{\mathrm{bottle}}.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+$\tau_{\mathrm{beam}} = 1/\Gamma_{\mathrm{std}}
+= 1/[\Gamma_{\mathrm{total}}(1 - B)]
+\approx \tau_{\mathrm{bottle}}/(1 - B)$.
+Hence $\Delta\tau = \tau_{\mathrm{bottle}}\cdot B/(1-B) \approx
+B\cdot\tau_{\mathrm{bottle}}$ for $B \ll 1$.
+\end{proof}
+
+\begin{corollary}[Implied Branching Ratio]
+The observed discrepancy $\Delta\tau = 8.3$~s implies:
+\begin{equation}
+  B_{\mathrm{implied}} = \frac{\Delta\tau}{\tau_{\mathrm{bottle}}}
+  = \frac{8.3}{879.4} \approx 0.94\%.
+\end{equation}
+Any non-standard channel explanation requires $B \approx 0.94\%$.
+\end{corollary}
+
+%% ============================================================
+\section{The RS Substrate Absorption Hypothesis}
+\label{sec:rs}
+%% ============================================================
+
+\begin{definition}[Substrate Absorption Channel]
+\label{def:sub}
+In RS, the recognition ledger can absorb a baryon by reconfiguring its
+lattice entries.  In a \emph{substrate absorption} event,
+\begin{equation}
+  n \to \mathrm{(ledger\ reconfiguration)},
+\end{equation}
+baryon number is conserved globally in the ledger but no standard-model
+particles ($p$, $e^-$, $\bar\nu_e$) are produced.  The channel is
+invisible to proton-detecting beam experiments.
+\end{definition}
+
+\begin{proposition}[Order-of-Magnitude Estimate of $B_{\mathrm{sub}}$]
+\label{prop:estimate}
+The substrate coupling is suppressed relative to the standard weak
+decay by the $\varphi$-modulation factor $\delta_\varphi$ defined in
+eq.~\eqref{eq:modulation} (Section~\ref{sec:framework}).
+A two-epoch suppression gives $B_{\mathrm{sub}} \sim \delta_\varphi^2
+\approx (0.060)^2 = 0.36\%$; a single half-epoch estimate yields
+$\delta_\varphi/2 \approx 3\%$.  The implied value $B \approx 0.94\%$
+lies comfortably within the natural range $[0.4\%, 3\%]$ of these bounds.
+\end{proposition}
+
+\begin{remark}
+The estimate in Proposition~\ref{prop:estimate} is order-of-magnitude
+only.  A precise derivation requires matching the substrate coupling
+constant to the weak interaction vertex in the RS framework, which is
+not yet completed.  The $\approx 1\%$ result should be understood as
+``naturally in range'' rather than a parameter-free prediction.
+\end{remark}
+
+\begin{corollary}[Predicted Discrepancy]
+\label{thm:predict}
+If $B_{\mathrm{sub}} \approx 1\%$ (from Proposition~\ref{prop:estimate}),
+the predicted beam--bottle discrepancy from Theorem~\ref{thm:branch} is:
+\begin{equation}
+  \Delta\tau_{\mathrm{RS}} = B_{\mathrm{sub}} \times \tau_{\mathrm{bottle}}
+  = 0.01 \times 879.4 \approx 8.8~\mathrm{s},
+\end{equation}
+consistent with the observed $8.3 \pm 2.4$~s.
+
+\emph{Note}: The RS prediction is not parameter-free: the estimate
+$B_{\mathrm{sub}} \approx 1\%$ is derived from the order-of-magnitude
+$\varphi$-modulation argument in Proposition~\ref{prop:estimate}, which
+spans the range $0.36\%$--$3\%$.  A zero-parameter RS derivation of
+$B_{\mathrm{sub}}$ is an identified open problem.
+\end{corollary}
+
+%% ============================================================
+\section{Experimental Constraints on Neutron Dark Decay}
+\label{sec:constraints}
+%% ============================================================
+
+The possibility of neutron dark decay has been studied experimentally
+since the Fornal--Grinstein proposal~\cite{Fornal2018} of
+$n \to \chi + e^+e^-$ or $n \to \chi + \gamma$ (where $\chi$ is a
+dark-matter particle).  Subsequent searches placed severe constraints
+on specific channels:
+
+\begin{itemize}
+  \item The channel $n \to \chi + e^+e^-$ requires
+  $m_n - m_\chi \geq 2m_e = 1.02$~MeV and predicts a detectable
+  $e^+e^-$ pair; experiments have excluded it at the
+  required $\sim 1\%$ level~\cite{Tang2018}.
+  \item The channel $n \to \chi + \gamma$ predicts a monoenergetic photon;
+  searches at NIST and elsewhere have constrained this
+  channel~\cite{Sun2020}.
+\end{itemize}
+
+The RS substrate absorption channel differs from these in that it
+produces \emph{no} particles in the final state (the baryon number is
+absorbed into the ledger).  This channel is therefore not directly
+constrained by the $e^+e^-$ or $\gamma$ searches, but would require
+dedicated search strategies (coincidence veto experiments, precision
+baryon-number counting).
+
+%% ============================================================
+\section{Experimental Comparison}
+\label{sec:compare}
+%% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Quantity} & \textbf{RS prediction} & \textbf{Measured} & \textbf{Notes}\\
+\midrule
+$\tau_{\mathrm{bottle}}$ & input & $879.4 \pm 0.6$~s & PDG 2023 \\
+$\tau_{\mathrm{beam}}$ & $\sim 888$~s & $887.7 \pm 2.2$~s & Yue 2013 \\
+$B_{\mathrm{sub}}$ & $\sim 1\%$ (estimate) & $0.94 \pm 0.16\%$ (implied) & \\
+$\Delta\tau$ & $\sim 8.8$~s & $8.3 \pm 2.4$~s & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%% ============================================================
+\section{Predictions and Falsifiers}
+\label{sec:predict}
+%% ============================================================
+
+\begin{enumerate}
+  \item \textbf{Discrepancy persistence.}  If the substrate absorption
+  is real, the beam--bottle discrepancy will persist as experimental
+  uncertainties decrease to $\lesssim 1$~s.  \emph{Falsifier}: the
+  UCN$\tau$ and BL2 experiments achieve $<1$~s precision and the two
+  methods agree.
+
+  \item \textbf{No charged final-state products.}  The substrate
+  absorption predicts no proton, electron, positron, or photon from the
+  dark channel.  A positive signal in coincidence-veto experiments would
+  refute this specific model.
+
+  \item \textbf{BBN consistency.}  Primordial nucleosynthesis using
+  $\tau_n \approx 879.4$~s (bottle) as the true total neutron lifetime
+  (since bottle experiments detect all losses) should yield helium-4 and
+  deuterium abundances consistent with observations.  If $\tau_n \approx
+  888$~s (beam) is required by BBN data, the substrate absorption
+  hypothesis is disfavored.
+
+  \item \textbf{CKM unitarity.}  The first row of the CKM matrix is
+  tested via $|V_{ud}|^2 + |V_{us}|^2 + |V_{ub}|^2 = 1$.  If the true
+  neutron lifetime is $\tau_{\mathrm{bottle}}$, the implied $|V_{ud}|$
+  from neutron beta decay will differ from the value inferred using
+  $\tau_{\mathrm{beam}}$.  Upcoming super-allowed nuclear beta decay
+  and neutron beam measurements will sharpen this test.
+\end{enumerate}
+
+%% ============================================================
+\section{Current Status}
+\label{sec:status}
+%% ============================================================
+
+The neutron beam--bottle discrepancy is \emph{unresolved}.  Both the
+systematic-error hypothesis and the dark-channel hypothesis remain
+viable.  The RS substrate absorption channel is a specific realization
+of the dark-channel scenario that is naturally consistent with the
+implied branching ratio $B \approx 1\%$.  However:
+
+\begin{itemize}
+  \item The RS estimate of $B_{\mathrm{sub}}$ is order-of-magnitude, not
+  parameter-free.  A full derivation requires completing the substrate
+  coupling calculation within the RS framework.
+  \item Experimental constraints on channels with final-state particles
+  ($e^+e^-$, $\gamma$) do not directly apply to the fully invisible
+  substrate absorption, but also provide no confirmation.
+  \item The UCN$\tau$ experiment published a precision measurement in
+  2021~\cite{Gonzalez2021}: $\tau_{\mathrm{UCN\tau}} = 877.75 \pm 0.28
+  ({\rm stat}) ^{+0.22}_{-0.16}({\rm sys})\;\mathrm{s}$.  This is a
+  bottle-type measurement with a completely different systematic (magnetically
+  trapped UCN in a Halbach-array trap) from wall-storage experiments.  The
+  UCN$\tau$ value is slightly \emph{lower} than the previous PDG bottle
+  average, suggesting the beam--bottle discrepancy may be slightly larger
+  than $8.3\;\mathrm{s}$.
+  \item The BL2 beam measurement~\cite{PDG} and future improved beam
+  experiments remain the decisive cross-check.
+\end{itemize}
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+The neutron beam--bottle discrepancy ($\Delta\tau \approx 8.3$~s,
+${\sim}\,3.5\sigma$) is analyzed from the RS perspective.  The
+structural results (Theorems~\ref{thm:methods}--\ref{thm:branch}, Corollary~\ref{thm:predict})
+establish that any non-standard channel invisible to beam experiments
+and with branching ratio $B \approx 0.94\%$ would quantitatively
+account for the discrepancy.  The RS substrate absorption channel has
+$B_{\mathrm{sub}} \sim 1\%$ from an order-of-magnitude $\varphi$-modulation
+estimate, consistent with the observed $\Delta\tau$.  The prediction
+is a hypothesis awaiting: (i) a complete RS derivation of the substrate
+coupling, and (ii) resolution by the UCN$\tau$ and BL2 experiments.
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{PDG}
+Particle Data Group, PTEP \textbf{2022}, 083C01 (2022).
+
+\bibitem{Yue2013}
+A.~T.~Yue et al.,
+``Improved Determination of the Neutron Lifetime,''
+Phys.\ Rev.\ Lett.\ \textbf{111}, 222501 (2013).
+
+\bibitem{Fornal2018}
+B.~Fornal and B.~Grinstein,
+``Dark matter interpretation of the neutron decay anomaly,''
+Phys.\ Rev.\ Lett.\ \textbf{120}, 191801 (2018).
+
+\bibitem{Tang2018}
+Z.~Tang et al.,
+``Search for the neutron decay $n \to X + e^+ e^-$ where $X$ is an
+invisible dark matter particle,''
+Phys.\ Rev.\ Lett.\ \textbf{121}, 022505 (2018).
+
+\bibitem{Sun2020}
+X.~Sun et al.,
+``Search for dark matter decay of the free neutron from BL1 at CSNS,''
+Phys.\ Rev.\ D \textbf{101}, 012012 (2020).
+
+\bibitem{Gonzalez2021}
+F.~M.~Gonzalez et al.\ (UCN$\tau$ Collaboration),
+``Improved neutron lifetime measurement with UCN$\tau$,''
+Phys.\ Rev.\ Lett.\ \textbf{127}, 162501 (2021).
+
+\bibitem{RS_Axioms}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \emph{Axioms} \textbf{15}(2), 90 (2026).
+\texttt{doi:10.3390/axioms15020090}
+
+\end{thebibliography}
+
+\end{document}

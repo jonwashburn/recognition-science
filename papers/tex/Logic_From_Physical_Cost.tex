@@ -1,0 +1,498 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+\usepackage{microtype}
+\usepackage{enumitem}
+
+\geometry{letterpaper, margin=1in}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{axiom}{Axiom}
+
+% Custom environments
+\newenvironment{keyresult}[1][]
+  {\begin{center}\begin{minipage}{0.95\textwidth}\hrule\vspace{0.5em}\textbf{#1}\par\vspace{0.3em}}
+  {\vspace{0.5em}\hrule\end{minipage}\end{center}\vspace{0.5em}}
+
+% Commands
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Rp}{\mathbb{R}_{>0}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\Jcost}{J}
+\newcommand{\defect}{\mathrm{defect}}
+
+\title{\vspace{-1cm}\textbf{Logic Emerges from Physical Cost}\\[0.3em]
+\large Logical Consistency as a Low-Energy State\\[0.2em]
+Proof as Geodesic, Existence as Stability}
+\author{Jonathan Washburn\\[0.3em]
+Recognition Physics Institute, Austin, Texas\\[0.3em]
+\texttt{jon@recognitionphysics.org}}
+\date{January 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We develop a radical inversion of the traditional relationship between logic and physics: rather than assuming logic as a pre-given foundation upon which physics is built, we derive a canonical logical semantics as emergent from a physical cost functional. The canonical reciprocal cost $J(x) = \frac{1}{2}(x + x^{-1}) - 1$ is uniquely determined by normalization, a composition law, and calibration---it is not chosen but \emph{forced}. We prove three fundamental identifications:
+\begin{enumerate}[nosep]
+\item \textbf{Logical consistency} is a low-energy (zero-defect) state of a physical system.
+\item \textbf{Proof} is a path of zero-cost transitions (geodesic) from premises to conclusion.
+\item \textbf{Mathematical existence} is physical stability: $\defect(x) = 0 \Leftrightarrow x = 1$.
+\end{enumerate}
+Contradictions are expensive (no stable witness); consistency is cheap (a stable witness exists). The cost landscape \emph{is} the logical landscape. This framework resolves the question ``Why is reality logical?'' by showing that classical logical structure arises as the induced Boolean semantics on the unique stable minimizer. The results are machine-verified in Lean 4.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%==============================================================================
+\section{Introduction: The Traditional Picture and Its Inversion}
+%==============================================================================
+
+\subsection{The Orthodox Hierarchy}
+
+The standard picture in foundational mathematics and mathematical physics places logic at the base of the conceptual hierarchy:
+
+\begin{center}
+\begin{tabular}{c}
+\textbf{Logic} (pre-given, absolute) \\
+$\downarrow$ \\
+\textbf{Set Theory} (built from logic) \\
+$\downarrow$ \\
+\textbf{Analysis} (real numbers, topology, measure) \\
+$\downarrow$ \\
+\textbf{Physics} (physical theories using analysis)
+\end{tabular}
+\end{center}
+
+In this picture, logical laws---the law of non-contradiction, the law of excluded middle, modus ponens---are taken as given. They are not explained by anything deeper; they simply \emph{are}. Physical theories must conform to them.
+
+This paper inverts the hierarchy:
+
+\begin{keyresult}[The Cost-First Thesis]
+\textbf{Cost} is foundational. Logic \emph{emerges} as the structure of cost-minimizing configurations. Logical consistency is not a pre-given constraint but a derived property: what is cheap is what is consistent.
+\end{keyresult}
+
+\subsection{Why This Matters}
+
+If logic is foundational, we can never answer the question: \emph{Why is reality logical?} The question is meaningless---logic is simply assumed, not explained.
+
+But if logic emerges from a more primitive structure (cost), then the question has an answer:
+
+\begin{quote}
+\textit{Reality is logical because logic is cheap. Contradictions are expensive (they have positive cost and cannot stabilize). Consistency is cheap (it can achieve zero cost). Reality is what exists, and what exists is what minimizes cost. Therefore reality is logical.}
+\end{quote}
+
+This is the ``economic inevitability'' of logic. We do not need to assume that reality obeys logical laws; we can \emph{derive} it from the cost structure.
+
+\subsection{Outline}
+
+Section~\ref{sec:cost} introduces the canonical reciprocal cost $J$ and proves its uniqueness. Section~\ref{sec:logic} shows how logical structure emerges from cost minimization. Section~\ref{sec:proof} interprets proof as geodesic motion through cost space. Section~\ref{sec:existence} identifies mathematical existence with physical stability. Section~\ref{sec:rsa} connects to the Recognition Stability Audit framework for certifying impossibility. Section~\ref{sec:godel} addresses Gödelian objections. Section~\ref{sec:lean} summarizes the machine verification.
+
+%==============================================================================
+\section{The Canonical Reciprocal Cost}\label{sec:cost}
+%==============================================================================
+
+\subsection{The Primitive: Cost of Deviation}
+
+We begin with the concept of \emph{deviation from identity}. A ``deviant'' is a multiplicative ratio $x \in \Rp$, where $x = 1$ represents perfect agreement with a reference and $x \neq 1$ represents deviation.
+
+\begin{definition}[Canonical reciprocal cost]
+Define $J:\Rp\to\R$ by
+\begin{equation}\label{eq:Jdef}
+J(x) \;=\; \frac{1}{2}\left(x + x^{-1}\right) - 1.
+\end{equation}
+\end{definition}
+
+\begin{proposition}[Basic properties]\label{prop:basic}
+For all $x\in\Rp$:
+\begin{enumerate}[nosep]
+\item \textbf{(Reciprocity)} $J(x)=J(x^{-1})$.
+\item \textbf{(Normalization)} $J(1)=0$.
+\item \textbf{(Nonnegativity)} $J(x)=\dfrac{(x-1)^2}{2x}\ge 0$, with equality iff $x=1$.
+\item \textbf{(Divergence)} $J(x)\to\infty$ as $x\to 0^+$ or $x\to\infty$.
+\end{enumerate}
+\end{proposition}
+
+The form \eqref{eq:Jdef} is not arbitrary. The following uniqueness theorem shows it is \emph{forced} by natural axioms.
+
+\subsection{Uniqueness: The d'Alembert Inevitability}
+
+\begin{theorem}[Uniqueness under composition and calibration]\label{thm:J-unique}
+Let $F:\Rp\to\R$ satisfy:
+\begin{enumerate}[nosep]
+\item \textbf{(Normalization)} $F(1)=0$.
+\item \textbf{(Composition law)} For all $x,y>0$:
+\begin{equation}\label{eq:composition}
+F(xy)+F(x/y)=2F(x)F(y)+2F(x)+2F(y).
+\end{equation}
+\item \textbf{(Calibration)} 
+\begin{equation}\label{eq:curv}
+\lim_{t\to 0}\frac{2F(e^t)}{t^2}=1.
+\end{equation}
+\end{enumerate}
+Then $F(x)=J(x)$ for all $x>0$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Define $H(t):=F(e^t)+1$. Then $H(0)=1$ and the composition law \eqref{eq:composition} transforms to d'Alembert's functional equation:
+\[
+H(t+u)+H(t-u)=2H(t)H(u).
+\]
+Under standard regularity hypotheses (e.g.\ $H\in C^2$), one passes from the d'Alembert identity to the ODE $H''=H$. The calibration condition selects $H(t)=\cosh(t)$, giving $F(e^t)=\cosh(t)-1$ and hence $F(x)=J(x)$. Full details appear in \cite{Washburn2025Cost,WashburnDAlembert}.
+\end{proof}
+
+\begin{remark}[Not a dial]
+The composition law \eqref{eq:composition} is the multiplicative form of d'Alembert's equation, known since the 18th century. The key point is that $J$ is \emph{forced}---not chosen from aesthetic preference or mathematical convenience. Any cost function satisfying the natural structural axioms must equal $J$.
+\end{remark}
+
+\subsection{The Defect Functional}
+
+\begin{definition}[Defect]
+The \emph{defect} of $x \in \Rp$ is
+\[
+\defect(x) := J(x) = \frac{1}{2}(x + x^{-1}) - 1 = \frac{(x-1)^2}{2x}.
+\]
+\end{definition}
+
+\begin{theorem}[Law of Existence]\label{thm:existence}
+The unique zero-defect state is $x = 1$:
+\[
+\defect(x) = 0 \quad \Longleftrightarrow \quad x = 1.
+\]
+\end{theorem}
+
+\begin{proof}
+$\defect(x) = (x-1)^2/(2x) = 0$ requires $x = 1$ since $x > 0$.
+\end{proof}
+
+%==============================================================================
+\section{Logic Emerges from Cost}\label{sec:logic}
+%==============================================================================
+
+\subsection{The Core Insight}
+
+\begin{keyresult}[T0: Logic from Cost (semantic form)]
+Logic is not imposed from outside. A cost functional selects a unique stable minimizer, and \emph{truth} is forced to mean ``admitting a stable witness.'' Under this semantics, contradictions have no stable witness (expensive), while consistency admits a stable witness (cheap).
+\end{keyresult}
+
+\subsection{A cost-selected semantics of truth}
+
+To avoid circularity, we distinguish two layers:
+\begin{itemize}[nosep]
+\item a meta-theory in which we reason (ordinary mathematics);
+\item an RS-internal semantics where ``truth'' is defined from cost/stability.
+\end{itemize}
+The claim ``logic emerges'' is about the second layer: the cost landscape induces a canonical Boolean semantics on the stable sector.
+
+\begin{definition}[Costed configuration space]\label{def:costed-space}
+A \emph{costed configuration space} is a nonempty set $X$ equipped with a function $C:X\to \R_{\ge 0}$.
+A \emph{stable minimizer} is a point $x_\star\in X$ such that $C(x_\star)=0$ and $C(x)>0$ for all $x\neq x_\star$.
+\end{definition}
+
+\begin{remark}[Our base instance]\label{rem:base-instance}
+In this paper's base cost model, $X=\Rp$ and $C=\defect=J$. Theorem~\ref{thm:existence} states that the unique stable minimizer is $x_\star=1$.
+\end{remark}
+
+\begin{definition}[Stable witness]\label{def:stable-witness}
+Let $(X,C)$ be a costed configuration space.
+For a predicate $P:X\to \mathrm{Prop}$, a \emph{stable witness} for $P$ is a point $x\in X$ such that $C(x)=0$ and $P(x)$ holds.
+\end{definition}
+
+\begin{definition}[RS-truth]\label{def:rs-true}
+In a costed configuration space $(X,C)$, define the RS truth predicate
+\[
+\mathrm{RSTrue}(P)\;:\!\!\Longleftrightarrow\;\exists x\in X,\ C(x)=0\ \wedge\ P(x).
+\]
+\end{definition}
+
+\begin{lemma}[Truth collapses to evaluation at the minimizer]\label{lem:true-eval}
+Assume $(X,C)$ has a stable minimizer $x_\star$ (Definition~\ref{def:costed-space}). Then for any predicate $P:X\to \mathrm{Prop}$,
+\[
+\mathrm{RSTrue}(P)\quad\Longleftrightarrow\quad P(x_\star).
+\]
+\end{lemma}
+
+\begin{proof}
+($\Rightarrow$) If $\mathrm{RSTrue}(P)$ holds, there exists $x$ with $C(x)=0$ and $P(x)$. By uniqueness of the zero-cost state, $x=x_\star$, hence $P(x_\star)$.
+($\Leftarrow$) If $P(x_\star)$ holds, then $x_\star$ is a stable witness, so $\mathrm{RSTrue}(P)$ holds.
+\end{proof}
+
+\subsection{Consistency is cheap; contradiction is expensive}
+
+\begin{proposition}[Consistency is cheap]\label{prop:consistency-cheap}
+Assume $(X,C)$ has a stable minimizer $x_\star$.
+Then there exists a predicate $P$ such that $\mathrm{RSTrue}(P)$ holds (e.g.\ $P(x):\!\!\Longleftrightarrow \mathrm{True}$).
+\end{proposition}
+
+\begin{proof}
+Take $P(x)\equiv \mathrm{True}$. Then $P(x_\star)$ holds, so $\mathrm{RSTrue}(P)$ holds by Lemma~\ref{lem:true-eval}.
+\end{proof}
+
+\begin{proposition}[Contradictions have no stable witness]\label{prop:contradiction-expensive}
+Assume $(X,C)$ has a stable minimizer $x_\star$. Then for any predicate $P$,
+\[
+\neg\big(\mathrm{RSTrue}(P)\ \wedge\ \mathrm{RSTrue}(\neg P)\big).
+\]
+\end{proposition}
+
+\begin{proof}
+By Lemma~\ref{lem:true-eval}, the conjunction implies $P(x_\star)\wedge \neg P(x_\star)$, which is impossible.
+\end{proof}
+
+\subsection{Logic as induced Boolean semantics on the stable sector}
+
+\begin{theorem}[Logic from cost (semantic theorem)]\label{thm:logic-from-cost}
+Assume $(X,C)$ has a stable minimizer $x_\star$.
+Then RS-truth (Definition~\ref{def:rs-true}) induces a canonical Boolean semantics on predicates via evaluation at $x_\star$:
+for any predicates $P,Q:X\to\mathrm{Prop}$,
+\[
+\mathrm{RSTrue}(P\wedge Q)\ \Longleftrightarrow\ \mathrm{RSTrue}(P)\wedge \mathrm{RSTrue}(Q),\qquad
+\mathrm{RSTrue}(\neg P)\ \Longleftrightarrow\ \neg\,\mathrm{RSTrue}(P),
+\]
+and similarly for the other propositional connectives.
+\end{theorem}
+
+\begin{proof}
+By Lemma~\ref{lem:true-eval}, $\mathrm{RSTrue}(P)$ is equivalent to $P(x_\star)$, and evaluation at a point commutes with propositional connectives by definition.
+\end{proof}
+
+\begin{remark}[Why this is not circular]
+We do not claim to derive the meta-theory's logic from cost. Rather, we show that once a physical cost selects a unique stable minimizer, it forces a canonical \emph{semantic} notion of truth (stable witness), and under that notion the usual logical structure is recovered. In this sense, \emph{logical consistency is a low-energy state}.
+\end{remark}
+
+%==============================================================================
+\section{Proof as Geodesic}\label{sec:proof}
+%==============================================================================
+
+\subsection{Discrete cost geometry (what ``geodesic'' means here)}
+
+The slogan ``proof is a geodesic'' is best made precise in a discrete setting: a proof is a finite sequence of permissible transitions, each with an associated physical cost.
+
+\begin{definition}[Costed transition system]\label{def:costed-transition}
+A \emph{costed transition system} is a directed graph $(S,\to)$ together with a step cost
+\[
+\kappa:\{(s,s')\in S\times S:\ s\to s'\}\to \R_{\ge 0}.
+\]
+\end{definition}
+
+\begin{definition}[Path cost]\label{def:path-cost}
+Given a finite path $s_0\to s_1\to \cdots \to s_n$, define its total cost
+\[
+\mathrm{Cost}(s_0\to\cdots\to s_n)\ :=\ \sum_{i=0}^{n-1}\kappa(s_i,s_{i+1}).
+\]
+\end{definition}
+
+\begin{definition}[Geodesic]\label{def:geodesic}
+A path from $s$ to $t$ is a \emph{geodesic} if it has minimal total cost among all paths from $s$ to $t$.
+\end{definition}
+
+\subsection{Proof = zero-cost geodesic}
+
+\begin{keyresult}[Proof as zero-cost path]\label{kr:proof-geodesic}
+Fix a costed transition system of ``inference steps'' (or ``recognition ticks'') on a space of statements/configurations.
+A \textbf{proof} from premises $A$ to conclusion $B$ is a geodesic path from $A$ to $B$ of total cost $0$.
+\end{keyresult}
+
+\begin{remark}[Why this matches the physics]
+If each inference step is a physical transition that must be recognized/paid for, then only zero-cost transitions can be composed indefinitely without destabilizing. Thus ``provability'' corresponds to reachability along zero-cost edges, and proof search becomes a shortest-path problem in a costed graph.
+\end{remark}
+
+\subsection{Continuous limit (optional)}\label{subsec:continuous-limit}
+In regimes where transitions are well-approximated by small continuous moves, one may pass from discrete path costs to a variational principle and (in favorable cases) an induced metric in suitable coordinates. We do not use this here; the discrete model is sufficient for the core identification ``proof = (zero-cost) geodesic.''
+
+%==============================================================================
+\section{Existence as Stability}\label{sec:existence}
+%==============================================================================
+
+\subsection{Mathematical Existence = Physical Stability}
+
+\begin{keyresult}[Existence Principle]
+A mathematical object \textbf{exists} (in the RS sense) if and only if it corresponds to a stable physical configuration: $\defect(x) = 0$.
+\end{keyresult}
+
+\begin{definition}[RS-Existence predicate]
+\[
+\text{RSExists}(x) \quad \Longleftrightarrow \quad 0 < x \wedge \defect(x) = 0.
+\]
+\end{definition}
+
+\begin{theorem}[Uniqueness of existence]
+$\text{RSExists}(x) \Leftrightarrow x = 1$.
+\end{theorem}
+
+\begin{proof}
+Immediate from $\defect(x) = 0 \Leftrightarrow x = 1$.
+\end{proof}
+
+\subsection{The Meta-Principle: Nothing Has Infinite Cost}
+
+\begin{theorem}[Nothing cannot exist]\label{thm:nothing-infinite}
+For any $C > 0$, there exists $\varepsilon > 0$ such that $\defect(x) > C$ for all $x \in (0, \varepsilon)$.
+\end{theorem}
+
+\begin{proof}
+$\defect(x) = (x-1)^2/(2x) \to \infty$ as $x \to 0^+$.
+\end{proof}
+
+\begin{corollary}[Meta-Principle is derived]
+The statement ``Nothing cannot recognize itself'' (the RS Meta-Principle) is now a \textbf{theorem} about cost, not an axiom: $J(0^+) = \infty$ means ``nothing'' has infinite cost and cannot exist.
+\end{corollary}
+
+\subsection{The Dichotomy}
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Configuration state (base model $X=\Rp$)} & \textbf{Defect} & \textbf{Stable/RSExists?} \\
+\midrule
+Neutral (unity) $x=1$ & $=0$ & Yes \\
+Deviant $x\neq 1$ & $>0$ & No \\
+Nothing $x\to 0^+$ & $\to \infty$ & No \\
+Unbounded $x\to \infty$ & $\to \infty$ & No \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%==============================================================================
+\section{Connection to Recognition Stability Audit}\label{sec:rsa}
+%==============================================================================
+
+\subsection{Sensor-Obstruction Framework}
+
+The Recognition Stability Audit (RSA) \cite{WashburnRSA} provides a systematic method for certifying impossibility claims. The connection to logic-from-cost is direct:
+
+\begin{definition}[Obstruction and Sensor]
+Given a candidate statement $S$, define:
+\begin{itemize}[nosep]
+\item An \emph{obstruction} $G_S$ whose zeros encode where $S$ holds.
+\item A \emph{sensor} $\mathcal{J}_S = 1/G_S$, so $S$ at $z$ implies a pole of $\mathcal{J}_S$ at $z$.
+\end{itemize}
+\end{definition}
+
+\begin{remark}[The unification]
+In RSA, ``$S$ cannot occur in region $\Omega$'' is certified by showing $\mathcal{J}_S$ has no poles in $\Omega$. This is exactly the claim that no zero-defect configuration exists for $S$ in $\Omega$---i.e., $S$ is ``too expensive'' to exist.
+\end{remark}
+
+\subsection{Impossibility as Positive Cost}
+
+\begin{keyresult}[Impossibility = Positive Cost]
+RSA's verdict \texttt{IMPOSSIBLE\_STATE} corresponds exactly to showing that the candidate has positive cost everywhere in the audited region---it cannot stabilize.
+\end{keyresult}
+
+%==============================================================================
+\section{Gödelian Objections and Scope}\label{sec:godel}
+%==============================================================================
+
+\subsection{Why Gödel Does Not Obstruct}
+
+Gödel's incompleteness theorems show that any consistent, sufficiently strong formal system cannot prove all true statements about arithmetic. Does this obstruct the claim that logic emerges from cost?
+
+\begin{keyresult}[Different Targets]
+\begin{itemize}[nosep]
+\item \textbf{Gödel's domain}: Provability of arithmetic sentences in formal systems.
+\item \textbf{RS domain}: Selection of physical configurations by cost minimization.
+\end{itemize}
+These are orthogonal targets. RS does not claim to prove arithmetic truths; RS claims there is a unique zero-parameter cost-minimizing framework.
+\end{keyresult}
+
+\subsection{Self-Reference Is Excluded}
+
+\begin{theorem}[Self-referential queries are impossible]
+In the RS ontology, a ``self-referential stabilization query'' (a configuration asserting its own non-stabilization) has no fixed point under coercive dynamics and is therefore outside the ontology.
+\end{theorem}
+
+The Gödelian sentence ``This sentence is not provable'' has no analog in the RS framework because:
+\begin{enumerate}[nosep]
+\item RS does not have a ``provability'' predicate; it has a \emph{cost} functional.
+\item Self-referential cost queries would require $\defect(x) = f(\defect(x))$ for some fixed-point-free $f$.
+\item Such configurations are not stable and hence do not exist.
+\end{enumerate}
+
+%==============================================================================
+\section{Machine Verification}\label{sec:lean}
+%==============================================================================
+
+The core results are formalized and verified in Lean 4 with zero \texttt{sorry} (unproved) placeholders:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Theorem} & \textbf{Lean Reference} \\
+\midrule
+$J(1) = 0$ & \texttt{Cost.Jcost\_unit0} \\
+$J(x) = J(1/x)$ & \texttt{Cost.Jcost\_symm} \\
+$\defect(x) \geq 0$ & \texttt{LawOfExistence.defect\_nonneg} \\
+$\defect(x) = 0 \Leftrightarrow x = 1$ & \texttt{LawOfExistence.defect\_zero\_iff\_one} \\
+$J(0^+) \to \infty$ & \texttt{LawOfExistence.nothing\_cannot\_exist} \\
+Consistency has a stable witness (toy model) & \texttt{LogicFromCost.consistent\_zero\_cost\_possible} \\
+Contradiction is expensive (toy model) & \texttt{LogicFromCost.contradiction\_positive\_cost} \\
+Main theorem: logic from cost & \texttt{LogicFromCost.logic\_from\_cost} \\
+ODE uniqueness ($H'' = H \Rightarrow \cosh$) & \texttt{FunctionalEquation.\allowbreak ode\_cosh\_uniqueness\_contdiff} \\
+Unconditional RCL & \texttt{DAlembert.\allowbreak Unconditional.\allowbreak rcl\_unconditional} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Repository: \texttt{IndisputableMonolith/Foundation/LogicFromCost.lean}
+
+%==============================================================================
+\section{Conclusion: A New Foundation}
+%==============================================================================
+
+We have shown that logical consistency is not a pre-given structure imposed on reality, but an emergent property of cost-minimizing configurations.
+
+\begin{keyresult}[Summary]
+\begin{enumerate}[nosep]
+\item \textbf{Cost is primitive}: The canonical reciprocal cost $J(x) = \frac{1}{2}(x + x^{-1}) - 1$ is uniquely forced by normalization, a composition law, and calibration.
+\item \textbf{Logic emerges (semantics)}: RS-truth is ``admitting a stable witness'' (Definition~\ref{def:rs-true}). Contradictions have no stable witness; consistency is cheap (a stable witness exists). Thus the cost-selected stable minimizer induces a Boolean semantics (Theorem~\ref{thm:logic-from-cost}).
+\item \textbf{Proof = geodesic}: A valid proof is a zero-cost geodesic in a costed transition system (Key Result~\ref{kr:proof-geodesic}).
+\item \textbf{Existence = stability}: Mathematical existence means $\defect = 0$.
+\end{enumerate}
+\end{keyresult}
+
+This inverts the traditional hierarchy: physics does not rest on logic; logic rests on cost.
+
+The question ``Why is reality logical?'' has an answer: because logic is cheap.
+
+\begin{thebibliography}{99}
+
+\bibitem{Washburn2025Cost}
+J.~Washburn and M.~Zlatanović, ``Uniqueness of the Canonical Reciprocal Cost,''
+manuscript (2025).
+
+\bibitem{WashburnDAlembert}
+J.~Washburn, ``The d'Alembert Inevitability Theorem: Why the Recognition Composition Law Is Mathematically Forced, Not Assumed,''
+manuscript (2026).
+
+\bibitem{WashburnRSA}
+J.~Washburn, ``The Recognition Stability Audit: A Compiler for Impossibility Certificates,''
+manuscript (2026).
+
+\bibitem{WashburnRG}
+J.~Washburn, M.~Zlatanović, and E.~Allahyarov, ``Recognition Geometry,''
+\emph{Axioms} (2026).
+
+\bibitem{Aczel1966}
+J.~Aczél, \emph{Lectures on Functional Equations and Their Applications},
+Academic Press, 1966.
+
+\bibitem{Kuczma2009}
+M.~Kuczma, \emph{An Introduction to the Theory of Functional Equations and Inequalities}, 2nd ed.,
+Birkhäuser, 2009.
+
+\end{thebibliography}
+
+\end{document}

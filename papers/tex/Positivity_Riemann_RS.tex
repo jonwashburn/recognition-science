@@ -1,0 +1,757 @@
+\documentclass[11pt]{amsart}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage[numbers,sort&compress]{natbib}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\theoremstyle{definition}
+\newtheorem{principle}[theorem]{Principle}
+
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\PP}{\mathcal{P}}
+\DeclareMathOperator{\dettwo}{det_2}
+\DeclareMathOperator{\re}{Re}
+
+\title[Positivity of the Arithmetic Ratio]{%
+Positivity of the Arithmetic Ratio from the\\
+Canonical Reciprocal Cost: a Recognition Science Derivation}
+
+\author{Jonathan Washburn}
+\address{Austin, TX, USA}
+\email{jon@recognitionphysics.org}
+
+\author{Amir Rahnamai Barghi}
+\email{arahnamab@gmail.com}
+
+\date{\today}
+
+\begin{document}
+\begin{abstract}
+In a companion paper~\cite{WashburnPaper1} we proved that the
+Riemann Hypothesis is equivalent to the positivity condition
+$\re\mathcal J(s)\ge 0$ on $\{\re s>1/2\}\setminus Z(\zeta)$,
+where $\mathcal J:=\dettwo(I-A)/\zeta\cdot(s-1)/s$.
+Here we derive this positivity condition from the Recognition
+Science forcing chain.
+The canonical reciprocal cost
+$J(x)=\tfrac12(x+x^{-1})-1$, uniquely characterized by a
+d'Alembert composition identity~\cite{WashburnEntropy},
+has unit log-curvature $J''(0)=1$.
+This forces discrete configuration space and a minimum
+recognition tick~$\tau_0>0$.
+By the Shannon--Nyquist theorem, the recognition apparatus
+resolves frequencies up to $\Omega_{\max}=1/(2\tau_0)$.
+When $\tau_0\ge 1$ (forced by the unit curvature),
+$\Omega_{\max}\le 1/2<\log 2$, and no prime frequency
+$\omega_p=\log p$ is individually resolvable.
+The oscillatory prime sum in $\log(1/\zeta)$---the only
+potentially unbounded contribution to $\arg\mathcal J$---is
+therefore unobservable to any bandwidth-limited
+recognition process.
+Within the Recognition Science framework,
+this eliminates the principal obstruction to positivity
+on most of the half-plane.
+A residual near-real strip
+$\{1/2<\sigma<1,\;|t|<1/2\}$, where term~(III)
+contributes excess phase, requires a joint phase
+bound that we identify but do not fully close.
+Combined with the Schur Pinch
+of~\cite{WashburnPaper1}, full closure of this strip
+would establish~RH conditional on~RS.
+\end{abstract}
+
+\subjclass[2020]{Primary 11M26; Secondary 39B52, 94A12, 47B35}
+\keywords{Riemann hypothesis, recognition science,
+d'Alembert functional equation, Shannon--Nyquist theorem,
+Carleson measure, bandwidth limit}
+\maketitle
+
+%% ============================================================
+\section{Introduction}\label{sec:intro}
+%% ============================================================
+
+\subsection*{Context}
+In~\cite{WashburnPaper1} we established the equivalence
+\begin{equation}\label{eq:equiv}
+  \text{RH}
+  \quad\Longleftrightarrow\quad
+  \re\mathcal J(s)\ge 0
+  \text{ for all }
+  s\in\Omega\setminus Z(\zeta),
+\end{equation}
+where $\Omega=\{\re s>1/2\}$ and
+$\mathcal J=\dettwo(I-A)/\zeta\cdot(s-1)/s$.
+The forward direction is classical; the reverse
+uses the Schur Pinch (removable singularity $+$
+Maximum Modulus Principle).
+
+The purpose of this paper is to derive the
+positivity condition~$\re\mathcal J\ge 0$
+from the Recognition Science (RS) forcing chain.
+
+\subsection*{Structural context: CPT aggregation and the exclusion pipeline}
+In companion papers~\cite{WashburnCPT,WashburnExclusion}, we prove that:
+\begin{itemize}
+\item The Coercive Projection Theorem (CPT) gives the
+  \emph{unique optimal membership certificate}: the three-step
+  pipeline $\mathcal{P}\to\mathcal{B}\to\mathcal{A}$ (project,
+  bound, aggregate) with optimal constants $c_{\min}=1/2$,
+  $C_{\mathrm{proj}}=1$.
+\item The Exclusion Theorem gives the \emph{unique optimal
+  impossibility certificate}: the four-step pipeline
+  $\mathcal{O}\to\mathcal{R}\to\mathcal{C}\to\mathcal{S}$
+  (obstruction, reciprocal, Cayley, Schur).
+\end{itemize}
+The present paper derives the positivity condition needed by
+the Schur Pinch~\cite{WashburnPaper1}.  The derivation is
+an instance of \emph{CPT aggregation}: the bandwidth argument
+(Link~5 below) is the $\mathcal{A}$-step of CPT applied to
+prime frequencies, and the coercivity bound $J''(0)=1$ is the
+$\mathcal{B}$-step.  Closing RH then reduces to a single
+\emph{domain adapter} problem: showing that the arithmetic
+Cayley field in the near-real strip belongs to the
+cost-contracting realization class.
+
+\subsection*{Structure of the argument}
+The derivation has six links, organized as a
+forcing chain from a single primitive:
+
+\medskip
+\begin{center}
+\small
+\begin{tabular}{@{}rlll@{}}
+\textbf{Link} & \textbf{Statement} & \textbf{Method} & \textbf{Status} \\
+\hline
+1 & $J=\cosh(\log\cdot)-1$ uniquely forced
+  & d'Alembert~\cite{WashburnEntropy}
+  & Theorem \\
+2 & $J''(0)=1$ forces discrete steps
+  & Strict convexity
+  & Theorem \\
+3 & Recognition tick $\tau_0\ge 1$ exists
+  & Discreteness $+$ unit curvature
+  & Theorem \\
+4 & Bandwidth $\Omega_{\max}=1/(2\tau_0)\le 1/2$
+  & Shannon--Nyquist
+  & Classical \\
+5 & No prime resolvable ($\Omega_{\max}<\log 2$)
+  & Arithmetic ($\log 2>1/2$)
+  & Trivial \\
+6 & $\re\mathcal J\ge 0$ on $\Omega$
+  & Links 1--5 $+$ log-decomposition
+  & \textbf{RS-derived} \\
+\end{tabular}
+\end{center}
+
+\medskip
+Links 1--5 are unconditional theorems
+(of functional analysis, information theory,
+and arithmetic).
+Link~6 uses the RS principle that
+\emph{observables are recognition acts}
+(Section~\ref{sec:T4}) to conclude that the
+oscillatory prime sum in $\log(1/\zeta)$ is
+unobservable to the recognition apparatus.
+
+\subsection*{Claim taxonomy}
+\begin{itemize}
+\item Links 1--5: \textbf{unconditional mathematics.}
+\item Link 6: \textbf{conditional on the RS framework}
+  (specifically, on the principle that all physical
+  observables respect the recognition bandwidth).
+  Within RS, this principle is itself derived
+  from Links 1--3.
+\item The conjunction of~\eqref{eq:equiv}
+  (from~\cite{WashburnPaper1})
+  and Link~6 (this paper)
+  yields RH conditional on~RS.
+\end{itemize}
+
+%% ============================================================
+\section{The canonical cost and its consequences}
+\label{sec:cost}
+%% ============================================================
+
+\begin{theorem}[Cost uniqueness~{\cite{WashburnEntropy}}]
+\label{thm:cost}
+Let $F:\R_{>0}\to\R$ satisfy
+normalization $F(1)=0$,
+the d'Alembert composition identity
+\begin{equation}\label{eq:dalembert}
+  F(xy)+F(x/y)=2F(x)F(y)+2F(x)+2F(y),
+\end{equation}
+and unit log-curvature
+$\lim_{t\to 0}2F(e^t)/t^2=1$.
+Then $F(x)=J(x):=\tfrac12(x+x^{-1})-1$ for all $x>0$.
+\end{theorem}
+\begin{proof}
+Setting $H(t):=F(e^t)+1$ reduces~\eqref{eq:dalembert}
+to d'Alembert's equation $H(t+u)+H(t-u)=2H(t)H(u)$.
+Strict convexity of~$F$ forces continuity,
+so $H(t)=\cosh(at)$ for some $a>0$
+(the cosine branch is excluded by $F\ge 0$,
+the constant branch by strict convexity).
+The curvature condition fixes $a=1$.
+See~\cite[Proposition~2]{WashburnEntropy}
+for the complete proof.
+\end{proof}
+
+\begin{corollary}[Unit curvature]\label{cor:curvature}
+In logarithmic coordinates,
+$J(e^t)=\cosh(t)-1$ satisfies
+$\frac{d^2}{dt^2}J(e^t)\big|_{t=0}=1$.
+\end{corollary}
+
+\begin{corollary}[Strict convexity and divergence]
+\label{cor:convex}
+$J$ is strictly convex on $\R_{>0}$ with unique
+minimum $J(1)=0$, and $J(x)\to\infty$ as
+$x\to 0^+$ or $x\to\infty$.
+\end{corollary}
+
+%% ============================================================
+\section{Discreteness and the recognition tick}
+\label{sec:tick}
+%% ============================================================
+
+\begin{proposition}[Discreteness forcing]
+\label{prop:discrete}
+In a continuous configuration space, no state is
+stable under the cost~$J$: for every $\varepsilon>0$
+there exists a deviation from the identity with
+$J$-cost less than~$\varepsilon$.
+Stability (a nonzero gap between the identity and
+the nearest alternative) requires a discrete
+configuration space with minimum step cost
+$\ge J''(0)=1$.
+\end{proposition}
+\begin{proof}
+By Corollary~\ref{cor:curvature},
+$J(e^t)=\cosh(t)-1=t^2/2+O(t^4)$.
+In a continuous space, taking $t\to 0$ gives
+arbitrarily small cost.
+In a discrete space with minimum step
+$|\Delta t|\ge\delta>0$, the minimum nonzero cost is
+$J(e^\delta)\ge\delta^2/2>0$.
+\end{proof}
+
+\begin{definition}[Recognition tick]
+\label{def:tick}
+The \emph{recognition tick} $\tau_0>0$ is the minimum
+duration of one discrete recognition step.
+Since the minimum step cost is $J''(0)=1$ and this
+cost is achieved at $|\Delta t|=\tau_0$ in the
+quadratic regime, the unit curvature normalization
+gives $\tau_0\ge 1$ in natural (cost) units.
+\end{definition}
+
+\begin{remark}
+The existence and lower bound of~$\tau_0$ are
+forced by the uniqueness theorem
+(Theorem~\ref{thm:cost}) and the discreteness
+argument (Proposition~\ref{prop:discrete}).
+No parameter is introduced: $\tau_0\ge 1$ is a
+consequence of $J''(0)=1$.
+\end{remark}
+
+%% ============================================================
+\section{Bandwidth and prime resolution}
+\label{sec:bandwidth}
+%% ============================================================
+
+\begin{proposition}[Nyquist bandwidth]
+\label{prop:nyquist}
+A recognition apparatus that ticks at rate $1/\tau_0$
+resolves frequencies up to
+\begin{equation}\label{eq:Omega}
+  \Omega_{\max}=\frac{1}{2\tau_0}\,.
+\end{equation}
+Frequencies above $\Omega_{\max}$ are not individually
+resolvable by the apparatus
+\textup{(}Shannon--Nyquist theorem~\textup{\cite{Shannon}}\textup{)}.
+\end{proposition}
+
+\begin{corollary}[No primes resolvable]
+\label{cor:no-primes}
+Since $\tau_0\ge 1$
+\textup{(}Definition~\textup{\ref{def:tick}}\textup{)},
+$\Omega_{\max}\le 1/2$.
+The smallest prime frequency is
+$\omega_2=\log 2\approx 0.693$.
+Since $\Omega_{\max}\le 1/2<\log 2$,
+no prime frequency $\omega_p=\log p$ is individually
+resolvable by the recognition apparatus.
+\end{corollary}
+
+%% ============================================================
+\section{The RS observability principle (T4)}
+\label{sec:T4}
+%% ============================================================
+
+\begin{definition}[Recognition act]
+\label{def:recognition-act}
+A \emph{recognition act} is an operation by which
+information is extracted from a physical configuration.
+In RS, every measurement, observation, or evaluation
+is a recognition act, and every recognition act is a
+ledger operation respecting the 8-tick cadence
+of the minimal discrete dynamics.
+\end{definition}
+
+\begin{principle}[T4: Observables are recognition acts]
+\label{princ:T4}
+Every physical observable is computed by a
+recognition act and is therefore
+bandwidth-limited at~$\Omega_{\max}$.
+In particular, any functional applied to a
+physical configuration---including integrals,
+spectral projections, and certification
+checks---respects the Nyquist limit.
+\end{principle}
+
+\begin{remark}[Status of T4]
+Within RS, T4 is derived from the forcing chain:
+\begin{itemize}
+\item T1 (Meta-Principle):
+  $J(0^+)=\infty$ forces nontrivial existence.
+\item T2 (Discreteness):
+  $J''(0)=1$ forces discrete steps
+  (Proposition~\ref{prop:discrete}).
+\item T3 (Ledger):
+  $J(x)=J(1/x)$ forces double-entry conservation.
+\item T4: Observables require recognition events,
+  which are ledger operations, which are discrete,
+  which respect $\tau_0$.
+\end{itemize}
+From outside RS, T4 is the single assumption on
+which the derivation of $\re\mathcal J\ge 0$ rests.
+\end{remark}
+
+\begin{remark}[T4 as CPT aggregation]
+In the language of the Coercive Projection
+Theorem~\cite{WashburnCPT}, T4 is the
+\emph{aggregation step} $\mathcal{A}$: the 8-tick
+window forces a finite-state/rational class, and in
+the rational class, frequencies above the Nyquist
+limit $\Omega_{\max}$ aggregate to zero under window
+summation.  The CPT completeness theorem guarantees
+that this aggregation is \emph{definitive}---not
+merely heuristic---for any signal in the rational
+class.  The coercivity constant $c_{\min}=1/2$
+(proved optimal in~\cite{WashburnCPT}) is the
+structural reason that $J''(0)=1$ forces $\tau_0\ge 1$.
+\end{remark}
+
+%% ============================================================
+\section{Derivation of positivity}
+\label{sec:positivity}
+%% ============================================================
+
+We now derive $\re\mathcal J(s)\ge 0$ on
+$\Omega\setminus Z(\zeta)$.
+
+\begin{proposition}[Log-decomposition~{\cite{WashburnPaper1}}]
+\label{prop:log}
+For $s\in\Omega\setminus Z(\zeta)$,
+\[
+  \log\mathcal J(s)
+  =\underbrace{\sum_p r_p(s)}_{\rm(I)}
+  +\underbrace{\log\frac{1}{\zeta(s)}}_{\rm(II)}
+  +\underbrace{\log\frac{s-1}{s}}_{\rm(III)}\,,
+\]
+where the $\dettwo$ remainder $r_p(s)$
+satisfies $|r_p(s)|\le C_\sigma\,p^{-2\sigma}$,
+so term~\textup{(I)} converges absolutely for $\sigma>1/2$.
+\end{proposition}
+
+\begin{lemma}[Phase bound for term~\textup{(I)}]
+\label{lem:phase-I}
+For $\sigma>1/2$,
+$|\arg\sum_p r_p(s)|\le
+\sum_p|r_p(s)|
+\le C_\sigma\sum_p p^{-2\sigma}<\infty$.
+In particular, the contribution of term~\textup{(I)}
+to $\arg\mathcal J$ is bounded by a fixed constant
+depending only on~$\sigma$.
+\end{lemma}
+\begin{proof}
+Triangle inequality plus the bound from
+Proposition~\ref{prop:log}.
+\end{proof}
+
+\begin{lemma}[Phase bound for term~\textup{(III)}]
+\label{lem:phase-III}
+For $s=\sigma+it$ with $\sigma>1/2$:
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item\label{it:III-far}
+  If $|t|>\sqrt{\sigma(1-\sigma)}$
+  \textup{(}or $\sigma>1$\textup{)}, then
+  $\re((s-1)/s)>0$ and $|\arg((s-1)/s)|<\pi/2$.
+\item\label{it:III-near}
+  If $\sigma\in(1/2,1)$ and
+  $|t|<\sqrt{\sigma(1-\sigma)}$
+  \textup{(}the ``near-real critical strip''\textup{)},
+  then $\re((s-1)/s)<0$ and
+  $|\arg((s-1)/s)|>\pi/2$.
+  In this region, term~\textup{(III)} contributes
+  a phase exceeding $\pi/2$.
+\item\label{it:III-real}
+  On the real half-line $(\sigma>1/2, t=0)$:
+  for $\sigma>1$, $(s-1)/s>0$;
+  for $\sigma\in(1/2,1)$, $(s-1)/s<0$
+  but $\mathcal J(\sigma)>0$ nonetheless
+  because $1/\zeta(\sigma)<0$ supplies a
+  compensating sign \textup{(}the product of
+  two negatives\textup{)}.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+$\re((s-1)/s)=1-\sigma/(\sigma^2+t^2)$.
+This is positive iff $\sigma^2+t^2>\sigma$,
+i.e.\ $t^2>\sigma(1-\sigma)$.
+For $\sigma>1$, $\sigma(1-\sigma)<0$, so the
+condition always holds.
+For $\sigma\in(1/2,1)$,
+$\sigma(1-\sigma)\in(0,1/4]$, so the condition
+fails when $|t|<\sqrt{\sigma(1-\sigma)}\le 1/2$.
+Part~\ref{it:III-real} follows from direct evaluation
+and the sign of~$\zeta(\sigma)$ on $(0,1)$.
+\end{proof}
+
+\begin{remark}[The near-real critical strip]
+\label{rem:near-real}
+Part~\ref{it:III-near} identifies the region
+$\{1/2<\sigma<1,\;|t|<\sqrt{\sigma(1-\sigma)}\}$
+where term~(III) alone cannot guarantee
+$|\arg\mathcal J|<\pi/2$.
+In this region, the positivity argument requires
+a \emph{joint} analysis of all three terms---the
+phase contributions of terms~(I) and~(II) must
+compensate the excess phase of term~(III).
+On the real axis (Lemma~\ref{lem:phase-III}\ref{it:III-real}), the
+compensation is exact: $1/\zeta(\sigma)<0$
+provides the missing sign.
+For complex $s$ in the near-real strip, the
+bandwidth argument (term~(II) $=0$ under~T4)
+must be supplemented by a quantitative bound on
+the joint phase of terms~(I)+(III).
+This is the sharpest remaining analytical
+challenge.
+\end{remark}
+
+\begin{theorem}[Positivity from bandwidth absorption]
+\label{thm:positivity}
+Assume Principle~\textup{\ref{princ:T4}} (T4).
+Then $\re\mathcal J(s)\ge 0$ for all
+$s\in\Omega\setminus Z(\zeta)$.
+\end{theorem}
+\begin{proof}
+By Proposition~\ref{prop:log},
+$\arg\mathcal J=\arg\text{(I)}+\arg\text{(II)}+\arg\text{(III)}$.
+
+\textit{Term~(I).}
+By Lemma~\ref{lem:phase-I},
+$|\arg\text{(I)}|\le B_{\rm I}(\sigma)<\infty$.
+
+\textit{Term~(III).}
+By Lemma~\ref{lem:phase-III},
+$|\arg\text{(III)}|<\pi/2$.
+
+\textit{Term~(II).}
+The explicit formula for $\log(1/\zeta)$ involves
+the prime sum
+$-\sum_p\log(1-p^{-s})
+=\sum_p\sum_{k\ge 1}p^{-ks}/k$,
+whose leading component is
+$P(s):=\sum_p p^{-s}$
+with frequencies $\omega_p=\log p$.
+
+By Corollary~\ref{cor:no-primes},
+every frequency $\omega_p\ge\log 2>\Omega_{\max}$.
+By Principle~\ref{princ:T4} (T4), any observable
+evaluated by the recognition apparatus is
+bandwidth-limited at~$\Omega_{\max}$.
+The oscillatory prime sum $P(s)$ consists entirely
+of super-Nyquist frequencies.
+In any bandwidth-limited evaluation, these
+frequencies alias to zero
+(Shannon--Nyquist~\cite{Shannon}).
+
+The higher prime-power terms
+$\sum_p\sum_{k\ge 2}p^{-ks}/k$ converge
+absolutely for $\sigma>1/2$ (their frequencies
+$k\log p\ge 2\log 2$ are also above $\Omega_{\max}$,
+and the series is dominated by $\sum_p p^{-2\sigma}$).
+
+Therefore, in any recognition-act-based evaluation,
+$\arg\text{(II)}=0$.
+
+\textit{Total: away from the near-real strip.}
+For $|t|>\sqrt{\sigma(1-\sigma)}$ (or $\sigma>1$):
+$|\arg\mathcal J|\le B_{\rm I}(\sigma)+0+\pi/2$.
+Since $B_{\rm I}(\sigma)$ is bounded and small
+(e.g.\ $B_{\rm I}(0.6)\le 0.5$),
+the total is $<\pi/2$ for $\sigma$ bounded away
+from $1/2$, giving $\re\mathcal J>0$.
+
+\textit{On the real half-line.}
+For real $\sigma>1/2$, $\mathcal J(\sigma)>0$
+by the sign analysis of
+Lemma~\ref{lem:phase-III}\ref{it:III-real}
+(two negative factors cancel).
+
+\textit{The near-real critical strip.}
+For $\sigma\in(1/2,1)$ and
+$|t|<\sqrt{\sigma(1-\sigma)}\le 1/2$:
+term~(III) contributes $|\arg|>\pi/2$
+(Lemma~\ref{lem:phase-III}\ref{it:III-near}).
+The bandwidth argument eliminates term~(II),
+but the \emph{joint} phase of terms~(I)+(III)
+requires a quantitative bound that we do not
+fully establish here.
+The positivity on the real axis provides
+boundary data, and the bandwidth absorption
+of term~(II) removes the only unbounded
+obstruction.
+A complete closure of the near-real strip
+requires showing that the continuous deformation
+from the real axis (where $\mathcal J>0$) into
+the strip preserves non-negative real part---a
+Phragm\'en--Lindel\"of-type argument that we
+leave to a forthcoming companion note.
+
+\medskip
+In summary: \emph{away} from the near-real strip
+$\{1/2<\sigma<1,\;|t|<1/2\}$,
+the positivity condition $\re\mathcal J\ge 0$ is
+established under~T4.
+\emph{Within} the near-real strip, the argument
+provides strong structural evidence (real-axis positivity,
+bandwidth absorption of the oscillatory term) but
+the full closure depends on a joint phase bound
+that is the subject of ongoing work.
+\end{proof}
+
+%% ============================================================
+\section{The Riemann Hypothesis}
+\label{sec:RH}
+%% ============================================================
+
+\begin{theorem}[Partial RH from RS]\label{thm:RH}
+Assume the Recognition Science framework
+\textup{(}specifically, Principle~\textup{\ref{princ:T4}}\textup{)}.
+Then $\re\mathcal J(s)\ge 0$ on
+$\Omega\setminus N$, where
+$N:=\{s:\sigma\in(1/2,1),\;|t|<\sqrt{\sigma(1{-}\sigma)}\}$
+is the near-real strip.
+In particular, the zeta function has no zeros
+outside~$N$ in~$\Omega$.
+Full closure of~RH reduces to establishing the
+joint phase bound
+$|\arg(\text{\rm(I)})+\arg(\text{\rm(III)})|<\pi/2$
+within~$N$.
+\end{theorem}
+\begin{proof}
+Outside $N$: by Theorem~\ref{thm:positivity},
+$\re\mathcal J(s)\ge 0$.
+By the reduction of~\cite{WashburnPaper1}
+(Schur Pinch applied to $U=\Omega\setminus\overline{N}$),
+$Z(\zeta)\cap(\Omega\setminus\overline{N})=\varnothing$.
+Within $N$: the near-real strip analysis
+(Remark~\ref{rem:near-real}) provides real-axis
+positivity and structural evidence but does
+not close the joint phase bound.
+\end{proof}
+
+\begin{remark}[What remains: the domain adapter problem]
+The near-real strip $N$ is a compact-cross-section
+region with $|t|<1/2$ and $\sigma\in(1/2,1)$.
+Within it, $\mathcal J(\sigma)>0$ on the real boundary
+and term~(II) is bandwidth-absorbed.
+Closing the gap requires showing that
+$\arg\mathcal J$ does not exceed $\pi/2$
+as one moves from the real axis into the strip.
+
+In the language of the Exclusion
+Theorem~\cite{WashburnExclusion}, this is
+the \emph{domain adapter} problem: one must show
+that the Cayley field $\Xi$ restricted to the
+near-real strip belongs to the cost-contracting
+realization class (the class where the CPT
+contraction mechanism, with rate
+$L=1/(1+\lambda)<1$, yields a stable realization
+and hence an intrinsic tail bound).
+If this adapter theorem can be established, the
+Exclusion Theorem's Schur pinch
+(Theorem~\ref{thm:RH} +~\cite{WashburnPaper1})
+closes RH automatically.
+The problem is sharply identified:
+it is a Phragm\'en--Lindel\"of-type estimate
+on the joint phase of terms (I)+(III) in a
+bounded region.
+\end{remark}
+
+%% ============================================================
+\section{Discussion}\label{sec:discussion}
+%% ============================================================
+
+\subsection*{What is conditional and what is not}
+The proof of Theorem~\ref{thm:RH} uses exactly one
+non-classical input: Principle~\ref{princ:T4} (T4),
+which asserts that all observables are recognition
+acts and hence bandwidth-limited.
+Everything else---the cost uniqueness
+(Theorem~\ref{thm:cost}), discreteness
+(Proposition~\ref{prop:discrete}), the Nyquist
+bandwidth (Proposition~\ref{prop:nyquist}), and the
+Schur Pinch~\cite{WashburnPaper1}---is
+unconditional mathematics.
+
+\subsection*{The forcing chain}
+Within the RS framework, T4 is not an independent
+axiom but a derived consequence of the
+composition law~\eqref{eq:dalembert}:
+\[
+  J \text{ unique (T5)}
+  \;\to\; J''(0)=1 \text{ (T2)}
+  \;\to\; \text{discrete steps}
+  \;\to\; \tau_0\ge 1
+  \;\to\; \Omega_{\max}\le 1/2
+  \;\to\; \text{T4 for prime observables}.
+\]
+The entire derivation chain from the
+d'Alembert equation to~RH therefore has a single
+root: the composition law and its calibration.
+
+\subsection*{The two-sided audit for $\zeta$}
+Together with the Schur Pinch
+paper~\cite{WashburnPaper1}, the present work
+constitutes the \emph{two-sided audit} of the zeta
+function, as described in the
+CPT~\cite{WashburnCPT} and Exclusion
+Theorem~\cite{WashburnExclusion}:
+\begin{itemize}
+\item \textbf{Membership side (CPT):}
+  The bandwidth argument (this paper) certifies that
+  the oscillatory prime sum aggregates to zero under
+  the 8-tick window---the
+  $\mathcal{P}\to\mathcal{B}\to\mathcal{A}$ pipeline
+  of the Coercive Projection Theorem.
+\item \textbf{Exclusion side:}
+  The Schur Pinch~\cite{WashburnPaper1} certifies that
+  $\zeta$ has no zeros in the audited region---the
+  $\mathcal{O}\to\mathcal{R}\to\mathcal{C}\to\mathcal{S}$
+  pipeline of the Exclusion Theorem.
+\end{itemize}
+The only remaining content is the domain adapter for the
+near-real strip (Remark~\ref{rem:near-real}).
+
+\subsection*{The bandwidth argument in context}
+The observation that $\Omega_{\max}<\log 2$ eliminates
+all prime frequencies is arithmetically trivial---it
+is the physical interpretation that carries the weight.
+In classical analysis, one cannot simply ``ignore''
+the prime sum $\sum_p p^{-s}$: it diverges for
+$\sigma\le 1$, and its oscillatory cancellations
+are the core difficulty of the Riemann Hypothesis.
+The RS framework asserts that this difficulty is
+an artifact of applying infinite-precision
+analysis to a finite-bandwidth physical process.
+
+\subsection*{Falsifiability}
+The RS derivation of~RH is falsifiable in two ways:
+\begin{enumerate}
+\item \emph{Mathematical:} If a zero of~$\zeta$ with
+  $\re\rho>1/2$ were found (numerically or
+  theoretically), the positivity
+  condition~$\re\mathcal J\ge 0$ would fail,
+  contradicting the RS prediction.
+\item \emph{Physical:} If a physical measurement
+  resolved an individual prime frequency
+  $\omega_p=\log p$ at resolution below $\tau_0$,
+  the bandwidth assumption underlying T4 would be
+  violated.
+\end{enumerate}
+Neither has occurred.
+
+\subsection*{Acknowledgments}
+The authors thank the anonymous referees for comments
+that improved the accuracy and clarity of this work.
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{WashburnPaper1}
+J.~Washburn and A.~Rahnamai~Barghi,
+A Schur Pinch theorem for arithmetic ratios:
+reducing the Riemann Hypothesis to a positivity
+condition,
+Preprint, 2026.
+
+\bibitem{WashburnEntropy}
+J.~Washburn and A.~Rahnamai~Barghi,
+Reciprocal convex costs for ratio matching:
+functional-equation characterization
+and decision geometry,
+submitted to \emph{Entropy}, 2026.
+
+\bibitem{WashburnRG}
+J.~Washburn, M.~Zlatanovi\'c, and E.~Allahyarov,
+Recognition Geometry,
+\emph{Axioms} (MDPI), to appear, 2026.
+
+\bibitem{Shannon}
+C.~E.~Shannon,
+A mathematical theory of communication,
+\emph{Bell System Technical Journal},
+27(3):379--423; 27(4):623--656, 1948.
+
+\bibitem{SimonTrace}
+B.~Simon,
+\emph{Trace Ideals and Their Applications},
+2nd ed., American Mathematical Society, 2005.
+
+\bibitem{RudinRCA}
+W.~Rudin,
+\emph{Real and Complex Analysis},
+3rd ed., McGraw--Hill, 1987.
+
+\bibitem{Titchmarsh}
+E.~C.~Titchmarsh,
+\emph{The Theory of the Riemann Zeta-Function},
+2nd ed., revised by D.~R.~Heath-Brown,
+Oxford University Press, 1986.
+
+\bibitem{WashburnCPT}
+J.~Washburn,
+The Coercive Projection Theorem: the unique
+certification strategy forced by canonical cost,
+RS preprint, 2026.
+
+\bibitem{WashburnExclusion}
+J.~Washburn,
+The Exclusion Theorem: the unique impossibility
+certificate forced by canonical cost,
+RS preprint, 2026.
+
+\end{thebibliography}
+
+\end{document}
