@@ -1,5 +1,18 @@
 # Master Prompt: Writing Tier 2 Recognition Science Papers
 
+> ## ✅ STATUS: ALL 14 TIER 2 PAPERS ARE COMPLETE (commit c250e450a)
+>
+> **Papers written:** `papers/tex/RS_Electron_g_minus_2.tex` through `RS_Neutron_Star_TOV_Limit.tex`
+> **PDFs:** `papers/pdf/RS_Electron_g_minus_2.pdf` through `RS_Neutron_Star_TOV_Limit.pdf`
+> **Lean modules:** `RecognitionScience/Physics/*.lean` (14 modules, zero build errors)
+> **Validation:** `papers/TIER2_PAPER_PROGRESS.md` — all 14 rows show [x][x][x][x]
+>
+> **Also complete:** 4 Tier 1 papers (Special Relativity, Maxwell, Hydrogen, Thermodynamics) — commit 6d3a7aebe
+>
+> **Next:** Tier 3 papers (Zeeman/Stark, Compton, BEC, nuclear force, radioactive decay)
+>
+> ---
+>
 > **How to use this file:** Copy the prompt in §1 into a new Cursor session (or paste it at the start of a conversation) when you are ready to work on a specific paper. Replace `[PAPER_NUMBER]` and `[PAPER_NAME]` with the target paper. The prompt is self-contained and gives the AI everything it needs.
 
 ---
