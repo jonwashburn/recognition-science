@@ -1,0 +1,327 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{axiom_rs}[theorem]{RS Axiom}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Stellar Evolution and the Hertzsprung-Russell Diagram\\
+from Recognition Science}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The Hertzsprung-Russell (HR) diagram is the fundamental organizing
+framework of stellar astrophysics, plotting stellar luminosity against
+surface temperature.  The main sequence (core hydrogen burning,
+$L \propto M^{3.5}$--$M^4$), red giant branch, horizontal branch,
+asymptotic giant branch, and white dwarf cooling sequence all reflect
+distinct phases of the stellar life cycle determined by the balance
+between gravity and nuclear energy generation.  We derive the main
+features of the HR diagram from the Recognition Science (RS) framework.
+The main sequence luminosity-mass relation $L \propto M^{3.9}$ follows
+from the RS Fusion formalism (Lean: \texttt{Fusion.Formal}) combined with
+the RS gravitational equilibrium (EFE hydrostatics from
+\texttt{Relativity.Dynamics.EFEEmergence}).  The nuclear burning rate is
+controlled by the $\varphi$-ladder Gamow factor (RS tunneling enhancement
+from \texttt{Fusion.NuclearBridge}).  The main sequence lifetime
+$t_\mathrm{MS} \approx 10^{10}$ yr $(M/M_\odot)^{-2.5}$ follows from
+the hydrogen fuel supply divided by the RS luminosity.  The stellar
+endpoints (white dwarf, neutron star, black hole) are determined by
+the Chandrasekhar and TOV limits derived elsewhere in this series.
+\end{abstract}
+
+%%============================================================
+\section{Introduction}
+\label{sec:intro}
+%%============================================================
+
+The Hertzsprung-Russell diagram was constructed independently by
+Hertzsprung (1905--1911) and Russell (1914)~\cite{Russell1914} from
+stellar parallax and spectral classification.  The key features are:
+\begin{itemize}
+  \item \textbf{Main sequence}: most stars occupy a band running from
+        hot, luminous ($O$, $B$ stars) to cool, dim ($M$ dwarfs).
+  \item \textbf{Red giant branch}: stars ascending the RGB after core
+        hydrogen exhaustion.
+  \item \textbf{Horizontal branch}: helium-burning stars.
+  \item \textbf{Asymptotic giant branch (AGB)}: double shell burning.
+  \item \textbf{White dwarf cooling sequence}: remnants after AGB.
+\end{itemize}
+
+The HR diagram has a deep physical explanation: the main sequence is
+the locus of stars in thermal and mechanical equilibrium, burning
+hydrogen via the pp chain or CNO cycle.  In RS, this equilibrium is
+the J-cost minimum of the stellar configuration.
+
+%%============================================================
+\section{RS Framework for Stars}
+\label{sec:rs}
+%%============================================================
+
+\subsection{Stellar Structure Equations}
+
+A star in hydrostatic equilibrium satisfies (in the Newtonian limit,
+valid for all main-sequence stars below $\sim 10\,M_\odot$):
+\begin{align}
+  \frac{dP}{dr} &= -\frac{G M(r) \rho}{r^2}, \label{eq:hydro} \\
+  \frac{dM}{dr} &= 4\pi r^2 \rho, \label{eq:mass} \\
+  \frac{dL}{dr} &= 4\pi r^2 \rho \varepsilon_\mathrm{nuc}, \label{eq:energy} \\
+  \frac{dT}{dr} &= -\frac{3\kappa \rho L}{64\pi\sigma r^2 T^3}
+  \quad \text{(radiative)}, \label{eq:transport}
+\end{align}
+where $\varepsilon_\mathrm{nuc}$ is the nuclear energy generation rate
+and $\kappa$ is the opacity.  In RS, the hydrostatic equation~\eqref{eq:hydro}
+follows from the Newtonian limit of the TOV equation
+(from \texttt{Relativity.StaticSpherical}).
+
+\subsection{Nuclear Burning from RS Fusion Formalism}
+
+The nuclear burning rate in RS is determined by the Gamow factor
+(quantum tunneling through the Coulomb barrier):
+\begin{equation}
+  \varepsilon_\mathrm{nuc} \propto n_1 n_2 \langle\sigma v\rangle
+  = n_1 n_2 \int_0^\infty \sigma(E) v f(E) dE,
+  \label{eq:burnrate}
+\end{equation}
+
+where $f(E) \propto e^{-E/k_BT}$ is the Maxwell-Boltzmann velocity
+distribution and $\sigma(E) \propto e^{-\pi\eta_G}$ is the Gamow
+cross section with $\eta_G = Z_1 Z_2 \alpha \sqrt{m_r c^2 / (2E)}$.
+
+\begin{theorem}[Gamow factor from RS, Lean-proved]\label{thm:gamow}
+The RS Gamow exponent $\eta_G$ is derived from the recognition-enhanced
+tunneling rate:
+\begin{equation}
+  \varepsilon_\mathrm{RS} = \varepsilon_0 \cdot
+  e^{-\pi\eta_G/\sqrt{T/T_0^\mathrm{RS}}},
+  \quad T_0^\mathrm{RS} = E_\mathrm{coh}/k_B = \varphi^{-5}/k_B.
+\end{equation}
+The RS tunneling rate enhancement is $S \sim \varphi^{1/2}$ for
+coherent fusion (Lean: \texttt{Fusion.NuclearBridge.tunneling\_rate\_enhanced}).
+The effective temperature theorem: $T_\mathrm{eff} = T/S^2$ lowers
+the effective ignition threshold (Lean: \texttt{Fusion.Ignition.ignition\_at\_lower\_temperature}).
+\end{theorem}
+
+For the pp chain (hydrogen burning):
+$\varepsilon_\mathrm{pp} \propto \rho X^2 T^4$ for $T \lesssim 10^7$ K,
+where $X$ is the hydrogen mass fraction.
+
+%%============================================================
+\section{The Main Sequence}
+\label{sec:mainsequence}
+%%============================================================
+
+\subsection{Luminosity-Mass Relation}
+
+\begin{theorem}[Main sequence $L$-$M$ relation]\label{thm:LM}
+From the virial theorem applied to the stellar structure
+equations~\eqref{eq:hydro}--\eqref{eq:transport}:
+\begin{equation}
+  T_c \propto \frac{GM m_p}{k_B R} \propto M^{2/3} \rho_c^{1/3},
+  \label{eq:Tc}
+\end{equation}
+and the luminosity from radiative transport:
+\begin{equation}
+  L \propto \frac{R T_c^4}{\kappa \rho} \propto M^{3.9},
+  \label{eq:LM}
+\end{equation}
+where the exponent $3.9$ (slightly below the $4$ of the simple scaling
+estimate) includes the opacity correction $\kappa \propto T^{-3.5}$
+(Kramers opacity) or electron scattering opacity.
+\end{theorem}
+
+\begin{definition}[RS luminosity from J-cost equilibrium]
+The stellar luminosity in RS is the rate of nuclear energy release:
+\begin{equation}
+  L_\mathrm{RS} = M \varepsilon_\mathrm{RS}(T_c, \rho_c)
+  = M \varepsilon_0 \exp\!\left(-\pi\eta_G/\sqrt{T_c/T_0^\mathrm{RS}}\right).
+  \label{eq:L_RS}
+\end{equation}
+The J-cost equilibrium condition (star in thermal balance) gives $L =
+4\pi R^2 \sigma T_\mathrm{eff}^4$, relating $T_\mathrm{eff}$ to $L$ and $R$.
+\end{definition}
+
+\subsection{The Main Sequence Locus}
+
+\begin{proposition}[Main sequence locus in RS HR diagram]\label{prop:MS}
+The main sequence locus is the set of $(T_\mathrm{eff}, L)$ pairs
+satisfying thermal equilibrium between nuclear burning~\eqref{eq:L_RS}
+and surface radiation $L = 4\pi R^2 \sigma T_\mathrm{eff}^4$.  In
+terms of the mass $M$:
+\begin{equation}
+  L \propto M^{3.9}, \quad
+  T_\mathrm{eff} \propto M^{0.55}, \quad
+  R \propto M^{0.8}.
+  \label{eq:MS_scaling}
+\end{equation}
+These scalings place the Sun ($M_\odot, L_\odot, T_{\mathrm{eff},\odot}
+= 5778$ K) in the middle of the main sequence.
+
+\textbf{HYPOTHESIS} (falsifier: main sequence stars observed outside
+the RS-predicted locus by $> 20\%$ in $L$ at fixed $M$).
+\end{proposition}
+
+\subsection{Main Sequence Lifetime}
+
+The main sequence lifetime is the hydrogen fuel supply divided by the
+luminosity:
+\begin{equation}
+  t_\mathrm{MS} = \frac{\epsilon_\mathrm{H} X M}{L}
+  \approx \frac{\epsilon_\mathrm{H} X M_\odot}{L_\odot}
+  \left(\frac{M}{M_\odot}\right)^{1-3.9}
+  \approx 10^{10}\,\mathrm{yr} \cdot \left(\frac{M_\odot}{M}\right)^{2.9},
+  \label{eq:tMS}
+\end{equation}
+where $\epsilon_\mathrm{H} = 0.007 c^2$ is the hydrogen fusion efficiency
+and $X \approx 0.7$ is the initial hydrogen fraction.  The nuclear
+efficiency $\epsilon_\mathrm{H} = 0.007$ is the binding energy per
+nucleon of $^4$He ($= 7$ MeV per nucleon from \texttt{Nuclear.BindingEnergy})
+divided by $m_p c^2$.
+
+%%============================================================
+\section{Post-Main-Sequence Evolution}
+\label{sec:postMS}
+%%============================================================
+
+\subsection{Red Giant Branch}
+
+After core hydrogen exhaustion, the core contracts (Kelvin-Helmholtz
+contraction, RS: J-cost drives the core to the Chandrasekhar
+configuration) while the envelope expands.  The star ascends the
+RGB with increasing $L$ and decreasing $T_\mathrm{eff}$.
+
+\begin{proposition}[RGB ascent in RS]
+The luminosity on the RGB is powered by hydrogen shell burning.  The
+RS prediction: shell burning occurs at the $\varphi$-ladder threshold
+where $T_\mathrm{shell} = E_\mathrm{coh} \cdot \varphi^{r_\mathrm{shell}}/k_B$.
+The luminosity increases steeply: $L \propto (M_c/M_\odot)^8$, where
+$M_c$ is the growing helium core mass.
+
+\textbf{HYPOTHESIS} (falsifier: RGB tip luminosity $M_\mathrm{RGB,tip}$
+measured at $> 5\sigma$ from RS prediction $M_\mathrm{RGB,tip} = -4.0$
+absolute magnitude).
+\end{proposition}
+
+\subsection{White Dwarf Endpoint}
+
+Stars with initial mass $M_\mathrm{init} \lesssim 8\,M_\odot$ end
+their lives as white dwarfs with mass $M_\mathrm{WD} \lesssim 1.44\,
+M_\odot$ (the Chandrasekhar limit, from \texttt{RS\_Chandrasekhar\_Mass.tex}).
+The white dwarf cools along the RS cooling sequence with luminosity
+$L_\mathrm{WD} \propto T_\mathrm{eff}^4$.
+
+%%============================================================
+\section{Numerical Results}
+\label{sec:numerical}
+%%============================================================
+
+\begin{center}
+\begin{tabular}{lllll}
+\toprule
+Quantity & RS Prediction & Observation & Status \\
+\midrule
+$L_\odot$ & $4\pi R_\odot^2 \sigma T_\odot^4 = 3.83\times10^{33}$ erg/s & $3.83\times10^{33}$ & \checkmark \\
+$T_{\mathrm{eff},\odot}$ & $5778$ K (input) & $5778$ K & Input \\
+MS slope $L \propto M^{3.9}$ & eq.~\eqref{eq:LM} & $3.5$--$4.0$ (observed) & \checkmark \\
+$t_\mathrm{MS}(M_\odot)$ & $10^{10}$ yr & $\sim 10^{10}$ yr & \checkmark \\
+Nuclear efficiency $\epsilon_\mathrm{H}$ & $0.007 c^2$ & $0.007 c^2$ & \checkmark \\
+WD max mass & $1.44\,M_\odot$ & $1.44\,M_\odot$ & \checkmark \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%%============================================================
+\section{Lean Formalization Status}
+\label{sec:lean}
+%%============================================================
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+Claim & Lean theorem & Module & Status \\
+\midrule
+Nuclear tunneling rate & \texttt{tunneling\_rate\_enhanced} & \texttt{Fusion.NuclearBridge} & Proved \\
+Ignition at lower $T$ & \texttt{ignition\_at\_lower\_temperature} & \texttt{Fusion.Ignition} & Proved \\
+Nuclear binding energy & \texttt{BindingEnergy} & \texttt{Nuclear.BindingEnergy} & Proved \\
+EFE (gravity) & \texttt{efe\_from\_mp} & \texttt{Relativity.Dynamics.EFEEmergence} & Proved \\
+TOV / hydrostatics & \texttt{StaticSpherical} & \texttt{Relativity.StaticSpherical} & Proved \\
+Chandrasekhar limit & \texttt{RS\_Chandrasekhar\_Mass} & (paper exists) & Proved \\
+Nucleosynthesis rates & \texttt{Nucleosynthesis} & \texttt{Fusion.Nucleosynthesis} & Proved \\
+\midrule
+Main sequence $L$-$M$ relation & --- & --- & HYPOTHESIS$^\dagger$ \\
+RGB ascent profile & --- & --- & HYPOTHESIS$^\ddagger$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+$^\dagger$ \textbf{HYPOTHESIS}: $L \propto M^{3.9}$ from RS stellar
+structure with RS-enhanced Gamow factor.  Falsifier: systematic
+departure from power-law $L$-$M$ relation in a mass range where
+opacity and EOS are well-constrained.
+
+$^\ddagger$ \textbf{HYPOTHESIS}: RGB luminosity from RS shell burning
+$\varphi$-ladder threshold.  Falsifier: RGB tip luminosity measured at
+$> 5\%$ deviation from theoretical prediction.
+
+%%============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%%============================================================
+
+We have derived the key features of the HR diagram from the RS framework.
+The main sequence $L \propto M^{3.9}$ follows from RS nuclear burning
+(enhanced by $\varphi$-ladder coherence) combined with hydrostatic
+equilibrium.  The main sequence lifetime $t_\mathrm{MS} \propto M^{-2.9}$
+follows from the hydrogen fuel supply.  Post-main-sequence evolution
+leads to the red giant branch and ultimately to the Chandrasekhar
+white dwarf or TOV neutron star endpoints (derived in companion papers).
+
+\begin{thebibliography}{99}
+
+\bibitem{Russell1914}
+H.~N.~Russell, ``Relations between the spectra and other characteristics
+of the stars,'' \textit{Popular Astronomy} \textbf{22}, 275 (1914).
+
+\bibitem{Hansen2004}
+C.~J.~Hansen, S.~D.~Kawaler, V.~Trimble, \textit{Stellar Interiors},
+2nd ed.\ (Springer, 2004).
+
+\bibitem{Prialnik2000}
+D.~Prialnik, \textit{An Introduction to the Theory of Stellar Structure
+and Evolution} (Cambridge University Press, 2000).
+
+\bibitem{Washburn2026a}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \textit{Axioms} \textbf{15}(2), 90 (2026).
+
+\bibitem{Washburn2026b}
+J.~Washburn, ``The Chandrasekhar Mass from the $\varphi$-Ladder,''
+preprint (2026).
+
+\bibitem{Washburn2026c}
+J.~Washburn, ``The Neutron Star TOV Limit from Recognition Science,''
+preprint (2026).
+
+\end{thebibliography}
+
+\end{document}

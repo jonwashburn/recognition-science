@@ -170,6 +170,7 @@
 | ILG Galaxy Rotation (standalone) | `reality/papers/RS_ILG_Galaxy_Rotation.tex` |
 | Quantum Gravity (standalone) | `reality/papers/RS_Quantum_Gravity.tex` |
 | Recognition Angle θ₀ | `reality/papers/RS_Recognition_Angle.tex` |
+| **Gravitational Lensing** *(Tier 2, new)* | `reality/papers/tex/RS_Gravitational_Lensing.tex` |
 
 ---
 
@@ -184,6 +185,7 @@
 | Hawking Radiation Temperature | `reality/papers/RS_Hawking_Radiation_Temperature.tex` |
 | Black Hole Evaporation Final State | `reality/papers/RS_Black_Hole_Evaporation_Final_State.tex` |
 | Naked Singularities | `reality/papers/RS_Naked_Singularities.tex` |
+| **No-Hair Theorem** *(Tier 2, new)* | `reality/papers/tex/RS_No_Hair_Theorem.tex` |
 
 ---
 
@@ -217,6 +219,8 @@
 | Cosmological Observables | `reality/papers/RS_Cosmological_Observables.tex` |
 | Low-Entropy Initial Conditions | `reality/papers/RS_Low_Entropy_Initial_Conditions.tex` |
 | Early Universe (compilation) | `reality/papers/RS_Early_Universe.tex` |
+| **CMB Temperature (T = 2.725 K)** *(Tier 2, new)* | `reality/papers/tex/RS_CMB_Temperature.tex` |
+| **Baryon Acoustic Oscillations** *(Tier 2, new)* | `reality/papers/tex/RS_Baryon_Acoustic_Oscillations.tex` |
 
 ---
 
@@ -247,6 +251,9 @@
 | Topological Phases of Matter | `reality/papers/RS_Topological_Phases_of_Matter.tex` |
 | Turbulence | `reality/papers/RS_Turbulence.tex` |
 | Condensed Matter (compilation) | `reality/papers/RS_Condensed_Matter.tex` |
+| **BCS Superconductivity** *(Tier 2, new)* | `reality/papers/tex/RS_BCS_Superconductivity.tex` |
+| **Superfluidity (He-4 and He-3)** *(Tier 2, new)* | `reality/papers/tex/RS_Superfluidity.tex` |
+| **Quantum Hall Effect (IQHE + FQHE)** *(Tier 2, new)* | `reality/papers/tex/RS_Quantum_Hall_Effect.tex` |
 
 ---
 
@@ -261,6 +268,9 @@
 | Cosmic Magnetic Fields | `reality/papers/RS_Cosmic_Magnetic_Fields.tex` |
 | Fermi Paradox Resolution | `reality/papers/RS_Fermi_Paradox_Resolution.tex` |
 | Astrophysics (compilation) | `reality/papers/RS_Astrophysics.tex` |
+| **Stellar Evolution / HR Diagram** *(Tier 2, new)* | `reality/papers/tex/RS_Stellar_Evolution_HR_Diagram.tex` |
+| **Gamma-Ray Bursts** *(Tier 2, new)* | `reality/papers/tex/RS_Gamma_Ray_Bursts.tex` |
+| **Neutron Star / TOV Limit** *(Tier 2, new)* | `reality/papers/tex/RS_Neutron_Star_TOV_Limit.tex` |
 
 ---
 
@@ -269,6 +279,8 @@
 | Paper | Location |
 |-------|----------|
 | Muon g−2 | `reality/papers/RS_Muon_G_Minus_Two.tex` |
+| **Electron g−2** *(Tier 2, new)* | `reality/papers/tex/RS_Electron_g_minus_2.tex` |
+| **Proton Radius Puzzle** *(Tier 2, new)* | `reality/papers/tex/RS_Proton_Radius_Puzzle.tex` |
 | B Meson Anomalies | `reality/papers/RS_B_Meson_Anomalies.tex` |
 | Gallium Anomaly | `reality/papers/RS_Gallium_Anomaly.tex` |
 | ANITA Upgoing Events | `reality/papers/RS_ANITA_Upgoing_Events.tex` |
@@ -293,6 +305,7 @@
 | Entanglement Ontology | `reality/papers/RS_Entanglement_Ontology.tex` |
 | Commutation Relations | `reality/papers/RS_Commutation_Relations.tex` |
 | Quantum-to-Classical Transition | `reality/papers/RS_Quantum_to_Classical_Transition.tex` |
+| **Spin-Statistics Theorem** *(Tier 2, new)* | `reality/papers/tex/RS_Spin_Statistics_Theorem.tex` |
 | Bell Inequality | `reality/papers/RS_Bell_Inequality.tex` |
 | QM from Cost Minimization | `reality/papers/RS_QM_From_Cost.tex` |
 | QM Interpretation | `reality/papers/RS_QM_Interpretation.tex` |
@@ -384,6 +397,8 @@
 | Falsifiability and Lean Formalization | `reality/papers/RS_Falsifiability_Lean.tex` |
 | RS Verification Framework | `reality/papers/RS_Verification_Framework.tex` |
 | Zero-Parameters Scope | `reality/papers/RS_Zero_Parameters_Scope.tex` |
+| **Spin-Statistics Theorem** *(Tier 2, new)* | `reality/papers/tex/RS_Spin_Statistics_Theorem.tex` |
+| **Renormalization / Running Couplings** *(Tier 2, new)* | `reality/papers/tex/RS_Renormalization_Running_Couplings.tex` |
 
 ---
 
@@ -397,13 +412,13 @@
 | IV. Neutrino Physics | 6 |
 | V. QCD & Strong Interaction | 8 |
 | VI. Electroweak Physics | 8 |
-| VII. Gravity & GR | 19 |
-| VIII. Black Hole Physics | 7 |
-| IX. Cosmology & Dark Sector | 26 |
+| VII. Gravity & GR | 20 (+1 Tier 2) |
+| VIII. Black Hole Physics | 8 (+1 Tier 2) |
+| IX. Cosmology & Dark Sector | 28 (+2 Tier 2) |
 | X. Nuclear Physics | 9 |
-| XI. Condensed Matter | 7 |
-| XII. Astrophysics | 7 |
-| XIII. Experimental Anomalies | 12 |
+| XI. Condensed Matter | 10 (+3 Tier 2) |
+| XII. Astrophysics | 10 (+3 Tier 2) |
+| XIII. Experimental Anomalies | 14 (+2 Tier 2) |
 | XIV. Quantum Foundations | 10 |
 | XV. Chemistry & Materials | 2 |
 | XVI. Biology | 12 |

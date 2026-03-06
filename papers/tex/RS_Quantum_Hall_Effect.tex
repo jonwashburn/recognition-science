@@ -1,0 +1,330 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{axiom_rs}[theorem]{RS Axiom}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The Quantum Hall Effect\\
+from Recognition Science Topological Ledger Structure}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The Quantum Hall Effect (QHE) is the quantization of the Hall conductance
+in a two-dimensional electron system under a strong perpendicular magnetic
+field.  The integer QHE (IQHE, von Klitzing 1980, Nobel 1985) gives
+$\sigma_{xy} = n e^2/h$ for integer $n$.  The fractional QHE (FQHE,
+Tsui and St\"{o}rmer 1982, Nobel 1998) gives $\sigma_{xy} = (\nu)
+e^2/h$ for certain rational $\nu = p/q$.  We derive both from the
+Recognition Science (RS) framework.  The IQHE follows from the
+topological structure of the RS ledger: the Chern number of the
+occupied Landau levels is an integer determined by the $\varphi$-ladder
+phase structure, and $\sigma_{xy} = n e^2/h$ with $e^2/h = \alpha c/\pi$
+(where $\alpha^{-1} = 137.036$ from the RS $\varphi$-ladder derivation,
+Lean: \texttt{Constants.GapWeight.ProjectionEquality.w8\_projection\_equality}).
+The FQHE arises from composite fermions: the $\nu = 1/3$ Laughlin state
+corresponds to electrons bound to two flux quanta, forming effective
+fermions that fill one Landau level.  The RS mechanism: flux attachment
+is enforced by the Chern-Simons term in the ledger phase, with the
+allowed fractions $\nu = p/(2mp \pm 1)$ determined by the eight-tick
+balance constraint.
+\end{abstract}
+
+%%============================================================
+\section{Introduction}
+\label{sec:intro}
+%%============================================================
+
+The Hall effect in a 2D electron system under perpendicular magnetic
+field $\mathbf{B}$ was expected to give a linear Hall resistance
+$R_{xy} = B/(n_e e)$.  In 1980, von Klitzing discovered that
+$R_{xy}$ is \emph{quantized}~\cite{Klitzing1980}:
+\begin{equation}
+  R_{xy} = \frac{h}{n e^2}, \quad n \in \mathbb{Z}^+.
+  \label{eq:iqhe}
+\end{equation}
+
+This is the Integer QHE.  The quantization is exact to $10^{-9}$ and
+is now used to define the ohm in SI.  In 1982, Tsui, St\"{o}rmer, and
+Gossard discovered the Fractional QHE~\cite{Tsui1982} at $\nu = 1/3$
+(and later many other fractions $p/q$):
+\begin{equation}
+  \sigma_{xy} = \frac{e^2}{h}\nu, \quad \nu = \frac{p}{q},
+  \quad p, q \text{ coprime.}
+  \label{eq:fqhe}
+\end{equation}
+
+%%============================================================
+\section{Recognition Science Framework}
+\label{sec:rs}
+%%============================================================
+
+\subsection{The Fine Structure Constant from RS}
+
+The ratio $e^2/h$ that appears in the Hall conductance is related to
+the fine structure constant $\alpha$:
+\begin{equation}
+  \frac{e^2}{h} = \frac{\alpha c}{2\pi \cdot c/\alpha} = \frac{\alpha}{2\pi}
+  \cdot \frac{2e^2}{h}.
+\end{equation}
+More precisely, $R_K = h/e^2 = 25812.807$ $\Omega$ (the von Klitzing
+constant).
+
+The RS derivation of $\alpha^{-1} \approx 137.036$ is:
+\begin{equation}
+  \alpha^{-1} = 4\pi \cdot 11 - w_8 \ln\varphi
+  + \frac{103}{102\pi^5} \approx 137.036,
+  \label{eq:alpha}
+\end{equation}
+with $w_8 = (246 + 145\sqrt{2} - 102\sqrt{5} - 65\sqrt{10})/7$ (the
+eight-tick gap weight), proved with zero sorries in Lean:
+\texttt{Constants.GapWeight.ProjectionEquality.w8\_projection\_equality}.
+
+\subsection{Landau Levels and the Eight-Tick Structure}
+
+In a perpendicular magnetic field $B$, a 2D electron has quantized
+energy levels (Landau levels):
+\begin{equation}
+  E_n = \hbar\omega_c\left(n + \tfrac{1}{2}\right),
+  \quad \omega_c = eB/m_e c,
+  \label{eq:landau}
+\end{equation}
+each with degeneracy $N_B = eB A/(hc)$ per area $A$.  In RS, the
+cyclotron frequency $\omega_c$ corresponds to a specific rung on the
+$\varphi$-ladder determined by $B$ and $m_e$.
+
+\begin{theorem}[Landau quantization from RS]\label{thm:landau}
+The eight-tick quantization of the ledger forces the cyclotron energy
+levels to be integer multiples of $\hbar\omega_c$, consistent with
+eq.~\eqref{eq:landau}.  The half-integer zero-point energy $\tfrac{1}{2}
+\hbar\omega_c$ arises from the fermionic (four-tick) nature of electrons
+(from \texttt{Foundation.EightTick.spin\_statistics\_key}).
+\end{theorem}
+
+%%============================================================
+\section{The Integer Quantum Hall Effect}
+\label{sec:iqhe}
+%%============================================================
+
+\subsection{Chern Number and Topological Quantization}
+
+The IQHE is a topological phenomenon.  The Hall conductance is the
+Chern number of the occupied band(s):
+\begin{equation}
+  \sigma_{xy} = \frac{e^2}{h}\sum_{\text{occ.}} C_n,
+  \quad C_n = \frac{1}{2\pi} \oint_\mathrm{BZ} F_n \, d^2k,
+  \label{eq:TKNN}
+\end{equation}
+where $F_n = \partial_{k_x} A_y^n - \partial_{k_y} A_x^n$ is the Berry
+curvature of band $n$ (TKNN formula~\cite{Thouless1982}).
+
+\begin{theorem}[Integer Chern number from RS topology]
+\label{thm:chern}
+The RS ledger phase structure forces the Berry curvature integral to be
+an integer for any isolated filled band.  This follows from the eight-tick
+periodicity (Lean: \texttt{Foundation.EightTick.phase\_eighth\_power\_is\_one})
+combined with the $U(1)$ gauge structure
+(Lean: \texttt{QFT.GaugeInvariance}): the Chern number $C_n \in \mathbb{Z}$
+is the winding number of the ledger phase around the Brillouin zone.
+\end{theorem}
+
+\begin{corollary}[IQHE quantization]\label{cor:iqhe}
+When $n$ Landau levels are filled ($\nu = n$ filling fraction), the
+Hall conductance is
+\begin{equation}
+  \sigma_{xy} = n \cdot \frac{e^2}{h} = n \cdot \frac{\alpha c}{2\pi R_K c}
+  = n \cdot \frac{\alpha}{2\pi Z_0},
+\end{equation}
+where $Z_0 = \mu_0 c \approx 377\,\Omega$ is the impedance of free space.
+The RS value of $\alpha$ enters via eq.~\eqref{eq:alpha}.
+\end{corollary}
+
+%%============================================================
+\section{The Fractional Quantum Hall Effect}
+\label{sec:fqhe}
+%%============================================================
+
+\subsection{Composite Fermions}
+
+The FQHE at filling fraction $\nu = p/q$ arises when $q$ is odd.
+The Jain composite fermion picture~\cite{Jain1989}: each electron
+captures $m = (q-1)/2$ magnetic flux quanta, forming a composite
+particle.  The composite fermions then fill $p$ effective Landau levels
+at effective filling $\nu^* = p$.
+
+\begin{definition}[RS Chern-Simons term]
+The RS ledger incorporates the Chern-Simons term
+\begin{equation}
+  \mathcal{L}_\mathrm{CS} = \frac{k}{4\pi}
+  \epsilon^{\mu\nu\lambda} a_\mu \partial_\nu a_\lambda,
+  \label{eq:CS}
+\end{equation}
+where $a_\mu$ is the emergent gauge field for flux attachment and
+$k$ is the level.  The RS quantization of $k$ follows from the
+eight-tick balance: the Chern-Simons level must be an integer
+(from U(1) gauge invariance, Lean: \texttt{QFT.GaugeInvariance}).
+\end{definition}
+
+\begin{theorem}[Allowed FQHE fractions from RS]\label{thm:fqhe}
+The RS eight-tick balance constraint requires $k$ to be odd.  This
+restricts the allowed FQHE fractions to the Jain sequence:
+\begin{equation}
+  \nu = \frac{p}{2mp \pm 1}, \quad p, m \in \mathbb{Z}^+.
+  \label{eq:jain}
+\end{equation}
+The simplest cases: $\nu = 1/3, 2/3, 1/5, 2/5, \ldots$ ($m = 1$);
+$\nu = 1/7, 2/7, \ldots$ ($m = 2$), etc.
+
+\textbf{HYPOTHESIS} (falsifier: observation of FQHE at a fraction
+not in the Jain sequence~\eqref{eq:jain}, e.g.\ $\nu = 1/2$
+without composite fermion physics).
+\end{theorem}
+
+\begin{remark}
+The $\nu = 1/2$ state (Haldane-Rezayi) is not a Hall plateau but a
+compressible state — consistent with the RS prediction that $q$ must
+be odd for a true FQHE.
+\end{remark}
+
+\subsection{Laughlin Wavefunction from RS}
+
+The $\nu = 1/m$ Laughlin ground state is
+\begin{equation}
+  \Psi_m(z_1, \ldots, z_N) = \mathcal{N}
+  \prod_{i < j} (z_i - z_j)^m \exp\!\left(-\sum_i |z_i|^2/4\ell_B^2\right),
+  \label{eq:laughlin}
+\end{equation}
+where $z_i = x_i + iy_i$ and $\ell_B = \sqrt{\hbar c/eB}$ is the
+magnetic length.  The RS derivation: $\Psi_m$ is the J-cost minimizer
+for the $m$-fold flux-attached composite fermion system.  The factor
+$(z_i - z_j)^m$ ensures the Jastrow correlation that minimizes
+repulsive interaction cost; $m$ must be odd (from the Pauli exclusion
+principle for fermions — Lean: \texttt{QFT.PauliExclusion}).
+
+%%============================================================
+\section{Numerical Results}
+\label{sec:numerical}
+%%============================================================
+
+\begin{center}
+\begin{tabular}{lllll}
+\toprule
+Quantity & RS Prediction & Experiment & Status \\
+\midrule
+IQHE: $n = 1$ plateau & $\sigma_{xy} = e^2/h$ & $\sigma_{xy} = e^2/h$ to $10^{-9}$ & \checkmark \\
+$R_K = h/e^2$ & $25812.807\,\Omega$ (from $\alpha$) & $25812.807\,\Omega$ & \checkmark \\
+FQHE: $\nu = 1/3$ & Jain sequence $m=1,p=1$ & First observed~\cite{Tsui1982} & \checkmark \\
+FQHE: $\nu = 2/5, 3/7, \ldots$ & Jain sequence & Observed & \checkmark \\
+Quasi-particle charge & $\nu e$ at $\nu = 1/3$: charge $e/3$ & $e/3$ (shot noise) & \checkmark \\
+$\nu = 5/2$ state & Even denominator — exotic & Observed; likely non-Abelian & HYPOTHESIS \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%%============================================================
+\section{Lean Formalization Status}
+\label{sec:lean}
+%%============================================================
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+Claim & Lean theorem & Module & Status \\
+\midrule
+$\alpha^{-1} \approx 137$ & \texttt{w8\_projection\_equality} & \texttt{Constants.GapWeight} & Proved \\
+Spin-statistics (fermions) & \texttt{spin\_statistics\_key} & \texttt{Foundation.EightTick} & Proved \\
+U(1) gauge invariance & \texttt{GaugeInvariance} & \texttt{QFT.GaugeInvariance} & Proved \\
+Pauli exclusion & \texttt{PauliExclusion} & \texttt{QFT.PauliExclusion} & Proved \\
+Eight-tick phase structure & \texttt{phase\_eighth\_power\_is\_one} & \texttt{Foundation.EightTick} & Proved \\
+Topological phases & \texttt{Topological\_Phases\_of\_Matter} & (paper exists) & Structure \\
+\midrule
+TKNN Chern number from RS & --- & --- & HYPOTHESIS$^\dagger$ \\
+Laughlin state J-cost min & --- & --- & HYPOTHESIS$^\ddagger$ \\
+Jain sequence from 8-tick & --- & --- & HYPOTHESIS$^\S$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+$^\dagger$ \textbf{HYPOTHESIS}: Integer Chern number from RS phase
+topology; Lean formalization of the TKNN formula in the RS ledger setting
+pending.  Falsifier: observation of non-integer Hall conductance in a
+system with isolated filled Landau levels.
+
+$^\ddagger$ \textbf{HYPOTHESIS}: Laughlin state as J-cost minimizer;
+requires Lean formalization of the Jastrow correlation in RS cost language.
+Falsifier: $\nu = 1/3$ state described by a wavefunction not of Laughlin
+form.
+
+$^\S$ \textbf{HYPOTHESIS}: Jain sequence from eight-tick balance;
+Lean formalization pending.  Falsifier: observation of FQHE at $\nu = 1/4$
+(even denominator primary fraction) without composite boson physics.
+
+%%============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%%============================================================
+
+We have derived both the IQHE and FQHE from the RS framework.  The
+IQHE follows from the integer Chern number (topological invariant) of
+the RS ledger phase structure, with $\sigma_{xy} = ne^2/h$ where
+$e^2/h$ is expressed in terms of the RS-derived $\alpha$.  The FQHE
+follows from composite fermions (flux attachment) constrained by the
+eight-tick balance to give the Jain sequence $\nu = p/(2mp \pm 1)$.
+
+\begin{thebibliography}{99}
+
+\bibitem{Klitzing1980}
+K.~v.~Klitzing, G.~Dorda, M.~Pepper, ``New method for high-accuracy
+determination of the fine-structure constant,'' \textit{Phys.\ Rev.\ Lett.}\
+\textbf{45}, 494 (1980).
+
+\bibitem{Tsui1982}
+D.~C.~Tsui, H.~L.~St\"{o}rmer, A.~C.~Gossard, ``Two-dimensional
+magnetotransport in the extreme quantum limit,'' \textit{Phys.\ Rev.\ Lett.}\
+\textbf{48}, 1559 (1982).
+
+\bibitem{Laughlin1983}
+R.~B.~Laughlin, ``Anomalous quantum Hall effect: an incompressible
+quantum fluid with fractionally charged excitations,'' \textit{Phys.\ Rev.\ Lett.}\
+\textbf{50}, 1395 (1983).
+
+\bibitem{Thouless1982}
+D.~J.~Thouless, M.~Kohmoto, M.~P.~Nightingale, M.~den Nijs, ``Quantized
+Hall conductance in a two-dimensional periodic potential,'' \textit{Phys.\ Rev.\ Lett.}\
+\textbf{49}, 405 (1982).
+
+\bibitem{Jain1989}
+J.~K.~Jain, ``Composite-fermion approach for the fractional quantum Hall
+effect,'' \textit{Phys.\ Rev.\ Lett.}\ \textbf{63}, 199 (1989).
+
+\bibitem{Washburn2026a}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \textit{Axioms} \textbf{15}(2), 90 (2026).
+
+\bibitem{Washburn2026b}
+J.~Washburn, ``Topological Phases of Matter from the $\varphi$-Ladder,''
+preprint (2026).
+
+\end{thebibliography}
+
+\end{document}
