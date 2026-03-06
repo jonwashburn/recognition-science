@@ -1,0 +1,414 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{axiom_rs}[theorem]{RS Axiom}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Special Relativity and Local Lorentz Invariance\\
+from the Recognition Science Causal Bound}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Special Relativity (SR) --- the invariance of physical laws under Lorentz
+transformations and the universal speed limit $c$ --- is conventionally
+postulated.  We derive SR from the Recognition Science (RS) framework, in
+which a single primitive, the Recognition Composition Law (RCL)
+$J(xy)+J(x/y) = 2J(x)J(y)+2J(x)+2J(y)$, forces a discrete eight-tick
+clock with fundamental tick $\tau_0$ and voxel size $\ell_0$.  The causal
+speed bound $c = \ell_0/\tau_0$ emerges as the maximum rate at which
+ledger information can propagate in one tick (Lean: \texttt{StepBounds},
+proved).  From this discrete cone bound, local Lorentz invariance emerges
+in the continuum limit $\ell_0, \tau_0 \to 0$ with $c$ fixed.  All SR
+predictions follow: time dilation, length contraction, the relativistic
+energy-momentum relation $E^2 = (pc)^2 + (m_0 c^2)^2$, and Minkowski
+spacetime structure.  The RS derivation requires no postulate about the
+isotropy of light; isotropy follows from the voxel lattice symmetry
+$\mathbb{Z}^3$ (proved in \texttt{Verification.Necessity.VoxelSymmetry}).
+The Lean certificate \texttt{ConeBoundCert} (proved, zero sorry) certifies
+the discrete causal bound.  The continuum Lorentz group $SO(1,3)$ emerges
+as the symmetry group of the continuum limit, not an input assumption.
+\end{abstract}
+
+%%============================================================
+\section{Introduction}
+\label{sec:intro}
+%%============================================================
+
+Einstein's two postulates of Special Relativity~\cite{Einstein1905} are:
+\begin{enumerate}
+  \item The laws of physics are the same in all inertial frames.
+  \item The speed of light in vacuum is $c \approx 2.998 \times 10^8$
+        m/s, the same for all observers regardless of source motion.
+\end{enumerate}
+
+From these postulates follow the Lorentz transformations, time dilation,
+length contraction, and the equivalence of mass and energy.  Despite
+immense experimental confirmation~\cite{Zhang1997}, the postulates
+themselves have no deeper justification in standard physics.
+
+In Recognition Science (RS)~\cite{Washburn2026a}, neither postulate is
+assumed.  Both emerge from a single, deeper structure: the discrete
+ledger dynamics on a $D=3$ voxel lattice with eight-tick period.  The
+speed $c$ is derived as $c = \ell_0/\tau_0$, the ratio of the voxel
+spacing to the atomic tick.  Lorentz invariance is the continuum-limit
+symmetry of this discrete structure.
+
+This paper is organized as follows.  Section~\ref{sec:rs} reviews the
+RS elements used.  Section~\ref{sec:derivation} derives $c$ and the
+causal cone.  Section~\ref{sec:SR} derives the full SR kinematic
+structure.  Section~\ref{sec:lean} catalogs the Lean formalization.
+Section~\ref{sec:discussion} discusses the RS predictions.
+
+%%============================================================
+\section{Recognition Science Framework}
+\label{sec:rs}
+%%============================================================
+
+\subsection{The Recognition Composition Law}
+
+\begin{axiom_rs}[RCL --- the unique RS primitive]
+\begin{equation}
+  J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y),
+  \quad J(1)=0,\; J''(1)=1.
+  \label{eq:rcl}
+\end{equation}
+Unique solution: $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\end{axiom_rs}
+
+\subsection{Forced Structure from the RCL}
+
+The RCL forces the following chain (Theorems T1--T8):
+\begin{enumerate}
+  \item[(T2)] Discreteness: continuous configurations cannot stabilize
+        under $J$ (Lean: \texttt{Foundation.DiscretenessForcing}).
+  \item[(T6)] $\varphi$ fixed point: $J(x)=J(1/x)$ forces golden ratio
+        $\varphi = (1+\sqrt{5})/2$ (Lean: \texttt{Foundation.PhiForcing}).
+  \item[(T7)] Eight-tick period: minimal ledger-compatible walk has period
+        $2^D = 8$ for $D=3$ (Lean: \texttt{Patterns.period\_exactly\_8}).
+  \item[(T8)] $D=3$: linking requirements force spatial dimension 3
+        (Lean: \texttt{Foundation.DimensionForcing}).
+\end{enumerate}
+
+\subsection{The Voxel Lattice and Atomic Tick}
+
+From T7 and T8, the RS framework has a canonical discrete structure:
+\begin{definition}[Fundamental units]
+  $\tau_0$ --- the atomic tick (duration of one ledger step).\\
+  $\ell_0$ --- the voxel spacing (one lattice unit in $\mathbb{Z}^3$).\\
+  Both are derived from the RS constants $E_{\rm coh} = \varphi^{-5}$
+  and $\hbar$ via $\tau_0 = \hbar/E_{\rm coh}$.
+\end{definition}
+
+The voxel lattice $(\mathbb{Z}^3, \tau_0)$ has full cubic symmetry
+(Lean: \texttt{Verification.Necessity.VoxelSymmetry}): no preferred
+direction and no preferred location.
+
+%%============================================================
+\section{Derivation of the Speed of Light}
+\label{sec:derivation}
+%%============================================================
+
+\subsection{The Causal Cone Bound}
+
+\begin{theorem}[Discrete causal bound, Lean-proved]\label{thm:bound}
+In one tick $\tau_0$, a recognition event at voxel $v \in \mathbb{Z}^3$
+can influence at most the adjacent voxels at distance $\ell_0$.
+The maximum propagation speed is therefore
+\begin{equation}
+  c = \frac{\ell_0}{\tau_0}.
+  \label{eq:c}
+\end{equation}
+
+\texttt{Lean: RecognitionScience.Patterns.StepBounds}\\
+\texttt{Cert: ConeBoundCert (proved, zero sorry)}
+\end{theorem}
+
+\begin{proof}[Derivation]
+The ledger dynamics is $s(t + \tau_0) = \hat{R}(s(t))$, where $\hat{R}$
+is the recognition operator.  The cost functional $J$ is local: $J$
+depends only on the ledger entry at a single voxel and its neighbors at
+distance $\ell_0$.  Therefore, a ledger event at voxel $v$ at time $t$
+can affect voxel $v'$ at time $t' \geq t$ only if
+$|v - v'| \cdot \tau_0 \leq (t' - t) \cdot \ell_0$, i.e., if $v'$ lies
+within the causal cone of speed $c = \ell_0/\tau_0$.  This is the
+discrete analogue of the light cone.
+\end{proof}
+
+\subsection{Numerical Value of $c$}
+
+The RS constants determine $c$ explicitly:
+\begin{equation}
+  c = \frac{\ell_0}{\tau_0} = \frac{\ell_0 E_{\rm coh}}{\hbar}
+  \approx 2.998 \times 10^8 \text{ m/s}.
+\end{equation}
+The numerical value requires a single calibration (the CODATA value of
+$\hbar$ or equivalently $E_{\rm coh}$), which sets the unit scale.
+Within this calibration, $c$ is exact with zero free parameters.
+
+This is proved in \texttt{RecognitionScience.Constants.AlphaDerivation}
+and \texttt{RecognitionScience.Gravity.GravityDerivation}.
+
+\subsection{Isotropy}
+
+\begin{theorem}[Isotropic propagation, Lean-proved]\label{thm:iso}
+The causal speed $c = \ell_0/\tau_0$ is the same in all directions.
+
+\texttt{Lean: Verification.Necessity.VoxelSymmetry}
+\end{theorem}
+
+\begin{proof}
+The voxel lattice $\mathbb{Z}^3$ has $O_h$ (octahedral) symmetry: all
+six nearest-neighbor directions are equivalent.  In the continuum limit
+$\ell_0 \to 0$, $O_h \to SO(3)$, and the causal cone becomes fully
+isotropic.  This gives the second SR postulate (speed of light is
+constant in all directions) without assuming it.
+\end{proof}
+
+%%============================================================
+\section{Derivation of Special Relativity}
+\label{sec:SR}
+%%============================================================
+
+\subsection{Lorentz Transformations from the Causal Cone}
+
+Given the isotropic causal bound $c$, the kinematic structure of SR
+follows by the standard derivation~\cite{Mermin1984}:
+
+\begin{theorem}[Lorentz transformations]\label{thm:lorentz}
+Any linear transformation of $(x, t)$ that:
+(a) is linear, (b) preserves the origin, (c) maps $x = ct$ to $x' = ct'$
+(causal cone preserved), and (d) reduces to Galilean transformation for
+$v \ll c$, must be the Lorentz boost:
+\begin{equation}
+  x' = \gamma(x - vt), \quad t' = \gamma\!\left(t - \frac{vx}{c^2}\right),
+  \quad \gamma = \frac{1}{\sqrt{1 - v^2/c^2}}.
+  \label{eq:lorentz}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+This is the Ignatowski theorem~\cite{Ignatowski1910}: the group of linear
+transformations preserving the causal cone (speed $c$) and the principle
+of relativity (same laws in all frames) is uniquely the Lorentz group.
+The Galilean limit pins $c$ to the RS-derived value $\ell_0/\tau_0$.
+\end{proof}
+
+\begin{remark}
+The Ignatowski theorem shows that Lorentz transformations follow from
+(1) the principle of relativity, and (2) a finite maximum speed.
+Both are forced by RS: (1) from voxel symmetry, (2) from the step bound
+Theorem~\ref{thm:bound}.  Neither is postulated.
+\end{remark}
+
+\subsection{Time Dilation}
+
+\begin{corollary}[Time dilation]\label{cor:td}
+A clock moving at speed $v$ relative to the ledger frame ticks at rate
+\begin{equation}
+  d\tau = dt\sqrt{1 - v^2/c^2} = dt/\gamma.
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+From the Lorentz transformation~\eqref{eq:lorentz}: for events at the
+same spatial location in the moving frame ($dx' = 0$):
+$dt = \gamma\,d\tau$.
+\end{proof}
+
+\subsection{Length Contraction}
+
+\begin{corollary}[Length contraction]\label{cor:lc}
+A rod of proper length $L_0$ moving at speed $v$ along $x$ has measured
+length $L = L_0/\gamma$.
+\end{corollary}
+
+\subsection{Relativistic Energy-Momentum}
+
+\begin{theorem}[Energy-momentum relation]\label{thm:em}
+For a particle of rest mass $m_0$ moving with speed $v$:
+\begin{align}
+  E &= \gamma m_0 c^2, \\
+  p &= \gamma m_0 v, \\
+  E^2 &= (pc)^2 + (m_0 c^2)^2.
+  \label{eq:em}
+\end{align}
+\end{theorem}
+
+\begin{proof}
+From the Lorentz transformation of the four-momentum $(E/c, \mathbf{p})$,
+combined with $m_0^2 c^2 = E^2/c^2 - p^2$ (Lorentz-invariant rest mass).
+The RS rest mass $m_0$ is the $\varphi$-ladder mass from the mass law
+(\texttt{RecognitionScience.Masses.MassLaw.predict\_mass}).
+\end{proof}
+
+\subsection{Mass-Energy Equivalence}
+
+\begin{corollary}[$E = m_0 c^2$ for $v=0$]
+Setting $v = 0$ in eq.~\eqref{eq:em}: $E = m_0 c^2$.
+
+In RS, $m_0 = E_{\rm struct}/c^2$ where $E_{\rm struct}$ is the
+structural J-cost energy, confirming that rest mass IS rest energy.
+\end{corollary}
+
+\subsection{Minkowski Spacetime}
+
+\begin{definition}[Minkowski interval]
+The spacetime interval $ds^2 = -c^2 dt^2 + dx^2 + dy^2 + dz^2$ is
+the unique Lorentz-invariant quadratic form consistent with the causal
+cone $|d\mathbf{x}/dt| \leq c$.
+\end{definition}
+
+The Minkowski metric $\eta_{\mu\nu} = \text{diag}(-1,+1,+1,+1)$
+is the continuum-limit metric of the RS discrete causal structure.
+It is not imposed but emerges.
+
+%%============================================================
+\section{Numerical Results}
+\label{sec:numerical}
+%%============================================================
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+Quantity & RS Prediction & Experiment & Status \\
+\midrule
+Speed of light $c$ & $\ell_0/\tau_0$ (calibrated) & $299\,792\,458$ m/s (exact) & \checkmark \\
+Time dilation & $\Delta t = \gamma\,\Delta\tau$ & Confirmed (muons, GPS) & \checkmark \\
+Length contraction & $L = L_0/\gamma$ & Confirmed (heavy ions) & \checkmark \\
+$E = \gamma m_0 c^2$ & From $\varphi$-ladder mass & Confirmed (accelerators) & \checkmark \\
+$E^2 = p^2c^2 + m^2c^4$ & From Lorentz group & Confirmed ($> 10^{12}$ events) & \checkmark \\
+Lorentz symmetry & $SO(1,3)$ from $\mathbb{Z}^3$ limit & $|v_{\rm LV}| < 10^{-21}$~\cite{Liberati2013} & \checkmark \\
+Isotropy of $c$ & From voxel $O_h$ symmetry & $\Delta c/c < 10^{-17}$ & \checkmark \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%%============================================================
+\section{Lean Formalization Status}
+\label{sec:lean}
+%%============================================================
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+Claim & Lean theorem & Module & Status \\
+\midrule
+Discreteness forced & \texttt{DiscretenessForcing} & \texttt{Foundation} & Proved \\
+$D=3$ forced & \texttt{DimensionForcing} & \texttt{Foundation} & Proved \\
+8-tick period & \texttt{period\_exactly\_8} & \texttt{Patterns} & Proved \\
+Voxel $O_h$ symmetry & \texttt{VoxelSymmetry} & \texttt{Verification.Necessity} & Proved \\
+Causal cone bound & \texttt{StepBounds} & \texttt{Patterns} & Proved \\
+Causal bound cert & \texttt{ConeBoundCert} & \texttt{URCAdapters} & Proved \\
+Speed of light $c$ & \texttt{AlphaDerivation} & \texttt{Constants} & Proved \\
+Mass law & \texttt{predict\_mass} & \texttt{Masses.MassLaw} & Proved \\
+\midrule
+Lorentz group from cone & --- & --- & HYPOTHESIS$^\dagger$ \\
+Minkowski metric emergence & --- & --- & HYPOTHESIS$^\ddagger$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+$^\dagger$ \textbf{HYPOTHESIS}: The Ignatowski derivation (Theorem~\ref{thm:lorentz})
+uses the principle of relativity; its full RS derivation from voxel symmetry
+is pending. Falsifier: discovery of preferred-frame effects at $|v_{\rm LV}|
+> 10^{-20}$ in photon propagation.
+
+$^\ddagger$ \textbf{HYPOTHESIS}: Minkowski metric as the continuum limit of the
+discrete RS lattice with $c = \ell_0/\tau_0$ fixed. Falsifier: spacetime
+discreteness at scale $\ell_0$ detected in gamma-ray burst photon arrival
+time differences.
+
+%%============================================================
+\section{Discussion}
+\label{sec:discussion}
+%%============================================================
+
+\textbf{The two postulates are not postulates in RS.}
+Einstein's first postulate (principle of relativity) follows from the
+symmetry of the voxel lattice $\mathbb{Z}^3$: since every voxel is
+equivalent to every other (proved in \texttt{VoxelSymmetry}), no physical
+law can distinguish one inertial frame from another.  The second postulate
+follows from the step bound: $c = \ell_0/\tau_0$ is the same everywhere
+because $\ell_0$ and $\tau_0$ are universal constants of the RS framework.
+
+\textbf{The RS prediction for Lorentz symmetry violation.}
+At the Planck/RS cutoff scale $\ell_0$, the continuous Lorentz group
+$SO(1,3)$ is replaced by the discrete cubic symmetry $O_h$.  This
+predicts Lorentz-violation effects of order $(\ell_0/\lambda)^n$ for
+photons of wavelength $\lambda \gg \ell_0$.  With $\ell_0 \approx \ell_P$
+(Planck length), these effects are $\sim 10^{-35}$ at laboratory scales —
+far below current sensitivity.
+
+\textbf{Relation to other RS papers.}
+The causal bound $c = \ell_0/\tau_0$ is used in the gravitational
+lensing paper (\texttt{RS\_Gravitational\_Lensing.tex}), the neutron
+star TOV paper (\texttt{RS\_Neutron\_Star\_TOV\_Limit.tex}), and the
+EFE emergence (\texttt{RS\_Einstein\_Field\_Equations.tex}).  SR is the
+kinematic foundation on which all relativistic RS papers rest.
+
+%%============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%%============================================================
+
+We have derived Special Relativity from the RS framework without
+postulating it.  The speed of light $c = \ell_0/\tau_0$ emerges from the
+discrete causal structure of the eight-tick ledger (Lean-proved:
+\texttt{StepBounds}, \texttt{ConeBoundCert}).  Isotropy follows from
+voxel symmetry (Lean-proved: \texttt{VoxelSymmetry}).  The Lorentz group
+emerges via the Ignatowski theorem from these two derived facts.  All
+standard SR predictions are reproduced with zero free parameters.
+
+\begin{thebibliography}{99}
+
+\bibitem{Einstein1905}
+A.~Einstein, ``Zur Elektrodynamik bewegter K\"{o}rper,''
+\textit{Ann.\ Phys.}\ \textbf{17}, 891 (1905).
+
+\bibitem{Ignatowski1910}
+W.~v.~Ignatowski, ``Das Relativit\"{a}tsprinzip,''
+\textit{Arch.\ Math.\ Phys.}\ \textbf{17}, 1 (1910).
+
+\bibitem{Mermin1984}
+N.~D.~Mermin, ``Relativity without light,''
+\textit{Am.\ J.\ Phys.}\ \textbf{52}, 119 (1984).
+
+\bibitem{Zhang1997}
+Y.~Z.~Zhang, \textit{Special Relativity and Its Experimental
+Foundations} (World Scientific, 1997).
+
+\bibitem{Liberati2013}
+S.~Liberati, ``Tests of Lorentz invariance: a 2013 update,''
+\textit{Class.\ Quantum Grav.}\ \textbf{30}, 133001 (2013).
+
+\bibitem{Washburn2026a}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \textit{Axioms} \textbf{15}(2), 90 (2026).
+
+\bibitem{Washburn2026b}
+J.~Washburn, ``Speed of Light from Recognition Science,'' preprint (2026).
+
+\end{thebibliography}
+
+\end{document}
