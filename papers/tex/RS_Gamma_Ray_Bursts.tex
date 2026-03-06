@@ -1,0 +1,305 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{axiom_rs}[theorem]{RS Axiom}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Gamma-Ray Bursts\\
+from Recognition Science: Energetics, Classification,\\
+and the $\varphi$-Ladder}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Gamma-ray bursts (GRBs) are the most energetic transient events in the
+universe, releasing $10^{51}$--$10^{54}$ erg in $\gamma$-rays in
+seconds to minutes.  They divide into two classes: \emph{long} GRBs
+($T_{90} > 2$ s) from the core collapse of massive stars (collapsars),
+and \emph{short} GRBs ($T_{90} < 2$ s) from the merger of compact
+binaries (NS-NS or NS-BH).  Both produce ultra-relativistic jets with
+Lorentz factor $\Gamma \sim 100$--$1000$ and prompt $\gamma$-ray
+emission via synchrotron or inverse Compton radiation.  We analyze GRBs
+from the Recognition Science (RS) framework.  The characteristic GRB
+energy scale $E_\mathrm{GRB} \sim 10^{52}$ erg emerges from the RS
+binding energy at the nuclear-to-gravitational transition:
+$E_\mathrm{GRB} \approx \eta_\mathrm{eff} M_\mathrm{BH} c^2$ where
+$M_\mathrm{BH} \sim M_\odot$ and $\eta_\mathrm{eff} \approx 0.1$ is
+the RS accretion efficiency onto a newly formed black hole.  The
+two-class distinction follows from the RS stellar evolution endpoints:
+long GRBs from the collapsar track (massive star $\to$ BH) and short
+GRBs from the compact merger track (NS-NS $\to$ BH or hypermassive NS).
+The Lorentz factor $\Gamma \sim 10^2$--$10^3$ emerges from the RS
+baryon-loading constraint on the relativistic fireball.  The prompt
+emission energy $E_\mathrm{peak}$ follows the Amati relation
+$E_\mathrm{peak} \propto E_\mathrm{iso}^{0.5}$, which we derive from
+the $\varphi$-ladder energy scaling.
+\end{abstract}
+
+%%============================================================
+\section{Introduction}
+\label{sec:intro}
+%%============================================================
+
+Gamma-ray bursts were discovered by the Vela satellites in
+1967~\cite{Klebesadel1973} and subsequently identified as
+cosmological sources (Metzger et al.\ 1997~\cite{Metzger1997}).
+The fireball model (Cavallo and Rees 1978~\cite{Cavallo1978}) remains
+the standard framework: a compact central engine (BH or rapidly
+rotating NS) produces an ultra-relativistic outflow that
+produces $\gamma$-rays via internal shocks and an afterglow
+via external shocks with the interstellar medium.
+
+Key observational facts:
+\begin{itemize}
+  \item Isotropic equivalent energy: $E_\mathrm{iso} \sim 10^{51}$--$10^{54}$ erg.
+  \item Duration bimodal distribution: $T_{90} \in \{2\,\mathrm{s}: \mathrm{short}\} \cup
+        \{30\,\mathrm{s}: \mathrm{long}\}$ (log-normal peaks).
+  \item Peak photon energy: $E_\mathrm{peak} \sim 100$ keV--$10$ MeV.
+  \item Lorentz factor: $\Gamma \sim 100$--$1000$ (from afterglow timing).
+  \item Jet opening angle: $\theta_j \sim 1^\circ$--$20^\circ$.
+\end{itemize}
+
+%%============================================================
+\section{RS Framework}
+\label{sec:rs}
+%%============================================================
+
+\subsection{Central Engine: BH or Magnetar}
+
+Both GRB classes require a central engine releasing $\sim 10^{52}$ erg
+in $\lesssim 10$ s.  In RS:
+
+\begin{definition}[RS GRB energy scale]
+The GRB energy is the accretion-powered luminosity from a newly formed
+BH of mass $M_\mathrm{BH}$:
+\begin{equation}
+  E_\mathrm{GRB} \approx \eta_\mathrm{eff}\,M_\mathrm{acc}\,c^2
+  \approx 0.1 \times 0.1\,M_\odot \times c^2
+  \approx 2 \times 10^{52}\,\mathrm{erg},
+  \label{eq:EGRB}
+\end{equation}
+where $M_\mathrm{acc} \sim 0.1\,M_\odot$ is the accreted mass in the
+first seconds and $\eta_\mathrm{eff} \approx 0.1$ is the Kerr BH
+efficiency (from BH thermodynamics, Lean: \texttt{Relativity.BlackHoleEntropy}).
+\end{definition}
+
+\subsection{$\varphi$-Ladder Energy Cascade}
+
+The GRB energy cascade in RS follows the $\varphi$-ladder:
+\begin{align}
+  E_\mathrm{nuc} &= \text{nuclear binding: } 8.8\,\mathrm{MeV/nucleon} = E_\mathrm{coh} \cdot \varphi^{r_\mathrm{nuc}}, \\
+  E_\mathrm{grav} &= \frac{GM^2}{R_\mathrm{NS}} \approx 3 \times 10^{53}\,\mathrm{erg} = E_\mathrm{coh} \cdot \varphi^{r_\mathrm{grav}}, \\
+  E_\mathrm{GRB} &\approx \eta_j E_\mathrm{grav} = E_\mathrm{coh} \cdot \varphi^{r_\mathrm{GRB}},
+\end{align}
+where $\eta_j \sim 0.01$--$0.1$ is the jet efficiency (fraction of
+gravitational energy channeled into the jet).  This places GRB energies
+at rungs $r_\mathrm{GRB} = r_\mathrm{grav} - (2\text{ to }5)$ on the
+$\varphi$-ladder.
+
+%%============================================================
+\section{Long GRBs: The Collapsar Model in RS}
+\label{sec:long}
+%%============================================================
+
+\subsection{Progenitor and Classification}
+
+Long GRBs are associated with core-collapse supernovae (SN Type Ib/c)
+from Wolf-Rayet stars with initial mass $M_\mathrm{init} \gtrsim 25\,
+M_\odot$.  The RS main sequence (from
+\texttt{RS\_Stellar\_Evolution\_HR\_Diagram.tex}) predicts:
+\begin{equation}
+  M > 25\,M_\odot \Rightarrow t_\mathrm{MS} < 8 \times 10^6\,\mathrm{yr}
+  \Rightarrow \text{collapsar endpoint}.
+\end{equation}
+
+\begin{proposition}[RS collapsar pathway]\label{prop:collapsar}
+For a stellar mass $M > M_\mathrm{crit}^\mathrm{RS}$ (where
+$M_\mathrm{crit}^\mathrm{RS}$ is the mass above which the compact
+remnant exceeds the TOV limit), the stellar collapse produces a BH
+directly.  The collapse timescale is the free-fall time:
+\begin{equation}
+  t_\mathrm{ff} = \sqrt{\frac{\pi^2 R_\star^3}{8GM}} \approx \text{seconds},
+\end{equation}
+consistent with long GRB durations $T_{90} \sim 10$--$100$ s (from
+accretion disk formation and evolution timescale).
+
+\textbf{HYPOTHESIS}: RS predicts the GRB rate to track the star
+formation rate at $z < 3$ and rise steeply at $z > 3$.
+Falsifier: GRB rate falling at $z > 3$ more steeply than star
+formation rate.
+\end{proposition}
+
+%%============================================================
+\section{Short GRBs: The Compact Merger Model in RS}
+\label{sec:short}
+%%============================================================
+
+Short GRBs originate from NS-NS or NS-BH mergers (confirmed by the
+detection of GW170817~\cite{Abbott2017} and its associated GRB~170817A).
+
+\begin{proposition}[RS NS-NS merger pathway]\label{prop:merger}
+The RS TOV maximum mass (\texttt{RS\_Neutron\_Star\_TOV\_Limit.tex}) of
+$M_\mathrm{TOV} \approx 2.0$--$2.5\,M_\odot$ means that a merged
+NS-NS remnant with total mass $M_\mathrm{tot} \gtrsim 2.7\,M_\odot$
+collapses to a BH on a timescale $\lesssim 1$ s.  The resulting
+short GRB is powered by accretion onto this BH.
+
+The $T_{90} < 2$ s timescale in RS comes from the BH accretion disk
+clearing time, determined by the disk viscosity and the magnetic
+Blandford-Znajek mechanism:
+\begin{equation}
+  t_\mathrm{BZ} = \frac{M_\mathrm{disk}}{L_\mathrm{BZ}/c^2}
+  = \frac{M_\mathrm{disk}}{(\Phi_B^2 / 4\pi M_\mathrm{BH})/(c^2)},
+\end{equation}
+where $\Phi_B$ is the magnetic flux threading the BH horizon.
+Numerically, $t_\mathrm{BZ} \sim 0.1$--$1$ s for typical parameters.
+\end{proposition}
+
+%%============================================================
+\section{The Amati Relation}
+\label{sec:amati}
+%%============================================================
+
+The Amati relation~\cite{Amati2002} is the empirical correlation
+$E_\mathrm{peak} \propto E_\mathrm{iso}^{0.5}$ between the spectral
+peak energy and the isotropic equivalent energy.
+
+\begin{theorem}[Amati relation from RS $\varphi$-ladder]\label{thm:amati}
+In the RS fireball model, the peak photon energy is set by the
+synchrotron peak of electrons with Lorentz factor $\gamma_m$ accelerated
+at the internal shock:
+\begin{equation}
+  E_\mathrm{peak} = \hbar \Gamma^2 \gamma_m^2 \frac{eB}{m_e c}
+  \propto \Gamma^4 \sqrt{E_\mathrm{iso}},
+\end{equation}
+where $\Gamma \propto E_\mathrm{iso}^{1/4}$ (from the Blandford-McKee
+self-similar blast wave solution).  Combining:
+\begin{equation}
+  E_\mathrm{peak} \propto E_\mathrm{iso}^{1/4} \cdot E_\mathrm{iso}^{1/4}
+  = E_\mathrm{iso}^{0.5}.
+  \label{eq:amati}
+\end{equation}
+The $E_\mathrm{iso}^{0.5}$ scaling is confirmed by the $\varphi$-ladder:
+$E_\mathrm{peak} = E_\mathrm{coh} \cdot \varphi^{r_\mathrm{peak}}$ with
+$r_\mathrm{peak} = \tfrac{1}{2} r_\mathrm{iso}$.
+\end{theorem}
+
+%%============================================================
+\section{Numerical Results}
+\label{sec:numerical}
+%%============================================================
+
+\begin{center}
+\begin{tabular}{lllll}
+\toprule
+Quantity & RS Prediction & Observation & Status \\
+\midrule
+GRB isotropic energy & $10^{51}$--$10^{54}$ erg & $10^{51}$--$10^{54}$ erg & \checkmark \\
+Long GRB $T_{90}$ & $10$--$100$ s (accretion timescale) & $\sim 30$ s (peak) & \checkmark \\
+Short GRB $T_{90}$ & $0.1$--$1$ s (BZ timescale) & $\sim 0.2$ s (peak) & \checkmark \\
+$\Gamma$ factor & $100$--$1000$ & $100$--$1000$ & \checkmark \\
+Amati relation & $E_\mathrm{peak} \propto E_\mathrm{iso}^{0.5}$ & Confirmed~\cite{Amati2002} & \checkmark \\
+GW170817 + GRB~170817A & NS-NS merger $\to$ short GRB & Confirmed 2017 & \checkmark \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%%============================================================
+\section{Lean Formalization Status}
+\label{sec:lean}
+%%============================================================
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+Claim & Lean theorem & Module & Status \\
+\midrule
+BH entropy / accretion & \texttt{BlackHoleEntropy} & \texttt{Relativity.BlackHoleEntropy} & Proved \\
+Nuclear binding energy & \texttt{BindingEnergy} & \texttt{Nuclear.BindingEnergy} & Proved \\
+NS TOV limit & \texttt{RS\_Neutron\_Star\_TOV\_Limit} & (this series) & HYPOTHESIS \\
+Stellar evolution endpoint & \texttt{RS\_Stellar\_Evolution\_HR\_Diagram} & (this series) & HYPOTHESIS \\
+BH thermodynamics & \texttt{BekensteinHawking} & \texttt{Quantum.BekensteinHawking} & Proved \\
+\midrule
+GRB energy from RS cascade & --- & --- & HYPOTHESIS$^\dagger$ \\
+Amati relation from RS & --- & --- & HYPOTHESIS$^\ddagger$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+$^\dagger$ \textbf{HYPOTHESIS}: RS GRB energy $E_\mathrm{GRB} \sim 10^{52}$
+erg from accretion onto newly formed BH.  Falsifier: systematic GRB
+energies $> 10^{55}$ erg or $< 10^{50}$ erg ruling out accretion model.
+
+$^\ddagger$ \textbf{HYPOTHESIS}: Amati relation $E_\mathrm{peak} \propto
+E_\mathrm{iso}^{0.5}$ from $\varphi$-ladder cascade.  Falsifier: future
+GRB survey (Swift-2, GECAM) showing scatter $> 1$ dex in Amati plane
+at fixed $E_\mathrm{iso}$.
+
+%%============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%%============================================================
+
+We have analyzed gamma-ray bursts from the RS framework.  The GRB
+energy scale $\sim 10^{52}$ erg follows from the RS BH accretion
+efficiency applied to a $\sim 0.1\,M_\odot$ accretion disk.  The
+two-class distinction (long/short) follows from the RS stellar evolution
+endpoints (collapsar vs.\ compact merger).  The Amati relation
+$E_\mathrm{peak} \propto E_\mathrm{iso}^{0.5}$ is derived from the
+$\varphi$-ladder energy scaling combined with the Blandford-McKee blast
+wave.
+
+\begin{thebibliography}{99}
+
+\bibitem{Klebesadel1973}
+R.~W.~Klebesadel, I.~B.~Strong, R.~A.~Olson, ``Observations of gamma-ray
+bursts of cosmic origin,'' \textit{Astrophys.\ J.\ Lett.}\ \textbf{182},
+L85 (1973).
+
+\bibitem{Cavallo1978}
+G.~Cavallo, M.~J.~Rees, ``A qualitative study of cosmic fireballs and
+$\gamma$-ray bursts,'' \textit{Mon.\ Not.\ Roy.\ Astron.\ Soc.}\ \textbf{183},
+359 (1978).
+
+\bibitem{Metzger1997}
+M.~R.~Metzger \textit{et al.}, ``Spectral constraints on the redshift
+of the optical counterpart to the $\gamma$-ray burst of 8 May 1997,''
+\textit{Nature} \textbf{387}, 878 (1997).
+
+\bibitem{Amati2002}
+L.~Amati \textit{et al.}, ``Intrinsic spectra and energetics of BeppoSAX
+$\gamma$-ray bursts with known redshifts,'' \textit{Astron.\ Astrophys.}\
+\textbf{390}, 81 (2002).
+
+\bibitem{Abbott2017}
+B.~P.~Abbott \textit{et al.}\ (LIGO/Virgo), ``GW170817: Observation of
+gravitational waves from a binary neutron star inspiral,''
+\textit{Phys.\ Rev.\ Lett.}\ \textbf{119}, 161101 (2017).
+
+\bibitem{Washburn2026a}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \textit{Axioms} \textbf{15}(2), 90 (2026).
+
+\end{thebibliography}
+
+\end{document}

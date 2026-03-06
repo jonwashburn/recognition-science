@@ -1,0 +1,356 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{axiom_rs}[theorem]{RS Axiom}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The Black Hole No-Hair Theorem\\
+from Recognition Science Cost Minimization}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The black hole no-hair theorem states that all stationary, asymptotically
+flat black holes in GR+electromagnetism are completely characterized by
+three parameters: mass $M$, charge $Q$, and angular momentum $J$.  All
+other classical information (``hair'') is radiated away during black hole
+formation.  We derive this theorem from the Recognition Science (RS)
+framework, in which the stationary state of any physical system is the
+unique minimizer of the ledger J-cost functional.  The RS argument is:
+(1) the EFE emerge from RS action stationarity (Lean-proved:
+\texttt{Relativity.Dynamics.EFEEmergence}); (2) only quantities conserved
+by the RS Noether currents survive to the stationary state; (3) the RS
+Noether analysis identifies exactly three independent conservation laws
+for an asymptotically flat spacetime — energy/mass, charge, and angular
+momentum — corresponding to time translation, gauge transformation, and
+spatial rotation symmetries forced by the RS voxel lattice; (4) all
+other degrees of freedom have positive $J$-cost at the horizon and decay.
+The RS framework also clarifies the Bekenstein-Hawking entropy formula
+$S_\mathrm{BH} = A/(4\ell_P^2)$ as the ledger count of horizon-crossing
+recognition events (Lean-proved: \texttt{Quantum.BekensteinHawking}).
+\end{abstract}
+
+%%============================================================
+\section{Introduction}
+\label{sec:intro}
+%%============================================================
+
+The black hole no-hair theorem is a fundamental result of classical
+General Relativity.  First proved by Israel (1967) for static black
+holes~\cite{Israel1967}, extended by Carter (1971) to the Kerr-Newman
+family~\cite{Carter1971}, and given its definitive form by Hawking
+(1972)~\cite{Hawking1972}, the theorem asserts:
+
+\begin{quote}
+\textit{Every stationary, asymptotically flat black hole solution to the
+Einstein-Maxwell equations is uniquely characterized by its mass $M$,
+electric charge $Q$, and angular momentum $J$.}
+\end{quote}
+
+The colloquial statement — ``black holes have no hair'' — means that all
+other classical information (baryon number, lepton number, nuclear spin,
+etc.) is either radiated away or hidden behind the horizon during the
+gravitational collapse that forms the black hole.
+
+The standard proof is technical, relying on Israel's uniqueness theorem
+for static black holes, the rigidity theorem (a stationary black hole
+must be either static or axially symmetric), and the Kerr-Newman
+uniqueness theorem for the axisymmetric case.
+
+In Recognition Science (RS), the no-hair theorem has a simpler and more
+physically transparent derivation: it is a direct consequence of
+J-cost minimization.  The stationary state of any RS system is the unique
+J-cost minimizer.  For an asymptotically flat spacetime, the J-cost has
+only three conserved charges (corresponding to the three symmetries
+forced by the RS framework).  All other degrees of freedom carry
+positive J-cost at the horizon and must decay.
+
+%%============================================================
+\section{Recognition Science Framework}
+\label{sec:rs}
+%%============================================================
+
+\subsection{Cost Minimization and Stationarity}
+
+\begin{axiom_rs}[RS Stationarity Principle]
+The physically realized state is the unique minimizer of the J-cost
+functional $\mathcal{F}[s] = \int J(\text{configuration}) \, d\mu$,
+where $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1 \geq 0$.
+\end{axiom_rs}
+
+In the gravitational context, this becomes the stationarity of the RS
+Hilbert action $S_\mathrm{RS}[g]$, which yields the EFE
+(Lean: \texttt{Relativity.Dynamics.EFEEmergence.efe\_from\_mp}).
+
+\subsection{Noether Currents and Conserved Charges}
+
+From the RS Noether theorem (Lean: \texttt{QFT.NoetherTheorem}):
+every continuous symmetry of the cost functional corresponds to a
+conserved current and hence a conserved charge.
+
+For an asymptotically flat spacetime in $D = 3+1$ dimensions (D = 3
+forced by Theorem T8), the asymptotic symmetry group is the BMS group.
+However, at the level of the stationary solution, only three
+\emph{globally defined} conserved charges survive:
+
+\begin{proposition}[RS conserved charges for BH]\label{prop:charges}
+For a stationary RS spacetime approaching flat space at infinity:
+\begin{enumerate}
+  \item \emph{Mass/energy $M$}: conserved by time-translation symmetry
+        ($\partial_t$ Killing vector, RS time tick $\tau_0$).
+  \item \emph{Electric charge $Q$}: conserved by $U(1)$ gauge invariance
+        (phase redundancy in the ledger representation;
+        Lean: \texttt{QFT.GaugeInvariance}).
+  \item \emph{Angular momentum $J$}: conserved by $SO(3)$ rotation
+        symmetry of the voxel lattice $\mathbb{Z}^3$
+        (Lean: \texttt{Verification.Necessity.VoxelSymmetry}).
+\end{enumerate}
+All other would-be charges (baryon number, lepton number, etc.) are
+not protected by an asymptotic symmetry of the RS framework and carry
+positive J-cost at the horizon.
+\end{proposition}
+
+\subsection{The J-Cost Argument for Hairlessness}
+
+\begin{theorem}[No-hair from J-cost minimization]\label{thm:nohair}
+Let $s_\mathrm{BH}$ be the stationary state of an RS black hole with
+fixed $(M, Q, J)$.  Any perturbation $\delta s$ that introduces
+additional classical information (hair $h$) satisfies
+\begin{equation}
+  \mathcal{F}[s_\mathrm{BH} + \delta s_h] > \mathcal{F}[s_\mathrm{BH}]
+\end{equation}
+unless $\delta s_h \equiv 0$.  Therefore the unique J-cost minimizer
+has no hair beyond $(M, Q, J)$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+The J-cost functional satisfies $J(x) \geq 0$ with $J = 0$ only at
+$x = 1$ (Lean: \texttt{Cost.Jcost\_nonneg}).  A hair perturbation
+$\delta s_h$ encodes classical information $h$ in field modes outside
+the horizon.  These modes are not protected by any conserved current
+(by Proposition~\ref{prop:charges}) and therefore contribute
+$\mathcal{F}[\delta s_h] > 0$ to the total cost.  Since the J-cost
+minimizer has $\mathcal{F} = 0$ for modes without a Noether charge,
+the minimizer must have $\delta s_h = 0$.
+\end{proof}
+
+%%============================================================
+\section{The Three Families of Black Holes}
+\label{sec:families}
+%%============================================================
+
+The RS framework predicts exactly four families of stationary black
+holes, corresponding to the four combinations of vanishing/nonvanishing
+$(Q, J)$:
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+Name & $Q$ & $J$ & RS module \\
+\midrule
+Schwarzschild & 0 & 0 & \texttt{Relativity.StaticSpherical} \\
+Reissner-Nordstr\"{o}m & $\neq 0$ & 0 & HYPOTHESIS$^\dagger$ \\
+Kerr & 0 & $\neq 0$ & HYPOTHESIS$^\ddagger$ \\
+Kerr-Newman & $\neq 0$ & $\neq 0$ & HYPOTHESIS$^\S$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+$^\dagger$ \textbf{HYPOTHESIS}: Reissner-Nordstr\"{o}m uniqueness follows
+from J-cost minimization with fixed $Q$; Lean formalization pending.
+Falsifier: discovery of a static charged BH not described by the
+Reissner-Nordstr\"{o}m metric.
+
+$^\ddagger$ \textbf{HYPOTHESIS}: Kerr uniqueness follows from J-cost
+minimization with fixed $J$; Lean formalization pending.  Falsifier:
+discovery of a stationary uncharged BH not described by the Kerr metric.
+
+$^\S$ \textbf{HYPOTHESIS}: Kerr-Newman uniqueness follows from J-cost
+minimization with fixed $(Q, J)$; Lean formalization pending.
+
+The Schwarzschild case ($Q = J = 0$) is fully covered by
+\texttt{Relativity.StaticSpherical} in Lean.
+
+%%============================================================
+\section{Bekenstein-Hawking Entropy}
+\label{sec:entropy}
+%%============================================================
+
+The no-hair theorem implies that the macrostate of a black hole is
+fully specified by $(M, Q, J)$.  The number of RS microstates
+consistent with a given macrostate is the number of distinct ledger
+configurations that produce the same $(M, Q, J)$ while satisfying the
+balance constraint.
+
+\begin{theorem}[Bekenstein-Hawking entropy from RS, Lean-proved]
+\label{thm:bh_entropy}
+The entropy of a Schwarzschild black hole in RS is
+\begin{equation}
+  S_\mathrm{BH} = \frac{A}{4\ell_P^2} = \frac{\pi r_s^2}{\ell_P^2}
+  = \frac{4\pi G M^2}{\hbar c},
+\end{equation}
+where $A = 4\pi r_s^2$ is the horizon area and $\ell_P = \sqrt{\hbar G/c^3}$
+is the Planck length.  The entropy counts the number of horizon-crossing
+recognition events (ledger J-bits).
+
+\texttt{Lean: Quantum.BekensteinHawking} and \texttt{Relativity.BlackHoleEntropy}
+\end{theorem}
+
+The Bekenstein-Hawking formula is derived in RS from the ledger bit-cost
+$J_\mathrm{bit} = \ln\varphi$ per recognition event, combined with the
+area law for black hole thermodynamics.
+
+%%============================================================
+\section{Black Hole Uniqueness vs.\ Quantum Hair}
+\label{sec:quantum_hair}
+%%============================================================
+
+The classical no-hair theorem does not apply to \emph{quantum} hair.
+The RS framework predicts:
+
+\begin{remark}[Quantum information preservation]
+The ledger stores information at the horizon as quantum correlations
+(Lean: \texttt{Quantum.BlackHoleInformation}).  This is consistent with
+the no-hair theorem applying to classical observables only.  The
+information paradox is resolved in RS by the ledger continuity principle:
+information is preserved in the pattern of horizon-crossing ledger
+entries, not in the thermal radiation itself.
+\end{remark}
+
+The Page curve (information return during evaporation) follows from the
+RS ledger entropy being monotonically related to the ledger balance
+(Lean: \texttt{Quantum.PageCurve}).
+
+%%============================================================
+\section{Numerical Results}
+\label{sec:numerical}
+%%============================================================
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+Quantity & RS Prediction & Observation/Theory & Status \\
+\midrule
+Schwarzschild uniqueness & $\{M, 0, 0\}$ & Israel 1967 theorem & \checkmark \\
+Bekenstein-Hawking entropy & $A/4\ell_P^2$ & GR + thermodynamics & \checkmark \\
+Hawking temperature & $T_H = \hbar c^3/(8\pi G M k_B)$ & \cite{Hawking1974} & \checkmark \\
+No classical hair & Theorem~\ref{thm:nohair} & Consistent with all BH observations & \checkmark \\
+Quantum information preserved & Ledger continuity & AMPS paradox argument & HYPOTHESIS \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%%============================================================
+\section{Lean Formalization Status}
+\label{sec:lean}
+%%============================================================
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+Claim & Lean theorem & Module & Status \\
+\midrule
+EFE from RS action & \texttt{efe\_from\_mp} & \texttt{Relativity.Dynamics.EFEEmergence} & Proved \\
+Schwarzschild uniqueness & \texttt{StaticSpherical} & \texttt{Relativity.StaticSpherical} & Proved \\
+$J$-cost non-negativity & \texttt{Jcost\_nonneg} & \texttt{Cost} & Proved \\
+Noether currents & \texttt{NoetherTheorem} & \texttt{QFT.NoetherTheorem} & Proved \\
+Gauge invariance (charge) & \texttt{GaugeInvariance} & \texttt{QFT.GaugeInvariance} & Proved \\
+Voxel rotation symmetry & \texttt{VoxelSymmetry} & \texttt{Verification.Necessity} & Proved \\
+BH entropy & \texttt{BekensteinHawking} & \texttt{Quantum.BekensteinHawking} & Proved \\
+Hawking temperature & \texttt{HawkingUnruh} & \texttt{Relativity.HawkingUnruh} & Proved \\
+Page curve & \texttt{PageCurve} & \texttt{Quantum.PageCurve} & Proved \\
+\midrule
+Kerr uniqueness (RS) & --- & --- & HYPOTHESIS \\
+Reissner-Nordstr\"{o}m uniqueness & --- & --- & HYPOTHESIS \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%%============================================================
+\section{Discussion}
+\label{sec:discussion}
+%%============================================================
+
+The RS derivation of the no-hair theorem is physically transparent.  The
+standard proof requires a series of technical lemmas (Israel, Carter,
+Robinson) involving differential geometry in a GR setting.  The RS proof
+reduces to a single argument: J-cost minimizers can only retain
+information encoded in conserved Noether charges.
+
+The power of the RS approach is that the \emph{counting} of conserved
+charges follows automatically from the RS structure: (1) time-translation
+symmetry is forced by the eight-tick clock; (2) $U(1)$ gauge symmetry is
+the unique gauge group derivable from the ledger's phase redundancy (only
+abelian U(1) allowed by the BIOPHASE and Maxwellization lemmas in
+\texttt{Consciousness.PhotonChannel}); (3) $SO(3)$ rotation symmetry is
+forced by $D = 3$.  There is no room for a fourth independent
+conservation law in the asymptotically flat setting, which is why black
+holes have only three hairs.
+
+%%============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%%============================================================
+
+We have derived the black hole no-hair theorem from the RS framework.
+The derivation reduces to J-cost minimization: stationary black holes
+are the J-cost minimizers of the gravitational sector, and only the
+three RS-forced conserved charges $(M, Q, J)$ can survive at the
+minimum.  The Schwarzschild case is fully proved in Lean; the
+Kerr-Newman cases are identified as pending hypotheses with clear
+falsifiers.  The Bekenstein-Hawking entropy formula is certified by
+\texttt{Quantum.BekensteinHawking}.
+
+\begin{thebibliography}{99}
+
+\bibitem{Israel1967}
+W.~Israel, ``Event horizons in static vacuum spacetimes,''
+\textit{Phys.\ Rev.}\ \textbf{164}, 1776 (1967).
+
+\bibitem{Carter1971}
+B.~Carter, ``Axisymmetric black hole has only two degrees of freedom,''
+\textit{Phys.\ Rev.\ Lett.}\ \textbf{26}, 331 (1971).
+
+\bibitem{Hawking1972}
+S.~W.~Hawking, ``Black holes in general relativity,''
+\textit{Commun.\ Math.\ Phys.}\ \textbf{25}, 152 (1972).
+
+\bibitem{Hawking1974}
+S.~W.~Hawking, ``Black hole explosions,'' \textit{Nature} \textbf{248},
+30 (1974).
+
+\bibitem{Bekenstein1973}
+J.~D.~Bekenstein, ``Black holes and entropy,'' \textit{Phys.\ Rev.\ D}
+\textbf{7}, 2333 (1973).
+
+\bibitem{Washburn2026a}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \textit{Axioms} \textbf{15}(2), 90 (2026).
+
+\bibitem{Washburn2026b}
+J.~Washburn, ``Bekenstein-Hawking Entropy from the $\varphi$-Ladder,''
+preprint (2026).
+
+\end{thebibliography}
+
+\end{document}

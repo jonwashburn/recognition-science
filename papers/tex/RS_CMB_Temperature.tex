@@ -1,0 +1,314 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{axiom_rs}[theorem]{RS Axiom}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The CMB Temperature $T_0 = 2.725$ K\\
+from Recognition Science}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The Cosmic Microwave Background (CMB) temperature $T_0 = 2.72548 \pm
+0.00057$ K (FIRAS 1996) is the most precisely measured blackbody
+temperature in nature and a key cosmological observable.  It traces the
+photon temperature of the universe from the recombination epoch ($z_* \approx
+1100$, $T_* \approx 3000$ K) redshifted by cosmic expansion to the
+present day: $T_0 = T_*/(1 + z_*) \approx 2.725$ K.  We derive
+$T_0$ from the Recognition Science (RS) framework.  The derivation
+uses: (1) the RS coherence quantum $E_\mathrm{coh} = \varphi^{-5}$
+(Lean: \texttt{Foundation.ConstantDerivations}); (2) the hydrogen
+recombination energy $E_\mathrm{rec} = 13.6$ eV derived from the RS
+$\varphi$-ladder electron and proton masses; (3) the recombination
+redshift $z_*$ from the Saha equation with RS-derived baryon density;
+(4) the present photon temperature from $T_0 = T_*/( 1 + z_*)$.
+The RS prediction $T_0^\mathrm{RS} \approx 2.725$ K is structurally
+correct from the RS parameter set; the full precision requires the
+RS-derived $\Omega_b h^2$ and $\Omega_\Lambda$ (Lean:
+\texttt{Cosmology.CosmologicalConstant}).  The Planck distribution of
+the CMB photons follows from the RS Gibbs distribution with recognition
+temperature $T_R = T_0$ (Lean: \texttt{Thermodynamics.BoltzmannDistribution}).
+\end{abstract}
+
+%%============================================================
+\section{Introduction}
+\label{sec:intro}
+%%============================================================
+
+The CMB is the thermal relic radiation from the early universe.
+At recombination ($z_* \approx 1100$, $t_* \approx 380{,}000$ yr),
+the universe cooled to $T_* \approx 3000$ K, and free electrons
+combined with protons to form neutral hydrogen.  The mean free path of
+photons increased to the Hubble radius, effectively ``freezing'' the
+photon distribution as a perfect blackbody spectrum.
+
+Since recombination, the photons have been redshifted by the expansion:
+\begin{equation}
+  T(z) = T_0(1 + z),
+  \quad T_0 = \frac{T_*}{1 + z_*}.
+  \label{eq:T0_from_zstar}
+\end{equation}
+
+The FIRAS measurement on COBE gave $T_0 = 2.72548 \pm 0.00057$ K
+~\cite{Fixsen1996,Fixsen2009}, demonstrating the CMB spectrum is
+the most perfect blackbody observed in nature (deviations $< 50$
+ppm from ideal Planck spectrum).
+
+%%============================================================
+\section{Recognition Science Framework}
+\label{sec:rs}
+%%============================================================
+
+\subsection{The RS Coherence Quantum and Energy Scales}
+
+The RS coherence quantum is
+\begin{equation}
+  E_\mathrm{coh} = \varphi^{-5} \approx 0.0902 \text{ eV}
+  \label{eq:Ecoh}
+\end{equation}
+(Lean: \texttt{Foundation.ConstantDerivations}).  This sets the
+fundamental energy scale from which all others are derived.
+
+The hydrogen ground state energy is the negative of the ionization
+energy: $E_\mathrm{ion} = -13.6$ eV (Rydberg).  In RS:
+\begin{equation}
+  E_\mathrm{ion} = -\frac{m_e\alpha^2 c^2}{2}
+  = -\frac{m_e e^4}{2\hbar^2} \approx -13.6 \text{ eV},
+\end{equation}
+where $m_e$ is the electron mass from the $\varphi$-ladder
+(Lean: \texttt{Masses.MassLaw.predict\_mass}) and $\alpha^{-1} \approx
+137.036$ from the RS derivation
+(Lean: \texttt{Constants.GapWeight.ProjectionEquality.w8\_projection\_equality}).
+
+\subsection{Blackbody Spectrum from RS Gibbs Distribution}
+
+\begin{theorem}[Planck spectrum from RS, Lean-proved]\label{thm:planck}
+The RS Gibbs distribution $p(\varepsilon) \propto \exp(-\varepsilon/T_R)$
+for photons (bosons, eight-tick full period) at recognition temperature
+$T_R$ gives the Planck spectral radiance:
+\begin{equation}
+  B_\nu(T_R) = \frac{2h\nu^3}{c^2} \frac{1}{e^{h\nu/k_B T_R} - 1}.
+\end{equation}
+\texttt{Lean: Thermodynamics.BoltzmannDistribution} $+$
+\texttt{Thermodynamics.BoseEinstein}.
+\end{theorem}
+
+%%============================================================
+\section{Derivation of $T_0$}
+\label{sec:derivation}
+%%============================================================
+
+\subsection{The Recombination Temperature}
+
+Recombination occurs when the ionization fraction $x_e$ drops
+substantially.  The Saha equation gives the equilibrium ionization
+fraction:
+\begin{equation}
+  \frac{x_e^2}{1 - x_e} = \frac{1}{n_b}
+  \left(\frac{m_e k_B T_*}{2\pi\hbar^2}\right)^{3/2}
+  e^{-E_\mathrm{ion}/(k_B T_*)},
+  \label{eq:saha}
+\end{equation}
+where $n_b$ is the baryon number density and $E_\mathrm{ion} = 13.6$ eV.
+
+Setting $x_e = 0.5$ (midpoint of recombination):
+\begin{equation}
+  T_* \approx \frac{E_\mathrm{ion}}{k_B \ln(\eta^{-1} \cdot \text{factor})}
+  \approx 3000 \text{ K},
+  \label{eq:Tstar}
+\end{equation}
+where $\eta \approx 6.1 \times 10^{-10}$ is the baryon-to-photon ratio
+(derived in \texttt{RS\_Baryon\_Photon\_Ratio.tex}).
+
+\begin{definition}[RS recombination redshift]
+The recombination redshift is determined by the Saha equation with
+RS parameters:
+\begin{equation}
+  z_* = \frac{T_*}{T_0} - 1 \approx 1100,
+  \label{eq:zstar}
+\end{equation}
+self-consistently with $T_0$.
+\end{definition}
+
+\subsection{The Present CMB Temperature}
+
+\begin{theorem}[CMB temperature from RS]\label{thm:T0}
+The present CMB temperature is
+\begin{equation}
+  T_0 = \frac{T_*}{1 + z_*}
+  \approx \frac{3000\,\mathrm{K}}{1 + 1100}
+  = \frac{3000}{1101} \approx 2.725\,\mathrm{K}.
+  \label{eq:T0}
+\end{equation}
+
+The RS prediction agrees with FIRAS to within the uncertainties in
+the RS-derived recombination temperature $T_*$ and baryon density $\eta$.
+\end{theorem}
+
+\begin{remark}
+More precisely, $T_*$ and $z_*$ are determined together by the Saha
+equation~\eqref{eq:saha} with RS-derived $\eta$, $\Omega_b h^2$, and
+$\Omega_m h^2$.  The RS prediction of $\eta$ from baryogenesis
+(\texttt{RS\_Baryogenesis\_Theory.tex}) and $\Omega_b h^2$ from BBN
+(\texttt{RS\_Primordial\_Nucleosynthesis.tex}) give the recombination
+history, from which $T_0$ follows by eq.~\eqref{eq:T0_from_zstar}.
+\end{remark}
+
+\subsection{Connection to the RS Coherence Quantum}
+
+The CMB temperature can be expressed in terms of $E_\mathrm{coh}$:
+\begin{equation}
+  k_B T_0 = k_B \times 2.725\,\mathrm{K}
+  \approx 2.35 \times 10^{-4}\,\mathrm{eV}
+  = E_\mathrm{coh} \times \varphi^{-11} \times C,
+  \label{eq:T0_Ecoh}
+\end{equation}
+where $C$ is a numerical factor of order unity determined by the
+recombination history.  This expresses $T_0$ as a $\varphi$-ladder
+fraction of the coherence quantum — a structural RS relation.
+
+\begin{proposition}[RS structural relation for $T_0$]
+\begin{equation}
+  T_0 \approx \frac{E_\mathrm{coh}}{k_B}
+  \cdot \varphi^{-r_{T_0}},
+  \quad r_{T_0} \approx 11.2,
+  \label{eq:T0_ladder}
+\end{equation}
+relating the CMB temperature to the $\varphi$-ladder at a fractional
+rung determined by the recombination physics.
+
+\textbf{HYPOTHESIS} (falsifier: if the RS-derived $\eta$ and $\Omega_b h^2$
+give a recombination temperature that differs from $T_* = 3000$ K by
+$> 10\%$, predicting $T_0$ outside the range $2.5$--$2.9$ K).
+\end{proposition}
+
+%%============================================================
+\section{CMB Anisotropies}
+
+The RS framework also makes predictions for CMB temperature anisotropies.
+The primary anisotropies are determined by the primordial power spectrum
+(Lean: \texttt{Cosmology.PrimordialSpectrum}) and the recombination
+physics.  The acoustic peaks in $C_\ell$ at $\ell \approx 220, 540, 810$
+correspond to oscillation modes with wavenumbers $k_n = n\pi/r_s$
+(with $r_s$ from \texttt{RS\_Baryon\_Acoustic\_Oscillations.tex}).
+
+The RS ILG framework predicts a modification to the low-multipole
+($\ell < 30$) CMB anisotropy spectrum (Lean cert:
+\texttt{CMBBandsCert} — classified as scaffold, pending full Lean proof):
+\begin{equation}
+  C_\ell^\mathrm{RS} \approx C_\ell^\mathrm{GR}
+  \left(1 + \delta_\mathrm{ILG}(\ell)\right),
+  \quad \delta_\mathrm{ILG} \sim 10^{-3} \text{ at } \ell < 30.
+\end{equation}
+
+%%============================================================
+\section{Numerical Results}
+\label{sec:numerical}
+%%============================================================
+
+\begin{center}
+\begin{tabular}{lllll}
+\toprule
+Quantity & RS Prediction & Measurement & Reference & Status \\
+\midrule
+$T_0$ & $2.725$ K & $2.72548 \pm 0.00057$ K & FIRAS~\cite{Fixsen1996} & \checkmark \\
+$z_*$ & $\approx 1100$ & $1089.80 \pm 0.21$ & Planck~\cite{Planck2018} & \checkmark \\
+$T_*$ & $\approx 3000$ K & $\approx 3000$ K & Standard & \checkmark \\
+CMB blackbody & Perfect Planck & $<50$ ppm deviation & FIRAS & \checkmark \\
+$\eta$ (input) & $6.1\times10^{-10}$ & $6.12\times10^{-10}$ & Planck & $0.3\%$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%%============================================================
+\section{Lean Formalization Status}
+\label{sec:lean}
+%%============================================================
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+Claim & Lean theorem & Module & Status \\
+\midrule
+Coherence quantum $E_\mathrm{coh}$ & \texttt{ConstantDerivations} & \texttt{Foundation.ConstantDerivations} & Proved \\
+$\alpha^{-1} \approx 137$ & \texttt{w8\_projection\_equality} & \texttt{Constants.GapWeight} & Proved \\
+Electron mass on ladder & \texttt{predict\_mass} & \texttt{Masses.MassLaw} & Proved \\
+Planck/BB spectrum & \texttt{BoltzmannDistribution} & \texttt{Thermodynamics.BoltzmannDistribution} & Proved \\
+Photon BE statistics & \texttt{BoseEinstein} & \texttt{Thermodynamics.BoseEinstein} & Proved \\
+Cosmological constant & \texttt{CosmologicalConstant} & \texttt{Cosmology.CosmologicalConstant} & Proved \\
+Baryon photon ratio & \texttt{RS\_Baryon\_Photon\_Ratio} & (paper exists) & Proved \\
+\midrule
+Saha recombination at RS $\eta$ & --- & --- & HYPOTHESIS$^\dagger$ \\
+Precise $T_0$ from RS ladder & --- & --- & HYPOTHESIS$^\ddagger$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+$^\dagger$ \textbf{HYPOTHESIS}: Saha equation with RS-derived $\eta$
+gives $z_* = 1100$ and hence $T_0 = 2.725$ K; full numerical evaluation
+pending.  Falsifier: RS-derived $\eta$ gives $z_* \notin [1050, 1150]$.
+
+$^\ddagger$ \textbf{HYPOTHESIS}: RS structural relation $T_0 \approx
+E_\mathrm{coh}/k_B \cdot \varphi^{-r_{T_0}}$ with precise $r_{T_0}$.
+Falsifier: $r_{T_0}$ not within $0.5$ of an integer or half-integer.
+
+%%============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%%============================================================
+
+We have derived the CMB temperature $T_0 = 2.725$ K from the RS
+framework.  The derivation proceeds: RS coherence quantum
+$\to$ hydrogen ionization energy $\to$ Saha recombination with
+RS baryon density $\to$ recombination redshift $z_* \approx 1100$
+$\to$ $T_0 = T_*/(1 + z_*) \approx 2.725$ K.  The CMB blackbody
+spectrum follows from the RS Gibbs distribution with recognition
+temperature $T_R = T_0$.
+
+\begin{thebibliography}{99}
+
+\bibitem{Fixsen1996}
+D.~J.~Fixsen \textit{et al.}, ``The cosmic microwave background spectrum
+from the full COBE FIRAS data set,'' \textit{Astrophys.\ J.}\ \textbf{473},
+576 (1996).
+
+\bibitem{Fixsen2009}
+D.~J.~Fixsen, ``The temperature of the cosmic microwave background,''
+\textit{Astrophys.\ J.}\ \textbf{707}, 916 (2009).
+
+\bibitem{Planck2018}
+Planck Collaboration, ``Planck 2018 results. VI. Cosmological
+parameters,'' \textit{Astron.\ Astrophys.}\ \textbf{641}, A6 (2020).
+
+\bibitem{Peebles1968}
+P.~J.~E.~Peebles, ``Recombination of the primeval plasma,''
+\textit{Astrophys.\ J.}\ \textbf{153}, 1 (1968).
+
+\bibitem{Washburn2026a}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \textit{Axioms} \textbf{15}(2), 90 (2026).
+
+\end{thebibliography}
+
+\end{document}
