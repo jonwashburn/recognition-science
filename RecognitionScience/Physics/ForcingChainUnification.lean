@@ -1,7 +1,6 @@
 import Mathlib
 import RecognitionScience.Constants
 import RecognitionScience.Cost
-import RecognitionScience.Foundation.UnifiedForcingChain
 import RecognitionScience.Foundation.DimensionForcing
 import RecognitionScience.Foundation.PhiForcing
 import RecognitionScience.Foundation.ParticleGenerations
