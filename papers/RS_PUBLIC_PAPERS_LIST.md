@@ -28,7 +28,6 @@
 | Recognition Stability Audit | `syllabus/papers/01-root-foundation/Recognition_Stability_Audit.tex` |
 | The Exclusion Theorem | `syllabus/papers/01-root-foundation/RSA_From_First_Principles.tex` |
 | The Coercive Projection Theorem | `syllabus/papers/01-root-foundation/CPM_From_First_Principles.tex` |
-| CPM: Axioms, Theorems, and Applications | `syllabus/papers/01-root-foundation/CPM_Axioms_Theorems_Applications.tex` |
 | Combinatorial Cascade D3 | `syllabus/papers/01-root-foundation/Combinatorial_Cascade_D3.tex` |
 | Rigidity and Compact Phase Emergence | `syllabus/papers/01-root-foundation/GCIC_Rigidity_Phase_Emergence.pdf` |
 | Logic, Identity and Existence through RCL | `syllabus/papers/02-structure-ontology/The_Cost_of_Existence.tex` |
