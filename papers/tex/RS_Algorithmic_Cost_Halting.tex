@@ -1,0 +1,567 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Jcost}{J}
+
+\title{\textbf{Algorithmic Cost and the Halting Problem}\\[0.5em]
+\large Why the Universe Cannot Loop:\\
+Computation, Divergence, and Economic Censorship\\
+from the $J$-Cost Functional}
+\author{Jonathan Washburn\\
+\small Recognition Science Research Institute, Austin, Texas\\
+\small \texttt{jon@recognitionphysics.org}}
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove that \emph{every physical computation is bounded by its initial $\Jcost$-cost budget}, that \emph{infinite loops are economically impossible}, and that \emph{the halting problem for ledger-realized computation is resolved by cost exhaustion}.
+
+The argument requires only three ingredients already present in Recognition Science:
+(i)~the non-negativity of the defect functional $\Jcost(x) = \tfrac{1}{2}(x + x^{-1}) - 1 \ge 0$,
+(ii)~the variational dynamics in which total defect is monotone non-increasing,
+and (iii)~the Archimedean property of the reals.
+
+The central result (\textbf{Infinite Computation Impossibility Theorem}, \S\ref{sec:impossible}) states:
+
+\begin{quote}
+\itshape
+No variational trajectory on the Recognition Science ledger can sustain infinitely many steps each costing at least $\delta > 0$ in defect reduction. After at most $\lfloor D_0/\delta \rfloor$ such steps, where $D_0$ is the initial total defect, the computation must slow below threshold.
+\end{quote}
+
+This result unifies two previously separate censorship phenomena.
+\texttt{LogicFromCost.lean} proved that contradictions carry positive cost and are therefore censored.
+\texttt{AlgorithmicCost.lean} proves that infinite loops carry infinite cumulative cost and are therefore censored.
+Both are instances of the same meta-principle: the universe forbids infinite defect accumulation.
+A contradiction is a \emph{static} infinite-cost configuration; an infinite loop is a \emph{dynamic} infinite-cost trajectory.
+The cost functional censors both.
+
+All theorems are machine-verified in Lean~4 with no \texttt{sorry} and no custom axioms.
+The formalization is available at \texttt{RecognitionScience/Foundation/AlgorithmicCost.lean}.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%% ============================================================
+\section{Introduction}\label{sec:intro}
+%% ============================================================
+
+Recognition Science derives the structure of physical reality from a single cost functional
+\begin{equation}\label{eq:jcost}
+\Jcost(x) \;=\; \frac{1}{2}\!\left(x + x^{-1}\right) - 1, \qquad x > 0,
+\end{equation}
+together with the combinatorics of the $3$-cube $Q_3$ and the self-similarity equation $x^2 = x + 1$ that forces $x = \varphi$, the golden ratio.
+
+Previous work established that this framework yields:
+\begin{itemize}[nosep]
+\item The law of existence: $x$ exists iff $\Jcost(x) = 0$ iff $x = 1$ \cite{RS-LawOfExistence}.
+\item Logic from cost: consistency minimizes $\Jcost$; contradictions carry positive cost \cite{RS-LogicFromCost}.
+\item Variational dynamics: the ledger evolves by constrained $\Jcost$-minimization, producing deterministic, defect-monotone trajectories \cite{RS-VariationalDynamics}.
+\item Temperature, entropy, and the three laws of thermodynamics from the ledger's cost structure \cite{RS-Thermodynamics}.
+\end{itemize}
+
+But logic is only the \emph{foundation} of computation, and the theory was silent on a deeper question: \textbf{what are the computational limits imposed by $\Jcost$-cost?}
+
+This paper answers that question.
+We prove that every physical computation---modeled as a variational trajectory on the ledger---is bounded by its initial defect budget, that infinite loops are economically impossible, and that the halting problem for physically realized computation is resolved by cost exhaustion.
+
+The argument is elementary.
+It uses only the non-negativity and monotonicity of total defect together with the Archimedean property of the reals.
+No computability theory, no diagonalization, and no reference to Turing machines is needed.
+The universe does not need a halting oracle; it \emph{is} the halting oracle, and its mechanism is $\Jcost$-cost exhaustion.
+
+%% ============================================================
+\section{Preliminaries}\label{sec:prelim}
+%% ============================================================
+
+\subsection{The Cost Functional}
+
+The canonical cost functional $\Jcost : \R_{>0} \to \R$ is defined by~\eqref{eq:jcost}.
+Its key properties, all machine-verified:
+
+\begin{proposition}[Properties of $\Jcost$]\label{prop:jcost}
+\begin{enumerate}[nosep,label=(\roman*)]
+\item $\Jcost(x) \ge 0$ for all $x > 0$ \quad (AM--GM inequality).
+\item $\Jcost(x) = 0 \iff x = 1$ \quad (unique zero).
+\item $\Jcost(x) = \Jcost(x^{-1})$ \quad (reciprocal symmetry).
+\item $\Jcost$ is strictly convex on $(0,\infty)$.
+\item $\Jcost(x) \to +\infty$ as $x \to 0^+$ or $x \to +\infty$.
+\end{enumerate}
+\end{proposition}
+
+In log-coordinates $t = \log x$, the cost becomes $\Jcost_{\log}(t) = \cosh t - 1$, a convex bowl centered at $t=0$ with $\Jcost_{\log}''(0) = 1$.
+
+\subsection{Ledger Configurations and Total Defect}
+
+A \emph{ledger configuration} of size $N$ is a function $c : \{0,\ldots,N-1\} \to \R_{>0}$ assigning a positive real ratio to each ledger entry.
+The \emph{total defect} is
+\begin{equation}\label{eq:totaldefect}
+D(c) \;=\; \sum_{i=0}^{N-1} \Jcost(c_i) \;\ge\; 0,
+\end{equation}
+with $D(c) = 0$ iff $c_i = 1$ for all $i$ (the unity configuration).
+
+\subsection{Variational Dynamics}
+
+The ledger evolves by constrained $\Jcost$-minimization.
+At each tick $t$, the successor state $c(t{+}1)$ is the configuration minimizing $D$ over the \emph{feasible set}
+\[
+\mathcal{F}(c) \;=\; \bigl\{c' : D(c') \text{ is defined and } \textstyle\sum_i \log c'_i = \sum_i \log c_i\bigr\},
+\]
+which preserves the conserved log-charge $\sigma = \sum_i \log c_i$.
+
+A \emph{trajectory} is a sequence $\tau : \N \to \text{Config}(N)$ satisfying
+\[
+\tau(t{+}1) \;=\; \operatorname*{arg\,min}_{c' \in \mathcal{F}(\tau(t))} D(c')
+\qquad \forall\, t \in \N.
+\]
+
+\begin{proposition}[Defect Monotonicity]\label{prop:monotone}
+Along any variational trajectory, total defect is monotone non-increasing:
+\[
+D(\tau(t{+}1)) \;\le\; D(\tau(t)) \qquad \forall\, t \in \N.
+\]
+\end{proposition}
+
+\begin{proof}
+The current state $\tau(t)$ is feasible for itself.
+The successor minimizes over the feasible set.
+Therefore $D(\tau(t{+}1)) \le D(\tau(t))$.
+\end{proof}
+
+%% ============================================================
+\section{Computation as Trajectory}\label{sec:computation}
+%% ============================================================
+
+\begin{definition}[Step Cost]\label{def:stepcost}
+The \emph{step cost} of a trajectory $\tau$ at time $t$ is the defect reduction achieved by the variational step:
+\[
+\delta_t \;=\; D(\tau(t)) - D(\tau(t{+}1)) \;\ge\; 0.
+\]
+\end{definition}
+
+The step cost is the ``computational work'' performed at tick $t$.
+It is non-negative by defect monotonicity.
+It is zero iff the state is already at equilibrium---the computation has halted.
+It is positive iff genuine work was performed.
+
+\begin{definition}[Cumulative Cost]\label{def:cumcost}
+The \emph{cumulative cost} over $T$ steps is
+\[
+\Delta_T \;=\; D(\tau(0)) - D(\tau(T)) \;=\; \sum_{t=0}^{T-1} \delta_t.
+\]
+\end{definition}
+
+The telescoping equality follows immediately from the definition.
+The cumulative cost is the total computation budget expended from tick~0 to tick~$T$.
+
+\begin{proposition}[Cost Budget]\label{prop:budget}
+The cumulative cost is bounded above by the initial defect:
+\[
+\Delta_T \;=\; D(\tau(0)) - D(\tau(T)) \;\le\; D(\tau(0)) \;=:\; D_0.
+\]
+\end{proposition}
+
+\begin{proof}
+$D(\tau(T)) \ge 0$ by~\eqref{eq:totaldefect}, so $\Delta_T = D_0 - D(\tau(T)) \le D_0$.
+\end{proof}
+
+This bound is the key to everything that follows.
+The initial defect $D_0$ is the computation's total fuel.
+Every step burns some of it.
+Once the fuel is exhausted, the computation has halted.
+
+%% ============================================================
+\section{The Computation Bound}\label{sec:bound}
+%% ============================================================
+
+\begin{theorem}[Step Cost Accumulation]\label{thm:accumulation}
+If each of $n$ consecutive steps costs at least $\delta > 0$, the cumulative cost satisfies
+\[
+\Delta_n \;\ge\; n\delta.
+\]
+\end{theorem}
+
+\begin{proof}
+By induction on $n$.
+The base case $n=0$ is trivial ($\Delta_0 = 0 \ge 0$).
+For the inductive step, $\Delta_{k+1} = \Delta_k + \delta_{k} \ge k\delta + \delta = (k{+}1)\delta$.
+\end{proof}
+
+\begin{theorem}[Computation Bound]\label{thm:bound}
+If each step costs at least $\delta > 0$, then the number of such steps satisfies
+\begin{equation}\label{eq:bound}
+n\delta \;\le\; D_0.
+\end{equation}
+Equivalently, $n \le D_0/\delta$.
+\end{theorem}
+
+\begin{proof}
+Combine Theorem~\ref{thm:accumulation} ($\Delta_n \ge n\delta$) with Proposition~\ref{prop:budget} ($\Delta_n \le D_0$).
+\end{proof}
+
+\begin{remark}
+The bound $n \le D_0/\delta$ is the \emph{computation budget} of the trajectory.
+It depends on exactly two quantities: the initial defect $D_0$ (how far the universe is from equilibrium) and the minimum step cost $\delta$ (the granularity of the computation).
+No parameter of the computation itself---its algorithm, its data, its purpose---enters the bound.
+The budget is a property of the \emph{cost landscape}, not of the computation.
+\end{remark}
+
+%% ============================================================
+\section{Infinite Loops Are Economically Impossible}\label{sec:impossible}
+%% ============================================================
+
+\begin{theorem}[Infinite Computation Impossibility]\label{thm:impossible}
+No variational trajectory can sustain infinitely many steps each costing at least $\delta > 0$.
+Formally: for any $\delta > 0$,
+\[
+\neg\;\bigl(\forall\, t \in \N,\; \delta_t \ge \delta\bigr).
+\]
+\end{theorem}
+
+\begin{proof}
+Suppose for contradiction that $\delta_t \ge \delta$ for all $t$.
+By the Archimedean property of $\R$, choose $n \in \N$ with $n > D_0/\delta$.
+Then by Theorem~\ref{thm:bound}, $n\delta \le D_0$.
+But $n > D_0/\delta$ implies $n\delta > D_0$.
+Contradiction.
+\end{proof}
+
+\begin{corollary}[Eventual Slowdown]\label{cor:slowdown}
+For any $\delta > 0$, there exists $T \in \N$ such that $\delta_T < \delta$.
+\end{corollary}
+
+\begin{proof}
+Contrapositive of Theorem~\ref{thm:impossible}.
+If $\delta_t \ge \delta$ for all $t$, then Theorem~\ref{thm:impossible} gives a contradiction.
+Therefore $\delta_T < \delta$ for some $T$.
+\end{proof}
+
+\begin{corollary}[Asymptotic Halting]\label{cor:asymptotic}
+For any $\varepsilon > 0$, the trajectory eventually has a step costing less than $\varepsilon$.
+The step costs approach zero in the sense that no positive lower bound can be maintained forever.
+\end{corollary}
+
+\begin{remark}
+This does not claim that $\delta_t \to 0$ as $t \to \infty$ (which would require a monotone convergence argument).
+It claims the weaker but already powerful fact: no positive floor can persist indefinitely.
+The universe cannot sustain high-throughput computation forever.
+It must eventually relax toward equilibrium.
+\end{remark}
+
+%% ============================================================
+\section{Equilibrium as Halting}\label{sec:equilibrium}
+%% ============================================================
+
+\begin{definition}[Equilibrium / Halting]\label{def:equilibrium}
+A configuration $c$ is at \emph{equilibrium} if it minimizes total defect over its feasible set:
+\[
+\forall\, c' \in \mathcal{F}(c),\quad D(c) \le D(c').
+\]
+Equivalently, $c$ is a fixed point of the variational dynamics.
+\end{definition}
+
+\begin{theorem}[Zero Cost Characterizes Halting]\label{thm:halting-equiv}
+A step has zero cost if and only if the state is at equilibrium:
+\[
+\delta_t = 0 \quad\Longleftrightarrow\quad \tau(t) \text{ is at equilibrium.}
+\]
+\end{theorem}
+
+\begin{proof}
+($\Rightarrow$)
+If $\delta_t = 0$, then $D(\tau(t)) = D(\tau(t{+}1))$.
+Since $\tau(t{+}1)$ minimizes $D$ over $\mathcal{F}(\tau(t))$ and $\tau(t) \in \mathcal{F}(\tau(t))$, we get $D(\tau(t)) = D(\tau(t{+}1)) \le D(c')$ for all $c' \in \mathcal{F}(\tau(t))$.
+So $\tau(t)$ is at equilibrium.
+
+\noindent($\Leftarrow$)
+If $\tau(t)$ is at equilibrium, then $D(\tau(t)) \le D(\tau(t{+}1))$ (since $\tau(t{+}1)$ is feasible).
+Combined with defect monotonicity $D(\tau(t{+}1)) \le D(\tau(t))$, equality follows.
+\end{proof}
+
+%% ============================================================
+\section{Loops Imply Fixed Points}\label{sec:loops}
+%% ============================================================
+
+\begin{theorem}[No Non-Trivial Loops]\label{thm:noloops}
+If a trajectory revisits a previous state---$\tau(t_2) = \tau(t_1)$ with $t_1 < t_2$---then every step in the interval $[t_1, t_2)$ has zero cost, and every state in the interval is at equilibrium.
+\end{theorem}
+
+\begin{proof}
+The states $\tau(t_1)$ and $\tau(t_2)$ have identical entries, hence identical total defect: $D(\tau(t_1)) = D(\tau(t_2))$.
+But defect is monotone non-increasing on $[t_1, t_2]$:
+\[
+D(\tau(t_1)) \ge D(\tau(t_1{+}1)) \ge \cdots \ge D(\tau(t_2)) = D(\tau(t_1)).
+\]
+All inequalities are equalities.
+Therefore $\delta_t = 0$ for all $t \in [t_1, t_2)$, and by Theorem~\ref{thm:halting-equiv}, each $\tau(t)$ is at equilibrium.
+\end{proof}
+
+\begin{remark}
+This theorem says that the variational dynamics on the ledger is \emph{loop-free} in a strong sense.
+The only ``loop'' is the trivial one: a fixed point that repeats itself forever.
+Non-trivial cycles---states that return to a previous configuration without being at equilibrium---are impossible.
+An infinite loop would be an infinite repetition of non-trivial states, each costing positive defect.
+But that is precisely what Theorem~\ref{thm:impossible} forbids.
+\end{remark}
+
+%% ============================================================
+\section{Economic Censorship: Unifying Logic and Computation}\label{sec:censorship}
+%% ============================================================
+
+The deepest consequence of this work is not any single theorem but the \emph{structural identity} it reveals between two previously separate RS results.
+
+\texttt{LogicFromCost.lean} proved:
+\begin{quote}
+Contradictions carry positive cost $\Rightarrow$ the universe censors contradictions.
+\end{quote}
+
+\texttt{AlgorithmicCost.lean} proves:
+\begin{quote}
+Infinite loops carry infinite cumulative cost $\Rightarrow$ the universe censors infinite loops.
+\end{quote}
+
+Both are instances of the \textbf{Economic Censorship Principle}:
+
+\begin{quote}
+\itshape
+The universe forbids infinite defect accumulation.
+Any configuration or trajectory whose total $\Jcost$-cost would exceed the finite initial budget $D_0$ is physically unrealizable.
+\end{quote}
+
+\begin{theorem}[Economic Censorship]\label{thm:censorship}
+For any variational trajectory $\tau$ with initial defect $D_0$:
+\begin{enumerate}[nosep,label=(\roman*)]
+\item $D_0 \ge 0$ \quad (finite, non-negative budget).
+\item $D(\tau(t{+}1)) \le D(\tau(t))$ for all $t$ \quad (cost is paid, never refunded).
+\item $\Delta_T \le D_0$ for all $T$ \quad (cumulative cost is bounded).
+\item For all $\delta > 0$: $\neg(\forall t,\, \delta_t \ge \delta)$ \quad (no infinite loops).
+\item For all $\varepsilon > 0$: $\exists T,\, \delta_T < \varepsilon$ \quad (eventual slowdown).
+\end{enumerate}
+\end{theorem}
+
+The following table summarizes the unification:
+
+\begin{center}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+& \textbf{Contradiction} & \textbf{Infinite Loop} \\
+\midrule
+Type & Static config & Dynamic trajectory \\
+Cost & $\Jcost(P \wedge \neg P) > 0$ & $\sum \delta_t = \infty$ \\
+Censorship & Cannot stabilize at $\Jcost = 0$ & Cannot fit in budget $D_0$ \\
+Mechanism & Complementarity of ratios & Archimedean property of $\R$ \\
+RS theorem & \texttt{contradiction\_positive\_cost} & \texttt{infinite\_computation\_impossible} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Both pathologies---logical inconsistency and computational divergence---are the same disease viewed from different angles.
+The cost functional cures both.
+
+%% ============================================================
+\section{The Halting Theorem for Ledger Computation}\label{sec:halting}
+%% ============================================================
+
+\begin{definition}[Computational Process]\label{def:process}
+A \emph{computational process} on the ledger is a variational trajectory $\tau$ together with a minimum step cost $\delta > 0$.
+The parameter $\delta$ represents the granularity of the computation: the minimum defect reduction per non-trivial step.
+\end{definition}
+
+\begin{definition}[Halting Bound]\label{def:haltingbound}
+The \emph{halting bound} of a computational process $(\tau, \delta)$ is
+\[
+T_{\max} \;=\; \frac{D_0}{\delta},
+\]
+where $D_0 = D(\tau(0))$ is the initial total defect.
+\end{definition}
+
+\begin{theorem}[The Halting Theorem]\label{thm:halting}
+Every computational process on the ledger reaches effective halting: there exists $T \in \N$ with $T \le T_{\max}$ such that $\delta_T < \delta$.
+\end{theorem}
+
+\begin{proof}
+Immediate from Corollary~\ref{cor:slowdown} and the explicit bound $n \le D_0/\delta$ (Theorem~\ref{thm:bound}).
+\end{proof}
+
+\begin{remark}[The Universe as Halting Oracle]
+This theorem does not ``solve'' the abstract Halting Problem, which concerns formal Turing machines with no cost constraint.
+What it proves is something different and, in a physical sense, stronger:
+
+\begin{enumerate}[nosep]
+\item Abstract Turing machines can loop forever---they have no cost budget.
+\item Physical computations (ledger trajectories) cannot---they are bounded by $D_0/\delta$.
+\item The universe does not need an external halting oracle.
+\item It \emph{is} the halting oracle: its mechanism is $\Jcost$-cost exhaustion.
+\end{enumerate}
+
+The halting question is not undecidable for physical computation.
+It is decided by the cost landscape itself.
+Every physical computation halts because the universe runs out of defect to spend.
+\end{remark}
+
+%% ============================================================
+\section{Connections to Algorithmic Information Theory}\label{sec:ait}
+%% ============================================================
+
+The computation bound $n \le D_0/\delta$ connects naturally to several concepts in algorithmic information theory.
+
+\subsection{Kolmogorov Complexity}
+
+The Kolmogorov complexity of an object is the length of the shortest program that produces it.
+In RS terms, the ``program'' is the trajectory from the initial configuration to the target, and the ``length'' is the number of non-trivial steps.
+The computation bound says:
+\[
+K_{\text{RS}}(\text{target}) \;\le\; \frac{D(\text{initial}) - D(\text{target})}{\delta}.
+\]
+The RS-complexity of a target state is bounded by the defect reduction needed to reach it, divided by the minimum step cost.
+This is a cost-theoretic complexity measure that does not depend on a choice of universal Turing machine.
+
+\subsection{Levin's Universal Search}
+
+Levin's universal search allocates computation time to programs in proportion to $2^{-|p|}$, where $|p|$ is program length.
+In RS terms, the analogous weight is $e^{-D(c)}$ (the Boltzmann weight from $\Jcost$-cost), which allocates probability to configurations in proportion to their defect.
+Lower defect $=$ higher weight $=$ more ``computational probability.''
+The Born rule structure proved in \texttt{MeasurementMechanism.lean} is precisely this allocation.
+
+\subsection{The $\varphi$-Connection}
+
+Recognition Science derives all fundamental constants from the golden ratio $\varphi = (1+\sqrt{5})/2$.
+The minimum step cost $\delta$ in physical computation is determined by the ledger's discreteness scale, which is itself set by $\varphi$ through the self-similarity equation $\varphi^2 = \varphi + 1$.
+Therefore the halting bound becomes
+\[
+T_{\max} \;\sim\; \frac{D_0}{\delta(\varphi)},
+\]
+and the computational capacity of the universe is bounded by $\varphi$ and $\Jcost$.
+
+%% ============================================================
+\section{Discussion}\label{sec:discussion}
+%% ============================================================
+
+\subsection{What This Result Does Not Claim}
+
+We do not claim that the abstract Halting Problem is decidable.
+Turing's 1936 theorem is a statement about formal systems without cost constraints.
+Our result is about physical computation, which is subject to the $\Jcost$-cost budget.
+
+We do not claim that Turing machines are ``wrong.''
+They are correct models of \emph{idealized} computation with unbounded resources.
+But the universe is not an idealized computer.
+It has finite initial defect, and every transition costs positive defect.
+The RS computation bound is a physical constraint, not a logical one.
+
+\subsection{What This Result Does Claim}
+
+\begin{enumerate}[nosep]
+\item \textbf{Infinite loops are physically impossible.}
+Any process on the ledger that tries to loop forever with positive step cost will exhaust its defect budget in finite time.
+
+\item \textbf{Computation is bounded by cost, not by time or space.}
+The fundamental resource for computation is not clock cycles or memory cells but defect---the distance from equilibrium.
+A universe with more initial defect can compute more.
+
+\item \textbf{Logic and computation are unified through cost.}
+Contradictions (static infinite cost) and infinite loops (dynamic infinite cost) are both censored by the same $\Jcost$-cost bound.
+The cost functional provides a single mechanism for both logical consistency and computational boundedness.
+
+\item \textbf{The universe is its own halting oracle.}
+No external decider is needed to determine whether a physical computation halts.
+The cost landscape itself enforces halting through economic exhaustion.
+\end{enumerate}
+
+\subsection{Open Questions}
+
+\begin{enumerate}[nosep]
+\item \textbf{Tight bounds.}
+The bound $n \le D_0/\delta$ is sharp in principle (it uses only non-negativity and monotonicity).
+Can the bound be tightened using the strict convexity of $\Jcost$ or the specific form of the equilibrium (uniform configuration)?
+
+\item \textbf{Computational universality.}
+The ledger can ``compute'' in the sense that its trajectories transform configurations.
+Is the variational dynamics Turing-complete up to the halting bound?
+If so, the ledger can simulate any Turing machine for finitely many steps.
+
+\item \textbf{Complexity classes.}
+The bound $T_{\max} = D_0/\delta$ defines a natural complexity class: the set of problems solvable within a given defect budget.
+How does this class relate to classical complexity classes (P, NP, PSPACE)?
+
+\item \textbf{Quantum computation.}
+The $\Jcost$-cost bound applies to all variational trajectories, including those that model quantum evolution.
+Does the quadratic structure of $\Jcost$ near equilibrium ($\cosh t - 1 \approx t^2/2$) give quantum computation an advantage within the same defect budget?
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}\label{sec:conclusion}
+%% ============================================================
+
+We have proved that the $\Jcost$-cost functional imposes absolute bounds on physical computation.
+The argument is elementary: non-negative defect, monotone dynamics, and the Archimedean property of the reals are sufficient to show that infinite loops are economically impossible and that every physical computation reaches effective halting within a bound determined by the initial defect and the minimum step cost.
+
+The deepest insight is the unification of logic and computation through cost.
+Recognition Science already proved that logical consistency emerges from cost minimization: contradictions are expensive, consistency is cheap, and reality is what is cheap.
+This paper extends the same principle to computation: non-halting is expensive, halting is cheap, and reality is what halts.
+
+The universe does not compute by thinking.
+It computes by spending defect.
+When the defect runs out, the computation is done.
+
+\bigskip
+
+\noindent\textbf{Machine Verification.}\quad
+All theorems in this paper have been formalized and verified in Lean~4 using Mathlib, with no \texttt{sorry} placeholders and no custom axioms.
+The formalization is in the file \texttt{RecognitionScience/Foundation/AlgorithmicCost.lean}, available at \url{https://github.com/jonwashburn/recognition-science}.
+
+\bigskip
+
+\begin{thebibliography}{99}
+
+\bibitem{RS-LawOfExistence}
+J.~Washburn, ``Law of Existence: Rigorous Formalization,'' \texttt{RecognitionScience/Foundation/LawOfExistence.lean}, 2025--2026.
+
+\bibitem{RS-LogicFromCost}
+J.~Washburn, ``Logic Emerges from Cost Minimization,'' \texttt{RecognitionScience/Foundation/LogicFromCost.lean}, 2025--2026.
+
+\bibitem{RS-VariationalDynamics}
+J.~Washburn, ``Variational Dynamics: The Equation of Motion for the Ledger,'' \texttt{RecognitionScience/Foundation/VariationalDynamics.lean}, 2025--2026.
+
+\bibitem{RS-Thermodynamics}
+J.~Washburn, ``Thermodynamics: Temperature, Entropy, and the Canonical Ensemble,'' \texttt{RecognitionScience/Foundation/Thermodynamics.lean}, 2025--2026.
+
+\bibitem{RS-MeasurementMechanism}
+J.~Washburn, ``Measurement Mechanism: How Determinism Produces Apparent Randomness,'' \texttt{RecognitionScience/Foundation/MeasurementMechanism.lean}, 2025--2026.
+
+\bibitem{Turing1936}
+A.~M.~Turing, ``On computable numbers, with an application to the Entscheidungsproblem,'' \emph{Proceedings of the London Mathematical Society}, 2(42):230--265, 1936.
+
+\bibitem{Levin1973}
+L.~A.~Levin, ``Universal sequential search problems,'' \emph{Problems of Information Transmission}, 9(3):265--266, 1973.
+
+\bibitem{Kolmogorov1965}
+A.~N.~Kolmogorov, ``Three approaches to the quantitative definition of information,'' \emph{Problems of Information Transmission}, 1(1):1--7, 1965.
+
+\end{thebibliography}
+
+\end{document}

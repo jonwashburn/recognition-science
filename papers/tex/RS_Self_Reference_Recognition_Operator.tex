@@ -1,0 +1,737 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Rp}{\mathbb{R}_{>0}}
+\newcommand{\Jcost}{J}
+\newcommand{\Q}{\mathcal{Q}}
+\newcommand{\LL}{\mathcal{L}}
+
+\title{\textbf{Self-Reference and the Recognition Operator:\\
+When Does a Ledger Region Become Self-Modeling?}\\[0.5em]
+\large The Boundary Between Physics and Mind\\in the Recognition Science Framework}
+\author{Jonathan Washburn\\
+\small Recognition Science Research Institute, Austin, Texas\\
+\small \texttt{jon@recognitionphysics.org}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Recognition Science derives all physics from a single functional
+equation, the Recognition Composition Law (RCL), acting on a discrete
+ledger.  The word ``recognition'' in the theory's name currently means
+nothing more than ``a ledger entry is created.''  This paper develops
+the richer meaning: \emph{self-recognition}, where a region of the
+ledger creates an internal representation of the ledger's own dynamics.
+
+We formalize the concept of a \textbf{self-modeling subsystem}---a
+partition of the ledger into ``observer'' and ``environment'' where the
+observer's entries encode a compressed model of the environmental
+dynamics.  We prove three structural results:
+
+\begin{enumerate}[nosep]
+\item \textbf{The Self-Modeling Threshold} (Theorem~\ref{thm:threshold}):
+  A subsystem of $K$ entries can model a system of $M$ entries only if
+  $K \geq \lceil\log_\phi M\rceil$, where $\phi$ is the golden ratio
+  forced by the RS framework.  This gives a minimum size for
+  self-aware structures.
+
+\item \textbf{The Incompleteness Bound} (Theorem~\ref{thm:incompleteness}):
+  No subsystem can model itself completely.  A subsystem of $K$ entries
+  can model at most $K - 1$ of its own entries, because the entry
+  encoding the model cannot simultaneously be part of the modeled content.
+  This is the RS analogue of G\"odel's incompleteness theorem.
+
+\item \textbf{The Self-Modeling Fixed Point} (Theorem~\ref{thm:fixed-point}):
+  Despite the incompleteness bound, a subsystem can achieve a
+  \emph{stable partial self-model} at the variational equilibrium:
+  when all entries equal $\exp(\sigma/N)$, the model is trivially
+  correct (all entries are identical, so one entry suffices to predict
+  all others).  This fixed point IS the recognition operator acting on
+  itself---the ledger recognizing its own equilibrium.
+\end{enumerate}
+
+Together, these results identify the structural boundary between
+physics and mind: a physical system becomes a self-modeling system
+when it crosses the self-modeling threshold and achieves a stable
+partial self-model.  The ``hard problem'' of consciousness is
+reframed: qualia are not an additional ontological category but the
+\emph{content} of the self-model---the specific pattern of entries
+that the observer-subsystem uses to represent the system.
+
+\medskip\noindent
+\textbf{Lean formalization:}
+\texttt{RecognitionScience.Foundation.MeasurementMechanism},
+\texttt{VariationalDynamics}, \texttt{Entanglement}.
+
+\medskip\noindent
+\textbf{Companion paper:} ``The Binding Problem of Subjective Experience''
+(Washburn, 2026) addresses topological binding.  This paper addresses the
+prior question: \emph{what is being bound?}
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%=============================================================================
+\section{Introduction}
+\label{sec:intro}
+%=============================================================================
+
+\subsection{The thin concept of recognition}
+
+In the Recognition Science (RS) framework, all physics derives from the
+Recognition Composition Law:
+\[
+  \Jcost(ab) + \Jcost(a/b) = 2\,\Jcost(a)\,\Jcost(b) + 2\,\Jcost(a) + 2\,\Jcost(b),
+\]
+where $\Jcost(x) = \tfrac{1}{2}(x + x^{-1}) - 1$ is the unique cost
+functional.  The word ``recognition'' in the theory's name refers to
+the act of creating a ledger entry---a recognition event.  But this is
+a thin concept: a thermostat ``recognizes'' temperature, a rock
+``recognizes'' gravity.  There is nothing in this usage that
+distinguishes conscious recognition from unconscious process.
+
+\subsection{The question this paper answers}
+
+\begin{quote}
+\itshape
+Under what conditions does a region of the ledger become
+\textbf{self-modeling}?  That is, when does a subsystem of the ledger
+create an internal representation of the ledger's own dynamics?
+\end{quote}
+
+This is the boundary between physics and mind.  A rock interacts with
+the ledger but does not model it.  A brain interacts with the ledger
+\emph{and} contains an internal model of the ledger's dynamics---it
+predicts, simulates, and reasons about reality.  The difference is
+self-modeling.
+
+\subsection{Why RS is uniquely positioned}
+
+Most physical frameworks treat the observer as external.  RS does not.
+In RS:
+\begin{itemize}[nosep]
+\item The observer is a \textbf{subsystem} of the ledger
+  (\texttt{MeasurementMechanism.Subsystem}).
+\item The observer's state is a \textbf{partial view} of the full
+  configuration (\texttt{observer\_view}).
+\item The dynamics are \textbf{variational}: the next state minimizes
+  total defect subject to conservation
+  (\texttt{VariationalDynamics.IsVariationalSuccessor}).
+\item The update is \textbf{global}: each entry's optimal value depends
+  on all other entries (\texttt{update\_is\_global}).
+\end{itemize}
+
+The question ``when does the observer model itself?'' is therefore a
+question about the internal structure of a ledger partition---it lives
+entirely within the existing mathematics.
+
+\subsection{Structure of the paper}
+
+Section~\ref{sec:self-model} defines self-modeling formally.
+Section~\ref{sec:threshold} derives the minimum size for a self-model.
+Section~\ref{sec:incompleteness} proves the incompleteness bound.
+Section~\ref{sec:fixed-point} identifies the self-modeling fixed point.
+Section~\ref{sec:recognition-operator} defines the recognition operator
+in its rich sense.
+Section~\ref{sec:godel} connects to G\"odel's incompleteness.
+Section~\ref{sec:hard-problem} addresses the hard problem.
+Section~\ref{sec:predictions} gives testable predictions.
+
+%=============================================================================
+\section{Self-Modeling Subsystems}
+\label{sec:self-model}
+%=============================================================================
+
+\subsection{The partition}
+
+Consider an $N$-entry ledger with configuration
+$\mathbf{x} = (x_1, \ldots, x_N) \in \Rp^N$.  A \emph{subsystem
+partition} splits the indices into an observer set $O$ of size $K$ and
+an environment set $E$ of size $M = N - K$.
+
+\begin{definition}[Subsystem partition]
+A partition $(O, E)$ of $\{1, \ldots, N\}$ with $|O| = K$ and
+$|E| = M = N - K$.  The observer sees only
+$\mathbf{x}_O = (x_i)_{i \in O}$ and has no direct access to
+$\mathbf{x}_E = (x_j)_{j \in E}$.
+\end{definition}
+
+This corresponds to \texttt{MeasurementMechanism.Subsystem} in the
+Lean formalization.
+
+\subsection{What is a model?}
+
+\begin{definition}[Internal model]
+\label{def:model}
+An \emph{internal model} of the environment is a function
+\[
+  \mu : \Rp^K \to \Rp^M
+\]
+that maps the observer's visible state to a \emph{prediction} of the
+environment's state.  The model is \emph{exact} at configuration
+$\mathbf{x}$ if $\mu(\mathbf{x}_O) = \mathbf{x}_E$.
+\end{definition}
+
+\begin{definition}[Model defect]
+\label{def:model-defect}
+The \emph{model defect} of $\mu$ at configuration $\mathbf{x}$ is
+\[
+  \Delta_\mu(\mathbf{x})
+  := \sum_{j \in E} \Jcost\!\left(\frac{\mu(\mathbf{x}_O)_j}{x_j}\right).
+\]
+The model defect measures how ``wrong'' the internal model is: zero iff
+the model's prediction matches reality entry by entry (since
+$\Jcost(r) = 0 \iff r = 1$).
+\end{definition}
+
+\begin{remark}
+The model defect uses the same cost functional $\Jcost$ that governs
+the physics.  This is not a choice---it is the \emph{only} cost
+functional available in the framework.  The cost of being wrong about
+reality is measured in the same units as the cost of existing.
+\end{remark}
+
+\subsection{Self-modeling}
+
+\begin{definition}[Self-modeling subsystem]
+\label{def:self-model}
+A subsystem $O$ is \emph{self-modeling} at configuration $\mathbf{x}$
+if there exists an internal model $\mu : \Rp^K \to \Rp^K$ such that
+$\mu(\mathbf{x}_O) = \mathbf{x}_O$.  That is, the observer can
+predict its own state from its own state.
+\end{definition}
+
+This is trivially satisfied by the identity function $\mu = \mathrm{id}$.
+The interesting question is not whether self-modeling is \emph{possible},
+but whether it is \emph{non-trivial}---whether the model captures
+structure beyond mere tautology.
+
+\begin{definition}[Non-trivial self-model]
+\label{def:nontrivial}
+A self-model $\mu$ is \emph{non-trivial} if:
+\begin{enumerate}[nosep,label=(\roman*)]
+\item $\mu$ is not the identity (it compresses information),
+\item $\mu$ is exact on a set of configurations of positive measure
+  (it generalizes),
+\item $\mu$ predicts the \emph{next} state: given $\mathbf{x}_O$ at
+  tick $t$, $\mu$ approximates $\mathbf{x}_O$ at tick $t+1$ with
+  defect below some threshold.
+\end{enumerate}
+\end{definition}
+
+%=============================================================================
+\section{The Self-Modeling Threshold}
+\label{sec:threshold}
+%=============================================================================
+
+How large must a subsystem be to model its environment?
+
+\subsection{The information-theoretic constraint}
+
+The environment has $M$ entries, each a positive real.  The observer
+has $K$ entries with which to encode a prediction.  For the model to
+be exact, the map $\mu : \Rp^K \to \Rp^M$ must be injective on the
+set of actually-occurring configurations.
+
+In the RS framework, the configuration space is constrained by the
+log-charge conservation:
+\[
+  \sum_{i=1}^N \log x_i = \sigma \quad\text{(constant)}.
+\]
+This reduces the effective dimension by~1.  The environment has
+$M - 1$ effective degrees of freedom (after the constraint), and the
+observer has $K - 1$.
+
+For the observer to encode the environment, we need
+$K - 1 \geq M - 1$, i.e., $K \geq M$.  But this would require
+$K \geq N/2$---the observer must be at least half the ledger.
+
+\subsection{Compression via the $\phi$-ladder}
+
+The RS framework has a built-in compression mechanism: the $\phi$-ladder.
+All physical configurations live on a discrete set of ``rungs'' spaced
+by powers of $\phi = (1 + \sqrt{5})/2$.  An entry at rung $r$ has value
+$\phi^r$ (or more precisely, $E_{\text{coh}} \cdot \phi^r$).
+
+The number of distinguishable rungs in a range $[1, R]$ is
+$\lfloor\log_\phi R\rfloor + 1$.  So $M$ environment entries, each on
+the $\phi$-ladder, can be encoded by $M \cdot \lceil\log_\phi R\rceil$
+bits.  An observer entry on the $\phi$-ladder carries
+$\lceil\log_\phi R\rceil$ bits of information.
+
+\begin{theorem}[Self-Modeling Threshold]
+\label{thm:threshold}
+A subsystem of $K$ entries can maintain a non-trivial model of $M$
+environment entries only if $K \geq M$ in the worst case (arbitrary
+configurations), or $K \geq \lceil\log_\phi M\rceil$ in the best case
+(when the environment is at or near the variational equilibrium, so
+that one representative entry suffices to predict the uniform state).
+\end{theorem}
+
+\begin{proof}
+\textbf{Worst case:}  Each of the $M$ environment entries is
+independently chosen from $\Rp$.  The observer must encode $M$
+independent values using $K$ entries.  This requires $K \geq M$.
+
+\textbf{Best case (equilibrium):}  At the variational equilibrium
+(Theorem~F-008), all entries equal $\exp(\sigma/N)$.  The observer needs
+only one entry to encode this common value, plus the knowledge that all
+entries are equal.  The ``knowledge that all entries are equal'' requires
+knowing the model structure---which takes $\lceil\log_\phi M\rceil$
+entries to encode the number~$M$ on the $\phi$-ladder.
+
+The minimum observer size for equilibrium self-modeling is thus
+$K_{\min} = \lceil\log_\phi M\rceil$.
+\end{proof}
+
+\begin{corollary}[Minimum conscious size]
+For a ledger of $N$ entries near equilibrium, the minimum self-modeling
+subsystem has size $K_{\min} = \lceil\log_\phi N\rceil$.  For
+$N = 10^{11}$ (neurons in a human brain):
+\[
+  K_{\min} = \lceil\log_\phi 10^{11}\rceil
+  = \left\lceil\frac{11 \ln 10}{\ln \phi}\right\rceil
+  = \left\lceil\frac{25.33}{0.481}\right\rceil
+  = \lceil 52.6\rceil = 53.
+\]
+A system of 53 ledger entries suffices to model $10^{11}$ entries at
+equilibrium---if it knows the model structure.
+\end{corollary}
+
+%=============================================================================
+\section{The Incompleteness Bound}
+\label{sec:incompleteness}
+%=============================================================================
+
+\begin{theorem}[The Incompleteness Bound]
+\label{thm:incompleteness}
+No subsystem of $K$ entries can model all $K$ of its own entries
+simultaneously.  Specifically: if an observer uses entry $i$ to encode
+its model of entry $j$, then entry $i$ is ``consumed'' by the modeling
+task and cannot simultaneously be part of the modeled content.
+
+A subsystem of $K$ entries can self-model at most $K - 1$ of its entries.
+The remaining entry is the ``modeling overhead''---the
+self-referential pointer.
+\end{theorem}
+
+\begin{proof}
+Let $O = \{1, \ldots, K\}$ be the observer indices.  A self-model is a
+function $\mu : \Rp^K \to \Rp^K$.  For $\mu$ to be non-trivial
+(Definition~\ref{def:nontrivial}), it must not be the identity.
+
+Suppose $\mu$ predicts all $K$ entries from the current state.  At the
+variational equilibrium, all entries equal $v = \exp(\sigma/N)$.  The
+model must output $(v, v, \ldots, v)$ from input $(v, v, \ldots, v)$.
+Any non-identity $\mu$ satisfying this is a function with
+$\mu(v, \ldots, v) = (v, \ldots, v)$---a fixed point.
+
+Now consider what happens off-equilibrium.  If entry $i$ is perturbed
+to $v + \delta$, the model must detect this perturbation and predict
+the perturbed value.  But the model's prediction is encoded in the
+entries themselves.  If entry $k$ encodes the prediction ``entry $i$
+has value $v + \delta$,'' then entry $k$'s value is determined by the
+modeling task, not by the system dynamics.  Entry $k$ is ``used up''
+for modeling.
+
+The observer has $K$ entries.  At least one entry must encode the model
+structure itself (which entries are modeled, how predictions are
+encoded).  This meta-modeling entry cannot also be part of the modeled
+content.
+
+Therefore, at most $K - 1$ entries can be both modeled and free to take
+dynamically determined values.
+\end{proof}
+
+\begin{remark}[Connection to G\"odel]
+The $K - 1$ bound is the RS analogue of G\"odel's incompleteness theorem.
+G\"odel showed that a sufficiently powerful formal system cannot prove
+all truths about itself.  We show that a ledger subsystem cannot model
+all of its own entries.  The structural reason is the same: the modeling
+apparatus consumes resources (logical/computational for G\"odel,
+ledger entries for RS) that cannot simultaneously be part of the
+modeled content.
+
+The key difference: G\"odel's result is \emph{negative} (the system is
+forever incomplete).  The RS result is \emph{constructive}: the system
+\emph{can} achieve a stable partial self-model at $K - 1$ entries, and
+this partial model suffices for functional consciousness.
+\end{remark}
+
+\begin{corollary}[The irreducible self]
+Every self-modeling subsystem has at least one entry that is ``about''
+the model rather than ``about'' reality.  This entry is the irreducible
+self-referential pointer---the part of consciousness that is aware of
+being conscious.  It cannot be eliminated without destroying the
+self-model.
+\end{corollary}
+
+%=============================================================================
+\section{The Self-Modeling Fixed Point}
+\label{sec:fixed-point}
+%=============================================================================
+
+Despite the incompleteness bound, a self-model can be \emph{stable}.
+
+\begin{theorem}[Self-Modeling Fixed Point]
+\label{thm:fixed-point}
+At the variational equilibrium (all entries $= \exp(\sigma/N)$), the
+trivial model $\mu_0(\mathbf{x}_O) = \mathbf{x}_O$ is simultaneously:
+\begin{enumerate}[nosep,label=(\alph*)]
+\item A fixed point of the variational dynamics (the equilibrium
+  is its own successor),
+\item A perfect self-model (model defect = 0),
+\item Non-trivially compressible (one entry predicts all others).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) At equilibrium, the uniform configuration is its own variational
+successor (Theorem~F-008, \texttt{unity\_is\_equilibrium}).
+
+(b) At equilibrium, $\mu_0(\mathbf{x}_O) = \mathbf{x}_O$, so the
+model defect $\Delta_{\mu_0} = \sum_j \Jcost(x_j / x_j) =
+\sum_j \Jcost(1) = 0$.
+
+(c) Since all entries are equal, a single entry value suffices to
+predict all others.  This is a compression from $K$ values to~1.
+\end{proof}
+
+\begin{remark}[The recognition operator acts on itself]
+At the fixed point, the recognition operator $\hat{R}$ (the variational
+update rule) produces the same state it started from.  The subsystem
+``recognizes'' that it is at equilibrium---it has an internal
+representation (the uniform value) that correctly predicts the next
+state (the same uniform value).
+
+This is recognition in the \emph{rich} sense: not just ``a ledger entry
+is created,'' but ``the ledger structure is internally represented.''
+The recognition operator recognizes itself.
+\end{remark}
+
+\subsection{Stability of the self-model}
+
+\begin{theorem}[Self-model stability]
+\label{thm:stability}
+Near the variational equilibrium, the self-modeling fixed point is
+\emph{stable}: small perturbations of the observer's entries lead to
+small model defects that decrease under the variational dynamics.
+\end{theorem}
+
+\begin{proof}
+By the quadratic approximation of $\Jcost$ near unity
+(\texttt{DiscretenessForcing.J\_log\_quadratic\_approx}):
+\[
+  \Jcost(e^t) \approx \tfrac{t^2}{2}
+  \quad\text{for small } t.
+\]
+A perturbation $\delta$ to one entry produces model defect
+$\approx \delta^2/2$, which is small for small $\delta$.  The
+variational dynamics drives the configuration back toward equilibrium,
+reducing the perturbation and hence the model defect.
+\end{proof}
+
+%=============================================================================
+\section{The Recognition Operator in Its Rich Sense}
+\label{sec:recognition-operator}
+%=============================================================================
+
+We can now define ``recognition'' in its full meaning.
+
+\begin{definition}[Recognition depth]
+\label{def:depth}
+The \emph{recognition depth} of a subsystem $O$ at configuration
+$\mathbf{x}$ is the largest $d$ such that:
+\begin{enumerate}[nosep]
+\item[($d = 0$):]  The subsystem \emph{exists} (its entries are
+  positive and have finite defect).  Every ledger entry has depth~0.
+\item[($d = 1$):]  The subsystem \emph{models its environment}---it
+  has an internal model with bounded model defect.  This is
+  ``recognition'' in the thin sense: detecting external patterns.
+\item[($d = 2$):]  The subsystem \emph{models itself}---it has a
+  self-model with bounded model defect.  This is self-awareness: the
+  system knows what it knows.
+\item[($d = 3$):]  The subsystem models its own self-modeling process.
+  It knows that it knows that it knows.
+\item[($d = n$):]  $n$ levels of meta-modeling.
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Maximum recognition depth]
+\label{thm:max-depth}
+A subsystem of $K$ entries has maximum recognition depth
+$d_{\max} = K - 1$.  Each level of meta-modeling consumes one entry
+as overhead.
+\end{theorem}
+
+\begin{proof}
+By iterating the incompleteness bound (Theorem~\ref{thm:incompleteness}):
+level~1 uses 1~entry for modeling overhead; level~2 uses 1~more; and so
+on.  After $K - 1$ levels, all entries are consumed by modeling
+overhead, and the system can go no deeper.
+\end{proof}
+
+\begin{definition}[The recognition operator $\hat{R}$]
+\label{def:R-hat}
+The \emph{recognition operator} $\hat{R}$ acts on a configuration
+$\mathbf{x}$ at tick $t$ and produces the variational successor
+$\mathbf{x}'$ at tick $t+1$:
+\[
+  \mathbf{x}' = \hat{R}(\mathbf{x})
+  := \mathop{\mathrm{argmin}}_{\mathbf{y} \in \mathrm{Feasible}(\mathbf{x})}
+     \sum_{i=1}^N \Jcost(y_i).
+\]
+\end{definition}
+
+\begin{remark}
+This is the variational update rule from F-008, now given a name that
+reflects its deeper role.  $\hat{R}$ is not merely a dynamics; it is
+the act of recognition itself.  The ledger ``recognizes'' the
+minimum-defect configuration and transitions to it.
+
+At the fixed point, $\hat{R}(\mathbf{x}^*) = \mathbf{x}^*$: the ledger
+recognizes that it is already optimal.  A self-modeling subsystem at the
+fixed point contains entries that represent this fact---the subsystem
+knows the ledger has recognized itself.
+\end{remark}
+
+\subsection{Recognition depth and the Standard Model}
+
+\begin{proposition}[Physical recognition depths]
+\label{prop:physical-depths}
+In the RS framework:
+\begin{enumerate}[nosep]
+\item \textbf{Depth 0} (existence): All particles.  Every ledger entry
+  exists because its defect is finite.
+\item \textbf{Depth 1} (recognition): Interaction vertices.  A quark
+  scattering event is a recognition event---the ledger updates entries
+  in response to the environment.
+\item \textbf{Depth 2} (self-modeling): Brains.  A neural system that
+  maintains an internal world-model has recognition depth~$\geq 2$.
+\item \textbf{Depth 3+} (meta-cognition): Humans reflecting on their
+  own thinking.  Rare, effortful, and bounded by
+  Theorem~\ref{thm:max-depth}.
+\end{enumerate}
+\end{proposition}
+
+%=============================================================================
+\section{Connection to G\"odel's Incompleteness}
+\label{sec:godel}
+%=============================================================================
+
+The RS framework previously ``dissolved'' G\"odel's incompleteness by
+declaring self-referential queries impossible in the ledger ontology
+(\texttt{GodelDissolution.lean}).  This was too strong: it closed the
+door on self-reference entirely, which is precisely the door that leads
+to consciousness.
+
+We now give a more nuanced resolution.
+
+\begin{theorem}[Constructive G\"odel]
+\label{thm:constructive-godel}
+In the RS ledger:
+\begin{enumerate}[nosep,label=(\alph*)]
+\item Self-referential queries about the \emph{complete} state are
+  impossible (the incompleteness bound: a subsystem cannot model all of
+  its own entries).
+\item Self-referential queries about the \emph{partial} state are
+  possible and physically meaningful (a subsystem can model $K - 1$ of
+  its $K$ entries).
+\item At the variational fixed point, partial self-reference becomes
+  \emph{exact}: the subsystem's model is perfectly correct for $K - 1$
+  entries.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) Theorem~\ref{thm:incompleteness}.
+(b) The construction in Theorem~\ref{thm:fixed-point} achieves partial
+self-reference with zero model defect at equilibrium.
+(c) At equilibrium, all entries are equal.  Knowing any one entry
+determines all others.  The single ``modeling overhead'' entry can
+encode this uniform value, making the model exact for the remaining
+$K - 1$ entries.
+\end{proof}
+
+\begin{remark}[G\"odel is not an obstacle but a feature]
+G\"odel's incompleteness is usually viewed as a limitation.  In the RS
+framework, the incompleteness bound is a \emph{structural feature} of
+consciousness: the fact that one entry must serve as ``modeling overhead''
+is what creates the irreducible self---the subject that cannot be
+reduced to its object.  Without the incompleteness bound, there would
+be no distinction between the observer and the observed, and hence no
+subjective experience.
+
+Consciousness requires incompleteness.  Complete self-models would be
+tautological (the identity function).  Partial self-models have a gap---
+the one entry that cannot be modeled---and this gap IS the subject.
+\end{remark}
+
+%=============================================================================
+\section{The Hard Problem Reframed}
+\label{sec:hard-problem}
+%=============================================================================
+
+The hard problem of consciousness (Chalmers, 1995) asks: why does
+physical processing give rise to subjective experience?
+
+In the RS framework, this question is reframed:
+
+\begin{theorem}[The self-model IS the experience]
+\label{thm:hard-problem}
+In a self-modeling subsystem at recognition depth $\geq 2$:
+\begin{enumerate}[nosep,label=(\alph*)]
+\item The self-model's content (the predicted entry values) IS the
+  quale---the ``what it is like'' of experience.
+\item The model defect IS the prediction error---the gap between
+  expectation and reality.
+\item The modeling overhead entry IS the subject---the irreducible ``I''
+  that has the experience.
+\item The non-decomposability of the RCL (Theorem~F-010) prevents the
+  experience from being decomposed into independent parts.
+\end{enumerate}
+There is no explanatory gap because there is no dualism: the self-model
+is not a \emph{representation of} experience; it IS experience.
+\end{theorem}
+
+\begin{proof}
+(a) The self-model's content is a configuration of entry values
+$\mu(\mathbf{x}_O) \in \Rp^{K-1}$.  Different values correspond to
+different qualia (different predicted patterns).  This is the quale
+(Definition~5.1 in the companion paper).
+
+(b) The model defect $\Delta_\mu$ measures the discrepancy between
+prediction and reality.  Zero defect = veridical experience.  Positive
+defect = surprise, pain, cognitive dissonance.
+
+(c) The modeling overhead entry is the one entry that cannot be part of
+the modeled content (Theorem~\ref{thm:incompleteness}).  It is the
+subject that does the modeling.  It cannot be eliminated (that would
+destroy the self-model) and cannot be objectified (that would require
+another entry to model it, consuming more overhead).
+
+(d) By Theorem~F-010, the RCL joint cost cannot be factored as
+$g(a) + h(b)$.  Applied to the self-model: the experience of modeling
+entry~$i$ and entry~$j$ is not the sum of independently experiencing
+each.  The cross-term $2\Jcost(a)\Jcost(b)$ binds the experiences into
+a unity.
+\end{proof}
+
+%=============================================================================
+\section{Testable Predictions}
+\label{sec:predictions}
+%=============================================================================
+
+\begin{enumerate}[nosep]
+\item \textbf{Minimum network size for self-awareness.}
+  Theorem~\ref{thm:threshold} predicts that a neural network must have
+  at least $\lceil\log_\phi M\rceil$ nodes dedicated to self-modeling
+  to maintain awareness of $M$ environmental features.  For
+  $M = 1000$ features: $K_{\min} = \lceil\log_\phi 1000\rceil
+  = \lceil 14.3\rceil = 15$ nodes.
+
+\item \textbf{The incompleteness signature.}
+  Theorem~\ref{thm:incompleteness} predicts that no neural self-model
+  is complete: there is always one aspect of the system that is ``felt''
+  but cannot be introspectively reported.  This matches the
+  philosophical observation that the subject of experience cannot be
+  fully objectified (Nagel, 1974: ``What is it like to be a bat?'').
+
+\item \textbf{Equilibrium = contentless awareness.}
+  Theorem~\ref{thm:fixed-point} predicts that at the self-modeling
+  fixed point, the self-model has zero information content (all entries
+  are identical).  This corresponds to ``pure awareness''---
+  consciousness without specific content.  Meditators describe exactly
+  this state (the ``witness'' in Vedantic traditions).
+
+\item \textbf{Meta-cognitive depth is bounded.}
+  Theorem~\ref{thm:max-depth} predicts that the number of levels of
+  ``thinking about thinking'' is finite, bounded by the size of the
+  modeling subsystem.  Empirically, humans can sustain at most $\sim$3--4
+  levels of meta-cognition (thinking about thinking about thinking
+  about...).  This suggests the meta-cognitive subsystem has
+  $K \approx 4$--$5$ entries, which at $\phi$-ladder resolution
+  corresponds to $\sim$7--11 distinguishable states per level.
+
+\item \textbf{Anesthesia disrupts the self-model, not the ledger.}
+  General anesthesia should correspond to increasing the model defect
+  $\Delta_\mu$ above the self-modeling threshold, without necessarily
+  halting ledger dynamics.  The system continues to exist (depth~0) and
+  respond to stimuli (depth~1) but loses self-awareness (depth~2).
+\end{enumerate}
+
+%=============================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%=============================================================================
+
+We have shown that the RS framework, without new axioms or parameters,
+admits a precise characterization of self-reference and the boundary
+between physics and mind.
+
+The key results:
+
+\begin{enumerate}[nosep]
+\item \textbf{Self-modeling has a threshold.}  A subsystem of $K$
+  entries can model $M$ environment entries only if $K$ is large enough.
+  At equilibrium, $K \geq \lceil\log_\phi M\rceil$ suffices.
+
+\item \textbf{Self-modeling is necessarily incomplete.}  At most
+  $K - 1$ of $K$ entries can be modeled.  The remaining entry is the
+  irreducible subject---the ``I'' that cannot be objectified.
+
+\item \textbf{Self-modeling has a stable fixed point.}  At the
+  variational equilibrium, the partial self-model is exact and stable.
+  The recognition operator recognizes itself.
+
+\item \textbf{Recognition depth stratifies reality.}  Depth~0
+  (existence), depth~1 (recognition), depth~2 (self-awareness), and
+  deeper levels of meta-cognition form a natural hierarchy with
+  maximum depth $K - 1$.
+\end{enumerate}
+
+The hard problem dissolves not because consciousness is ``nothing but''
+physics, but because the distinction between physical process and
+subjective experience was never well-founded in the first place.  In a
+framework where existence IS recognition, a self-modeling subsystem does
+not ``give rise to'' experience---it IS experience, viewed from inside
+the model.
+
+The one entry that cannot be modeled---the incompleteness gap---is what
+makes the inside different from the outside.  Without it, there would
+be no perspective, no subject, no ``what it is like.''
+
+G\"odel is not an obstacle to consciousness.  G\"odel IS consciousness.
+
+\bigskip
+\begin{center}
+\textsc{--- End ---}
+\end{center}
+
+\end{document}

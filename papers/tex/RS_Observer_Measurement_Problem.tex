@@ -1,0 +1,602 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Jcost}{J}
+\newcommand{\F}{\mathcal{F}}
+
+\title{\textbf{The Observer Formalized}\\[0.3em]
+\large Superposition as Unresolved Ledger Debt,\\
+Collapse as Forced Reconciliation,\\
+and the Dissolution of the Measurement Problem\\
+from $\Jcost$-Cost Thresholds}
+\author{Jonathan Washburn\\
+\small Recognition Science Research Institute, Austin, Texas\\
+\small \texttt{jon@recognitionphysics.org}}
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We present a machine-verified resolution of the quantum measurement problem within the Recognition Science framework.
+The resolution requires no collapse postulate, no many-worlds branching, no hidden variables, and no new axioms.
+It follows entirely from three identifications already latent in the theory:
+
+\begin{enumerate}[nosep]
+\item \textbf{The observer is an interface}: a recognizer that maps ledger configurations to a finite event space, whose kernel defines gauge and whose resolution defines the threshold of perceptibility.
+\item \textbf{Superposition is unresolved ledger debt}: a configuration whose total defect exceeds the minimum achievable under its conservation constraints.
+\item \textbf{Collapse is forced reconciliation}: the variational dynamics drives the ledger to the defect minimum, eliminating all unresolved debt in a single, deterministic, irreversible step.
+\end{enumerate}
+
+The central results:
+\begin{itemize}[nosep]
+\item Every ledger state is either in superposition (has unresolved debt) or collapsed (fully reconciled); there is no third option (\S\ref{sec:superposition}).
+\item The variational step forces collapse: the successor state is always fully reconciled (\S\ref{sec:collapse}).
+\item Collapse is irreversible: defect monotonicity forbids re-entry into superposition (\S\ref{sec:collapse}).
+\item Collapse is absolute post-step: \emph{every} observer, regardless of resolution, perceives the post-collapse state as definite (\S\ref{sec:threshold}).
+\item Superposition is observer-relative pre-step: different subsystem observers perceive different superposition structures for the same ledger state (\S\ref{sec:relative}).
+\end{itemize}
+
+The measurement problem was never a problem of physics.
+It was a problem of not recognizing that the observer IS an interface, superposition IS unresolved cost, and collapse IS the variational principle doing what it always does.
+
+All theorems are verified in Lean~4 with no \texttt{sorry} and no custom axioms.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%% ============================================================
+\section{Introduction}\label{sec:intro}
+%% ============================================================
+
+The measurement problem is the most persistent conceptual difficulty in quantum mechanics.
+In the standard formalism, the quantum state evolves unitarily (Schr\"odinger equation) except during measurement, when it ``collapses'' to an eigenstate of the measured observable.
+The formalism does not say \emph{what counts as a measurement}, \emph{what causes collapse}, or \emph{why outcomes are probabilistic}.
+Three generations of interpretation---Copenhagen, many-worlds, Bohmian, decoherence, QBism---have offered competing answers, none universally accepted.
+
+Recognition Science approaches the problem from a different direction entirely.
+The theory derives observable structure from a single cost functional
+\begin{equation}\label{eq:jcost}
+\Jcost(x) \;=\; \frac{1}{2}\!\left(x + x^{-1}\right) - 1, \qquad x > 0,
+\end{equation}
+and the variational principle that the universe evolves by minimizing total defect $D(c) = \sum_i \Jcost(c_i)$ subject to conservation of log-charge.
+
+Previous work established:
+\begin{itemize}[nosep]
+\item \textbf{Determinism} (F-007): The strict convexity of $\Jcost$ forces a unique minimizer.
+The universe is deterministic at the level of the full ledger.
+\item \textbf{Measurement Mechanism} (F-009): Observers are subsystems ($K < N$ entries).
+The measurement outcome is determined by the full state, but the observer cannot access the full state.
+Apparent randomness arises from partial information.
+\item \textbf{Born Rule} (F-009): The $\Jcost$-cost weight $e^{-D(c)}$ governs the probability landscape.
+The quadratic structure of $\Jcost$ near equilibrium ($\cosh t - 1 \approx t^2/2$) produces $|\psi|^2$ statistics.
+\end{itemize}
+
+But these results left three questions open:
+
+\begin{enumerate}[nosep]
+\item What \emph{is} superposition, in cost-theoretic terms?
+\item What \emph{forces} collapse?
+\item What \emph{is} the observer, formally?
+\end{enumerate}
+
+This paper answers all three.
+The answers draw on two companion papers: ``Interface Is Real'' \cite{Washburn-Interface} and ``What Is an Object?'' \cite{Washburn-Object}, which develop the ontological framework of admissible cuts and boundary-stabilized individuation.
+
+%% ============================================================
+\section{The Observer as Admissible Interface}\label{sec:observer}
+%% ============================================================
+
+\subsection{The Triadic Ontology}
+
+From ``Interface Is Real'': reality is not dyadic (configuration + dynamics) but triadic:
+\[
+\mathfrak{R} \;=\; (C, \Sigma, E),
+\]
+where $C$ is configuration space, $E$ is event space, and $\Sigma$ is the \emph{interface structure}---the family of admissible recognizers through which configurations become events.
+
+The observer is not external to this structure.
+The observer IS a component of $\Sigma$: a recognizer that maps configurations to outcomes.
+
+\begin{definition}[Recognizer]\label{def:recognizer}
+A \emph{recognizer} of resolution $M$ on a ledger of size $N$ is a function
+\[
+R : \mathrm{Config}(N) \;\to\; \{0,\ldots,M{-}1\},
+\]
+where $M \ge 1$.
+The recognizer maps each configuration to one of $M$ distinguishable outcomes.
+\end{definition}
+
+\subsection{The Interface Kernel: Gauge from Recognition}
+
+\begin{definition}[Interface Kernel]\label{def:kernel}
+Two configurations $c_1, c_2$ are \emph{indistinguishable} (gauge-equivalent) relative to recognizer $R$ if
+\[
+c_1 \sim_R c_2 \quad\Longleftrightarrow\quad R(c_1) = R(c_2).
+\]
+The set $\ker(R) = \{(c_1, c_2) : R(c_1) = R(c_2)\}$ is the \emph{interface kernel}.
+\end{definition}
+
+\begin{theorem}[Kernel Is an Equivalence Relation]\label{thm:kernel}
+The interface kernel $\sim_R$ is reflexive, symmetric, and transitive.
+It partitions configuration space into equivalence classes.
+\end{theorem}
+
+\begin{proof}
+Reflexivity: $R(c) = R(c)$.
+Symmetry: $R(c_1) = R(c_2) \implies R(c_2) = R(c_1)$.
+Transitivity: $R(c_1) = R(c_2)$ and $R(c_2) = R(c_3) \implies R(c_1) = R(c_3)$.
+\end{proof}
+
+\begin{remark}
+Each equivalence class is a \emph{superposition} from the observer's perspective: a set of distinct configurations that the observer cannot tell apart.
+The quotient $C/{\sim_R}$ IS the observable space.
+From ``Interface Is Real'': space is an interface quotient.
+Gauge is the kernel of interface.
+\end{remark}
+
+\begin{definition}[Recognizer Superposition]\label{def:recsup}
+A configuration $c$ is in \emph{recognizer superposition} relative to $R$ if there exists $c' \ne c$ (at the level of entries) with $R(c) = R(c')$.
+The observer cannot determine which state the ledger is actually in.
+\end{definition}
+
+%% ============================================================
+\section{Superposition as Unresolved Ledger Debt}\label{sec:superposition}
+%% ============================================================
+
+We now give superposition a precise cost-theoretic meaning that goes beyond the recognizer's classification.
+
+\begin{definition}[Unresolved Ledger Debt]\label{def:debt}
+A configuration $c$ has \emph{unresolved ledger debt} if there exists a feasible configuration with strictly lower total defect:
+\[
+\exists\, c' \in \F(c),\quad D(c') < D(c).
+\]
+The ``debt'' is the gap $D(c) - \min_{c' \in \F(c)} D(c')$: the amount of defect that the variational dynamics will eliminate.
+\end{definition}
+
+\begin{definition}[Fully Reconciled]\label{def:reconciled}
+A configuration $c$ is \emph{fully reconciled} (collapsed) if it minimizes total defect over its feasible set:
+\[
+\forall\, c' \in \F(c),\quad D(c) \le D(c').
+\]
+There is no cheaper state the ledger could transition to.
+The ledger has committed.
+\end{definition}
+
+\begin{theorem}[Dichotomy]\label{thm:dichotomy}
+Every configuration is either in superposition (has unresolved debt) or collapsed (fully reconciled).
+There is no third option.
+\end{theorem}
+
+\begin{proof}
+By the law of excluded middle: either $\exists c' \in \F(c),\, D(c') < D(c)$, or $\forall c' \in \F(c),\, D(c) \le D(c')$.
+\end{proof}
+
+\begin{theorem}[Mutual Exclusivity]\label{thm:mutual}
+Superposition and collapse are mutually exclusive: if $c$ is fully reconciled, it has no unresolved debt.
+\end{theorem}
+
+\begin{proof}
+If $c$ is reconciled, then $D(c) \le D(c')$ for all feasible $c'$.
+No $c'$ can satisfy $D(c') < D(c)$.
+\end{proof}
+
+\begin{remark}[What Superposition Really Is]
+In this framework, a ``superposition'' is not a mysterious quantum cloud.
+It is an accounting fact: the ledger's current configuration is not at its cost minimum.
+There is unresolved debt---defect that has not yet been paid down.
+The variational dynamics exists precisely to close this gap.
+
+An electron in a superposition of spin-up and spin-down is, in RS terms, a ledger configuration whose total defect exceeds the minimum.
+The excess defect is ``potential collapse''---it WILL be resolved at the next variational step.
+Until then, the ledger has not committed to a specific outcome.
+\end{remark}
+
+\subsection{The Defect Gap}
+
+\begin{definition}[Defect Gap]\label{def:gap}
+The \emph{defect gap} between configurations $c_1$ and $c_2$ is
+\[
+\Delta(c_1, c_2) \;=\; D(c_1) - D(c_2).
+\]
+When $c_2$ is the variational successor of $c_1$, the gap measures the ``ledger debt'' that collapse will eliminate.
+\end{definition}
+
+\begin{proposition}[Gap Characterizes Debt]\label{prop:gap}
+For a configuration $c$ with variational successor $c^*$:
+\[
+\Delta(c, c^*) > 0 \quad\Longleftrightarrow\quad c \text{ has unresolved debt}.
+\]
+\[
+\Delta(c, c^*) = 0 \quad\Longleftrightarrow\quad c \text{ is fully reconciled}.
+\]
+\end{proposition}
+
+\begin{proof}
+$(\Rightarrow)$: $\Delta > 0$ means $D(c^*) < D(c)$ and $c^* \in \F(c)$.
+$(\Leftarrow)$: If debt exists, some $c' \in \F(c)$ has $D(c') < D(c)$.
+Since $c^*$ minimizes over $\F(c)$, $D(c^*) \le D(c') < D(c)$, so $\Delta > 0$.
+The second equivalence follows similarly, using $D(c^*) \le D(c)$ (monotonicity) and $D(c) \le D(c^*)$ (reconciliation).
+\end{proof}
+
+%% ============================================================
+\section{Collapse as Forced Reconciliation}\label{sec:collapse}
+%% ============================================================
+
+\begin{theorem}[Variational Step Forces Collapse]\label{thm:collapse}
+After a variational step, the successor state is fully reconciled.
+All unresolved ledger debt is eliminated.
+\end{theorem}
+
+\begin{proof}
+Let $c^* = \operatorname*{arg\,min}_{c' \in \F(c)} D(c')$.
+For any $c'' \in \F(c^*)$: since $\F(c^*) = \F(c)$ (same log-charge), $c'' \in \F(c)$, so $D(c^*) \le D(c'')$.
+Therefore $c^*$ minimizes over $\F(c^*)$, i.e., $c^*$ is fully reconciled.
+\end{proof}
+
+\begin{remark}[Why This IS Collapse]
+This theorem says that every variational step produces a fully reconciled state---a state with zero unresolved debt.
+The successor has committed to a specific configuration.
+There is no ambiguity, no superposition, no unresolved potential.
+
+This IS wavefunction collapse.
+It is:
+\begin{itemize}[nosep]
+\item \textbf{Deterministic}: the minimizer is unique (strict convexity of $\Jcost$).
+\item \textbf{Forced}: the variational principle fires every tick---no choice is involved.
+\item \textbf{Complete}: the successor is fully reconciled---no residual debt remains.
+\item \textbf{Irreversible}: defect is monotone non-increasing---the collapsed state persists.
+\end{itemize}
+It is not caused by consciousness.
+It is not caused by observation.
+It is the unique cost-minimizing transition that the variational principle demands.
+\end{remark}
+
+\begin{corollary}[Collapse Eliminates All Debt]\label{cor:nodebt}
+After a variational step, the successor has no unresolved debt.
+\end{corollary}
+
+\begin{theorem}[Collapse Is Irreversible]\label{thm:irreversible}
+Once the ledger has reconciled, no future variational step can increase its defect:
+\[
+t_0 \le t \quad\Longrightarrow\quad D(\tau(t)) \le D(\tau(t_0)).
+\]
+The collapsed state is permanent.
+This is decoherence: the measurement record cannot be erased.
+\end{theorem}
+
+\begin{proof}
+By induction on $t - t_0$, using $D(\tau(t{+}1)) \le D(\tau(t))$ at each step.
+\end{proof}
+
+%% ============================================================
+\section{$\Jcost$-Cost Thresholds and Observer Resolution}\label{sec:threshold}
+%% ============================================================
+
+The observer has finite resolution---it cannot detect arbitrarily small defect differences.
+This threshold determines when the observer \emph{perceives} superposition versus collapse.
+
+\begin{definition}[Observer Resolution]\label{def:resolution}
+An observer with \emph{resolution} $\varepsilon > 0$ can detect a defect gap only if $\Delta(c, c') \ge \varepsilon$.
+Gaps smaller than $\varepsilon$ are invisible to the observer.
+\end{definition}
+
+\begin{definition}[Perceived Superposition / Collapse]\label{def:perceived}
+Relative to resolution $\varepsilon$:
+\begin{itemize}[nosep]
+\item The observer \emph{perceives superposition} at $c$ if $\exists c' \in \F(c)$ with $D(c) - D(c') \ge \varepsilon$.
+\item The observer \emph{perceives collapse} at $c$ if $\forall c' \in \F(c)$, $D(c) - D(c') < \varepsilon$.
+\end{itemize}
+\end{definition}
+
+\begin{theorem}[Perceptual Dichotomy]\label{thm:perceptual}
+For any resolution $\varepsilon > 0$ and any configuration $c$, the observer either perceives superposition or perceives collapse.
+No third option.
+\end{theorem}
+
+\begin{proof}
+By excluded middle on the existence of a feasible $c'$ with gap $\ge \varepsilon$.
+\end{proof}
+
+\begin{theorem}[Collapse Defeats All Thresholds]\label{thm:defeats}
+After a variational step, the successor state is perceived as collapsed by \textbf{every} observer, regardless of resolution.
+\end{theorem}
+
+\begin{proof}
+The successor $c^*$ minimizes $D$ over $\F(c)$.
+For any $c'' \in \F(c^*) = \F(c)$: $D(c^*) \le D(c'')$, so $D(c^*) - D(c'') \le 0 < \varepsilon$ for any $\varepsilon > 0$.
+Therefore every observer perceives collapse.
+\end{proof}
+
+\begin{remark}[Absolute Collapse, Relative Superposition]
+This theorem reveals a crucial asymmetry:
+\begin{itemize}[nosep]
+\item \textbf{Post-step}: collapse is \emph{absolute}.
+Every observer, no matter how fine its resolution, agrees that the post-step state is definite.
+\item \textbf{Pre-step}: superposition is \emph{relative}.
+Whether a pre-step state ``looks like'' superposition depends on the observer's resolution and subsystem partition.
+\end{itemize}
+The observer-dependence of quantum mechanics lives entirely in the pre-measurement state.
+The post-measurement state is observer-independent.
+This dissolves the measurement problem by locating the apparent puzzle (``who collapses the wavefunction?'') in a regime where the answer is clear: the variational dynamics collapses it, and every observer agrees.
+\end{remark}
+
+\begin{theorem}[Fine Resolution Detects All Debt]\label{thm:fine}
+For any positive defect gap, there exists a resolution fine enough to detect it.
+No debt can hide from sufficiently precise observation.
+\end{theorem}
+
+\begin{proof}
+If $c$ has debt, there exists $c' \in \F(c)$ with $D(c) - D(c') > 0$.
+Choose $\varepsilon = (D(c) - D(c'))/2 > 0$.
+Then $D(c) - D(c') \ge \varepsilon$, so an observer with resolution $\varepsilon$ perceives superposition.
+\end{proof}
+
+%% ============================================================
+\section{Observer-Relative Superposition}\label{sec:relative}
+%% ============================================================
+
+\begin{theorem}[Subsystem Observers See Superposition]\label{thm:subsystem}
+For any non-trivial subsystem observer ($K < N$), there exist configurations that are observationally equivalent to the subsystem but have different total defects.
+\end{theorem}
+
+\begin{proof}
+The complement of the observer's entries is nonempty ($N - K \ge 1$).
+Pick a system index $j$.
+Let $c_1$ have all entries~$1$ ($D = 0$) and $c_2$ have entry $j = 2$ and all others~$1$ ($D > 0$).
+Both configurations agree on all observer entries, but $D(c_1) \ne D(c_2)$.
+\end{proof}
+
+\begin{remark}[Wigner's Friend Dissolved]
+The same ledger state can appear as ``definite'' to one observer and ``in superposition'' to another, depending on their subsystem partition.
+Both observers are correct about what they can see.
+Neither has access to the full state.
+The apparent contradiction arises from the false assumption that ``collapsed'' is an absolute property of the pre-step state, rather than a relation between state and observer.
+
+This is the RS resolution of the Wigner's friend paradox: there is no paradox once you recognize that superposition is observer-relative while collapse is observer-absolute.
+\end{remark}
+
+%% ============================================================
+\section{The Complete Resolution}\label{sec:resolution_section}
+%% ============================================================
+
+\subsection{The Five-Link Chain}
+
+The measurement problem is resolved by five linked facts, each machine-verified:
+
+\begin{enumerate}[nosep]
+\item \textbf{The observer is an interface.}
+A recognizer $R : \mathrm{Config}(N) \to \{0,\ldots,M{-}1\}$ with finite resolution $\varepsilon > 0$.
+Its kernel defines gauge; its image defines the observable world.
+\emph{(Definitions~\ref{def:recognizer}--\ref{def:kernel}, Theorem~\ref{thm:kernel})}
+
+\item \textbf{Superposition is unresolved ledger debt.}
+A configuration with $D(c) > \min_{\F(c)} D$.
+The excess defect is cost that will be paid at the next variational step.
+\emph{(Definition~\ref{def:debt}, Theorem~\ref{thm:dichotomy})}
+
+\item \textbf{Collapse is forced reconciliation.}
+The variational step drives the ledger to the defect minimum, eliminating all debt.
+The successor is deterministic, unique, and fully reconciled.
+\emph{(Theorem~\ref{thm:collapse}, Corollary~\ref{cor:nodebt})}
+
+\item \textbf{Collapse is irreversible.}
+Defect monotonicity forbids re-entry into superposition.
+The measurement record is permanent---this is decoherence.
+\emph{(Theorem~\ref{thm:irreversible})}
+
+\item \textbf{Collapse is absolute post-step; superposition is relative pre-step.}
+Every observer, regardless of resolution, perceives the post-collapse state as definite.
+Pre-collapse perception depends on the observer's resolution and partition.
+\emph{(Theorems~\ref{thm:defeats},~\ref{thm:subsystem})}
+\end{enumerate}
+
+\subsection{What Is Not Needed}
+
+The resolution requires:
+\begin{itemize}[nosep]
+\item No collapse postulate (collapse is the variational step itself).
+\item No many-worlds branching (there is one trajectory, one outcome).
+\item No hidden variables (the ``hidden'' state is the system entries the observer cannot access---not a separate ontological layer).
+\item No consciousness trigger (the variational principle fires every tick, regardless of whether anyone is watching).
+\item No new axioms (everything follows from $\Jcost$-cost minimization, log-charge conservation, and the Subsystem structure).
+\end{itemize}
+
+\subsection{Comparison with Standard Interpretations}
+
+\begin{center}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+& \textbf{Copenhagen} & \textbf{Many-Worlds} & \textbf{Bohm} & \textbf{RS} \\
+\midrule
+Collapse? & Yes (postulated) & No (branching) & No (guiding eq.) & Yes (derived) \\
+Deterministic? & No & Yes (globally) & Yes & Yes \\
+Observer role? & Causes collapse & Selects branch & None & Is an interface \\
+Randomness? & Fundamental & Apparent & Apparent & Apparent \\
+Decoherence? & Ad hoc & Emergent & Not needed & Derived \\
+New axioms? & Collapse postulate & Branch postulate & Pilot wave eq. & None \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+RS is the only interpretation that derives collapse rather than postulating or denying it, while maintaining full determinism and requiring no new axioms.
+
+%% ============================================================
+\section{The Observer Certificate}\label{sec:certificate}
+%% ============================================================
+
+\begin{theorem}[Observer Certificate]\label{thm:certificate}
+For any ledger of size $N \ge 1$ and any configuration $c$:
+\begin{enumerate}[nosep,label=(\roman*)]
+\item $c$ is either in superposition or collapsed (dichotomy).
+\item If $c$ is collapsed, it has no unresolved debt (mutual exclusivity).
+\item For any variational successor: the successor is fully reconciled (forced collapse).
+\item For any variational successor: the successor has no unresolved debt (debt elimination).
+\item Along any variational trajectory: $D(\tau(t{+}1)) \le D(\tau(t))$ (irreversibility).
+\item $D(c) \ge 0$ (boundedness below).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Each clause is proved independently in \texttt{ObserverFormalization.lean}:
+\begin{enumerate}[nosep,label=(\roman*)]
+\item \texttt{unresolved\_or\_reconciled} (excluded middle).
+\item \texttt{reconciled\_has\_no\_debt} (contradiction with minimality).
+\item \texttt{variational\_step\_reconciles} ($\F(\text{next}) = \F(c)$, so successor minimizes over its own feasible set).
+\item \texttt{collapse\_eliminates\_debt} (composition of (ii) and (iii)).
+\item \texttt{trajectory\_defect\_monotone} (induction on trajectory steps).
+\item \texttt{total\_defect\_nonneg} (each $\Jcost(c_i) \ge 0$ by AM--GM).
+\end{enumerate}
+No \texttt{sorry}.
+No custom axioms.
+\end{proof}
+
+%% ============================================================
+\section{Discussion}\label{sec:discussion}
+%% ============================================================
+
+\subsection{The Measurement Problem Was a Category Error}
+
+The measurement problem arose from treating the observer as external to the system being measured.
+In the standard formalism, the observer is a classical entity that ``collapses'' a quantum state.
+This creates an irresolvable tension: what collapses the observer?
+
+RS dissolves this tension by recognizing that the observer is not external.
+The observer IS an interface---a recognizer that is itself part of the ledger.
+It does not cause collapse.
+The variational dynamics causes collapse.
+The observer merely partitions the configuration space into distinguishable classes.
+Different observers partition differently, hence perceive different superposition structures.
+But all observers agree on the post-collapse state, because the variational successor is unique and fully reconciled.
+
+\subsection{Connection to ``Interface Is Real''}
+
+The present paper formalizes one consequence of the triadic ontology developed in \cite{Washburn-Interface}:
+
+\begin{center}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Concept} & \textbf{Configuration} & \textbf{Interface} & \textbf{Event} \\
+\midrule
+RS term & Ledger state & Recognizer $R$ & Outcome $R(c)$ \\
+QM analogue & Wavefunction & Measurement apparatus & Eigenvalue \\
+Kernel & --- & Gauge/superposition class & --- \\
+Quotient & --- & Observable space $C/{\sim_R}$ & --- \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The interface is not a passive readout.
+It is an ontological participant in what ``appears.''
+Gauge is the kernel of interface.
+Space is the quotient.
+Measurement is the actualization of an admissible cut.
+
+\subsection{Open Questions}
+
+\begin{enumerate}[nosep]
+\item \textbf{Bell violations.}
+The variational update is non-local (proved in \texttt{VariationalDynamics.update\_is\_global}).
+Can this non-locality be shown to reproduce the specific correlations predicted by quantum mechanics and confirmed by Bell tests?
+
+\item \textbf{Entanglement.}
+\texttt{Entanglement.lean} formalizes entanglement from the Recognition Composition Law.
+Can the present framework derive the specific entanglement structure (CHSH inequality violation) from the recognizer formalism?
+
+\item \textbf{Continuous limit.}
+The present framework works with discrete configurations.
+Can the recognizer and defect-gap machinery be extended to continuous Hilbert spaces, recovering standard quantum mechanics as a limiting case?
+
+\item \textbf{Quantum error correction.}
+If collapse is forced reconciliation and decoherence is defect monotonicity, what does quantum error correction look like in RS terms?
+Is it the maintenance of unresolved debt against the pressure of the variational dynamics?
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}\label{sec:conclusion}
+%% ============================================================
+
+The measurement problem is dissolved.
+It required three identifications:
+
+\begin{enumerate}[nosep]
+\item The observer is not external to reality.
+It IS an interface: a recognizer with a kernel (gauge) and a resolution (threshold).
+\item Superposition is not a mystical quantum cloud.
+It IS unresolved ledger debt: defect above the feasible minimum.
+\item Collapse is not a mysterious postulate.
+It IS the variational step: the unique, deterministic, irreversible transition to the cost minimum.
+\end{enumerate}
+
+The measurement problem persisted for a century because the standard formalism separates observer from system.
+Recognition Science does not make this separation.
+The observer is a subsystem of the ledger, an interface through which configurations become events.
+There is no point at which ``classical'' ends and ``quantum'' begins, because there was never a boundary between system and observer in the first place.
+There is only the ledger, its cost landscape, and the variational principle that drives it toward reconciliation.
+
+The universe does not wait for an observer to collapse a wavefunction.
+The universe IS the observer, the wavefunction, and the collapse---all at once, all in the cost functional, all in the variational step.
+
+\bigskip
+
+\noindent\textbf{Machine Verification.}\quad
+All theorems have been formalized in Lean~4 using Mathlib, with no \texttt{sorry} placeholders and no custom axioms.
+The formalization is in \texttt{RecognitionScience/Foundation/ObserverFormalization.lean}.
+
+\bigskip
+
+\begin{thebibliography}{99}
+
+\bibitem{Washburn-Interface}
+J.~Washburn, ``Interface Is Real: Toward an Ontology of Admissible Cuts in Recognition Science,'' 2026.
+
+\bibitem{Washburn-Object}
+J.~Washburn, ``What Is an Object? Boundary-Stabilized Individuation in Recognition Science,'' 2026.
+
+\bibitem{RS-Determinism}
+J.~Washburn, ``Determinism: Why Apparent Randomness in a Determined Universe,'' \texttt{RecognitionScience/Foundation/Determinism.lean}, 2025--2026.
+
+\bibitem{RS-MeasurementMechanism}
+J.~Washburn, ``Measurement Mechanism: How Determinism Produces Apparent Randomness,'' \texttt{RecognitionScience/Foundation/MeasurementMechanism.lean}, 2025--2026.
+
+\bibitem{RS-VariationalDynamics}
+J.~Washburn, ``Variational Dynamics: The Equation of Motion for the Ledger,'' \texttt{RecognitionScience/Foundation/VariationalDynamics.lean}, 2025--2026.
+
+\bibitem{Neumann1932}
+J.~von~Neumann, \emph{Mathematische Grundlagen der Quantenmechanik}, Springer, 1932.
+
+\bibitem{Everett1957}
+H.~Everett, ``Relative State Formulation of Quantum Mechanics,'' \emph{Rev.~Mod.~Phys.}, 29:454--462, 1957.
+
+\bibitem{Bell1964}
+J.~S.~Bell, ``On the Einstein--Podolsky--Rosen paradox,'' \emph{Physics}, 1(3):195--200, 1964.
+
+\bibitem{Zurek2003}
+W.~H.~Zurek, ``Decoherence, einselection, and the quantum origins of the classical,'' \emph{Rev.~Mod.~Phys.}, 75:715--775, 2003.
+
+\end{thebibliography}
+
+\end{document}

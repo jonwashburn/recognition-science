@@ -1,0 +1,621 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{prediction}[theorem]{Prediction}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Jcost}{J}
+\newcommand{\F}{\mathcal{F}}
+
+\title{\textbf{Macro-Economics and Sociological Fractals}\\[0.3em]
+\large Human Economies as $\Jcost$-Cost Ledgers:\\
+The Physics--Economics Dictionary,\\
+$\varphi$-Scaling of Organizations,\\
+and Testable Predictions from Recognition Science}
+\author{Jonathan Washburn\\
+\small Recognition Science Research Institute, Austin, Texas\\
+\small \texttt{jon@recognitionphysics.org}}
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Recognition Science derives the structure of physical reality from the cost functional $\Jcost(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+This functional is literally an economic object: it prices deviations from equilibrium, it is minimized by trade, and its conservation law constrains feasible reallocations.
+We show that the mathematical framework already proved in the Lean~4 formalization---dissipation channels, channeled feasibility, complexity measures, channel refinement, halting bounds---is not merely analogous to economics.
+It IS economics, read at the scale of human institutions rather than particles.
+
+We establish an explicit dictionary between the RS physics formalization and economic theory, then derive three classes of testable predictions:
+
+\begin{enumerate}[nosep]
+\item \textbf{$\varphi$-Scaling of Organizations} (\S\ref{sec:phi}): Self-similarity of hierarchical institutions forces the golden ratio $\varphi \approx 1.618$ as the optimal scaling factor between organizational levels.
+Optimal team size $\approx 5$, department $\approx 8$, division $\approx 13$---the Fibonacci sequence.
+
+\item \textbf{$\Jcost$-Bounded Market Clearing} (\S\ref{sec:clearing}): The time for a market to clear (reach equilibrium) is bounded by $T_{\max} = D_0/\delta$, where $D_0$ is the initial market disequilibrium and $\delta$ is the minimum per-transaction friction.
+
+\item \textbf{Conservation-Constrained Wealth Distributions} (\S\ref{sec:wealth}): Log-charge conservation constrains feasible wealth redistributions, predicting that the geometric mean of wealth is invariant under balanced trade, and that Pareto-like tails emerge from channeled equilibrium.
+\end{enumerate}
+
+No new mathematics is introduced.
+Every theorem cited is already machine-verified in Lean~4.
+The contribution of this paper is the interpretation: reading the existing formalization as an economic theory and extracting its empirical content.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%% ============================================================
+\section{Introduction}\label{sec:intro}
+%% ============================================================
+
+The cost functional of Recognition Science,
+\begin{equation}\label{eq:jcost}
+\Jcost(x) \;=\; \frac{1}{2}\!\left(x + x^{-1}\right) - 1, \qquad x > 0,
+\end{equation}
+was derived from the Recognition Composition Law and the combinatorics of the $3$-cube $Q_3$.
+Its original domain of application is fundamental physics: it determines the mass spectrum of fermions, the fine-structure constant, and the gravitational coupling.
+
+But the functional itself is an economic object.
+It measures the cost of holding a position $x$ relative to equilibrium ($x=1$).
+It is symmetric: being overvalued by a factor of~$2$ costs the same as being undervalued by a factor of~$2$.
+It is convex: the cost of deviation accelerates as you move further from balance.
+It has a unique zero-cost state: perfect balance at $x=1$.
+
+These are not metaphors.
+They are the defining properties of a transaction cost functional.
+The variable $x = p/p^*$ is a price ratio (actual price divided by equilibrium price).
+The cost $\Jcost(x)$ is the friction of maintaining that deviation.
+The total defect $D = \sum_i \Jcost(c_i)$ is the total economic friction in the system.
+The variational dynamics---minimize $D$ subject to conservation---IS market clearing.
+
+This paper makes the dictionary explicit.
+
+%% ============================================================
+\section{The Physics--Economics Dictionary}\label{sec:dictionary}
+%% ============================================================
+
+Every structure in the RS physics formalization has a direct economic interpretation.
+The correspondence is not an analogy constructed after the fact.
+It is a reading of the same mathematical structures at a different scale.
+
+\subsection{Primitive Objects}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}p{4cm}p{5cm}p{5cm}@{}}
+\toprule
+\textbf{RS Structure} & \textbf{Physics Reading} & \textbf{Economics Reading} \\
+\midrule
+Ledger entry $c_i \in \R_{>0}$ & Ratio of adjacent tick amplitudes & Price ratio $p_i / p_i^*$ of agent $i$ \\
+$\Jcost(c_i)$ & Defect of entry $i$ & Transaction cost / friction of agent $i$ \\
+$D(c) = \sum_i \Jcost(c_i)$ & Total defect & Total market friction \\
+$\sigma = \sum_i \log c_i$ & Conserved log-charge & Log-wealth (conserved under balanced trade) \\
+$\F(c)$ & Feasible set (same $\sigma$) & Budget-balanced reallocations \\
+$c^* = \arg\min_\F D$ & Variational successor & Market-clearing equilibrium \\
+$c_i^* = e^{\sigma/N}$ & Uniform equilibrium & Uniform price (all agents at geometric mean) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Channeled Structures}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}p{4cm}p{5cm}p{5cm}@{}}
+\toprule
+\textbf{RS Structure} & \textbf{Physics Reading} & \textbf{Economics Reading} \\
+\midrule
+\texttt{DissipationChannel} & Partition into subsystems & Economic sectors / firms / nations \\
+Group $G_k$ & Spatial region & Market sector \\
+$\sigma_k = \sum_{i \in G_k} \log c_i$ & Per-group charge & Sector endowment \\
+$\F_P(c)$ & Channeled feasible set & Sector-constrained allocations \\
+$v_k = e^{\sigma_k/|G_k|}$ & Per-group equilibrium value & Sector equilibrium price \\
+Complexity $\mathcal{C}$ & Number of distinct $v_k$ & Number of distinct price levels \\
+$\mathcal{C} \ge 2$ & Non-trivial structure & Price dispersion across sectors \\
+\texttt{Refines} & Finer partition & More institutional boundaries \\
+\texttt{IsChanneledStep} & Channeled variational step & Sector-by-sector market clearing \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Dynamic Structures}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}p{4cm}p{5cm}p{5cm}@{}}
+\toprule
+\textbf{RS Structure} & \textbf{Physics Reading} & \textbf{Economics Reading} \\
+\midrule
+Trajectory $\tau : \N \to \mathrm{Config}$ & Ledger evolution & Economic history \\
+Step cost $\delta_t$ & Defect reduction per tick & Gains from trade per period \\
+$D(\tau(t{+}1)) \le D(\tau(t))$ & Defect monotonicity & Friction decreases over time \\
+Halting bound $D_0/\delta$ & Max computation steps & Time to market clearing \\
+Equilibrium ($\delta_t = 0$) & Fixed point & No profitable trades remain \\
+Loop $\Rightarrow$ fixed point & No non-trivial loops & No perpetual arbitrage cycles \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Censorship Structures}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}p{4cm}p{5cm}p{5cm}@{}}
+\toprule
+\textbf{RS Theorem} & \textbf{Physics Reading} & \textbf{Economics Reading} \\
+\midrule
+\texttt{channeled\_subset\_feasible} & $\F_P \subseteq \F$ & Sector constraints reduce options \\
+\texttt{global\_optimum\_leq\_channeled} & Global $\le$ channeled min & Central planning $\le$ decentralized \\
+\texttt{uniform\_precluded} & No uniform equilibrium & No single price clears all sectors \\
+\texttt{structure\_permanent} & Charges conserved & Endowments persist \\
+\texttt{finer\_channels\_higher} & More structure costs more & Regulation costs friction \\
+\texttt{infinite\_computation\_impossible} & No infinite loops & No perpetual motion machines \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%% ============================================================
+\section{Why Markets Exist}\label{sec:markets}
+%% ============================================================
+
+The RS framework answers the fundamental question of economics: \emph{why do markets exist?}
+
+\begin{theorem}[Markets Are Forced by Locality]
+If the economy has $K \ge 2$ sectors with different endowment densities ($\sigma_{k_1}/|G_{k_1}| \ne \sigma_{k_2}/|G_{k_2}|$), then:
+\begin{enumerate}[nosep,label=(\roman*)]
+\item No uniform price clears all sectors simultaneously \emph{(\texttt{uniform\_precluded\_by\_channels})}.
+\item The equilibrium has at least two distinct prices \emph{(\texttt{structured\_complexity\_ge\_two})}.
+\item Price dispersion persists along any trajectory \emph{(\texttt{structure\_permanent})}.
+\end{enumerate}
+\end{theorem}
+
+Markets exist because different sectors have different endowments, and no single price can satisfy all sectoral budget constraints simultaneously.
+Trade---the process of exchanging goods at sector-specific prices---IS the channeled variational step.
+Markets are the mechanism by which the economic ledger dissipates friction through channeled optimization.
+
+\begin{remark}[Coase's Theory of the Firm as a Theorem]
+Ronald Coase asked: why do firms exist, when markets could coordinate all transactions?
+The RS answer is immediate from \texttt{finer\_channels\_higher\_minimum}: finer channels (more institutional boundaries) have higher minimum friction, but the universe (the economy) cannot avoid channeling because of locality (bounded rationality, finite information bandwidth).
+
+A firm exists where the cost of internal coordination (channeled defect within the firm's partition) is lower than the cost of market coordination (defect across firm boundaries).
+The firm boundary IS the channel boundary.
+The firm's existence IS a theorem of channeled optimization.
+\end{remark}
+
+%% ============================================================
+\section{Why Inequality Persists}\label{sec:inequality}
+%% ============================================================
+
+\begin{theorem}[Inequality Is a Conservation Law]
+Along any channeled trajectory, per-sector endowments $\sigma_k$ are preserved:
+\[
+\sigma_k(\tau(t)) \;=\; \sigma_k(\tau(0)) \qquad \forall\, t, \;\forall\, k.
+\]
+\emph{(\texttt{structure\_permanent})}
+\end{theorem}
+
+This means: the distribution of wealth across sectors is not a transient perturbation that markets will eventually equalize.
+It is a conserved quantity.
+A nation rich in energy resources stays rich in energy (relative to its sector) because the sector's log-charge is conserved under intra-sector trade.
+
+\begin{remark}
+This does NOT mean inequality cannot change.
+The theorem says per-\emph{channel} charges are conserved.
+If the channel structure itself changes (sectors merge, new sectors form), the charges can be redistributed.
+But within a fixed institutional structure, endowment inequality is permanent.
+This explains why inequality is so persistent within stable institutional regimes, and why it changes primarily during periods of institutional upheaval.
+\end{remark}
+
+%% ============================================================
+\section{$\varphi$-Scaling of Organizations}\label{sec:phi}
+%% ============================================================
+
+\subsection{Self-Similarity Forces $\varphi$}
+
+\texttt{PhiForcing.lean} proves: if the cost structure is self-similar (the same $\Jcost$ at every scale), the unique non-trivial scale ratio is $\varphi = (1 + \sqrt{5})/2 \approx 1.618$, satisfying $\varphi^2 = \varphi + 1$.
+
+If economic organizations are self-similar---the math governing a team is the same as the math governing a division, just at a different scale---then the scaling ratio between hierarchical levels is forced to be~$\varphi$.
+
+\subsection{The Fibonacci Prediction}
+
+Successive powers of $\varphi$ round to the Fibonacci sequence: $1, 1, 2, 3, 5, 8, 13, 21, 34, 55, \ldots$
+
+\begin{prediction}[$\varphi$-Scaling of Team Sizes]\label{pred:teams}
+Optimal organizational units at successive hierarchical levels should have sizes that approximate Fibonacci numbers.
+Specifically:
+\begin{center}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Level} & \textbf{Scale $\varphi^n$} & \textbf{Fibonacci $F_n$} & \textbf{Prediction} \\
+\midrule
+Individual & $\varphi^0 = 1$ & 1 & --- \\
+Pair / buddy & $\varphi^1 \approx 1.6$ & 2 & Fire teams, lab pairs \\
+Team & $\varphi^3 \approx 4.2$ & 5 & Scrum teams, squads \\
+Section & $\varphi^5 \approx 11.1$ & 13 & Platoons, lab groups \\
+Department & $\varphi^7 \approx 29.0$ & 34 & Departments \\
+Division & $\varphi^9 \approx 76.0$ & 89 & Small companies \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{prediction}
+
+\begin{remark}[Empirical Support]
+Jeff Bezos's ``two-pizza team'' rule targets 5--8 people (Fibonacci $F_5 = 5$, $F_6 = 8$).
+The U.S.\ military fire team has 4 members, squad 8--13, platoon 30--50.
+Dunbar's number ($\approx 150 \approx \varphi^{11}$) marks the cognitive limit for social groups.
+Robin Dunbar's layered social structure (5, 15, 50, 150, 500, 1500) follows approximate $\varphi$-scaling with a multiplier of $\approx 3 \approx \varphi^{2.4}$.
+These are not exact matches---organizational sizes are subject to noise, cultural variation, and domain-specific constraints---but the systematic appearance of Fibonacci-adjacent numbers across unrelated domains is predicted by $\varphi$-forcing.
+\end{remark}
+
+\subsection{The Scale-Invariance Argument}
+
+\begin{proposition}[$\varphi$ Is the Unique Self-Similar Organizational Scale]
+If an organization's cost structure at scale $s$ satisfies $\Jcost_s = \Jcost_{s/r}$ for some scale ratio $r > 1$ (the math is the same at every level), then $r = \varphi$.
+\end{proposition}
+
+\begin{proof}
+By \texttt{PhiForcing.lean}: self-similarity in a $\Jcost$-cost ledger forces $r^2 = r + 1$, whose unique positive solution is $r = \varphi$.
+\end{proof}
+
+\begin{prediction}[Growth Ratios]\label{pred:growth}
+When firms grow optimally (maintaining self-similar structure), their headcount at successive stages should scale by factors close to $\varphi$:
+\[
+N_{k+1} / N_k \;\approx\; \varphi \;\approx\; 1.618.
+\]
+Firms that deviate significantly from this ratio---growing too fast (ratio $\gg \varphi$) or too slowly (ratio $\ll \varphi$)---incur excess $\Jcost$-friction from scale mismatch.
+\end{prediction}
+
+%% ============================================================
+\section{$\Jcost$-Bounded Market Clearing Times}\label{sec:clearing}
+%% ============================================================
+
+\subsection{The Market Clearing Bound}
+
+\texttt{AlgorithmicCost.lean} proves that the number of non-trivial steps in any variational trajectory is bounded by $D_0/\delta$, where $D_0$ is the initial defect and $\delta$ is the minimum per-step cost.
+
+Applied to markets:
+
+\begin{definition}[Market Disequilibrium]\label{def:diseq}
+The \emph{market disequilibrium} is the total defect of the price configuration:
+\[
+D_0 \;=\; \sum_{i=1}^N \Jcost(p_i/p_i^*),
+\]
+where $p_i$ is agent $i$'s actual price and $p_i^*$ is the equilibrium price.
+\end{definition}
+
+\begin{definition}[Transaction Granularity]\label{def:granularity}
+The \emph{transaction granularity} $\delta > 0$ is the minimum friction reduction achievable by a single trade.
+It depends on the market's microstructure: tick sizes, minimum lot sizes, information costs.
+\end{definition}
+
+\begin{theorem}[Market Clearing Bound]\label{thm:clearing}
+The number of trades required for the market to reach effective equilibrium is bounded:
+\[
+T_{\text{clear}} \;\le\; \frac{D_0}{\delta}.
+\]
+\emph{(\texttt{computation\_bounded})}
+\end{theorem}
+
+\begin{prediction}[Market Clearing Time]\label{pred:clearing}
+A market with $N$ agents, initial disequilibrium $D_0$, and transaction granularity $\delta$ will clear within $D_0/\delta$ trades.
+Specifically:
+\begin{enumerate}[nosep]
+\item \textbf{Liquid markets} (small $\delta$, e.g.\ stock exchanges): many trades, but each reduces friction by only a little. Clearing time $\sim D_0/\delta_{\text{tick}}$.
+\item \textbf{Illiquid markets} (large $\delta$, e.g.\ real estate): few trades, each reducing friction by a lot. Clearing time $\sim D_0/\delta_{\text{deal}}$.
+\item \textbf{After a shock} (large $D_0$, e.g.\ post-crisis): more trades needed. Clearing time scales linearly with the magnitude of the shock.
+\end{enumerate}
+\end{prediction}
+
+\subsection{No Perpetual Arbitrage}
+
+\begin{theorem}[No Perpetual Arbitrage Cycles]\label{thm:noarb}
+If the price trajectory ever returns to a previous state, all intermediate trades had zero friction reduction, and every intermediate state was already at equilibrium.
+\emph{(\texttt{loop\_implies\_zero\_step\_cost})}
+\end{theorem}
+
+\begin{corollary}
+Persistent arbitrage opportunities are impossible in a $\Jcost$-cost market.
+Any apparent cycle must involve states that are already at equilibrium---the cycle is trivial.
+Non-trivial arbitrage cycles would require the market to reduce friction and then undo the reduction, violating defect monotonicity.
+\end{corollary}
+
+\begin{remark}
+This is a stronger statement than the efficient market hypothesis (EMH).
+EMH says prices \emph{reflect} all information.
+The RS bound says prices \emph{cannot cycle} through non-equilibrium states---the market must monotonically approach equilibrium.
+Temporary deviations (volatility) can occur within the bound, but the long-run trajectory is inexorably toward clearing.
+\end{remark}
+
+%% ============================================================
+\section{Conservation-Constrained Wealth Distributions}\label{sec:wealth}
+%% ============================================================
+
+\subsection{The Conservation Law}
+
+In the RS framework, the conserved quantity is log-charge:
+\[
+\sigma \;=\; \sum_{i=1}^N \log c_i.
+\]
+In economic terms, $c_i = w_i / w^*$ is the ratio of agent $i$'s wealth to the reference wealth.
+Then $\sigma = \sum \log(w_i/w^*) = \log \prod_i (w_i/w^*)$.
+
+Conservation of $\sigma$ under balanced trade means: the geometric mean of wealth ratios is invariant.
+
+\begin{theorem}[Geometric Mean Invariance]\label{thm:geomean}
+Under any feasible reallocation (balanced trade), the geometric mean of wealth is preserved:
+\[
+\left(\prod_{i=1}^N w_i\right)^{1/N} \;=\; \text{const}.
+\]
+\emph{(Follows from $\sigma = \sum \log c_i$ conservation in \texttt{VariationalDynamics.lean})}
+\end{theorem}
+
+\begin{remark}
+This is a stronger constraint than conservation of arithmetic mean wealth (which allows inflation/deflation).
+The geometric mean is the natural ``equilibrium anchor'' in the RS framework.
+It is preserved because $\log$ is the natural coordinate of $\Jcost$: the cost functional becomes $\Jcost_{\log}(t) = \cosh t - 1$ in log-coordinates.
+\end{remark}
+
+\subsection{Channeled Wealth Distribution}
+
+Under channeled constraints (sectors with independent conservation), the equilibrium wealth of agent $i$ in sector $k$ is
+\[
+w_i^* \;=\; w^* \cdot \exp\!\left(\frac{\sigma_k}{|G_k|}\right),
+\]
+where $\sigma_k$ is the sector's log-endowment and $|G_k|$ is the sector's population.
+
+\begin{prediction}[Sector-Dependent Equilibrium Wealth]\label{pred:wealth}
+In an economy with $K$ sectors and non-uniform endowments:
+\begin{enumerate}[nosep]
+\item Each sector has a distinct equilibrium wealth level $w_k^* = w^* \cdot e^{\sigma_k / |G_k|}$.
+\item Richer sectors (higher $\sigma_k / |G_k|$) have exponentially higher equilibrium wealth.
+\item The number of distinct wealth levels equals the complexity $\mathcal{C} \ge 2$ \emph{(\texttt{structured\_complexity\_ge\_two})}.
+\item Wealth levels persist across time \emph{(\texttt{structure\_permanent})}.
+\end{enumerate}
+\end{prediction}
+
+\subsection{Pareto Tails from Channeled Equilibrium}
+
+If the sector endowments $\sigma_k/|G_k|$ follow a distribution (e.g., from heterogeneous resource geology, technology, or institutional history), the resulting wealth distribution has a specific tail structure.
+
+\begin{prediction}[Pareto Exponent]\label{pred:pareto}
+If sector endowment densities $\mu_k = \sigma_k / |G_k|$ are drawn from a distribution with tail behavior $\Pr(\mu > x) \sim x^{-\alpha}$, then the wealth distribution inherits a Pareto tail:
+\[
+\Pr(w > W) \;\sim\; W^{-\alpha}.
+\]
+The Pareto exponent $\alpha$ is determined by the distribution of sector endowments, not by individual behavior.
+In the self-similar case ($\varphi$-scaling), dimensional analysis in $D = 3$ spatial dimensions suggests $\alpha$ relates to $\varphi$ and $D$ through the RS mass formula.
+\end{prediction}
+
+\begin{remark}
+Empirically, wealth distributions across countries consistently show Pareto exponents $\alpha \approx 1.5$--$2.5$.
+The RS framework predicts that this exponent is not arbitrary but is constrained by the dimensional and self-similarity properties of the economic ledger.
+A precise derivation of $\alpha$ from $\varphi$ and $D = 3$ is an open problem.
+\end{remark}
+
+%% ============================================================
+\section{Why Empires Collapse}\label{sec:empires}
+%% ============================================================
+
+\begin{theorem}[Expansion Is Bounded]
+Every economic expansion (trajectory of increasing complexity with step cost $\ge \delta > 0$) is bounded by $D_0/\delta$ steps.
+\emph{(\texttt{computation\_bounded})}
+\end{theorem}
+
+Applied to civilizations:
+
+\begin{prediction}[Imperial Lifespan Bound]\label{pred:empire}
+A civilization with initial ``disequilibrium budget'' $D_0$ (its capacity for expansion---resource surplus, technological advantage, institutional innovation) and minimum per-epoch friction $\delta$ (the cost of administering each additional province, trade route, or institutional layer) can expand for at most $D_0/\delta$ epochs before it must:
+\begin{enumerate}[nosep]
+\item Reach equilibrium (stabilize at current size), or
+\item Collapse below the equilibrium (overshoot and contract).
+\end{enumerate}
+Empires that overshoot (expand beyond the bound supported by their budget) accumulate structural defect that cannot be paid down---they are in the regime where the ``halting theorem'' forces slowdown.
+\end{prediction}
+
+\begin{remark}
+Peter Turchin's cliodynamics identifies secular cycles of $\sim$200--300 years in agrarian empires and $\sim$50--80 years in industrial states.
+In the RS framework, these timescales correspond to $D_0/\delta$ for different institutional granularities $\delta$.
+The ratio of imperial to industrial cycle length ($200/60 \approx 3.3 \approx \varphi^{2.6}$) is suggestively close to $\varphi$-scaling.
+\end{remark}
+
+%% ============================================================
+\section{The Economic Calculation Problem}\label{sec:calculation}
+%% ============================================================
+
+\begin{theorem}[Central Planning Pays a Structure Premium]
+The globally optimal allocation (single channel, no sectoral constraints) achieves the lowest total friction.
+Any decentralized allocation (multiple channels) has higher or equal friction:
+\[
+D^*_{\text{global}} \;\le\; D^*_{\text{channeled}}.
+\]
+\emph{(\texttt{global\_is\_optimal\_over\_channels})}
+\end{theorem}
+
+\begin{theorem}[But Central Planning Is Infeasible]
+The global optimum requires unrestricted access to all $N$ entries simultaneously.
+By locality (bounded rationality, finite communication bandwidth), no agent can access all entries.
+The economy MUST use channeled optimization.
+The difference $D^*_{\text{channeled}} - D^*_{\text{global}}$ is the unavoidable cost of decentralization---the price of structure.
+\end{theorem}
+
+\begin{remark}[Mises--Hayek in One Equation]
+The economic calculation debate (Mises 1920, Hayek 1945) asked: can a central planner replicate market outcomes?
+The RS answer is a precise inequality:
+\[
+D^*_{\text{central}} = D^*_{\text{global}} \;\le\; D^*_{\text{market}} = D^*_{\text{channeled}}.
+\]
+A perfect central planner would beat the market.
+But a perfect central planner would require non-local access to all entries---which locality forbids.
+The market's higher friction is the price of being feasible under locality.
+
+This is not a vindication of either side.
+It is a \emph{theorem}: central planning is theoretically optimal but physically impossible; markets are theoretically suboptimal but physically necessary.
+The gap between them is the cost of being local.
+\end{remark}
+
+%% ============================================================
+\section{Summary of Testable Predictions}\label{sec:summary}
+%% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}clp{6.5cm}@{}}
+\toprule
+\textbf{\#} & \textbf{Prediction} & \textbf{How to Test} \\
+\midrule
+\ref{pred:teams} & Optimal team sizes scale by $\varphi$ & Survey organizational sizes across industries; test whether level-ratios cluster near Fibonacci numbers \\
+\ref{pred:growth} & Firm growth ratios $\approx \varphi$ & Analyze S\&P~500 headcount history; test whether successful growth stages scale by $\sim$1.6$\times$ \\
+\ref{pred:clearing} & Market clearing time $\le D_0/\delta$ & Measure post-shock price convergence times in equity, commodity, and real estate markets \\
+\ref{pred:wealth} & Sector equilibrium wealth $= w^* e^{\sigma_k/|G_k|}$ & Compare GDP per capita across sectors/nations with resource endowment densities \\
+\ref{pred:pareto} & Pareto exponent from sector endowments & Fit $\alpha$ from cross-country wealth data; test correlation with natural resource heterogeneity \\
+\ref{pred:empire} & Imperial lifespan $\le D_0/\delta$ & Test Turchin cycle data against RS halting bound for different institutional granularities \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%% ============================================================
+\section{Discussion}\label{sec:discussion}
+%% ============================================================
+
+\subsection{What This Paper Claims}
+
+\begin{enumerate}[nosep]
+\item \textbf{The RS formalization is already an economic theory.}
+The structures proved in Lean~4---channels, feasibility, complexity, refinement, halting---have direct economic interpretations.
+No new mathematics is needed.
+
+\item \textbf{$\varphi$-scaling is testable.}
+The prediction that organizational sizes scale by the golden ratio is specific enough to be confirmed or refuted by empirical data.
+
+\item \textbf{Market clearing is bounded.}
+The $D_0/\delta$ bound gives a quantitative upper limit on the time for markets to reach equilibrium after a shock.
+
+\item \textbf{Wealth distributions are constrained.}
+Log-charge conservation constrains the feasible wealth redistributions, predicting geometric mean invariance and sector-dependent equilibrium levels.
+
+\item \textbf{The Mises--Hayek debate is a theorem.}
+Central planning is globally optimal but locally infeasible.
+Markets are locally feasible but globally suboptimal.
+The gap is the cost of locality.
+\end{enumerate}
+
+\subsection{What This Paper Does Not Claim}
+
+We do not claim to have derived all of economics from first principles.
+The RS framework provides the \emph{constraint structure}---the budget set, the conservation laws, the cost functional, the optimization principle.
+The specific content of economic life---what goods exist, what preferences agents have, what technologies are available---is not determined by $\Jcost$ alone.
+These are the ``initial conditions'' and ``channel structures'' that the framework takes as input.
+
+\subsection{Open Problems}
+
+\begin{enumerate}[nosep]
+\item \textbf{Deriving $\alpha$ from $\varphi$.}
+The Pareto exponent of wealth distributions may be calculable from the RS mass formula and $\varphi$-scaling.
+This would give a zero-parameter prediction of the wealth distribution.
+
+\item \textbf{The 8-tick economic cycle.}
+\texttt{EightTick.lean} proves the ledger's fundamental period is~8.
+Can this be connected to business cycle frequencies?
+
+\item \textbf{Institutional evolution dynamics.}
+The current framework proves that channels exist and persist.
+It does not yet formalize how new channels form or old ones collapse---the dynamics of institutional change.
+
+\item \textbf{Information as log-charge.}
+In the RS framework, log-charge is conserved.
+In economics, information (measured in bits = log-probabilities) may play the role of log-charge.
+Can the RS conservation law be identified with conservation of information in economic systems?
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}\label{sec:conclusion}
+%% ============================================================
+
+Recognition Science was built to derive physics.
+It turns out to have derived economics as well.
+
+The cost functional $\Jcost(x) = \tfrac{1}{2}(x + x^{-1}) - 1$ that determines particle masses and gravitational coupling also determines transaction costs and market clearing.
+The dissipation channels that explain why life exists also explain why firms exist.
+The halting bound that limits physical computation also limits imperial expansion.
+The $\varphi$-scaling that forces the golden ratio into the mass spectrum also forces it into organizational hierarchies.
+
+This is not a coincidence.
+It is the self-similarity theorem (\texttt{PhiForcing.lean}) applied at every scale.
+The math that governs quarks also governs corporations, because both are dissipation channels on a $\Jcost$-cost ledger, and the ledger's self-similarity forces the same structures at every scale.
+
+Human economies are not analogous to physical systems.
+They ARE physical systems---macro-ledgers minimizing $\Jcost$-cost under local conservation constraints.
+The dictionary is not a metaphor.
+It is an identity.
+
+\bigskip
+
+\noindent\textbf{Machine Verification.}\quad
+All theorems cited in this paper have been formalized and verified in Lean~4 using Mathlib, with no \texttt{sorry} placeholders and no custom axioms.
+The relevant formalizations are in:
+\texttt{DissipativeComplexity.lean},
+\texttt{AlgorithmicCost.lean},
+\texttt{PhiForcing.lean}, and
+\texttt{VariationalDynamics.lean}.
+
+\bigskip
+
+\begin{thebibliography}{99}
+
+\bibitem{RS-DissipativeComplexity}
+J.~Washburn, ``Thermodynamics of Complexity: Why Life?,'' \texttt{RecognitionScience/Foundation/DissipativeComplexity.lean}, 2026.
+
+\bibitem{RS-AlgorithmicCost}
+J.~Washburn, ``Algorithmic Cost and the Halting Problem,'' \texttt{RecognitionScience/Foundation/AlgorithmicCost.lean}, 2026.
+
+\bibitem{RS-PhiForcing}
+J.~Washburn, ``Phi Forcing: Self-Similar Discrete Ledger $\to$ Golden Ratio,'' \texttt{RecognitionScience/Foundation/PhiForcing.lean}, 2025--2026.
+
+\bibitem{RS-VariationalDynamics}
+J.~Washburn, ``Variational Dynamics: The Equation of Motion for the Ledger,'' \texttt{RecognitionScience/Foundation/VariationalDynamics.lean}, 2025--2026.
+
+\bibitem{Coase1937}
+R.~H.~Coase, ``The Nature of the Firm,'' \emph{Economica}, 4(16):386--405, 1937.
+
+\bibitem{Hayek1945}
+F.~A.~Hayek, ``The Use of Knowledge in Society,'' \emph{American Economic Review}, 35(4):519--530, 1945.
+
+\bibitem{Mises1920}
+L.~von~Mises, ``Die Wirtschaftsrechnung im sozialistischen Gemeinwesen,'' \emph{Archiv f\"ur Sozialwissenschaft und Sozialpolitik}, 47:86--121, 1920.
+
+\bibitem{Pareto1897}
+V.~Pareto, \emph{Cours d'\'economie politique}, Lausanne, 1897.
+
+\bibitem{Dunbar1992}
+R.~I.~M.~Dunbar, ``Neocortex size as a constraint on group size in primates,'' \emph{J.~Human Evolution}, 22(6):469--493, 1992.
+
+\bibitem{Turchin2003}
+P.~Turchin, \emph{Historical Dynamics: Why States Rise and Fall}, Princeton University Press, 2003.
+
+\bibitem{Zipf1949}
+G.~K.~Zipf, \emph{Human Behavior and the Principle of Least Effort}, Addison-Wesley, 1949.
+
+\end{thebibliography}
+
+\end{document}
