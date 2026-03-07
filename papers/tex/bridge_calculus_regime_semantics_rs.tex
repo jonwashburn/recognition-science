@@ -1,0 +1,376 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+
+\title{A Bridge Calculus Between Layers of Description\\Regime Semantics for Recognition Science}
+\author{Jonathan Washburn\\Recognition Science\\Recognition Physics Institute\\jon@recognitionphysics.org\\Austin, Texas, USA}
+\date{March 7, 2026}
+
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{principle}{Principle}
+\newtheorem{remark}{Remark}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Recognition Science already distinguishes between a specific derivation chain and a more representation-agnostic optimization skeleton. What it still lacks is a disciplined semantics for translation between descriptions. Without such a semantics, the words ``same,'' ``equivalent,'' ``coarse-grained,'' ``surrogate,'' ``emergent,'' and ``analogical'' are easily collapsed. That is how category drift begins. This paper introduces regime semantics: a bridge calculus for moving between layers of description without losing track of what is preserved, what is forgotten, and what is merely suggested. A regime is modeled by configuration space $C$, event space $E$, a family of recognizers $\Sigma$, admissibility $\mathcal{A}$, strain or cost $J$, evolution $\Phi$, and optional display channels. A bridge between regimes is not merely a map. It is a typed transport rule together with a declared domain of validity, transfer rights, loss profile, and, when needed, an error bound. Identity, gauge equivalence, quotient equivalence, monotone-optimality equivalence, approximation, emergence, and analogy are separated as distinct relations rather than allowed to blur into one another. Exact transfer laws are given for ranking and argmin invariance under strictly increasing cost reparameterization, and for equilibrium and well-posedness transfer under octave equivalence. Gauge and quotient bridges transfer only invariant or public content; analogy transfers no factual content at all. The result is a customs office for theory. Every cross-layer statement must carry both a certainty tag and a bridge tag. This does not shrink Recognition Science. It makes its unification sharper, more honest, and more powerful.
+\end{abstract}
+
+\section{Introduction}
+
+Recognition Science has become broad enough that it can now injure itself with its own strength. It has a common language of ledger, admissibility, strain, quotient, gauge, phase, and channel. That shared language allows one to compare physics, biology, consciousness, language, ethics, and other domains without starting from nothing each time. But breadth creates a new problem. Once many domains can be spoken in one grammar, it becomes dangerously easy to slide from ``the same optimization pattern appears here'' to ``these two descriptions are the same thing.'' That slide is not rigor. It is category drift.
+
+A theory this ambitious needs a customs office. It needs a rulebook that says what kind of relation holds between two descriptions and what is licensed to pass through that relation. Some translations preserve everything. Some preserve only public observables. Some preserve only order. Some are valid only inside a scale window or a perturbative basin. Some are merely analogies, which can inspire search but do not transport truth.
+
+The central claim of this paper is simple. Recognition Science already has claim hygiene inside a layer of description. It distinguishes definitions from theorems, hypotheses, and empirical anchors. The next step is to impose the same discipline between layers. We need a regime semantics: a typed bridge calculus for cross-layer translation.
+
+The argument has three parts. First, a layer of description will be formalized as a regime, meaning a package of configuration space, recognizers, admissibility, cost, dynamics, and observation rules. Second, a bridge will be formalized as a transport relation between regimes that explicitly declares what structure is preserved and what is lost. Third, the major bridge types will be separated: identity, gauge equivalence, quotient equivalence, monotone-optimality equivalence, approximation, emergence, and analogy. Once those distinctions are explicit, the theory becomes much harder to fake and much easier to extend.
+
+\section{Why a bridge calculus is needed}
+
+The basic issue is not obscure. A single system can be described in many ways. One description may track microstate; another may track a quotient class; another may track a display surrogate; another may track a coarse, emergent variable that is only stable in a certain regime. These are not the same relation.
+
+If two descriptions differ only by relabeling, then all structure should transfer. If they differ by gauge, then only gauge-invariant content should transfer. If they differ by quotient, then public observables may transfer while internal microstructure may not. If one cost is a strictly increasing remapping of another, then ranking and argmin should transfer but not absolute magnitudes. If one layer emerges from another only in a finite basin and time window, then claims outside that basin are not licensed. If there is only a suggestive rhyme and no witnessed transport, then the relation is analogical and nothing factual transfers.
+
+Without these distinctions, a unifying framework becomes an omnivorous metaphor engine. It can begin to explain everything by vibe. That is not a philosophical objection. It is a structural one. A theory that does not separate bridge types cannot tell the difference between exact invariance and loose resemblance. It therefore cannot control its own claims.
+
+Recognition Geometry already solves part of this problem inside a single layer. It distinguishes configurations from events, builds quotient spaces from recognizers, and treats gauge as recognition-preserving structure. Regime semantics lifts that discipline one level higher. It asks not merely how states are quotiented into observables, but how whole descriptions relate to one another.
+
+\section{Regimes and bridges}
+
+\begin{definition}[Regime]
+A regime is a tuple
+\[
+\mathcal{R}=(C,E,\Sigma,\mathcal{A},J,\Phi,\kappa,\mathcal{O}),
+\]
+where:
+\begin{enumerate}
+    \item $C$ is a configuration space;
+    \item $E$ is an event space;
+    \item $\Sigma$ is a family of recognizers $R:C\to E$ or, more generally, a family of event-selecting maps with common public interpretation;
+    \item $\mathcal{A}\subseteq C$ is the admissible set, encoding the ledger or closure constraint;
+    \item $J:\mathcal{A}\to \mathbb{R}_{\ge 0}\cup\{\infty\}$ is a strain or cost functional;
+    \item $\Phi:\mathcal{A}\to \mathcal{A}$ is an update rule or effective evolution law;
+    \item $\kappa:\mathcal{A}\to \mathbb{Z}/8\mathbb{Z}$ is an optional phase map when octave structure matters;
+    \item $\mathcal{O}$ is a family of display or observation channels derived from states, traces, or events.
+\end{enumerate}
+When phase is irrelevant, $\kappa$ may be omitted from the discussion.
+\end{definition}
+
+A regime is not just a state space. It is a disciplined package of what can vary, what is publicly recognized, what is admissible, what counts as strain, how time or step acts, and how the regime presents itself to observation. It is a full layer of description.
+
+\begin{definition}[Recognition quotient in a regime]
+Given a recognizer $R\in\Sigma$, define
+\[
+c_1 \sim_R c_2
+\quad\Longleftrightarrow\quad
+R(c_1)=R(c_2).
+\]
+The corresponding recognition quotient is
+\[
+C_R := C/{\sim_R},
+\]
+with quotient map
+\[
+\pi_R:C\to C_R.
+\]
+A quantity $F:C\to X$ will be called \emph{public} relative to $R$ if it factors through the quotient, meaning that there exists $\widetilde{F}:C_R\to X$ such that
+\[
+F=\widetilde{F}\circ \pi_R.
+\]
+\end{definition}
+
+This is the basic internal structure of a regime. A bridge compares such structures across regimes.
+
+\begin{definition}[Bridge]
+A bridge from regime $\mathcal{R}_1$ to regime $\mathcal{R}_2$ is a tuple
+\[
+B=(b_C,b_E,\tau,U,\mathsf{Rights},\mathsf{Loss},\mathsf{Err}),
+\]
+where:
+\begin{enumerate}
+    \item $b_C$ is a configuration-level translation, partial or total;
+    \item $b_E$ is an event-level translation, partial or total;
+    \item $\tau$ is the bridge type;
+    \item $U\subseteq C_1$ is the declared domain of validity;
+    \item $\mathsf{Rights}$ is the set of statements licensed to transfer;
+    \item $\mathsf{Loss}$ records the structure forgotten or identified by the bridge;
+    \item $\mathsf{Err}$ records any controlled error, tolerance, or scale window.
+\end{enumerate}
+\end{definition}
+
+A bridge is therefore not merely a map. It is a map plus a legal charter. The charter is the important part. It states what survives translation and what does not.
+
+\section{The major bridge types}
+
+\subsection*{Identity}
+
+Identity is the strongest bridge. It is the case where two descriptions differ only by notation, coordinates, or harmless packaging. Nothing real has been forgotten.
+
+\begin{definition}[Identity bridge]
+A bridge $B:\mathcal{R}_1\to\mathcal{R}_2$ is an identity bridge if there are bijections preserving all declared structure exactly: recognizers, admissibility, cost, update law, phase structure when present, and observation rules.
+\end{definition}
+
+An identity bridge transfers everything the description knows. If a claim fails to transfer across an alleged identity bridge, it was not identity in the first place.
+
+\subsection*{Gauge equivalence}
+
+Gauge equivalence is weaker. Two descriptions may differ internally while presenting the same public content. The invisible directions are not errors. They are the bridge kernel.
+
+\begin{definition}[Gauge bridge]
+A bridge is gauge if the source regime carries an equivalence relation $\sim_g$ such that the bridge identifies states only up to gauge and all recognized or public quantities are constant on gauge classes.
+\end{definition}
+
+Gauge is sameness modulo a null direction of appearance. The internal descriptions differ, but the quotient reality does not. Only gauge-invariant statements may pass.
+
+\subsection*{Quotient equivalence}
+
+Gauge equivalence is one way of forgetting. Quotient equivalence is the general version. Two regimes may have different internal configuration spaces while sharing the same public quotient structure.
+
+\begin{definition}[Quotient bridge]
+A bridge is quotient-equivalent if there exist recognizers $R_i\in\Sigma_i$ and an isomorphism
+\[
+q:C_{R_1}\to C_{R_2}
+\]
+between the relevant recognition quotients such that public content factors through $q$.
+\end{definition}
+
+A quotient bridge does not say the microstates are the same. It says the public worlds are the same after the relevant forgetting.
+
+\subsection*{Monotone-optimality equivalence}
+
+Some descriptions preserve neither microstate nor quotient, but still preserve optimization order. This is the bridge behind surrogate metrics and display channels.
+
+\begin{definition}[Monotone bridge]
+A bridge is monotone-optimality preserving if the relevant cost or quality functions satisfy
+\[
+J_2\circ b_C = g\circ J_1
+\]
+on the validity domain $U$, where $g:\mathbb{R}\to\mathbb{R}$ is strictly increasing.
+\end{definition}
+
+The word ``monotone'' needs one piece of honesty. Strict monotonicity by itself is not enough for argmin preservation. The monotonicity must be increasing. A strictly decreasing remap reverses the order and turns minima into maxima. Tiny devil, important horns.
+
+\subsection*{Approximation}
+
+Approximation is not, by itself, a distinct notion of sameness. It is a controlled weakening of one of the previous bridge types.
+
+\begin{definition}[Approximate bridge]
+A bridge is $\varepsilon$-approximate when its commuting laws hold only up to controlled error. Typical conditions have the form
+\[
+d_E\!\left(b_E(R_1(c)),R_2(b_C(c))\right)\le \varepsilon
+\]
+or
+\[
+|J_2(b_C(c)) - g(J_1(c))|\le \varepsilon
+\]
+for all $c$ in the declared validity domain $U$, possibly together with a time horizon or scale interval.
+\end{definition}
+
+Approximation without a declared domain, tolerance, and failure mode is not approximation. It is hand-waving.
+
+\subsection*{Emergence}
+
+Emergence is a directed bridge from finer description to coarser description. It is not symmetric. The coarse layer is not identical to the fine one, but it is not arbitrary either.
+
+\begin{definition}[Emergent bridge]
+Let $\mathcal{R}_f$ be a fine regime and $\mathcal{R}_c$ a coarse regime. A bridge $q:C_f\to C_c$ is emergent if there exists a validity domain $U\subseteq C_f$ and a scale window such that
+\[
+q\circ \Phi_f^t(c)\approx \Phi_c^t\circ q(c)
+\]
+for $c\in U$ throughout the declared window, together with a loss profile specifying the fast variables, hidden degrees of freedom, or internal distinctions forgotten by $q$.
+\end{definition}
+
+Emergence therefore has two required ingredients: a transport law and a regime of validity. Without both, ``emergent'' is too cheap a word.
+
+\subsection*{Analogy}
+
+Analogy is the weakest relation. It matters, but it must be quarantined.
+
+\begin{definition}[Analogical relation]
+Two regimes are analogically related when they exhibit a suggestive structural rhyme but no explicit bridge witness has been supplied that transports recognizers, quotients, costs, dynamics, or controlled errors.
+\end{definition}
+
+Analogy can motivate conjecture. It cannot carry factual content by itself.
+
+\section{Transfer laws}
+
+The point of a bridge calculus is not only to classify relations. It is to state what each relation licenses.
+
+\begin{proposition}[Ranking and argmin invariance under strictly increasing remapping]
+Let $J_1,J_2$ be cost functionals on the same admissible set $\mathcal{A}$, or on admissible sets identified by a bijection $b_C$, and suppose
+\[
+J_2\circ b_C = g\circ J_1
+\]
+for a strictly increasing function $g$. Then:
+\begin{enumerate}
+    \item for any admissible $c_1,c_2$,
+    \[
+    J_1(c_1)\le J_1(c_2)
+    \quad\Longleftrightarrow\quad
+    J_2(b_C(c_1))\le J_2(b_C(c_2));
+    \]
+    \item the minimizers correspond,
+    \[
+    b_C\!\left(\arg\min_{\mathcal{A}_1} J_1\right)=\arg\min_{\mathcal{A}_2} J_2.
+    \]
+\end{enumerate}
+\end{proposition}
+
+\noindent
+The proof is immediate. Strict increase preserves order, so the order on admissible states is unchanged. Since argmin depends only on order, argmin is unchanged as well. This is the bridge law that justifies surrogate diagnostics, alternate displays, and order-preserving measurement channels.
+
+\begin{proposition}[Gauge transfer principle]
+Let $\sim_g$ be a gauge relation on a regime $\mathcal{R}$, and let $F:C\to X$ be gauge-invariant, meaning
+\[
+c\sim_g c' \Longrightarrow F(c)=F(c').
+\]
+Then $F$ factors through the gauge quotient, and any bridge that is gauge-equivalent transfers the truth of statements expressed entirely in terms of $F$.
+\end{proposition}
+
+\noindent
+This is the formal reason gauge bridges do not transport all microstate claims. They transport only quotient claims.
+
+\begin{proposition}[Quotient transfer principle]
+Suppose two regimes have recognizers $R_1$ and $R_2$ and an isomorphism
+\[
+q:C_{R_1}\to C_{R_2}.
+\]
+If $F_1:C_1\to X$ and $F_2:C_2\to X$ are public quantities factoring through the corresponding quotients, then $F_1$ and $F_2$ correspond through $q$. In particular, any statement depending only on quotient classes transfers.
+\end{proposition}
+
+\noindent
+Again the message is plain. Quotient equivalence transfers public structure, not hidden interiors.
+
+A special bridge class matters for the octave skeleton used throughout Recognition Science.
+
+\begin{definition}[Octave-equivalent layers]
+Two octave layers
+\[
+\mathcal{L}_i=(C_i,\mathcal{A}_i,J_i,\Phi_i,\kappa_i)
+\]
+are octave-equivalent if there exists a bijection $h:C_1\to C_2$ such that, for all relevant states,
+\begin{enumerate}
+    \item $c\in\mathcal{A}_1$ if and only if $h(c)\in\mathcal{A}_2$;
+    \item $\kappa_2(h(c))=\kappa_1(c)$;
+    \item $h(\Phi_1(c))=\Phi_2(h(c))$;
+    \item for admissible states, the cost order is preserved:
+    \[
+    J_1(c_1)\le J_1(c_2)
+    \Longleftrightarrow
+    J_2(h(c_1))\le J_2(h(c_2)).
+    \]
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[Equilibrium and well-posedness]
+For the present discussion, define the equilibrium set of an octave layer by
+\[
+\mathrm{Eq}(\mathcal{L})=\arg\min_{c\in\mathcal{A}} J(c).
+\]
+Call the equilibrium problem well-posed when $\mathrm{Eq}(\mathcal{L})$ is nonempty.
+\end{definition}
+
+\begin{proposition}[Octave-equivalence transfers equilibria]
+If $h:\mathcal{L}_1\to\mathcal{L}_2$ is an octave equivalence, then
+\[
+h(\mathrm{Eq}(\mathcal{L}_1))=\mathrm{Eq}(\mathcal{L}_2).
+\]
+Consequently, well-posedness transfers:
+\[
+\mathrm{Eq}(\mathcal{L}_1)\neq \varnothing
+\quad\Longleftrightarrow\quad
+\mathrm{Eq}(\mathcal{L}_2)\neq \varnothing.
+\]
+\end{proposition}
+
+\noindent
+The proof is also straightforward. The bijection preserves admissibility and order, so a minimizer on one side maps to a minimizer on the other. Existence therefore transfers. If one also defines equilibrium by a fixed-point condition on $\Phi$, the commuting law $h\circ\Phi_1=\Phi_2\circ h$ transfers that condition as well.
+
+These transfer laws are simple, but they matter. They show the paper's main point in miniature. A bridge type is not poetic decoration. It determines what survives translation.
+
+\section{Bridge rights and loss profiles}
+
+One can now state the bridge calculus in its intended form. A bridge grants rights. It does not grant all rights.
+
+An identity bridge grants the right to transfer the full descriptive content of a regime. A gauge bridge grants the right to transfer only gauge-invariant quantities and quotient statements. A quotient bridge grants the right to transfer public observables, but not interior mechanisms unless a stronger bridge is given. A monotone bridge grants the right to transfer ranking, argmin, and any decision rule depending only on order, but not metric values. An approximate bridge grants these rights only inside the declared tolerance and scale window. An emergent bridge grants effective laws only inside the basin and time range for which closure holds. An analogical relation grants no transfer rights. It grants only the right to search for a real bridge.
+
+This can be summarized in one sentence: every bridge has both a preservation set and a loss profile.
+
+That sentence is not bookkeeping trivia. It is ontology in working clothes. A description is defined as much by what it cannot see or does not preserve as by what it reports. Gauge forgets null directions. Quotient forgets interiors. Emergence forgets fast variables. Monotone display forgets magnitudes but keeps order. Analogy forgets enough that it cannot support inference. The bridge calculus therefore turns hidden loss into an explicit part of the theory rather than a source of accidental overclaim.
+
+\section{Claim hygiene across layers}
+
+Recognition Science already benefits from one clean habit: it separates definitions, theorems, hypotheses, and empirical anchors. Regime semantics extends this discipline by adding a second tag to every cross-layer claim.
+
+\begin{principle}[Two-tag discipline]
+Every cross-layer statement should declare:
+\begin{enumerate}
+    \item a certainty tag, specifying whether the statement is a definition, theorem, hypothesis, or empirical anchor;
+    \item a bridge tag, specifying whether the transport is by identity, gauge, quotient, monotone, approximate, emergent, or analogical relation.
+\end{enumerate}
+\end{principle}
+
+This immediately improves scientific hygiene. A mathematically exact monotone bridge is very different from an empirical emergent bridge. A quotient theorem is very different from an analogical hypothesis. Once both tags are present, the sentence stops pretending to be stronger than it is.
+
+\begin{principle}[Analogy-default rule]
+If no bridge witness has been supplied, then the relation is analogical by default.
+\end{principle}
+
+This is the customs-office rule. It is severe on purpose. It prevents a framework from inflating a suggestive resemblance into an entitlement to transfer causal or numerical claims.
+
+The practical consequence is simple. The phrase ``these two layers are the same pattern'' becomes meaningful only after one adds: same in what sense? Identity? Gauge? Quotient? Order-preserving surrogate? Emergent reduction? Or merely analogy? The answer determines what one is allowed to say next.
+
+\section{Where regime semantics sits in Recognition Science}
+
+The role of regime semantics can now be stated precisely.
+
+Recognition Geometry studies how a single layer of description turns configuration into event, how indistinguishability induces quotient structure, and how gauge appears as a recognition-preserving symmetry. That is the internal geometry of appearance.
+
+The representation-agnostic optimization skeleton studies the common form shared by many layers: admissibility, strain, phase, step, and channels. That is the abstract grammar of optimization across domains.
+
+Regime semantics sits between them and above them. It asks how complete layers relate. It is the discipline of translation.
+
+This has an important consequence for ambitious unification. When two domains share a common optimization grammar, that does not yet mean they are identical. It means at minimum that there is a candidate bridge. One must still say which bridge. A physics layer and a semantic layer may be quotient-equivalent in some public structure, monotone-equivalent in some ranking, emergently related over some scale window, or merely analogical. The bridge type is the content of the claim.
+
+This resolves a recurring problem in cross-domain reasoning. One can affirm shared structure without collapsing all differences. The theory is then neither reductionist mush nor disconnected pluralism. It becomes a typed unification: exact where exactness is warranted, coarse where coarse-graining is warranted, and silent where only analogy is present.
+
+\section{Examples}
+
+A few examples make the framework concrete.
+
+First, consider a diagnostic display channel built from a cost trace. If the display score is a strictly increasing remap of the underlying strain, then ranking and argmin transfer. This is a monotone bridge. The display may be excellent for control or comparison while still failing to preserve metric scale. A sonified trace, a visual heat map, and a scalar score may all be equivalent in order without being identical as observables.
+
+Second, consider descriptions that differ only by a redundant phase or unit choice. That is gauge. Dimensionless or quotient-level statements transfer. Absolute coordinates along the redundant direction do not. Gauge therefore protects the theory from mistaking a representational redundancy for a physical disagreement.
+
+Third, consider a coarse variable that tracks the stable behavior of a finer system only after transient relaxation and only within a given basin. That is emergence. The coarse layer may be real, useful, and predictive. But it is licensed only in its own validity window. Outside that window, the bridge expires.
+
+Fourth, consider two domains that happen to exhibit similar network motifs, the same count, or a visually similar ladder. Without a witnessed transport rule, that relation is analogical. It may be a fertile clue. It is not yet an equivalence.
+
+These examples are deliberately plain. The point is not ornament. It is to show that the same theory needs several distinct notions of ``same'' and that each notion carries different rights.
+
+\section{Consequences for theory building}
+
+Once regime semantics is adopted, several practical consequences follow.
+
+First, bridge construction becomes a first-class research activity. One no longer asks only whether two domains look related. One asks what bridge type can actually be built.
+
+Second, transfer theorems become explicit targets rather than informal assumptions. Ranking preservation, argmin invariance, quotient correspondence, equilibrium transfer, and well-posedness transfer are not side comments. They are the core legal documents of cross-layer science.
+
+Third, empirical hypotheses become cleaner. A cross-domain claim is no longer stated as a vague unity thesis. It is stated as a bridge claim with a validity domain and a falsifier. For example, an emergent bridge can fail by breaking outside its predicted scale window. A quotient bridge can fail if supposedly public observables depend on hidden interior variables after all.
+
+Fourth, category drift is no longer a stylistic problem. It becomes a rule violation. One can point to the exact place where a claim jumped from quotient equivalence to identity, or from analogy to theorem, without a bridge witness.
+
+Fifth, unification improves. This sounds backwards, but it is not. Honest structure-sharing is stronger than indiscriminate blending. A theory that can say exactly what is common across layers becomes more credible, not less ambitious.
+
+\section{Conclusion}
+
+Recognition Science has already learned how to derive observable structure from recognizers, how to treat gauge as recognition-preserving redundancy, and how to speak many domains in a common optimization grammar. The next conceptual step is to learn how to move between descriptions without cheating.
+
+That is the purpose of regime semantics. A layer of description is a regime. A cross-layer translation is a bridge. Bridges come in kinds, and kinds matter. Identity, gauge, quotient, monotone-optimality, approximation, emergence, and analogy are not rhetorical variations on the same idea. They are different relations with different transfer rights.
+
+Once this is made explicit, the theory gains a real customs office. Every cross-layer claim must declare what it preserves, what it forgets, where it is valid, and what sort of truth it is carrying. That is not bureaucratic clutter. It is how a large theory remains honest enough to keep growing.
+
+The reward is substantial. The framework can unify without flattening, compare without conflating, and generalize without drifting into metaphor. In a theory that aims to connect many layers of reality, that discipline is not optional. It is part of reality's grammar.
+\end{document}

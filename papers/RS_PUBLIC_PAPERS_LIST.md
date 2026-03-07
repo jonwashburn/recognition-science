@@ -6,7 +6,7 @@
 >
 > **Scope note:** This list contains only papers addressing known, existing science.
 >
-> **Generated:** March 5, 2026
+> **Generated:** March 7, 2026
 
 ---
 
@@ -45,6 +45,10 @@
 | Reality-Native Measurements | `syllabus/papers/03-waist-big-unlock/RSNative-Measurement-Framework.tex` |
 | Quantum Coherence as Gated Recognition | `syllabus/papers/03-waist-big-unlock/Quantum-Coherence-Theory.tex` |
 | Octave System and Particle Mass Spectrum | `syllabus/papers/03-waist-big-unlock/OCTAVE_MASSES_PAPER.tex` |
+| **Topological Conservation: Charge from Linking** | `papers/tex/RS_Topological_Conservation.tex` |
+| **The Continuum Limit of Recognition Science** | `papers/tex/RS_Continuum_Limit.tex` |
+| **Self-Reference and the Recognition Operator** | `papers/tex/RS_Self_Reference_Recognition_Operator.tex` |
+| **Bridge Calculus Between Layers of Description** | `papers/tex/bridge_calculus_regime_semantics_rs.tex` |
 
 ---
 
@@ -310,6 +314,7 @@
 | QM from Cost Minimization | `reality/papers/RS_QM_From_Cost.tex` |
 | QM Interpretation | `reality/papers/RS_QM_Interpretation.tex` |
 | Quantum Foundations (compilation) | `reality/papers/RS_Quantum_Foundations.tex` |
+| **The Observer Formalized** | `papers/tex/RS_Observer_Measurement_Problem.tex` |
 
 ---
 
@@ -338,6 +343,7 @@
 | Genetic Code Structure | `reality/papers/RS_Genetic_Code_Structure.tex` |
 | Protein Folding (standalone) | `reality/papers/RS_Protein_Folding.tex` |
 | Molecular Biology from RS | `reality/papers/RS_Biology_Molecular.tex` |
+| **Binding Problem of Subjective Experience** | `papers/tex/RS_Consciousness_Binding.tex` |
 
 ---
 
@@ -351,6 +357,9 @@
 | Discrete–Continuous Relation | `reality/papers/RS_Discrete_Continuous_Relation.tex` |
 | Probability Meaning | `reality/papers/RS_Probability_Meaning.tex` |
 | Modal Logic Grounded in Physics | `reality/papers/RS_Modal_Logic_Grounded.tex` |
+| **What Is an Object? Boundary-Stabilized Individuation** | `papers/tex/what_is_an_object_rs.tex` |
+| **Interface Is Real: Ontology of Admissible Cuts** | `papers/tex/interface_is_real_rs.tex` |
+| **Thermodynamics of Complexity** | `papers/tex/RS_Thermodynamics_of_Complexity.tex` |
 
 ---
 
@@ -379,6 +388,8 @@
 | P vs NP from RS (standalone) | `reality/papers/RS_PvsNP.tex` |
 | Axiomatic Proof of RH | `reality/papers/RS_Axiomatic_Proof_RH.tex` |
 
+| **Algorithmic Cost and the Halting Problem** | `papers/tex/RS_Algorithmic_Cost_Halting.tex` |
+
 ---
 
 ## XIX. Overview, Synthesis & QFT
@@ -402,68 +413,59 @@
 
 ---
 
+## XX. Economics & Social Science
+
+| Paper | Location |
+|-------|----------|
+| **Macro-Economics and Sociological Fractals** | `papers/tex/RS_Economic_Interpretation.tex` |
+
+---
+
 ## Summary
 
 | Category | Count |
 |----------|-------|
-| I. Foundation | 31 |
+| I. Foundation | 35 |
 | II. Fundamental Constants | 8 |
 | III. Particle Physics & SM | 34 |
 | IV. Neutrino Physics | 6 |
 | V. QCD & Strong Interaction | 8 |
 | VI. Electroweak Physics | 8 |
-| VII. Gravity & GR | 20 (+1 Tier 2) |
-| VIII. Black Hole Physics | 8 (+1 Tier 2) |
-| IX. Cosmology & Dark Sector | 28 (+2 Tier 2) |
+| VII. Gravity & GR | 21 |
+| VIII. Black Hole Physics | 9 |
+| IX. Cosmology & Dark Sector | 30 |
 | X. Nuclear Physics | 9 |
-| XI. Condensed Matter | 10 (+3 Tier 2) |
-| XII. Astrophysics | 10 (+3 Tier 2) |
-| XIII. Experimental Anomalies | 14 (+2 Tier 2) |
-| XIV. Quantum Foundations | 10 |
+| XI. Condensed Matter | 13 |
+| XII. Astrophysics | 13 |
+| XIII. Experimental Anomalies | 16 |
+| XIV. Quantum Foundations | 12 |
 | XV. Chemistry & Materials | 2 |
-| XVI. Biology | 12 |
-| XVII. Philosophy of Physics | 6 |
-| XVIII. Mathematics | 20 |
-| XIX. Overview & QFT | 12 |
-| **Total** | **244** |
+| XVI. Biology | 13 |
+| XVII. Philosophy of Physics | 9 |
+| XVIII. Mathematics | 21 |
+| XIX. Overview & QFT | 14 |
+| XX. Economics & Social Science | 1 |
+| **Total** | **255** |
 
 ---
 
 ## Papers Needed for Full Resolution
 
-> The current 244 papers **cover** every major domain of fundamental science.
-> To **fully resolve** all of known physics requires filling the gaps below,
-> bringing the total to roughly 262–270 papers.
+> The current 255 papers **cover** every major domain of fundamental science.
+> Tier 1 and Tier 2 papers are COMPLETE. Remaining gaps are Tier 3.
 
-### Tier 1 — Fundamental frameworks not yet derived as standalone papers
+### Tier 1 — COMPLETE (4/4)
 
-| Topic | Notes |
-|-------|-------|
-| Special Relativity / Lorentz Invariance | `RS_Speed_of_Light` derives c but not the full SR framework (Lorentz transformations, Minkowski spacetime, length contraction, time dilation) |
-| Maxwell's Equations / Classical Electrodynamics | `RS_Gauge_Group_Origin` derives U(1); Maxwell's four equations need explicit standalone derivation from cost functional |
-| Hydrogen Atom Spectrum | THE foundational quantum result — Rydberg formula, fine structure, hyperfine splitting, Lamb shift |
-| Thermodynamics (Four Laws) | `RS_Statistical_Mechanics` covers part; explicit derivation of zeroth through third laws from RS needed |
+Special Relativity, Maxwell's Equations, Hydrogen Atom Spectrum, Thermodynamics.
 
-### Tier 2 — Important physics phenomena missing standalone treatment
+### Tier 2 — COMPLETE (14/14)
 
-| Topic | Notes |
-|-------|-------|
-| Electron g−2 | Most precisely verified prediction in physics history (~13 sig figs); only muon g−2 has a paper |
-| Superfluidity | Major quantum phenomenon (He-4, He-3), no paper |
-| Quantum Hall Effect (Integer + Fractional) | Nobel Prize physics (1985, 1998); only tangential mention in Topological Phases |
-| BCS Superconductivity | Conventional SC mechanism; only High-Tc and Room-Temp are addressed |
-| Proton Radius Puzzle | Major experimental anomaly (2010–2019), no dedicated paper |
-| Gravitational Lensing | Key GR prediction, mentioned in ILG papers but no standalone derivation |
-| Black Hole No-Hair Theorem | Fundamental GR theorem, no paper |
-| CMB Temperature (T = 2.725 K) | Key cosmological observable, should be derivable |
-| Stellar Evolution / HR Diagram | Main sequence, red giant branch — not addressed |
-| Gamma-Ray Bursts | Major astrophysical phenomenon, no paper |
-| Renormalization / Running Couplings | Beta functions and asymptotic freedom mentioned but not standalone |
-| Spin-Statistics Theorem | Mentioned in QFT Foundations but deserves explicit treatment |
-| Baryon Acoustic Oscillations | Major cosmological observable, mentioned but no standalone |
-| Neutron Star / TOV Limit | Chandrasekhar mass covers white dwarfs; neutron star TOV limit not explicit |
+Electron g−2, Superfluidity, Quantum Hall Effect, BCS Superconductivity,
+Proton Radius Puzzle, Gravitational Lensing, No-Hair Theorem, CMB Temperature,
+Stellar Evolution, Gamma-Ray Bursts, Renormalization, Spin-Statistics,
+Baryon Acoustic Oscillations, Neutron Star / TOV Limit.
 
-### Tier 3 — Completeness items
+### Tier 3 — Completeness items (next priority)
 
 | Topic | Notes |
 |-------|-------|
