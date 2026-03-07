@@ -20,6 +20,11 @@ equation (the Recognition Composition Law) and the combinatorics of the
 - `RecognitionScience.Foundation.PhiForcing`: T6 — φ from self-similarity
 - `RecognitionScience.Foundation.EightTick`: T7 — 8-tick period
 - `RecognitionScience.Foundation.DimensionForcing`: T8 — D = 3
+- `RecognitionScience.Foundation.VariationalDynamics`: F-008 — Ledger update rule
+- `RecognitionScience.Foundation.MeasurementMechanism`: F-009 — Measurement mechanism
+- `RecognitionScience.Foundation.Entanglement`: F-010 — Entanglement from RCL
+- `RecognitionScience.Foundation.GaugeFromCube`: P-014 — SM gauge group from Q₃
+- `RecognitionScience.Foundation.Thermodynamics`: F-011 — Temperature and thermodynamics
 
 ### Masses — The fermion mass spectrum
 - `RecognitionScience.Masses.MassLaw`: Master mass law
@@ -40,6 +45,11 @@ import RecognitionScience.Cost
 import RecognitionScience.Foundation.EightTick
 import RecognitionScience.Foundation.PhiForcing
 import RecognitionScience.Foundation.DimensionForcing
+import RecognitionScience.Foundation.VariationalDynamics
+import RecognitionScience.Foundation.MeasurementMechanism
+import RecognitionScience.Foundation.Entanglement
+import RecognitionScience.Foundation.GaugeFromCube
+import RecognitionScience.Foundation.Thermodynamics
 import RecognitionScience.Masses.MassLaw
 import RecognitionScience.Masses.BaselineDerivation
 import RecognitionScience.Gravity.ZeroParameterGravity
