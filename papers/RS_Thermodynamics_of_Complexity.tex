@@ -1,0 +1,590 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Jcost}{J}
+\newcommand{\F}{\mathcal{F}}
+
+\title{\textbf{The Thermodynamics of Complexity}\\[0.3em]
+\large Why Life Is Forced:\\
+Dissipation Channels, Structural Permanence, and\\
+Darwinian Selection from $\Jcost$-Cost Minimization}
+\author{Jonathan Washburn\\
+\small Recognition Science Research Institute, Austin, Texas\\
+\small \texttt{jon@recognitionphysics.org}}
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove that \emph{complex structure is mathematically forced} in a universe governed by $\Jcost$-cost minimization under local conservation constraints.
+The argument bridges two previously disconnected results: the Past Theorem (the universe begins in the unique zero-defect unity state) and the observed fact that the universe is filled with structure---stars, chemistry, organisms, ecosystems.
+
+The central mechanism is the distinction between \textbf{global} and \textbf{local} optimization.
+Global optimization---unconstrained minimization of total defect---produces featureless thermal equilibrium.
+Local optimization---minimization through \emph{dissipation channels} with per-group conservation laws---produces \emph{structured} equilibria with multiple distinct values.
+When locality forces channels with non-uniform charges, uniform thermalization is \emph{forbidden}: structure is not optional but \emph{economically inevitable}.
+
+The main results, all machine-verified in Lean~4 with no \texttt{sorry} and no custom axioms:
+
+\begin{enumerate}[nosep]
+\item \textbf{Channeled feasible sets are strict subsets} of the global feasible set; structure has a cost (\S\ref{sec:channels}).
+\item \textbf{Non-uniform channels forbid uniform equilibria}: the universe \emph{cannot} thermalize when locality imposes non-uniform conservation (\S\ref{sec:forbidden}).
+\item \textbf{Complexity is quantified and bounded below}: non-uniform channels force complexity $\ge 2$ (\S\ref{sec:complexity}).
+\item \textbf{Structure is permanent}: channel charges are conserved along trajectories (\S\ref{sec:permanence}).
+\item \textbf{Finer channels cost more but are unavoidable}: the gap between global and local optima is the price of structure (\S\ref{sec:selection}).
+\end{enumerate}
+
+Life is a dissipation channel.
+Evolution is channel refinement.
+Natural selection is the variational principle applied to partition structures.
+None of this requires new axioms; it follows from $\Jcost$-cost minimization, log-charge conservation, and locality.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%% ============================================================
+\section{Introduction}\label{sec:intro}
+%% ============================================================
+
+Recognition Science derives observable structure from a single cost functional
+\begin{equation}\label{eq:jcost}
+\Jcost(x) \;=\; \frac{1}{2}\!\left(x + x^{-1}\right) - 1, \qquad x > 0,
+\end{equation}
+and the variational principle that the universe evolves by minimizing total defect $D(c) = \sum_i \Jcost(c_i) \ge 0$ subject to conservation of log-charge $\sigma = \sum_i \log c_i$.
+
+Previous work established two bookends of cosmic history:
+
+\medskip
+\noindent\textbf{The Beginning.}
+\texttt{InitialCondition.lean} proved that the unique zero-defect state---all ledger entries equal to~$1$---is the only zero-cost configuration.
+This is the Past Theorem: the low-entropy initial condition is not a contingent fact but a mathematical necessity.
+The universe \emph{must} start at zero defect because that is the unique global minimum of $D$.
+
+\medskip
+\noindent\textbf{The End.}
+\texttt{Thermodynamics.lean} derived temperature, entropy, and the laws of thermodynamics from the ledger's cost structure.
+The universe evolves toward thermal equilibrium by monotonically reducing total defect.
+
+\medskip
+Between these two bookends lies the entire history of structure: galaxies, stars, planets, oceans, cells, brains, civilizations.
+The question this paper addresses is:
+
+\begin{quote}
+\itshape
+If the universe starts at zero defect and evolves toward thermal equilibrium, why does it not simply thermalize immediately?
+Why does structure---including life---exist at all?
+\end{quote}
+
+The answer, proved in \texttt{DissipativeComplexity.lean} and presented here, is that \textbf{locality forces channeled optimization}, and channeled optimization \textbf{produces structure as a mathematical necessity}.
+
+%% ============================================================
+\section{Preliminaries}\label{sec:prelim}
+%% ============================================================
+
+\subsection{Configurations and Total Defect}
+
+A ledger configuration of size $N$ is a function $c : \{0,\ldots,N{-}1\} \to \R_{>0}$.
+The total defect is $D(c) = \sum_{i} \Jcost(c_i) \ge 0$, with $D(c) = 0$ iff $c_i = 1$ for all $i$.
+
+\subsection{Feasibility and Variational Dynamics}
+
+The \emph{feasible set} of a configuration $c$ is
+\[
+\F(c) \;=\; \bigl\{c' \mid \textstyle\sum_i \log c'_i = \sum_i \log c_i\bigr\},
+\]
+preserving the conserved log-charge $\sigma$.
+The variational successor minimizes $D$ over $\F(c)$.
+By strict convexity of $\Jcost$, the minimizer is the \emph{uniform configuration}: all entries equal to $e^{\sigma/N}$.
+This is featureless thermal equilibrium.
+
+\subsection{The Problem}
+
+If unconstrained optimization produces featurelessness, why is the universe structured?
+The answer must lie in constraints beyond global log-charge conservation.
+Those constraints are \emph{locality}.
+
+%% ============================================================
+\section{Dissipation Channels}\label{sec:channels}
+%% ============================================================
+
+\begin{definition}[Dissipation Channel]\label{def:channel}
+A \emph{dissipation channel} of size $N$ is a partition of the $N$ ledger entries into $K \ge 1$ nonempty groups via an assignment function $\alpha : \{0,\ldots,N{-}1\} \to \{0,\ldots,K{-}1\}$.
+Each group $G_k = \alpha^{-1}(k)$ is nonempty.
+\end{definition}
+
+Physically, each group is a semi-isolated subsystem: a galaxy, a star, an organism, a cell.
+The subsystems interact internally but are partially isolated from each other.
+Each group has its own conserved log-charge:
+\[
+\sigma_k \;=\; \sum_{i \in G_k} \log c_i.
+\]
+
+\begin{definition}[Channeled Feasible Set]\label{def:channeledfeasible}
+The \emph{channeled feasible set} is
+\[
+\F_P(c) \;=\; \bigl\{c' \mid \forall k,\; \sigma_k(c') = \sigma_k(c)\bigr\}.
+\]
+This requires each group to independently conserve its own log-charge, which is strictly more constraining than conserving only the total $\sigma = \sum_k \sigma_k$.
+\end{definition}
+
+\begin{theorem}[Channeled $\subseteq$ Global]\label{thm:subset}
+$\F_P(c) \subseteq \F(c)$ for any channel $P$ and configuration $c$.
+\end{theorem}
+
+\begin{proof}
+If every group charge is preserved, the total charge $\sigma = \sum_k \sigma_k$ is preserved.
+Formally, this follows from the fiberwise sum decomposition: $\sum_i f(i) = \sum_k \sum_{i \in G_k} f(i)$.
+\end{proof}
+
+\begin{corollary}[Structure Has a Cost]\label{cor:cost}
+The global defect minimum is at most the channeled defect minimum:
+\[
+\min_{c' \in \F(c)} D(c') \;\le\; \min_{c' \in \F_P(c)} D(c').
+\]
+Optimizing over a smaller set yields a higher (or equal) minimum.
+\end{corollary}
+
+\begin{remark}
+This corollary is the cost of structure.
+A channeled universe pays more defect than a globally equilibrated one.
+But it has no choice: locality prevents global optimization.
+The excess defect is not waste---it is the price of the structure that locality demands.
+\end{remark}
+
+%% ============================================================
+\section{Uniform Thermalization Is Forbidden}\label{sec:forbidden}
+%% ============================================================
+
+The central result of this paper is that, under channeled constraints, the universe \emph{cannot} reach a uniform featureless equilibrium.
+
+\begin{definition}[Per-Group Equilibrium Value]\label{def:groupeq}
+The equilibrium value for group $k$ is
+\[
+v_k \;=\; \exp\!\left(\frac{\sigma_k}{|G_k|}\right),
+\]
+the uniform-within-group configuration that minimizes per-group defect subject to conserving $\sigma_k$.
+\end{definition}
+
+\begin{theorem}[Different Charges $\Rightarrow$ Different Values]\label{thm:different}
+If $\sigma_{k_1}/|G_{k_1}| \ne \sigma_{k_2}/|G_{k_2}|$, then $v_{k_1} \ne v_{k_2}$.
+\end{theorem}
+
+\begin{proof}
+$\exp$ is injective: $\exp(a) = \exp(b) \implies a = b$.
+\end{proof}
+
+\begin{theorem}[Uniform Equilibrium Precluded]\label{thm:precluded}
+If two groups have different mean charges ($\sigma_{k_1}/|G_{k_1}| \ne \sigma_{k_2}/|G_{k_2}|$), then no uniform configuration (all entries equal) is channeled-feasible.
+\end{theorem}
+
+\begin{proof}
+Suppose all entries equal $v > 0$.
+Then $\sigma_k(c') = |G_k| \cdot \log v$ for each group $k$.
+For channeled feasibility, $|G_k| \cdot \log v = \sigma_k$ for all $k$, giving $\log v = \sigma_k / |G_k|$ for all $k$.
+But if $\sigma_{k_1}/|G_{k_1}| \ne \sigma_{k_2}/|G_{k_2}|$, no single $v$ satisfies both.
+Contradiction.
+\end{proof}
+
+\begin{remark}[Why This Matters]
+This theorem is the mathematical answer to ``Why didn't the universe just thermalize?''
+Thermal equilibrium IS the uniform configuration.
+But locality imposes per-group conservation.
+When different regions of the universe have different charge densities, \emph{no uniform state is reachable}.
+The universe is forced to maintain non-uniformity---forced to maintain \emph{structure}.
+\end{remark}
+
+\begin{theorem}[Non-Zero Charge Forces Positive Defect]\label{thm:positivedefect}
+If the total log-charge $\sigma \ne 0$, then every feasible configuration has strictly positive defect.
+The universe can never return to the zero-defect unity state.
+\end{theorem}
+
+\begin{proof}
+The only $D = 0$ configuration has all entries equal to~$1$, which has $\sigma = 0$.
+If $\sigma \ne 0$, no zero-defect configuration is feasible.
+\end{proof}
+
+%% ============================================================
+\section{Complexity Is Quantified}\label{sec:complexity}
+%% ============================================================
+
+\begin{definition}[Complexity]\label{def:complexity}
+The \emph{complexity} of a channeled system is the number of distinct equilibrium values across groups:
+\[
+\mathcal{C}(P, c) \;=\; \bigl|\{v_k : k = 0,\ldots,K{-}1\}\bigr|.
+\]
+\end{definition}
+
+\begin{itemize}[nosep]
+\item $\mathcal{C} = 1$: all groups have the same mean charge. Featureless. Thermal.
+\item $\mathcal{C} \ge 2$: groups have different mean charges. \textbf{Structured.}
+\end{itemize}
+
+\begin{theorem}[Complexity $\ge 1$]\label{thm:cpos}
+$\mathcal{C}(P,c) \ge 1$ for any channel and configuration.
+\end{theorem}
+
+\begin{theorem}[Structure Means Complexity $\ge 2$]\label{thm:ctwo}
+If two groups have different mean charges, $\mathcal{C}(P,c) \ge 2$.
+\end{theorem}
+
+\begin{proof}
+The values $v_{k_1}$ and $v_{k_2}$ are distinct (Theorem~\ref{thm:different}) and both appear in the image.
+A set containing two distinct elements has cardinality $\ge 2$.
+\end{proof}
+
+\begin{remark}
+Complexity $\ge 2$ is the minimum requirement for all non-trivial physical structure.
+Stars exist because stellar interiors and interstellar gas have different charge densities.
+Chemistry exists because different elements have different equilibrium values.
+Life exists because metabolic subsystems maintain gradients against their environment.
+All of these are instances of $\mathcal{C} \ge 2$, forced by locality.
+\end{remark}
+
+%% ============================================================
+\section{Structure Is Permanent}\label{sec:permanence}
+%% ============================================================
+
+\begin{theorem}[Channel Charges Are Conserved]\label{thm:conserved}
+Under channeled dynamics, per-group charges $\sigma_k$ are preserved at every step.
+\end{theorem}
+
+\begin{proof}
+Immediate from the channeled feasibility constraint: each step must satisfy $\sigma_k(\text{next}) = \sigma_k(\text{current})$ for all $k$.
+\end{proof}
+
+\begin{theorem}[Structure Is Permanent Along Trajectories]\label{thm:permanent}
+For any channeled trajectory, $\sigma_k(\tau(t)) = \sigma_k(\tau(0))$ for all $t$ and all groups $k$.
+\end{theorem}
+
+\begin{proof}
+By induction on $t$.
+Each step preserves $\sigma_k$ (Theorem~\ref{thm:conserved}), so the charge at time $t{+}1$ equals the charge at time $t$, which by induction equals the charge at time~$0$.
+\end{proof}
+
+\begin{corollary}[Once Structured, Always Structured]
+If the channel charges are non-uniform at time $0$, they remain non-uniform at all future times.
+The universe cannot erase its structure---complexity is irreversible.
+\end{corollary}
+
+\begin{remark}
+This is the RS explanation for why complex structures \emph{endure}.
+A star persists because its internal charge balance is conserved.
+An organism persists because its metabolic charge flows are constrained.
+A civilization persists because its informational and energetic channels are protected by conservation laws.
+Permanence is not a miracle; it is a conservation theorem.
+\end{remark}
+
+%% ============================================================
+\section{Defect Drives Dynamics}\label{sec:dynamics}
+%% ============================================================
+
+\begin{theorem}[Channeled Defect Monotonicity]\label{thm:monotone}
+Total defect is monotone non-increasing along channeled trajectories:
+\[
+D(\tau(t{+}1)) \;\le\; D(\tau(t)) \qquad \forall\, t.
+\]
+\end{theorem}
+
+\begin{proof}
+The current state is channeled-feasible for itself.
+The channeled successor minimizes $D$ over the channeled feasible set.
+Therefore $D(\text{next}) \le D(\text{current})$.
+\end{proof}
+
+\begin{remark}
+Defect reduction IS dissipation.
+The channels are not merely constraints---they are \emph{conduits for cost reduction}.
+Each group independently reduces its internal defect, subject to its own conservation law.
+The total defect of the universe decreases as each channel processes its share.
+This is why complex structures are \emph{useful}: they parallelize defect dissipation.
+A star dissipates defect through nuclear fusion.
+A cell dissipates defect through metabolism.
+An ecosystem dissipates defect through nutrient cycling.
+Life is what happens when the ledger discovers how to parallelize its cost minimization.
+\end{remark}
+
+%% ============================================================
+\section{Channel Refinement and Natural Selection}\label{sec:selection}
+%% ============================================================
+
+\begin{definition}[Channel Refinement]\label{def:refinement}
+Channel $P_1$ \emph{refines} $P_2$ (relative to configuration $c$) if $\F_{P_1}(c) \subseteq \F_{P_2}(c)$.
+Refinement means more constraints, hence a smaller feasible set.
+\end{definition}
+
+\begin{theorem}[Finer Channels $\Rightarrow$ Higher Minimum Defect]\label{thm:finer}
+If $P_1$ refines $P_2$, then the $P_2$-optimal configuration has defect at most the $P_1$-optimal:
+\[
+D^*_{P_2} \;\le\; D^*_{P_1}.
+\]
+\end{theorem}
+
+\begin{proof}
+Every $P_1$-feasible configuration is $P_2$-feasible (by refinement).
+The $P_2$ minimizer, searching over the larger set, achieves defect at most the $P_1$ minimizer.
+\end{proof}
+
+\begin{theorem}[Global Optimum Is the Coarsest Channel]\label{thm:global}
+The unconstrained (single-channel) variational successor achieves the lowest defect.
+Any finer channel structure has higher or equal minimum defect:
+\[
+D^*_{\text{global}} \;\le\; D^*_P \qquad \forall\, P.
+\]
+\end{theorem}
+
+\begin{proof}
+$\F_P(c) \subseteq \F(c)$ by Theorem~\ref{thm:subset}.
+Apply Theorem~\ref{thm:finer}.
+\end{proof}
+
+\begin{remark}[The Fundamental Tradeoff]
+This pair of theorems encodes the fundamental tradeoff of the physical universe:
+
+\begin{center}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+& \textbf{Global Optimization} & \textbf{Local (Channeled)} \\
+\midrule
+Constraints & Global $\sigma$ only & Per-group $\sigma_k$ \\
+Feasible set & Largest & Smaller \\
+Minimum defect & Lowest & Higher \\
+Equilibrium & Uniform (featureless) & Structured (complex) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The universe \emph{cannot} do global optimization because of locality (finite propagation speed, causal structure).
+It is forced to optimize through channels.
+The resulting higher-defect, structured equilibrium IS the physical universe we observe---including life.
+\end{remark}
+
+%% ============================================================
+\section{Life as Dissipation Channel}\label{sec:life}
+%% ============================================================
+
+We are now in a position to answer the question posed in the introduction.
+
+\subsection{Why Life Exists}
+
+Life exists because:
+\begin{enumerate}[nosep]
+\item The universe starts at zero defect (Past Theorem).
+\item Perturbation introduces non-zero log-charge $\sigma \ne 0$.
+\item Non-zero charge forces permanently positive defect (Theorem~\ref{thm:positivedefect}).
+\item Locality imposes channeled conservation (finite propagation speed).
+\item Channeled conservation with non-uniform charges \emph{forbids} uniform thermalization (Theorem~\ref{thm:precluded}).
+\item The channeled equilibrium has complexity $\ge 2$ (Theorem~\ref{thm:ctwo}).
+\item Complexity is permanent (Theorem~\ref{thm:permanent}).
+\item Defect drives dynamics through channels (Theorem~\ref{thm:monotone}).
+\end{enumerate}
+
+Life is a dissipation channel: a partition of ledger entries into semi-isolated groups that efficiently routes defect toward equilibrium under local constraints.
+A cell is a channel.
+An organism is a system of nested channels.
+An ecosystem is a network of interacting channels.
+Life is not an accident---it is the economically inevitable solution to a constrained optimization problem.
+
+\subsection{Why Evolution Occurs}
+
+Darwinian evolution is channel refinement.
+Among all possible partition structures, the one that achieves the lowest total defect under its locality constraints is preferred by the variational dynamics.
+
+\begin{itemize}[nosep]
+\item \textbf{Fitness} is proximity to the channeled optimum: how efficiently the organism dissipates defect.
+\item \textbf{Mutation} is perturbation of the channel structure: a change in the partition.
+\item \textbf{Natural selection} is the variational principle applied to channels: lower-defect partitions are more stable and persist longer.
+\item \textbf{Adaptation} is the discovery of more efficient dissipation pathways within the constraint landscape.
+\end{itemize}
+
+Evolution is not a biological accident.
+It is the universe's algorithm for discovering better partition structures---for parallelizing its cost minimization.
+
+\subsection{Why Complexity Increases}
+
+The second law of thermodynamics says entropy increases.
+But the RS framework shows that \emph{structured} entropy increase---defect dissipation through channels---is more efficient than unstructured thermalization.
+The universe preferentially develops more refined channel structures because they dissipate defect faster.
+
+More channels $\Rightarrow$ more structure $\Rightarrow$ higher minimum defect (the cost of complexity) $\Rightarrow$ but also more efficient dissipation of the excess.
+Complexity increases because the cost of maintaining it is paid for by its efficiency at reducing defect.
+
+This resolves the apparent paradox: the second law demands thermalization, but what we observe is increasing complexity.
+The resolution is that \emph{channeled} dissipation (through complex structures) is the universe's fastest route toward equilibrium under local constraints.
+Complexity is not fighting the second law---it is implementing it.
+
+%% ============================================================
+\section{The Life Theorem}\label{sec:certificate}
+%% ============================================================
+
+We collect the main results into a single certificate.
+
+\begin{theorem}[The Life Theorem]\label{thm:life}
+For a ledger of size $N \ge 1$ with channel structure $P$ and non-zero total log-charge $\sigma \ne 0$:
+\begin{enumerate}[nosep,label=(\roman*)]
+\item $\F_P(c) \subseteq \F(c)$ \quad (structure has a cost).
+\item $\forall\, c' \in \F(c),\; D(c') > 0$ \quad (thermalization to zero defect is impossible).
+\item $\mathcal{C}(P,c) \ge 1$ \quad (complexity is well-defined and positive).
+\item $\forall\, \text{next channeled step},\; D(\text{next}) \le D(\text{current})$ \quad (defect drives dynamics).
+\item $\forall\, \text{next channeled step},\; \sigma_k(\text{next}) = \sigma_k(\text{current})$ \quad (structure is permanent).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Each clause is proved independently in \texttt{DissipativeComplexity.lean}:
+\begin{enumerate}[nosep,label=(\roman*)]
+\item \texttt{channeled\_subset\_feasible} (fiberwise sum decomposition).
+\item \texttt{nonzero\_charge\_forces\_defect} (only the all-ones config has $D = 0$, and it has $\sigma = 0$).
+\item \texttt{complexity\_pos} (at least one group $\Rightarrow$ at least one equilibrium value).
+\item \texttt{channeled\_step\_reduces\_defect} (current state is feasible; minimizer $\le$ current).
+\item \texttt{channel\_charges\_conserved} (channeled feasibility preserves per-group charges).
+\end{enumerate}
+No \texttt{sorry}.
+No custom axioms.
+\end{proof}
+
+%% ============================================================
+\section{Discussion}\label{sec:discussion}
+%% ============================================================
+
+\subsection{What This Result Does Not Claim}
+
+We do not claim to derive biology from first principles.
+The theorems proved here are structural: they show that complex organization is \emph{forced} by locality and cost minimization, not that any specific organism must exist.
+
+We do not claim that the specific partition structures corresponding to cells, organisms, or ecosystems are derived from $\Jcost$ alone.
+The theorems show that \emph{some} non-trivial partition structure is forced; the \emph{specific} structure depends on initial conditions and boundary conditions that are not determined by $\Jcost$.
+
+\subsection{What This Result Does Claim}
+
+\begin{enumerate}[nosep]
+\item \textbf{Life is not an accident.}
+Complex structure is a mathematical necessity in any universe with non-zero charge and local conservation.
+
+\item \textbf{Evolution is not a biological peculiarity.}
+It is the universe's general algorithm for discovering efficient dissipation channels.
+Darwinian fitness IS proximity to the channeled defect minimum.
+
+\item \textbf{Complexity is not fighting the second law.}
+It is implementing it through the most efficient available channels.
+
+\item \textbf{Structure is permanent.}
+Once created by non-uniform charge distribution, complex organization cannot be erased by future dynamics---it is protected by conservation.
+
+\item \textbf{The gap between global and local optimization IS the physical universe.}
+If global optimization were possible, the universe would be a featureless soup.
+Locality prevents this, and the difference between what locality allows and what global optimization would produce is \emph{everything we observe}: stars, chemistry, life, consciousness.
+\end{enumerate}
+
+\subsection{Open Questions}
+
+\begin{enumerate}[nosep]
+\item \textbf{Channel discovery dynamics.}
+The current formalization proves that channels exist and persist.
+It does not yet formalize the dynamics by which \emph{new} channels are discovered (how the partition structure itself evolves).
+
+\item \textbf{Nested channels.}
+Life exhibits hierarchical channel structure: organelles within cells within organisms within ecosystems.
+Can the framework prove that nested channeling is more efficient than flat channeling?
+
+\item \textbf{Quantitative predictions.}
+The current bounds (complexity $\ge 2$, defect $> 0$) are qualitative.
+Can the specific form of $\Jcost = \tfrac{1}{2}(x + x^{-1}) - 1$ yield quantitative predictions about the complexity or defect of biological systems?
+
+\item \textbf{Connection to information.}
+The complexity measure $\mathcal{C}$ counts distinct equilibrium values.
+Can this be related to Shannon entropy, mutual information, or algorithmic complexity of the channel structure?
+\end{enumerate}
+
+%% ============================================================
+\section{Conclusion}\label{sec:conclusion}
+%% ============================================================
+
+We have proved that complex structure---including life---is mathematically forced in a universe governed by $\Jcost$-cost minimization under local conservation constraints.
+
+The argument has five steps, each machine-verified:
+\begin{enumerate}[nosep]
+\item Locality imposes channeled conservation (more constraints than global).
+\item Channeled constraints forbid uniform thermalization (when charges are non-uniform).
+\item The channeled equilibrium has multiple distinct values (complexity $\ge 2$).
+\item Channel charges are conserved (structure is permanent).
+\item Defect is non-increasing through channels (dissipation continues).
+\end{enumerate}
+
+The deepest lesson is simple.
+The universe started at zero defect.
+It cannot return to zero defect (non-zero charge forbids it).
+It cannot thermalize to a uniform state (locality forbids it).
+It is forced to dissipate defect through structured, multi-valued equilibria.
+Those structured equilibria are stars, chemistry, and life.
+
+Life is what happens when the ledger figures out how to parallelize its cost minimization.
+Evolution is what happens when the ledger discovers better parallelization strategies.
+And the physical universe---the entire gap between what global optimization would produce (featureless equilibrium) and what local optimization actually produces (stars, planets, oceans, cells, brains, civilizations)---is the price the cosmos pays for being local.
+
+That price is not waste.
+It is everything.
+
+\bigskip
+
+\noindent\textbf{Machine Verification.}\quad
+All theorems have been formalized in Lean~4 using Mathlib, with no \texttt{sorry} placeholders and no custom axioms.
+The formalization is in \texttt{RecognitionScience/Foundation/DissipativeComplexity.lean}.
+
+\bigskip
+
+\begin{thebibliography}{99}
+
+\bibitem{RS-InitialCondition}
+J.~Washburn, ``The Initial Condition: Why Low Entropy,'' \texttt{RecognitionScience/Foundation/InitialCondition.lean}, 2025--2026.
+
+\bibitem{RS-Thermodynamics}
+J.~Washburn, ``Thermodynamics: Temperature, Entropy, and the Canonical Ensemble,'' \texttt{RecognitionScience/Foundation/Thermodynamics.lean}, 2025--2026.
+
+\bibitem{RS-VariationalDynamics}
+J.~Washburn, ``Variational Dynamics: The Equation of Motion for the Ledger,'' \texttt{RecognitionScience/Foundation/VariationalDynamics.lean}, 2025--2026.
+
+\bibitem{RS-LogicFromCost}
+J.~Washburn, ``Logic Emerges from Cost Minimization,'' \texttt{RecognitionScience/Foundation/LogicFromCost.lean}, 2025--2026.
+
+\bibitem{RS-AlgorithmicCost}
+J.~Washburn, ``Algorithmic Cost and the Halting Problem,'' \texttt{RecognitionScience/Foundation/AlgorithmicCost.lean}, 2026.
+
+\bibitem{Prigogine1977}
+I.~Prigogine, ``Time, Structure, and Fluctuations,'' Nobel Lecture, 1977.
+
+\bibitem{England2013}
+J.~L.~England, ``Statistical physics of self-replication,'' \emph{J.~Chem.~Phys.}, 139:121923, 2013.
+
+\bibitem{Penrose1979}
+R.~Penrose, ``Singularities and time-asymmetry,'' in \emph{General Relativity: An Einstein Centenary Survey}, Cambridge University Press, 1979.
+
+\bibitem{Albert2000}
+D.~Z.~Albert, \emph{Time and Chance}, Harvard University Press, 2000.
+
+\end{thebibliography}
+
+\end{document}

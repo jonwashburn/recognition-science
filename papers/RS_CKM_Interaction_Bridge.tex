@@ -1,0 +1,728 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{lmodern}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\phig}{\varphi}
+\newcommand{\mustar}{\mu_\star}
+\newcommand{\Epass}{E_{\mathrm{pass}}}
+\newcommand{\Ecoh}{E_{\mathrm{coh}}}
+\newcommand{\Bpow}{B_{\mathrm{pow}}}
+\newcommand{\Etot}{E_{\mathrm{total}}}
+
+\title{From Geometric Rungs to Standard Model Vertices:\\
+CKM Geometry and Yukawa Matching in Recognition Science\\[6pt]
+\large A Zero-Parameter Bridge between Discrete Mass Coordinates\\and Conventional Interaction Observables}
+
+\author{Jonathan Washburn\\
+Recognition Physics Institute\\
+Austin, Texas, USA\\
+\texttt{jon@recognitionphysics.org}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We show how the Recognition Science (RS) fermion mass backbone connects
+to two classes of Standard Model observables without introducing free
+parameters.  First, the three independent CKM matrix elements are
+expressed in terms of the fine-structure constant~$\alpha$, the
+golden ratio $\phig=(1+\sqrt{5})/2$, and the edge count $\Etot=12$
+of the three-cube~$Q_3$:
+\[
+  |V_{ub}| = \frac{\alpha}{2},
+  \qquad
+  |V_{cb}| = \frac{1}{2\Etot} = \frac{1}{24},
+  \qquad
+  |V_{us}| = \phig^{-3} - \frac{3\alpha}{2}.
+\]
+All three agree with PDG~2024 central values to within $1\sigma$.
+Second, the Yukawa coupling of every fermion at the common anchor
+scale $\mustar=182.201$~GeV is a fixed geometric coordinate:
+\[
+  y_f(\mustar)
+  = \frac{\sqrt{2}}{v}\,
+    A_{s(f)}\,\phig^{\,r_f - 8 + \mathrm{gap}(Z_f)},
+\]
+where $v\approx 246$~GeV is the electroweak vacuum expectation value,
+$A_s$ is the sector yardstick, $r_f$ is the integer rung,
+and $\mathrm{gap}(Z_f)$ is the charge-band correction defined in
+the backbone paper (Paper~I).  This formula converts every RS mass
+prediction into a fixed Higgs-vertex strength, allowing standard
+Feynman-diagram calculations (cross-sections, branching ratios,
+decay widths) to proceed with no adjustable couplings.
+The paper states explicit falsifiers for both the CKM predictions
+and the Yukawa bridge.
+\end{abstract}
+
+%=============================================================================
+\section{Introduction}
+%=============================================================================
+
+The Standard Model treats the CKM quark-mixing matrix and the
+fermion Yukawa couplings as independent sets of free parameters.
+Four real parameters describe the CKM matrix (three angles and one
+CP-violating phase), while thirteen Yukawa couplings set the nine
+charged-fermion masses and the three neutrino masses plus their
+mixing.  No mechanism within the SM determines their values.
+
+The Recognition Science program proposes that both the CKM elements
+and the Yukawa couplings are fixed by the combinatorics of the
+three-cube $Q_3$ and the golden ratio $\phig=(1+\sqrt{5})/2$.
+The backbone paper (Paper~I~\cite{backbone}) established the
+fermion mass law at the common anchor scale $\mustar=182.201$~GeV.
+The lepton paper (Paper~II~\cite{leptons}) demonstrated the
+charged-lepton mass ratios from $Q_3$ integers with no free
+parameters.  The present paper has a deliberately narrow scope:
+it connects the RS mass backbone to two sets of observables that
+particle theorists routinely compute with.
+
+The first task is the CKM matrix.  We give three formulas---one
+for each independent magnitude $|V_{us}|$, $|V_{cb}|$, and
+$|V_{ub}|$---in terms of quantities already present in the
+backbone: $\alpha$, $\phig$, and the cube integer $\Etot=12$.
+No new structural principle is introduced.
+
+The second task is the Yukawa bridge.  The backbone expresses
+fermion masses as dimensionless coordinates on a $\phig$-ladder.
+The Standard Model expresses the same masses through Yukawa
+couplings $y_f$ multiplied by the electroweak VEV $v/\sqrt{2}$.
+Equating these two expressions at the anchor scale yields a
+deterministic formula for every Yukawa coupling.  This is not a new
+derivation; it is a translation that makes the RS predictions
+legible in the language of ordinary perturbative QFT.
+
+What this paper does \emph{not} do: it does not claim to derive
+the full CKM phase structure from first principles, it does not
+attempt a quark mass table (that is deferred to a later paper),
+and it does not argue that the Standard Model is wrong.  It argues
+that the Standard Model's free parameters can be replaced by fixed
+geometric integers.
+
+%=============================================================================
+\section{Notation and prerequisites}
+%=============================================================================
+
+We use the backbone conventions of Paper~I~\cite{backbone}
+throughout.  The key objects are:
+\begin{itemize}
+  \item The golden ratio $\phig=(1+\sqrt{5})/2$,
+        forced by the Recognition Composition Law.
+  \item The three-cube integers $V=8$, $E=\Etot=12$, $F=6$,
+        $A=1$, $\Epass=E-A=11$, $W=\Epass+F=17$.
+  \item The fine-structure constant $\alpha$, derived within RS
+        from the geometric seed $4\pi\Epass$ plus curvature and
+        gap-weight corrections (see Paper~I,
+        and Ref.~\cite{fullderivation} for the full derivation).
+  \item The anchor scale $\mustar=182.201$~GeV and the
+        electroweak VEV $v\approx 246.22$~GeV.
+  \item The anchor-scale mass law
+        \begin{equation}\label{eq:masslaw}
+          m_f^{\mathrm{RS}}(\mustar)
+          = A_{s(f)}\,\phig^{\,r_f - 8 + \mathrm{gap}(Z_f)},
+        \end{equation}
+        where $A_s = 2^{\Bpow(s)}\Ecoh\,\phig^{r_0(s)}$
+        is the sector yardstick and
+        $\mathrm{gap}(Z)=\log_\phig(1+Z/\phig)$
+        is the charge-band correction.
+  \item The generation torsion $\tau_g\in\{0,\Epass,W\}=\{0,11,17\}$.
+\end{itemize}
+
+All CKM matrix elements are quoted as absolute values of the
+standard parameterization.  PDG~2024 values and uncertainties are
+taken from Ref.~\cite{PDG2024}.
+
+%=============================================================================
+\section{CKM matrix elements from cube geometry}
+\label{sec:CKM}
+%=============================================================================
+
+The CKM matrix $V$ describes the misalignment between the
+up-type and down-type quark mass eigenstates.  In the Wolfenstein
+parameterization, the matrix is conventionally expanded to
+$O(\lambda^4)$ in terms of four real parameters
+$(\lambda, A, \bar\rho, \bar\eta)$.  We do not use the Wolfenstein
+expansion as a fitting target.  Instead, we give direct geometric
+formulas for the three independent magnitudes.
+
+\subsection{$|V_{ub}|$: fine-structure coupling}
+
+The smallest CKM element connects the first and third quark
+generations.  Its geometric origin is the electromagnetic
+fine-structure constant at half strength:
+\begin{equation}\label{eq:Vub}
+  |V_{ub}| = \frac{\alpha}{2}.
+\end{equation}
+Using the PDG~2024 value $\alpha^{-1}=137.035\,999\,177(21)$,
+this gives
+\[
+  |V_{ub}|_{\mathrm{RS}} = \frac{1}{2\times 137.036} \approx 0.003\,649.
+\]
+
+\begin{table}[h]
+\centering
+\caption{CKM predictions vs.\ PDG~2024.}
+\label{tab:CKM}
+\begin{tabular}{lccc}
+\toprule
+Element & RS prediction & PDG~2024 & Pull ($\sigma$) \\
+\midrule
+$|V_{ub}|$ & $\alpha/2 \approx 0.003\,649$
+  & $0.003\,69 \pm 0.000\,11$ & $-0.4$ \\
+$|V_{cb}|$ & $1/24 \approx 0.041\,67$
+  & $0.041\,82 \pm 0.000\,85$ & $-0.2$ \\
+$|V_{us}|$ & $\phig^{-3}-3\alpha/2 \approx 0.225\,12$
+  & $0.225\,00 \pm 0.000\,67$ & $+0.2$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The physical interpretation is that the $1\leftrightarrow 3$
+generation transition is mediated by the electromagnetic
+coupling at half strength.  The factor of $1/2$ arises from
+the active-edge normalization $A=1$ applied to the two-vertex
+path connecting the first and third generation rungs on $Q_3$.
+
+\subsection{$|V_{cb}|$: edge-dual coupling}
+
+The second-to-third generation mixing is controlled by the
+total edge count of $Q_3$:
+\begin{equation}\label{eq:Vcb}
+  |V_{cb}| = \frac{1}{2\Etot} = \frac{1}{24}.
+\end{equation}
+The factor $2\Etot=24$ is the number of oriented edges of the
+three-cube (each of the 12 geometric edges carries two
+orientations).  This gives
+\[
+  |V_{cb}|_{\mathrm{RS}} = 0.041\,667.
+\]
+
+\subsection{$|V_{us}|$: Cabibbo angle from the golden ratio}
+
+The Cabibbo angle, the largest off-diagonal CKM element and the
+first to be measured historically, involves the golden ratio
+at third power with a radiative correction:
+\begin{equation}\label{eq:Vus}
+  |V_{us}| = \phig^{-3} - \frac{3\alpha}{2}.
+\end{equation}
+Since $\phig^{-3} = \sqrt{5}-2 \approx 0.236\,07$
+and $3\alpha/2 \approx 0.010\,95$, we obtain
+\[
+  |V_{us}|_{\mathrm{RS}} \approx 0.225\,12.
+\]
+The leading term $\phig^{-3}$ is the cube of the golden-ratio
+reciprocal, encoding the three-generation depth of the mixing.
+The correction $-3\alpha/2$ is the three-fold radiative
+shift---one factor of $\alpha/2$ per generation step.
+
+\subsection{CKM unitarity check}
+
+The predicted magnitudes satisfy the first-row unitarity
+condition $|V_{ud}|^2 + |V_{us}|^2 + |V_{ub}|^2 = 1$ to the
+extent that the residual element is
+\[
+  |V_{ud}|_{\mathrm{RS}}
+  = \sqrt{1 - |V_{us}|^2 - |V_{ub}|^2}
+  \approx 0.974\,33,
+\]
+which agrees with the PDG~2024 value
+$|V_{ud}|=0.974\,35 \pm 0.000\,14$ to within $0.2\sigma$.
+Unitarity is not an additional prediction; it is a consistency
+check that the three independent formulas do not conflict.
+
+\subsection{CP-violating phase}
+
+The Jarlskog invariant $\mathcal{J}$ provides a
+rephasing-invariant measure of CP violation.  A geometric
+formula for $\mathcal{J}$ from the $Q_3$ face-edge structure is
+a current frontier item and is not claimed in this paper.
+The three magnitude predictions above are independent of the
+CP phase and can be tested without it.
+
+%=============================================================================
+\section{The Yukawa bridge}
+\label{sec:yukawa}
+%=============================================================================
+
+\subsection{The Standard Model Yukawa relation}
+
+In the Standard Model, the mass of a fermion $f$ after
+electroweak symmetry breaking is
+\begin{equation}\label{eq:SM_mass}
+  m_f = y_f\,\frac{v}{\sqrt{2}},
+\end{equation}
+where $y_f$ is the dimensionless Yukawa coupling and
+$v\approx 246.22$~GeV is the Higgs-field vacuum expectation
+value measured by $G_F$.  The 13 Yukawa couplings of the
+charged fermions and the analogous Dirac-type couplings of
+neutrinos are free parameters in the SM.
+
+\subsection{RS masses as fixed Yukawa couplings}
+
+Equating the RS anchor-scale mass
+law~\eqref{eq:masslaw} with the SM Yukawa
+relation~\eqref{eq:SM_mass} at $\mu=\mustar$ yields the
+bridge formula:
+
+\begin{definition}[Yukawa bridge]\label{def:bridge}
+The Yukawa coupling of fermion $f$ at the anchor scale is
+\begin{equation}\label{eq:bridge}
+  y_f(\mustar)
+  = \frac{\sqrt{2}}{v}\,
+    A_{s(f)}\,\phig^{\,r_f - 8 + \mathrm{gap}(Z_f)}.
+\end{equation}
+\end{definition}
+
+Every quantity on the right-hand side is determined by Paper~I:
+the sector yardstick $A_s$ is a function of cube integers and
+$\phig$, the rung $r_f$ is an integer, and the gap correction
+is a fixed function of the integerized charge coordinate $Z_f$.
+The VEV $v$ is the only SM-side input; it is not a free
+parameter but a measured electroweak constant related to $G_F$
+by $v=(\sqrt{2}\,G_F)^{-1/2}$.
+
+\begin{remark}[Ontological status of Yukawa couplings in RS]
+The bridge formula does not assert that Yukawa couplings are
+fundamental objects in RS.  They are not.  In RS, the
+fundamental mass coordinate is the integer rung on the
+$\phig$-ladder.  The Yukawa coupling is an \emph{effective
+matched quantity}: the number one must insert into a Standard
+Model Lagrangian at scale $\mustar$ so that the SM reproduces
+the RS-derived mass.  It is a translation, not an ontic claim.
+\end{remark}
+
+\subsection{Explicit Yukawa predictions for charged leptons}
+
+The charged-lepton sector provides the cleanest illustration
+because it uses the best-established RS predictions.  Using the
+lepton yardstick $A_\ell = 2^{-22}\Ecoh\,\phig^{62}$ and the
+lepton charge coordinate $Z_\ell = 1332$, the three lepton
+Yukawa couplings at $\mustar$ are:
+\begin{align}
+  y_e(\mustar)
+  &= \frac{\sqrt{2}}{v}\,
+     A_\ell\,\phig^{\,2 - 8 + \mathrm{gap}(1332)}
+  \approx 2.94 \times 10^{-6},
+  \label{eq:ye} \\
+  y_\mu(\mustar)
+  &= \frac{\sqrt{2}}{v}\,
+     A_\ell\,\phig^{\,13 - 8 + \mathrm{gap}(1332)}
+  \approx 6.09 \times 10^{-4},
+  \label{eq:ymu} \\
+  y_\tau(\mustar)
+  &= \frac{\sqrt{2}}{v}\,
+     A_\ell\,\phig^{\,19 - 8 + \mathrm{gap}(1332)}
+  \approx 1.024 \times 10^{-2}.
+  \label{eq:ytau}
+\end{align}
+These are not independent predictions; they follow
+deterministically from the rung assignments $(e,\mu,\tau)=(2,13,19)$.
+The ratios $y_\mu/y_e = \phig^{11}$ and
+$y_\tau/y_\mu = \phig^{6}$ reproduce the lepton mass ratios
+derived in Paper~II, since the Yukawa ratios are identical to
+the mass ratios at the same scale.
+
+\subsection{Yukawa predictions for the electroweak sector}
+
+The top-quark Yukawa coupling is the most precisely measurable
+quark Yukawa, and its near-unity value is one of the unexplained
+features of the SM.  In the RS framework the top sits at rung
+$r_t = 21$ in the up-type sector with yardstick
+$A_u = 2^{-1}\Ecoh\,\phig^{35}$ and charge coordinate
+$Z_u = 276$:
+\begin{equation}\label{eq:yt}
+  y_t(\mustar)
+  = \frac{\sqrt{2}}{v}\,
+    A_u\,\phig^{\,21 - 8 + \mathrm{gap}(276)}
+  \approx 0.99.
+\end{equation}
+The near-unity of $y_t$ is not a coincidence; it reflects the
+fact that the top quark sits near the top of the accessible
+rung spectrum for the up-type sector.
+
+%=============================================================================
+\section{Interaction rates from fixed vertices}
+\label{sec:rates}
+%=============================================================================
+
+The bridge formula~\eqref{eq:bridge} converts each RS mass
+prediction into a fixed Higgs-fermion vertex factor.  Standard
+QFT calculations then proceed with no adjustable couplings.
+
+\subsection{Higgs decay to fermion pairs}
+
+The partial width for $H\to f\bar{f}$ in the SM is
+\begin{equation}\label{eq:Hff}
+  \Gamma(H\to f\bar{f})
+  = \frac{N_c\,G_F\,m_f^2}{4\pi\sqrt{2}}\,M_H
+    \left(1-\frac{4m_f^2}{M_H^2}\right)^{\!3/2},
+\end{equation}
+where $N_c$ is the color factor ($1$ for leptons, $3$ for quarks),
+$G_F$ is the Fermi constant, and $M_H\approx 125.25$~GeV is the
+Higgs mass.  Since the RS framework fixes $m_f$ with no free
+parameters, Eq.~\eqref{eq:Hff} becomes a parameter-free
+prediction for each channel.
+
+\begin{proposition}[Branching ratio independence of calibration seam]
+The branching ratio
+\[
+  \mathrm{BR}(H\to f\bar{f})
+  = \frac{\Gamma(H\to f\bar{f})}{\Gamma_{\mathrm{tot}}}
+\]
+depends only on mass \emph{ratios} (since $m_f^2$ in the
+numerator is divided by a sum of $m_j^2$ terms in the
+denominator).  By Corollary~3 of Paper~I, all mass ratios
+are independent of the SI calibration anchor~$\tau_0$.
+Therefore the predicted branching ratios are entirely within
+the structural layer and carry no calibration-seam dependence.
+\end{proposition}
+
+\subsection{Flavor-changing processes}
+
+The CKM predictions of Sec.~\ref{sec:CKM} enter directly
+into flavor-changing charged-current amplitudes.  For
+instance, the $b\to u\ell\bar\nu$ transition amplitude is
+proportional to $|V_{ub}|$, which is fixed to $\alpha/2$
+by Eq.~\eqref{eq:Vub}.  Combined with the RS-derived
+$b$-quark mass and the bridge Yukawa, the inclusive and
+exclusive $B$-meson decay rates become parameter-free
+predictions of the framework.
+
+Similarly, $K$-meson physics depends on $|V_{us}|$, which
+is fixed to $\phig^{-3}-3\alpha/2$ by Eq.~\eqref{eq:Vus}.
+$B_s$ mixing depends on $|V_{cb}|$, fixed to $1/24$ by
+Eq.~\eqref{eq:Vcb}.  In each case the RS framework replaces
+a fitted CKM parameter with a geometric formula.
+
+%=============================================================================
+\section{Structural origin of the CKM formulas}
+\label{sec:origin}
+%=============================================================================
+
+This section gives a concise account of how the three CKM
+formulas arise from the cube geometry.  The derivation is not
+repeated in full here; it is stated at the level of the key
+structural identifications.
+
+\subsection{Generation mixing as rung mismatch}
+
+In the RS framework, the up-type and down-type quarks occupy
+different sectors with different yardsticks but share the same
+generation torsion set $\{0,\Epass,W\}=\{0,11,17\}$.  The CKM
+matrix encodes the projection between the up-type and down-type
+mass eigenstate bases.  The magnitudes of the off-diagonal
+elements are controlled by the geometric mismatch between the
+two sector yardsticks.
+
+\subsection{The three coupling channels}
+
+Each CKM magnitude is associated with a distinct geometric
+coupling mechanism on the three-cube:
+
+\paragraph{$|V_{ub}|$: electromagnetic channel.}
+The $1\leftrightarrow 3$ transition couples through the
+electromagnetic fine-structure constant.  The half-strength
+factor $\alpha/2$ arises because the path connecting the first
+and third generation rungs traverses one active edge ($A=1$),
+and the active-edge normalization divides the full coupling by
+the number of endpoints (two vertices per edge).
+
+\paragraph{$|V_{cb}|$: edge-dual channel.}
+The $2\leftrightarrow 3$ transition couples through the
+oriented-edge dual of $Q_3$.  The 12 edges of the three-cube,
+each carrying two orientations, give $2\Etot=24$ oriented edges.
+The transition amplitude is $1/24$, which is the democratic
+weight over all oriented-edge channels.
+
+\paragraph{$|V_{us}|$: golden-ratio channel with radiative
+correction.}
+The Cabibbo mixing couples through the third power of the
+golden-ratio reciprocal, reflecting the three-generation depth.
+The radiative correction $-3\alpha/2$ accounts for the
+electromagnetic dressing of each of the three generation steps.
+
+\subsection{Why these channels and no others}
+
+The three coupling channels exhaust the independent geometric
+paths on $Q_3$ that connect different generation rungs.  The
+edge-count channel ($1/2\Etot$) is available for adjacent
+generations ($2\leftrightarrow 3$).  The electromagnetic
+channel ($\alpha/2$) is available for the maximal-separation
+pair ($1\leftrightarrow 3$).  The golden-projection channel
+($\phig^{-3}$) is available for the first-to-second transition,
+which is the dominant off-diagonal mixing.  The classification
+is unique once the generation labels are fixed.
+
+%=============================================================================
+\section{Methods: RS provenance}
+\label{sec:methods}
+%=============================================================================
+
+This section collects the RS-specific derivation details for
+readers interested in the framework provenance.  Readers
+interested only in the CKM and Yukawa predictions may skip
+this section.
+
+\subsection{The Recognition Composition Law}
+
+All RS structures originate from the functional equation
+\[
+  J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y),
+  \qquad x,y>0,
+\]
+with $J(1)=0$.  The unique positive solution is
+$J(x) = \tfrac{1}{2}(x+x^{-1})-1$.  Self-similar discrete
+closure forces $\phig$ as the hierarchy base.  An eight-step
+minimal cycle forces three spatial dimensions.
+
+\subsection{The mass backbone}
+
+Paper~I~\cite{backbone} defines the anchor-scale mass law
+\[
+  m_f^{\mathrm{RS}}(\mustar)
+  = A_{s(f)}\,\phig^{\,r_f - 8 + \mathrm{gap}(Z_f)}
+\]
+with sector yardsticks $A_s=2^{\Bpow(s)}\Ecoh\,\phig^{r_0(s)}$,
+$\Ecoh=\phig^{-5}$, and the canonical yardstick pairs
+$(\Bpow,r_0)$: $(-22,62)$ for leptons, $(-1,35)$ for up-type
+quarks, $(23,-5)$ for down-type quarks, and $(1,55)$ for the
+electroweak sector.
+
+The transport layer (Standard Model RG running) and the
+SI calibration seam are described in Paper~I.  Neither enters
+the CKM formulas or the Yukawa bridge formula, both of which
+are dimensionless statements at the anchor scale.
+
+\subsection{Fine-structure constant}
+
+The value of $\alpha$ used in the CKM formulas is derived
+within RS from the geometric seed $4\pi\Epass=4\pi\times 11$,
+with curvature and gap-weight corrections (see
+Ref.~\cite{fullderivation} for the full derivation).
+The derived value is consistent with the CODATA/PDG value
+$\alpha^{-1}\approx 137.036$ to the precision needed for the
+CKM predictions.
+
+\subsection{Lean verification status}
+
+The CKM geometry is formalized in the module
+\texttt{IndisputableMonolith.Physics.CKMGeometry} with
+zero \texttt{sorry} terms and interval-certified bounds.
+The Yukawa bridge formula is formalized in
+\texttt{Physics.AnchorPolicy} as the
+\texttt{family\_ratio\_from\_display} theorem, which
+proves that mass ratios equal $\phig$-power differences of
+rungs.
+
+%=============================================================================
+\section{Frontier items}
+\label{sec:frontier}
+%=============================================================================
+
+This paper keeps the following items explicitly at the frontier.
+
+\paragraph{CP-violating phase.}
+A geometric derivation of the Jarlskog invariant
+$\mathcal{J}$ from $Q_3$ face-edge combinatorics is not
+claimed.  The magnitude predictions in Sec.~\ref{sec:CKM}
+are independent of the CP phase.
+
+\paragraph{Quark mass table.}
+This paper does not present a full quark mass comparison
+table.  The quark sector uses structural hypotheses (SDGT
+assignments and a cross-sector correction) that are not yet
+derived from first principles.  The quark masses are deferred
+to a separate paper once the sector-coupling identification
+is closed.
+
+\paragraph{Yukawa running.}
+The bridge formula~\eqref{eq:bridge} gives Yukawa couplings
+at the anchor scale $\mustar$.  Running these couplings to
+other scales requires standard SM RG evolution, which is a
+transport-layer operation described in Paper~I.  The present
+paper does not perform this running; it states the matching
+condition.
+
+\paragraph{Neutrino Yukawa structure.}
+The bridge formula extends formally to neutrinos, but the
+neutrino sector's Dirac-vs-Majorana character and the
+absolute mass scale are subjects of the neutrino prediction
+paper (Paper~IV~\cite{neutrinos}).
+
+%=============================================================================
+\section{Falsifiers}
+\label{sec:falsifiers}
+%=============================================================================
+
+Each prediction in this paper carries concrete failure modes.
+
+\begin{enumerate}
+  \item \textbf{$|V_{ub}|$ falsifier.}
+    If future measurements of $|V_{ub}|$ (from inclusive and
+    exclusive $B$ decays, once the long-standing
+    inclusive/exclusive tension is resolved) move the central
+    value beyond $3\sigma$ from $\alpha/2$, the
+    electromagnetic-channel formula~\eqref{eq:Vub} is refuted.
+    Current PDG uncertainty is $\pm 0.000\,11$; the RS
+    prediction is $0.003\,649$, well within $1\sigma$ of the
+    central value $0.003\,69$.
+
+  \item \textbf{$|V_{cb}|$ falsifier.}
+    If $|V_{cb}|$ is measured to deviate from $1/24$ by more
+    than $3\sigma$, the edge-dual formula~\eqref{eq:Vcb} is
+    refuted.  The current tension between inclusive and
+    exclusive determinations of $|V_{cb}|$ is a known
+    systematic issue; the RS prediction $0.041\,67$ lies
+    between the two determinations.
+
+  \item \textbf{$|V_{us}|$ falsifier.}
+    If $|V_{us}|$ deviates from
+    $\phig^{-3}-3\alpha/2\approx 0.225\,12$ by more than
+    $3\sigma$, the golden-projection formula~\eqref{eq:Vus}
+    is refuted.  The Cabibbo angle is the most precisely
+    measured CKM element; the current PDG value
+    $0.225\,00\pm 0.000\,67$ is consistent with the prediction.
+
+  \item \textbf{Yukawa-bridge falsifier.}
+    If a fermion's measured coupling to the Higgs boson
+    (e.g., from $H\to\tau^+\tau^-$ or $H\to b\bar{b}$
+    signal strengths at the LHC) deviates from the
+    prediction of Eq.~\eqref{eq:bridge} by more than $3\sigma$
+    after proper RG transport, the bridge formula is refuted.
+    Current LHC measurements of the $\kappa$-framework
+    coupling modifiers are consistent with unity (i.e.,
+    SM values) at the $10$--$20\%$ level.
+
+  \item \textbf{Structural falsifier.}
+    If a simpler set of cube-geometric formulas reproduces
+    the CKM magnitudes with fewer ingredients, then the
+    present formulas are not uniquely justified.  An ablation
+    test against the skeleton CKM model (dropping the radiative
+    corrections) should be performed: if
+    $|V_{us}|=\phig^{-3}\approx 0.236$ without the
+    $-3\alpha/2$ correction is already sufficient given
+    measurement uncertainties, the correction is decorative
+    rather than necessary.
+\end{enumerate}
+
+%=============================================================================
+\section{Discussion}
+\label{sec:discussion}
+%=============================================================================
+
+The CKM matrix and the Yukawa couplings are the two
+interfaces through which the fermion mass pattern enters
+Standard Model calculations.  This paper shows that both
+interfaces can be populated from the RS backbone without
+free parameters.
+
+The CKM formulas are algebraically simple: $\alpha/2$,
+$1/24$, and $\phig^{-3}-3\alpha/2$.  Their simplicity is
+both a strength and a vulnerability.  It is a strength because
+the formulas are memorable, reproducible, and falsifiable.
+It is a vulnerability because simple numerology can sometimes
+produce accidental agreement.  The defense against this
+criticism is threefold: (a)~the three formulas use only
+ingredients already present in the backbone ($\alpha$, $\phig$,
+$\Etot$), not new ad hoc constants; (b)~each formula has
+a stated geometric mechanism, not a post hoc numerical fit;
+and (c)~each formula carries a concrete falsifier.
+
+The Yukawa bridge is a translation, not a derivation.  It
+does not add new physics to the backbone; it reformulates the
+backbone's mass predictions in the language of the SM
+Lagrangian.  The practical value of this translation is that it
+allows RS predictions to be tested using the standard toolkit of
+perturbative QFT: Feynman diagrams, RG evolution, and collider
+simulations.
+
+The deliberate omissions of this paper---the CP phase, the quark
+mass table, the neutrino sector---reflect the principle of claim
+hygiene stated in Paper~I.  Each omitted item is either a
+frontier derivation or the subject of a dedicated companion
+paper.  Mixing them into the present manuscript would obscure
+the two clean results it does contain.
+
+%=============================================================================
+\section{Conclusion}
+%=============================================================================
+
+Two results connect the Recognition Science mass backbone to
+Standard Model observables.
+
+First, the three independent CKM magnitudes are given by
+\[
+  |V_{ub}| = \frac{\alpha}{2},
+  \qquad
+  |V_{cb}| = \frac{1}{24},
+  \qquad
+  |V_{us}| = \phig^{-3} - \frac{3\alpha}{2},
+\]
+all within $1\sigma$ of PDG~2024.
+
+Second, every fermion Yukawa coupling at the anchor scale is
+the fixed geometric coordinate
+\[
+  y_f(\mustar)
+  = \frac{\sqrt{2}}{v}\,
+    A_{s(f)}\,\phig^{\,r_f - 8 + \mathrm{gap}(Z_f)},
+\]
+converting each RS mass prediction into a determined
+Higgs-vertex strength.
+
+Together these results make the RS framework computable in the
+standard particle-physics toolkit.  No new Lagrangian is
+required; the existing SM Lagrangian is used, but with all
+Yukawa couplings and CKM parameters replaced by cube-geometric
+formulas.
+
+\section*{Acknowledgments}
+
+The author thanks Elshad Allahyarov for detailed manuscript
+review and Nenad Zlatanovi\'{c} for collaboration on the
+dimensional rigidity proof.
+
+\begin{thebibliography}{9}
+
+\bibitem{backbone}
+J.~Washburn,
+``The Recognition Science Fermion Mass Backbone at the Anchor Scale:
+Structural Mass Coordinates, Sector Yardsticks, and the Explicit
+Calibration Seam,''
+Recognition Physics Institute preprint, March 2026.
+
+\bibitem{leptons}
+J.~Washburn,
+``Charged Lepton Mass Ratios from the Combinatorics of the 3-Cube,''
+Recognition Physics Institute preprint, March 2026.
+
+\bibitem{fullderivation}
+J.~Washburn,
+``Complete Fermion Mass Derivation in Recognition Science,''
+Recognition Physics Institute internal draft, March 2026.
+
+\bibitem{neutrinos}
+J.~Washburn,
+``A $\phig$-Ladder Prediction for Neutrino Ordering and the
+Dimensionless Splitting Ratio,''
+Recognition Physics Institute preprint, forthcoming.
+
+\bibitem{PDG2024}
+R.~L.~Workman \textit{et al.} (Particle Data Group),
+``Review of Particle Physics,''
+Prog.\ Theor.\ Exp.\ Phys.\ \textbf{2024}, 083C01.
+
+\end{thebibliography}
+
+\end{document}

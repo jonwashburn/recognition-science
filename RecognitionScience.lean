@@ -25,6 +25,9 @@ equation (the Recognition Composition Law) and the combinatorics of the
 - `RecognitionScience.Foundation.Entanglement`: F-010 — Entanglement from RCL
 - `RecognitionScience.Foundation.GaugeFromCube`: P-014 — SM gauge group from Q₃
 - `RecognitionScience.Foundation.Thermodynamics`: F-011 — Temperature and thermodynamics
+- `RecognitionScience.Foundation.WindingCharges`: F-013 — Topological charges from winding numbers
+- `RecognitionScience.Foundation.ContinuumLimit`: F-014 — Continuum limit from J-cost
+- `RecognitionScience.Foundation.LinkingNumbers`: F-015 — Linking numbers and conservation
 
 ### Masses — The fermion mass spectrum
 - `RecognitionScience.Masses.MassLaw`: Master mass law
@@ -50,6 +53,9 @@ import RecognitionScience.Foundation.MeasurementMechanism
 import RecognitionScience.Foundation.Entanglement
 import RecognitionScience.Foundation.GaugeFromCube
 import RecognitionScience.Foundation.Thermodynamics
+import RecognitionScience.Foundation.WindingCharges
+import RecognitionScience.Foundation.ContinuumLimit
+import RecognitionScience.Foundation.LinkingNumbers
 import RecognitionScience.Masses.MassLaw
 import RecognitionScience.Masses.BaselineDerivation
 import RecognitionScience.Gravity.ZeroParameterGravity

@@ -1,0 +1,1225 @@
+\documentclass[11pt,reqno]{amsart}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage[hidelinks,breaklinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc} % ---------- theorem environments ----------
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark} % ---------- notation ----------
+\newcommand{\phig}{\varphi}
+\newcommand{\psig}{\bar\varphi} % conjugate root
+\newcommand{\Jcost}{J}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\Rhat}{\hat{R}}
+\DeclareMathOperator{\Nm}{N} % norm
+\DeclareMathOperator{\tr}{tr} % trace
+\newcommand{\conj}{\sigma} % ---------- additional notation (cost systems / certification layer) ----------
+\newcommand{\Rp}{\RR_{>0}}
+\newcommand{\1}{\mathbf{1}}
+\newcommand{\eps}{\varepsilon}
+\DeclareMathOperator{\Mean}{Mean}
+\definecolor{paperblue}{RGB}{0,92,170}
+\newcommand{\paperadd}[1]{{\color{paperblue}#1}}
+% Galois conjugation
+\title[From Ratio Costs to Recognition Algebra]{From Ratio Costs to Recognition Algebra: Derived Structures and a Cost Category}
+\author{Jonathan Washburn}
+\address{Austin, TX, USA}
+\email{jon@recognitionphysics.org} \author{Amir Rahnamai Barghi}
+\email{arahnamab@gmail.com}
+\date{February 2026}
+\begin{document}
+\begin{abstract}
+We study the functional equation on $\RR_{>0}$,
+\[
+\Jcost(xy)+\Jcost(x/y)=2\,\Jcost(x)\Jcost(y)+2\,\Jcost(x)+2\,\Jcost(y),
+\]
+under the normalization $\Jcost(1)=0$ and calibration
+$\left.\frac{d^2}{dt^2}\right|_{t=0}\Jcost(e^t)=1$.
+These conditions determine the unique solution
+$\Jcost(x)=\tfrac12(x+x^{-1})-1$.
+\paperadd{A stronger closure statement is also available: if the binary combiner is left unspecified a priori, then under the additional structural hypotheses used in the formal development both the scalar law and the combiner collapse to the canonical pair \(\bigl(\tfrac12(x+x^{-1})-1,\;2uv+2u+2v\bigr)\) on \([0,\infty)^2\).}
+We then develop algebraic structures forced by this canonical cost layer, including a commutative flexible magma
+$(\RR_{\ge0},\ast)$ and a shifted associative realization, and we record compatible arithmetic, ledger, and octave extensions.
+Categorically, we define $\mathsf{CostAlg}$ and $\mathsf{RecAlg}$ and prove the calibrated cost object is unique up to isomorphism
+(with $\ZZ/2\ZZ$ automorphisms) and initial in $\mathsf{CostAlg}^{+}$.
+\paperadd{In the ambient category $\mathsf{CostAlg}$, the calibrated object admits exactly two morphisms into each positive-parameter object, given by the signed power maps \(x\mapsto x^{\pm 1/\kappa}\); restricting to the order-preserving branch recovers initiality in $\mathsf{CostAlg}^{+}$.}
+We further package the auxiliary layers into categories $\mathsf{PhiRing}$, $\mathsf{LedgerAlg}$, and $\mathsf{OctaveAlg}$
+and define a linked-system category $\mathsf{LayerSys}^{+}$ whose morphisms preserve explicit cross-layer bridges\paperadd{, together with a canonical linked quadruple satisfying those bridge axioms}.
+\end{abstract}
+
+\maketitle
+\noindent\textbf{Keywords:} ratio costs; recognition algebra; functional equations; golden ratio; DFT-8; compositional invariance.
+
+\noindent\textbf{AMS subject classification (MSC 2020):} 39B52; 11R11; 18B99; 94A12.
+
+
+
+
+
+
+
+\section{Introduction, Notation, and Problem Setting}\label{sec:intro}
+
+This section fixes notation and conventions and states the guiding problem: to understand what algebraic structure is forced by the recognition composition law once a calibrated normalization is imposed. We also summarize the scope of later layers and record which parts are intrinsic consequences and which are additional modeling choices.
+
+\subsection*{Motivation}
+Many empirical comparisons are naturally \emph{multiplicative}: performance is judged by ratios (speedup, odds, growth factors),
+and evidence from multiple stages composes by multiplying ratios.
+If the penalty for a mismatch depends only on the ratio and composes consistently when ratios multiply,
+then the modeling freedom collapses: after fixing a unit scale (calibration) the ratio-cost is determined, not chosen.
+The rest of the paper asks how far this rigidity propagates:
+which algebraic/categorical structures are \emph{forced} by the cost law, and which additional layers (arithmetic scales, conservation bookkeeping,
+periodic aggregation) can be attached as explicit, modular assumptions for applications.
+
+Unification often begins with a simple algebraic identity that constrains an entire class of models.
+In this paper we study a scalar composition law (RCL) for ratio-dependent costs $J:(0,\infty)\to\RR$.
+Under mild regularity hypotheses, this identity admits a rigid classification and, with a calibration, selects a canonical cost.
+We then present several algebraic structures---arithmetic, conservative ledger flows, and periodic aggregation-that are compatible with the canonical cost and can be coupled to it in a unified package.
+The goal is to isolate the forced core (the ratio-cost classification) and to provide a reusable framework in which additional structures can be added transparently as explicit assumptions.
+
+\subsection{Recognition composition law}
+The recognition composition law (RCL) is the functional equation \eqref{eq:RCL} for a nonconstant scalar cost $\Jcost:(0,\infty)\to\RR$.
+We use the shifted cost $A:=\Jcost+1$, for which \eqref{eq:RCL} becomes the multiplicative identity $A(xy)+A(x/y)=2A(x)A(y)$.
+On the nonnegative reals this induces the binary operation
+\[
+a\ast b:=2ab+2a+2b,
+\qquad a,b\in\RR_{\ge0},
+\]
+which will later serve as the basic ``composition'' law on (shifted) costs.
+
+\subsection{Notation}
+We write $\Rp=(0,\infty)$ and $\RR$ for the real numbers.
+Throughout, $x,y>0$ denote positive reals and $x^{-1}$ denotes the reciprocal.
+\begin{enumerate}[label=(\alph*),nosep]
+\item $\Jcost:(0,\infty)\to\RR$ denotes the scalar cost function (written as $J$ in informal discussion).
+\item $S$ and $O$ denote (arbitrary) state and observation sets. A cost on $S\times O$ is a function $c:S\times O\to\RR$.
+\item For a cost $c$, the meaning correspondence is the set of minimizers
+\[
+\Mean_c(s):=\arg\min_{o\in O}c(s,o)
+\]
+(possibly empty if the infimum is not attained). Its $\varepsilon$-relaxation is
+\[
+\Mean_{c,\varepsilon}(s):=\{o\in O:\ c(s,o)\le \inf_{o'}c(s,o')+\varepsilon\}.
+\]
+\item For a sequence $y=(y_n)_{n\ge 0}$ and an integer window size $W\ge 1$, the $W$-block window-sum operator is
+\[
+\mathcal W(y)_k:=\sum_{j=0}^{W-1}y_{Wk+j}.
+\]
+We write $\tau$ for the shift by one window: $(\tau y)_n:=y_{n+W}$.
+\item The golden ratio is denoted by $\phi=\frac{1+\sqrt5}{2}$, and $\ZZ[\phi]$ denotes the associated quadratic integer ring.
+\item A directed graph is $G=(V,E)$ with vertex set $V$ and edge set $E$; ledger flows are real-valued antisymmetric functions on $E$ satisfying nodewise conservation.
+\end{enumerate}
+
+\subsection*{Problem setting and approach}
+We study ratio-based comparison laws in which a scalar cost $J:(0,\infty)\to\RR$ depends only on a ratio and must compose consistently when ratios multiply (the Recognition Composition Law \eqref{eq:RCL}). A central goal is to eliminate arbitrary modeling choices: in a precise sense the framework is \emph{\paperadd{zero-free-parameter}}-once the composition axiom, mild regularity, a natural admissibility condition, and a calibration (choice of unit scale) are fixed, the ratio cost $J$ and the ensuing algebraic/categorical structure are uniquely determined rather than tuned by extra knobs. Section~2 classifies all admissible $J$ and records the induced algebra on shifted costs. Section~3 builds three compatible structural layers (arithmetic, conservation, and periodic aggregation) that can be coupled to the cost layer. Section~4 packages the layers into a unified object and extracts a small set of application-oriented consequences: canonical divergence quantities and forced identities that can be used as reusable ``toolbox'' lemmas whenever data are compared by ratios.
+
+\subsection*{Dependence on hypotheses (what is forced vs.\ modeled)}\label{subsec:dependence}
+The recognition composition law \eqref{eq:RCL} is the sole structural axiom on the cost layer.
+Under mild regularity (continuity) together with the normalization $J(1)=0$ and the calibration
+$\left.\frac{d^2}{dt^2}\right|_{t=0}J(e^t)=1$, the RCL rigidly determines a unique canonical solution,
+\[
+J(x)=\tfrac12(x+x^{-1})-1,
+\]
+proved in the next section.
+All algebra internal to the cost layer-including the induced magma $(\RR_{\ge0},\ast)$, the shifted associative realization, and the categorical statements in $\mathsf{CostAlg}$ and $\mathsf{RecAlg}$-is then forced by this rigidity and verified directly.
+
+By contrast, the arithmetic, ledger, and octave layers require additional choices.
+The quadratic element $\phig$ and the ring $\ZZ[\phig]$ enter after selecting a distinguished root of $x^2-x-1=0$ as an auxiliary arithmetic layer.
+The ledger layer assumes an event set with antisymmetric flows satisfying nodewise conservation.
+Finally, period-$8$ phenomena arise only after choosing a $3$-cube model and an $8$-tick Hamiltonian clock/windowing scheme; the number $8$ comes from $|V(Q_3)|=2^3$, not from the RCL alone.
+
+\section{Canonical Ratio Costs and Induced Recognition Laws}\label{sec:cost}
+Here we prove the rigidity of the calibrated cost layer and derive the basic algebra it induces. The results in this section are the formal core: they establish the canonical formula for $J$ and develop the induced operations, identities, and divergence quantities used throughout the paper.
+
+\begin{equation}\label{eq:RCL}
+\Jcost(xy)+\Jcost(x/y)=2\Jcost(x)\Jcost(y)+2\Jcost(x)+2\Jcost(y), \qquad x,y>0.
+\end{equation}
+
+%====================================================================== 
+
+\begin{equation}\label{eq:norm-calib}
+\Jcost(1)=0,\qquad \left.\frac{d^2}{dt^2}\right|_{t=0}\Jcost(e^t)=1.
+\end{equation}
+
+\subsection{Uniqueness of the cost function}
+
+\begin{lemma}\label{lem:dalembert-reduction}
+Let $\Jcost:(0,\infty)\to\RR$ satisfy the RCL \eqref{eq:RCL} and set $A(x):=\Jcost(x)+1$.
+Then $A(x)>0$ for all $x>0$ and, writing $f(t):=A(e^t)$ for $t\in\RR$, one has
+\begin{equation}\label{eq:dalembert}
+f(t+s)+f(t-s)=2f(t)f(s)\qquad (s,t\in\RR).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+By definition, $A(xy)+A(x/y)=2A(x)A(y)$ is equivalent to the RCL \eqref{eq:RCL}.
+Setting $x=e^t$ and $y=e^s$ gives \eqref{eq:dalembert}.
+Positivity $A>0$ follows from \eqref{eq:dalembert} with $t=s$:
+$\,f(2t)+f(0)=2f(t)^2$, hence $f(t)^2=\tfrac12(f(2t)+f(0))\ge 0$ and $f(t)\neq 0$
+because $f(0)=A(1)=1$ by \eqref{eq:norm-calib}. Thus $f(t)>0$ for all $t$.
+\end{proof}
+
+\paragraph{Log-coordinate form.}
+Define $G(t):=\Jcost(e^t)$ and $H(t):=G(t)+1$ for $t\in\RR$.
+Then the RCL \eqref{eq:RCL} is equivalent to
+\begin{equation}\label{eq:Gcosh}
+G(t+s)+G(t-s)=2G(t)G(s)+2G(t)+2G(s)\qquad (s,t\in\RR),
+\end{equation}
+and $H$ satisfies the d'Alembert equation \eqref{eq:dalembert} with $H(0)=1$.
+
+
+\begin{lemma}\label{lem:dalembert-classification}
+Let $f:\RR\to\RR$ be continuous and satisfy \eqref{eq:dalembert} with $f(0)=1$.
+Then there exists $\lambda\ge 0$ such that either $f(t)=\cosh(\lambda t)$ for all $t\in\RR$,
+or $f(t)=\cos(\lambda t)$ for all $t\in\RR$.
+Moreover, if $f(t)>0$ for all $t$, then necessarily $f(t)=\cosh(\lambda t)$.
+\end{lemma}
+
+\begin{proof}
+This is the standard classification of continuous solutions to d'Alembert's functional equation.
+See, e.g., \cite[Ch.~2]{aczel_dhombres1989} or \cite[\S13]{Kuczma}. The final sentence follows
+because $\cos(\lambda t)$ changes sign for $\lambda>0$.
+\end{proof}
+
+\begin{theorem}\label{thm:T5}
+Let $\Jcost:\RR_{>0}\to\RR$ be continuous, satisfy the
+RCL~\eqref{eq:RCL}, and obey the normalization and calibration
+conditions~\eqref{eq:norm-calib}. Then
+\begin{equation}\label{eq:Jdef}
+\Jcost(x)=\tfrac12\bigl(x+x^{-1}\bigr)-1 \qquad\text{for all } x>0.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Set $A(x):=\Jcost(x)+1$ and $f(t):=A(e^t)$. By Lemma~\ref{lem:dalembert-reduction},
+$f$ is continuous, satisfies the d'Alembert equation~\eqref{eq:dalembert}, and is strictly positive.
+By Lemma~\ref{lem:dalembert-classification} we therefore have $f(t)=\cosh(\lambda t)$ for some $\lambda\ge 0$.
+The calibration~\eqref{eq:norm-calib} reads
+\(
+1=\left.\frac{d^2}{dt^2}\right|_{t=0}\Jcost(e^t)
+=\left.\frac{d^2}{dt^2}\right|_{t=0}\bigl(f(t)-1\bigr)
+=f''(0),
+\)
+so $f''(0)=\lambda^2=1$ and hence $\lambda=1$.
+Thus $A(x)=f(\log x)=\cosh(\log x)=\tfrac12(x+x^{-1})$, so $\Jcost(x)=A(x)-1$ gives~\eqref{eq:Jdef}.
+\end{proof}
+
+\paperadd{The accompanying Lean development proves a strictly stronger closure theorem than Theorem~\ref{thm:T5}: one may begin with an a priori unknown binary combiner \(P\) and still recover both the scalar law and the combiner. We record that strengthened statement here.}
+
+{\color{paperblue}
+\begin{theorem}[Full unconditional closure]\label{thm:full-unconditional}
+Let \(F:\Rp\to\RR\) be \(C^2\), and let \(P:\RR^2\to\RR\) be a symmetric polynomial.
+Assume:
+\begin{enumerate}[nosep,label=\textup{(\roman*)}]
+\item \(F(1)=0\),
+\item \(F(x)=F(x^{-1})\) for all \(x>0\),
+\item \(\left.\frac{d^2}{dt^2}\right|_{t=0}F(e^t)=1\),
+\item \(F(xy)+F(x/y)=P(F(x),F(y))\) for all \(x,y>0\),
+\item \(F\) is nontrivial in the sense that \(F(x_0)\neq 0\) for some \(x_0>0\),
+\item \(P(1,1)=6\).
+\end{enumerate}
+Then
+\[
+F(x)=\tfrac12\bigl(x+x^{-1}\bigr)-1 \qquad (x>0),
+\]
+and
+\[
+P(u,v)=2uv+2u+2v \qquad (u,v\ge 0).
+\]
+In particular, not only the ratio cost but also the composition polynomial is forced.
+\end{theorem}
+
+\begin{proof}
+The first step is the combiner-forcing statement formalized in the accompanying Lean development:
+under the hypotheses above, the abstract consistency law already collapses on the range of \(F\) to
+\[
+P(F(x),F(y))=2F(x)F(y)+2F(x)+2F(y)\qquad (x,y>0).
+\]
+Once this reduction is available, the consistency law becomes exactly the RCL, so Theorem~\ref{thm:T5}
+applies and yields
+\[
+F(x)=\tfrac12\bigl(x+x^{-1}\bigr)-1 \qquad (x>0).
+\]
+For the second conclusion, fix \(u,v\ge 0\) and set
+\[
+x_u:=(u+1)+\sqrt{(u+1)^2-1},\qquad
+y_v:=(v+1)+\sqrt{(v+1)^2-1}.
+\]
+A direct substitution into~\eqref{eq:Jdef} shows \(\Jcost(x_u)=u\) and \(\Jcost(y_v)=v\). Therefore
+\[
+P(u,v)=P(\Jcost(x_u),\Jcost(y_v))
+=\Jcost(x_u y_v)+\Jcost(x_u/y_v)
+=2uv+2u+2v,
+\]
+where the last step is the RCL for \(\Jcost\). Thus both \(F\) and \(P\) are uniquely determined.
+\end{proof}
+}
+
+\subsection{Idempotent and invertible elements}\label{ssec:idemp-inv}
+Two basic computations will be used repeatedly. First, the idempotent equation
+\(a\ast a=a\) is equivalent to
+\begin{equation}\label{eq:idempotent}
+a(2a+3)=0,
+\end{equation}
+so on \(\RR_{\ge0}\) the unique idempotent is \(a=0\) (indeed \(0\ast0=0\)).
+Second, for any fixed \(a\ge0\), left-cancellation holds: if \(a\ast b_1=a\ast b_2\) then
+\begin{equation}\label{eq:left-cancel}
+(2a+2)(b_1-b_2)=0\quad\Rightarrow\quad b_1=b_2,
+\end{equation}
+since \(2a+2>0\). However, there is no identity element (Theorem~\ref{thm:ast-structure}(b)),
+so invertibility in the classical sense does not arise.
+
+
+\subsection{Elementary properties} \begin{proposition}\label{prop:J-props}
+The function~\eqref{eq:Jdef} satisfies, for every $x>0$:
+\begin{enumerate}[nosep,label=\textup{(\alph*)}]
+\item\label{it:norm} $\Jcost(1)=0$.
+\item\label{it:recip} $\Jcost(x)=\Jcost(x^{-1})$ \textup{(reciprocal symmetry)}.
+\item\label{it:nonneg} $\Jcost(x)\ge0$, with equality iff $x=1$.
+\item\label{it:defect} $\Jcost(x)=(x-1)^2/(2x)$ \textup{(defect form)}.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+\ref{it:norm}:
+$\Jcost(1)=\frac12(1+1)-1=0$.
+\ref{it:recip}:
+$\Jcost(x^{-1})=\frac12(x^{-1}+x)-1=\Jcost(x)$.
+\ref{it:defect}: Clearing fractions,
+$\frac12(x+x^{-1})-1=\frac{x^2+1-2x}{2x}=\frac{(x-1)^2}{2x}$.
+\ref{it:nonneg}: $(x-1)^2\ge0$ and $x>0$, so the ratio is
+non-negative, and vanishes iff $x=1$.
+\end{proof}
+
+\subsection{Cost composition}\label{ssec:star} The RCL expresses how costs combine when ratios are multiplied.
+If we write $a=\Jcost(x)$ and $b=\Jcost(y)$, the right-hand side
+of~\eqref{eq:RCL} depends only on $a$ and~$b$. This defines an
+\emph{induced binary operation} on cost values. \begin{definition}\label{def:ast}
+For $a,b\in\RR_{\ge0}$, the \emph{cost-composition operation} is
+\begin{equation}\label{eq:ast} a\ast b \;=\; 2ab+2a+2b \;=\; 2(a{+}1)(b{+}1)-2.
+\end{equation}
+Equivalently, writing $A=a+1$ and $B=b+1$, the factored form is
+$a\ast b = 2AB - 2$. Under this operation, the
+RCL~\eqref{eq:RCL} reads
+\begin{equation}\label{eq:RCL-star} \Jcost(xy)+\Jcost(x/y) = \Jcost(x)\ast\Jcost(y):
+\end{equation}
+the \emph{total cost of the pair} $(xy,\,x/y)$ is determined by the
+individual costs.
+\end{definition} We now determine the precise algebraic structure of $\ast$. \begin{theorem}\label{thm:ast-structure}
+The pair $(\RR_{\ge0},\ast)$ is a commutative, flexible magma that is not associative and
+possesses no identity element. \paperadd{Its threefold power is unambiguous, but full power-associativity fails.} Specifically:
+\begin{enumerate}[nosep,label=\textup{(\alph*)}]
+\item Commutativity. $a\ast b = b\ast a$ for all $a,b\ge0$.
+\item No identity. There is no element $e\ge0$ satisfying $e\ast a=a$ for all $a\ge0$.
+\item Non-associativity. The \emph{associator} of $\ast$ has the closed form \begin{equation}\label{eq:associator} (a\ast b)\ast c \;-\; a\ast(b\ast c) \;=\; 2(a-c). \end{equation} In particular, $\ast$ is associative on a triple $(a,b,c)$ if and only if $a=c$.
+\item Flexibility. $(a\ast b)\ast a = a\ast(b\ast a)$ for all $a,b\ge0$.
+\item \paperadd{Threefold power and failure of higher power-associativity. The cube satisfies \((a\ast a)\ast a = a\ast(a\ast a)\) for all \(a\ge0\). However, full power-associativity fails: for \(a=1\),}
+\[
+\paperadd{(((1\ast 1)\ast 1)\ast 1)=106\neq 96=(1\ast 1)\ast(1\ast 1).}
+\]
+\end{enumerate}
+\end{theorem}
+
+{\color{paperblue}
+\begin{proof}
+(a) Commutativity is immediate from the defining formula
+\[
+a\ast b=2ab+2a+2b=2ba+2b+2a=b\ast a.
+\]
+
+(b) Suppose \(e\ge 0\) were a left identity, so \(e\ast a=a\) for all \(a\ge 0\).
+Evaluating at \(a=0\) gives
+\[
+e=e\ast 0=2e,
+\]
+hence \(e=0\). But then
+\[
+0\ast 1=2\neq 1,
+\]
+contradicting the identity property. Therefore no identity element exists.
+
+(c) A direct expansion gives
+\[
+(a\ast b)\ast c
+=2(2ab+2a+2b)c+2(2ab+2a+2b)+2c
+=4abc+4ab+4ac+4bc+4a+4b+2c,
+\]
+while
+\[
+a\ast (b\ast c)
+=2a(2bc+2b+2c)+2a+2(2bc+2b+2c)
+=4abc+4ab+4ac+4bc+2a+4b+4c.
+\]
+Subtracting yields
+\[
+(a\ast b)\ast c-a\ast(b\ast c)=2(a-c),
+\]
+which is~\eqref{eq:associator}. In particular, associativity holds on the triple
+\((a,b,c)\) if and only if \(a=c\).
+
+(d) Flexibility is the special case \(c=a\) of~\eqref{eq:associator}:
+\[
+(a\ast b)\ast a-a\ast(b\ast a)=2(a-a)=0.
+\]
+
+(e) The cube identity is the special case \(b=a\) of flexibility:
+\[
+(a\ast a)\ast a=a\ast(a\ast a).
+\]
+However, higher parenthesizations already disagree for \(a=1\):
+\[
+1\ast1=6,\qquad ((1\ast1)\ast1)\ast1 = 26\ast1 = 106,
+\]
+while
+\[
+(1\ast1)\ast(1\ast1)=6\ast6=96.
+\]
+Hence \(\ast\) is not power-associative in the full universal-algebra sense.
+\end{proof}
+}
+
+\begin{remark}\label{rem:magma}
+A \emph{magma} (also called \emph{groupoid} in older universal-algebra
+literature) is a set equipped with a single binary operation and no
+further axioms~\cite{bourbaki1970}.
+The operation $\ast$ satisfies commutativity and flexibility but
+fails both associativity and the existence of an identity element.
+\paperadd{Flexibility should therefore be read as a threefold symmetry, not as genuine power-associativity: fourfold powers already depend on parenthesization.}
+It is therefore \emph{not} a monoid, semigroup, group, or
+quasigroup. The linear associator~\eqref{eq:associator}-depending
+only on the \emph{outer} arguments and independent of the middle
+argument~$b$-is a distinctive algebraic signature of the RCL.
+\end{remark}
+
+\subsection{Idempotent and invertible elements}\label{ssec:idemp-inv-2} \paragraph{Idempotents.} The idempotent equation $a\ast a=a$ is equivalent to \eqref{eq:idempotent}, hence on $\RR_{\ge0}$ the only idempotent is $a=0$ (indeed $0\ast0=0$).
+
+\paragraph{Left-cancellation and lack of inverses.} For fixed $a\ge0$, the map $b\mapsto a\ast b$ is injective by \eqref{eq:left-cancel}. Since $(\RR_{\ge0},\ast)$ has no identity element (Theorem~\ref{thm:ast-structure}(b)), classical two-sided inverses are not available.
+
+\begin{remark}\label{rem:shifted-units}
+In the shifted monoid
+$\bigl([\tfrac12,\infty),\,\bullet,\,\tfrac12\bigr)$ with
+$A\bullet B=2AB$ (see Theorem~\ref{thm:shifted-monoid} below),
+$A$ is a unit iff there exists $B\ge\tfrac12$ with
+$2AB=\tfrac12$, i.e.\ $B=1/(4A)$. The constraint
+$B\ge\tfrac12$ forces $A\le\tfrac12$; combined with
+$A\ge\tfrac12$, the only unit is $A=\tfrac12$ (the identity).
+Thus the group of units is trivial: $(\bullet)^{\times}=\{\tfrac12\}$.
+On the sub-semigroup $\bigl([1,\infty),\,\bullet\bigr)$ of
+$H$-values there are \emph{no} invertible elements at all, since
+the identity $\tfrac12$ does not belong to $[1,\infty)$.
+\end{remark}
+
+\subsection{The shifted monoid and the correct associative realization}
+\label{ssec:shifted} The non-associativity of $\ast$ is resolved by passing to the
+\emph{shifted} function $H=\Jcost+1$. \begin{theorem}\label{thm:shifted-monoid}
+Define $H=\Jcost+1:\RR_{>0}\to[1,\infty)$, so that
+$H(x)=\tfrac12(x+x^{-1})\ge1$.
+\begin{enumerate}[nosep,label=\textup{(\alph*)}]
+\item d'Alembert kernel identity. The d'Alembert equation~\eqref{eq:dalembert} states \[ H(xy)+H(x/y)=2\,H(x)\,H(y). \] In the log-coordinate $t=\ln x$, $\;H(e^t)=\cosh t$, so the exponential $t\mapsto e^t$ is the multiplicative character of $(\RR,+)$ and $\cosh$ is its even symmetrization $\cosh t=\tfrac12(e^t+e^{-t})$, satisfying the d'Alembert equation.
+\item Shifted operation. For $A,B\ge\tfrac12$, define $A\bullet B:=2AB$. Then $\bigl([\tfrac12,\infty),\,\bullet,\,\tfrac12\bigr)$ is a commutative monoid:
+\begin{enumerate}[nosep,label=\textup{(\roman*)},leftmargin=*]
+\item \emph{Associativity:} $(A\bullet B)\bullet C = 2(2AB)C = 4ABC = 2A(2BC) = A\bullet(B\bullet C)$.
+\item \emph{Identity:} $\tfrac12\bullet A = 2\cdot\tfrac12\cdot A = A$.
+\end{enumerate}
+\item Restriction to $H$-values. $\bigl([1,\infty),\,\bullet\bigr)$ is an associative commutative sub-semigroup (without identity, since $\tfrac12\notin[1,\infty)$).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) Immediate from~\eqref{eq:dalembert}. The identity
+$\cosh(t{+}u)+\cosh(t{-}u)=2\cosh t\cosh u$ is verified by
+expanding $\cosh t=(e^t+e^{-t})/2$. (b)--(c) Associativity and the identity property are verified
+by the displayed calculations. Closure of $[1,\infty)$: if
+$A,B\ge1$ then $2AB\ge2\ge1$.
+\end{proof} 
+
+\begin{remark}\label{rem:why-nonassoc}
+The operation $\ast$ is the conjugate of $\bullet$ by the
+\emph{affine} shift $a\mapsto a+1$:
+\[ a\ast b = \bigl((a{+}1)\bullet(b{+}1)\bigr)-2 \;=\; 2(a{+}1)(b{+}1)-2.
+\]
+Conjugation by an affine map preserves commutativity but \emph{not}
+associativity: the constant offset $-2$ interacts nonlinearly with
+iterated application, producing the associator $2(a{-}c)$.
+The natural algebraic structure therefore lives on $H=\Jcost+1$,
+not on $\Jcost$ directly; the d'Alembert equation is the
+\emph{associative realization} of the RCL.
+\end{remark}
+
+\subsection{The defect divergence}\label{ssec:metric}
+We now quantify multiplicative mismatch between positive quantities by a cost-induced divergence. This is the basic analytic gadget used in later stability and aggregation statements.
+Define the defect divergence (a symmetric, nonnegative discrepancy, not a metric in general) by
+\begin{equation}\label{eq:defect-dist}
+ d(x,y):=\Jcost(x/y).
+\end{equation}
+
+\begin{proposition}\label{prop:metric}
+For all $x,y,z>0$:
+\begin{enumerate}[nosep,label=\textup{(\roman*)}]
+\item $d(x,y)\ge0$.
+\item $d(x,y)=d(y,x)$.
+\item $d(x,y)=0$ if and only if $x=y$.
+\item $d$ does not satisfy the triangle inequality in general.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) By Proposition~\ref{prop:J-props}\ref{it:nonneg}, $\Jcost(t)\ge 0$ for all $t>0$. (ii) $d(x,y)=\Jcost(x/y)=\Jcost(y/x)=d(y,x)$ by reciprocal symmetry. (iii) If $d(x,y)=0$, then $\Jcost(x/y)=0$.
+By Proposition~\ref{prop:J-props}\ref{it:nonneg}, this implies $x/y=1$,
+hence $x=y$. The converse is immediate from $d(x,x)=\Jcost(1)=0$. (iv) Take $x=1$, $y=2$, $z=4$. Then
+\[ d(1,4)=\Jcost(1/4)=\tfrac{9}{8},\qquad d(1,2)=\Jcost(1/2)=\tfrac14,\qquad d(2,4)=\Jcost(1/2)=\tfrac14.
+\]
+So $d(1,4)=\tfrac98>\tfrac12=d(1,2)+d(2,4)$.
+\end{proof} 
+
+\begin{remark}
+Thus $d$ is a symmetric, nonnegative divergence on $\RR_{>0}$, not a
+metric (and not a pseudometric in the standard sense).
+\end{remark}
+
+\begin{proposition}\label{prop:quasi-triangle}
+There is no constant $K>1$ such that
+\[
+d(x,z)\le K\bigl(d(x,y)+d(y,z)\bigr)\qquad\text{for all }x,y,z>0.
+\]
+However, for every $M\ge1$ there is a constant
+\[
+K_M:=2\cosh^2\!\Bigl(\tfrac12\log M\Bigr)=\tfrac12\Bigl(M+2+M^{-1}\Bigr)
+\]
+such that a quasi-triangle inequality holds on multiplicatively bounded triples.
+If
+\[
+\frac{\max\{x,y,z\}}{\min\{x,y,z\}}\le M,
+\]
+then
+\[
+d(x,z)\le K_M\bigl(d(x,y)+d(y,z)\bigr).
+\]
+\end{proposition}
+
+\begin{proof}
+Write $x=e^{u}$, $y=e^{v}$, $z=e^{w}$ and note that for the canonical cost,
+\[
+d(x,y)=\Jcost(e^{u-v})=\cosh(u-v)-1=2\sinh^2\!\Bigl(\tfrac12(u-v)\Bigr).
+\]
+\emph{No global $K$.}  Take $u=0$, $v=t$, $w=2t$ with $t\to\infty$. Then
+$d(e^{u},e^{w})=\cosh(2t)-1$ while $d(e^{u},e^{v})+d(e^{v},e^{w})=2(\cosh t-1)$, and the ratio
+$\frac{\cosh(2t)-1}{2(\cosh t-1)}$ diverges as $t\to\infty$.
+
+\emph{Local bound.}  Assume $\max\{x,y,z\}/\min\{x,y,z\}\le M$. Then
+$|u-v|,|v-w|\le \log M$, hence with $s=\tfrac12(u-v)$ and $t=\tfrac12(v-w)$ we have $|s|,|t|\le \tfrac12\log M$.
+Using $\sinh(s+t)=\sinh s\,\cosh t+\cosh s\,\sinh t$ and $\cosh(\cdot)\le \cosh(\tfrac12\log M)$ on this range,
+\[
+|\sinh(s+t)|\le \cosh\!\Bigl(\tfrac12\log M\Bigr)\bigl(|\sinh s|+|\sinh t|\bigr),
+\]
+hence
+\[
+\sinh^2(s+t)\le 2\cosh^2\!\Bigl(\tfrac12\log M\Bigr)\bigl(\sinh^2 s+\sinh^2 t\bigr).
+\]
+Multiplying by $2$ and translating back to $d$ gives the stated quasi-triangle inequality with $K_M=2\cosh^2(\tfrac12\log M)$.
+\end{proof}
+
+\begin{remark}
+\paperadd{Both halves of Proposition~\ref{prop:quasi-triangle} are now formalized in the accompanying Lean development: the nonexistence of a universal quasi-triangle constant and the bounded-ratio estimate with the explicit constant \(K_M\).}
+\end{remark}
+
+ %======================================================================
+
+\paragraph{\paperadd{Cost systems and finite-resolution interfaces.}}\label{sec:cost-systems}
+This \paperadd{part} introduces a minimal interface for cost systems, meaning maps, and finite-resolution window aggregation used later.
+\subsection{Recognition cost systems}
+\begin{definition}\label{def:rcs}
+A \emph{recognition cost system} is a quadruple $(\Rp,\Jcost,\sigma,W)$ consisting of:
+\begin{enumerate}[label=\textup{(C\arabic*)},leftmargin=2.2em]
+\item Scalar cost. A non-constant function $\Jcost:(0,\infty)\to\RR$ satisfying the Recognition Composition Law
+(RCL) \eqref{eq:RCL}. In applications we assume $\Jcost$ is twice continuously differentiable ($C^2$) in a neighborhood of $1$, and we use the curvature calibration in~\eqref{eq:norm-calib}; in this regime $\Jcost$ is forced to be the canonical reciprocal cost
+$\Jcost(x)=\tfrac12(x+x^{-1})-1$ (Theorem~\ref{thm:T5}).
+\item Conservation functional. A map $\sigma:(\Rp)^n\to\RR$ (typically $\sigma(x)=\sum_{i=1}^n \log x_i$)
+whose admissible configurations satisfy $\sigma(x)=0$.
+\item Finite resolution. An integer window length $W\ge 1$ specifying that only $W$ consecutive observations
+per cycle (or per block) are available for aggregation.
+\end{enumerate}
+\end{definition}
+
+\begin{remark}\label{rem:rcs-basic}
+Two elementary consequences of RCL used implicitly later are:
+(i) \emph{balance} $\Jcost(1)=0$ and (ii) \emph{reciprocity} $\Jcost(x)=\Jcost(1/x)$.
+Both follow by substituting $(x,y)=(1,1)$ and $(x,y)=(x,1)$ into \eqref{eq:RCL} and using non-constancy.
+A detailed discussion appears in \cite{aczel1966,aczel_dhombres1989}.
+\end{remark}
+
+\subsection{Meaning maps and \texorpdfstring{$\varepsilon$}{epsilon}-relaxations}
+We isolate the basic argmin correspondence associated to a cost and its finite-tolerance relaxation; later sections use these sets to state stability and sharpness claims under noise.
+
+\begin{definition}\label{def:meaning-map}
+Given a cost function $c:S\times O\to\RR_{\ge 0}$, define the following minimizer correspondences:
+\begin{enumerate}[nosep,label=\textup{(\roman*)}]
+\item The \emph{meaning map} (argmin correspondence)
+\[
+\Mean(s):=\arg\min_{o\in O} c(s,o)
+:=\{o\in O:\ c(s,o)=\inf_{o'\in O}c(s,o')\}.
+\]
+\item For $\varepsilon\ge 0$, the \emph{$\varepsilon$-meaning set}
+\[
+\Mean_{\varepsilon}(s):=\Bigl\{o\in O:\ c(s,o)\le \inf_{o'\in O}c(s,o')+\varepsilon\Bigr\}.
+\]
+This is the natural finite-tolerance relaxation of $\Mean(s)$ used when observations are noisy or discretized.
+\end{enumerate}
+\end{definition}
+
+\begin{remark}\label{rem:mean-eps-sharpness}
+In finite-data certification problems, two-sided perturbations typically yield membership in $\Mean_{2\varepsilon}$
+rather than $\Mean_{\varepsilon}$; see for a sharp quantitative statement in the canonical
+reciprocal setting. We will not reproduce those bounds here; we only isolate the definitions so later layers can reference them.
+\end{remark}
+
+\subsection{Window aggregation}\label{ssec:window}
+Often one only observes a \emph{coarse} summary of a stream (e.g.\ batch totals rather than
+sample-level values). Window aggregation is a simple algebraic primitive that formalizes
+this kind of finite-resolution observation.
+
+Let $y=(y_n)_{n\ge 0}$ be a real sequence (for example, an evaluation stream produced by a finite-state representation).
+For an integer $W\ge 1$, define the \emph{$W$-block window sums}
+\begin{equation}\label{eq:window-sums}
+\mathcal W(y)_k:=\sum_{j=0}^{W-1} y_{Wk+j}\qquad (k\ge 0).
+\end{equation}
+This is the window operator referenced in the recognition-cost-system layer (Definition~\ref{def:rcs}(C3)).
+In applications $\mathcal W$ is typically coupled to a model class (e.g.\ rational/finite-state)
+and to an identifiability locus; here we isolate \eqref{eq:window-sums} as a reusable algebraic component.
+
+\begin{proposition}\label{prop:window-equiv}
+For any sequence $y$ and any window length $W\ge 1$, define the shift operator $(Ty)_n:=y_{n+1}$.
+Then
+\[
+\mathcal W(T^{W}y)=T\bigl(\mathcal W(y)\bigr).
+\]
+Equivalently, shifting the input sequence by one full window shifts the window-sum output by one index.
+\end{proposition}
+
+\begin{proof}
+For each $k\ge 0$,
+\[
+\mathcal W(T^{W}y)_k
+=\sum_{j=0}^{W-1}(T^{W}y)_{Wk+j}
+=\sum_{j=0}^{W-1}y_{Wk+W+j}
+=\mathcal W(y)_{k+1}
+= T\bigl(\mathcal W(y)\bigr)_k.
+\]
+\end{proof}
+
+\begin{remark}
+The ledger and octave layers may be interpreted as acting on aggregated blocks
+(flows on coarse time steps, or phases on a cycle). Proposition~\ref{prop:window-equiv}
+is the minimal compatibility needed to make those interpretations well-defined when only
+window-level information is observable.
+\end{remark}
+
+
+\section{Arithmetic, Conservation, and Periodic Aggregation Structures}\label{sec:structures}
+This section develops three auxiliary layers that are compatible with the canonical cost layer: an arithmetic layer based on $\ZZ[\phig]$, a conservation (ledger) layer based on antisymmetric flows, and a periodic aggregation layer based on an $8$-phase clock. We emphasize the exact hypotheses required for each layer and isolate the bridge statements that connect them.
+%====================================================================== 
+\subsection{Forcing the golden ratio}\label{sec:phi}
+We will use the golden ratio as a distinguished scale factor. Define $\phig>0$ to be the unique positive real number satisfying
+$\phig=1+\phig^{-1}$ (equivalently $\phig^2=\phig+1$); explicitly
+$\phig=(1+\sqrt5)/2$. \paragraph{Golden ratio.}
+Solving $x^2-x-1=0$ gives $x=(1\pm\sqrt5)/2$, so the unique positive root is
+\begin{equation}\label{eq:phi-value}
+\phig=\frac{1+\sqrt5}{2}\approx 1.618.
+\end{equation} 
+
+Every physical quantity in the setting turns out to be
+algebraic in~$\phig$. The natural home for these quantities is the ring
+$\ZZ[\phig]$. \subsection{The ring \texorpdfstring{$\ZZ[\phig]$}{Z[phi]}} \paragraph{The quadratic integer ring.}\label{def:phi-ring}
+We write $\ZZ[\phig]=\{a+b\phig: a,b\in\ZZ\}$ with coordinate-wise addition and multiplication reduced using $\phig^2=\phig+1$.
+ 
+
+\paragraph{Canonical model for $\ZZ[\phig]$.}\label{prop:phi-quot}
+There is a canonical isomorphism of rings
+\[
+\ZZ[\phig]\;\cong\;\ZZ[x]/(x^2-x-1),
+\]
+sending the class of $x$ to $\phig$.
+
+Explicitly, the multiplication rule is
+\begin{equation}\label{eq:phi-mul} (a_1+b_1\phig)(a_2+b_2\phig) =(a_1a_2+b_1b_2)+(a_1b_2+a_2b_1+b_1b_2)\,\phig,
+\end{equation}
+since $b_1b_2\phig^2=b_1b_2(\phig+1)=b_1b_2+b_1b_2\phig$. \paragraph{Basic ring operations in $\ZZ[\phig]$.}\label{thm:phi-ring}
+$\ZZ[\phig]$ is a commutative ring with the following additional
+structure.
+\begin{enumerate}[nosep,label=\textup{(\alph*)}]
+\item Galois conjugation. The map $\conj:a+b\phig\mapsto(a{+}b)-b\phig$ is a ring automorphism of order~$2$.
+\item Norm. $\Nm(\alpha)=\alpha\cdot\conj(\alpha)=a^2+ab-b^2$ for $\alpha=a+b\phig$. The norm is multiplicative: $\Nm(\alpha\beta)=\Nm(\alpha)\Nm(\beta)$.
+\item $\phig$ is a unit. $\Nm(\phig)=0^2+0\cdot1-1^2=-1$, so $|\Nm(\phig)|=1$ and $\phig^{-1}=\phig-1\in\ZZ[\phig]$.
+\end{enumerate}
+
+\subsection{Arithmetic structure: norm, units, and Euclideanity} The ring $\ZZ[\phig]$ is not only a quadratic order; it is in fact the full
+ring of integers of the real quadratic field $\QQ(\sqrt5)$ and enjoys strong
+factorization properties. \paragraph{Norm in $\ZZ[\phig]$.}\label{def:phi-norm}
+For $\alpha=a+b\phig\in\ZZ[\phig]$ define the (absolute) norm
+\[
+ N(\alpha):=\bigl|\alpha\,\alpha'\bigr|
+ =\bigl|(a+b\phig)(a+b\phig')\bigr|
+ =\bigl|a^2+ab-b^2\bigr|,
+\]
+where $\phig'=(1-\sqrt5)/2=1-\phig$ is the Galois conjugate of $\phig$ and $\alpha':=a+b\phig'$.
+ 
+
+\paragraph{Units in $\ZZ[\phig]$.}\label{prop:phi-units}
+An element $\alpha\in\ZZ[\phig]$ is a unit if and only if $N(\alpha)=1$.
+In particular, $\phig$ is a unit with $\phig^{-1}=\phig-1$.
+
+\paragraph{Arithmetic of $\ZZ[\phig]$.} It is a standard fact that $\ZZ[\phig]$ is Euclidean with respect to the norm $N$ from Definition~\ref{def:phi-norm}; in particular it is a PID and hence a UFD. See, for example, \cite[Ch.~10]{ireland_rosen} or \cite[\S~I.5]{marcus1977}.
+
+\subsection{The coherence cost of self-similarity}\label{ssec:Jphi} \paragraph{Value of the canonical cost at $\phig$.}\label{prop:Jphi}
+$\Jcost(\phig)=(\sqrt5-2)/2\approx0.118$.
+
+This quantity is the minimum nonzero cost on the $\phig$-ladder
+and may be interpreted as the \emph{coherence cost of aperiodic
+self-similar order}~. %======================================================================
+
+\label{sec:ledger}
+%====================================================================== 
+\subsection{Reciprocal symmetry forces pairing} Proposition~\ref{prop:J-props}\ref{it:recip} states
+$\Jcost(x)=\Jcost(x^{-1})$: the cost of a ratio equals the cost of its
+reciprocal. On a discrete event graph, this means every directed edge
+carrying flow~$w$ must be accompanied by a reverse edge carrying
+flow~$-w$. This is precisely the structure of double-entry
+bookkeeping. \paragraph{Ledger events.}\label{def:event}
+A \emph{ledger event} is an integer-valued flow $e\in\ZZ$; its \emph{conjugate} is $\bar e:=-e$.
+ 
+
+\paragraph{Event pairing.}\label{prop:pairing}
+$e+\bar e=0$ for every event~$e$.
+
+\subsection{The graded ledger and conservation} \paragraph{Graded ledgers and conservation.}\label{def:graded-ledger}
+A \emph{graded ledger} is a finite directed graph $(V,E)$ with an antisymmetric edge weighting $w:V\times V\to\ZZ$ (i.e.\ $w(u,v)=-w(v,u)$) satisfying \emph{conservation} (net zero flow) at every vertex:
+\begin{equation}\label{eq:conservation}
+\sum_{u\in V} w(u,v)=0 \qquad \text{for all } v\in V.
+\end{equation}
+ 
+
+\paragraph{Global balance.}\label{prop:global-balance}
+In any graded ledger,
+$\sum_{u,v}w(u,v)=0$.
+
+\begin{proposition}\label{prop:cycle-space}
+Let $(V,E,w)$ be a graded ledger. Viewing $w$ as an antisymmetric function on
+oriented edges, conservation~\eqref{eq:conservation} means that $w$ is a
+\emph{circulation}. Equivalently, $w$ lies in the cycle space of the underlying
+graph, i.e.\ $w$ can be written as an integer linear combination of directed
+cycle indicator flows.
+Moreover, if the underlying undirected graph has $m$ edges, $n$ vertices, and
+$c$ connected components, then the abelian group of real-valued circulations has
+dimension $m-n+c$.
+\end{proposition}
+
+\begin{proof}
+This is standard: conservation is the kernel condition for the incidence
+matrix, and the kernel is spanned by cycle flows; see, e.g., \cite[\S~1.9]{diestel2017}.
+The dimension statement follows from rank$(B)=n-c$ for the incidence matrix $B$.
+\end{proof}
+
+\subsection{Eight-window neutrality} On a period-8 clock (see \S\ref{sec:octave}), a \emph{window} is a
+consecutive block of 8 ticks. \paragraph{Window aggregation within one octave.}\label{prop:window}
+If events are arranged in four conjugate pairs within a single window,
+\[ (e_1,\bar e_1,\;e_2,\bar e_2,\;e_3,\bar e_3,\;e_4,\bar e_4),
+\]
+then the window sum is zero.
+
+%======================================================================
+
+\label{sec:octave}
+%====================================================================== 
+\subsection{The period-8 forcing} The algebra developed above does not, by itself, select a specific finite
+period. In the broader applied setting, one often works
+with a discrete ``phase'' index of length $2^D$ coming from a $D$-bit
+configuration space. A separate ``linking constraint'' is taken as an
+\emph{external assumption} to set $D=3$  Mathematically, for each $D\ge 1$ we consider the
+$D$--dimensional hypercube graph $Q_D$ whose vertices are $\{0,1\}^D$ and
+whose edges join vertices differing in exactly one bit. A \emph{single-bit periodic walk visiting each vertex exactly once} is
+precisely a Hamiltonian cycle in $Q_D$, and any such cycle has length
+$|V(Q_D)|=2^D$. Specializing to $D=3$ gives period~$8$. \paragraph{The $8$-phase cycle on $Q_3$.}\label{thm:T7}
+The minimal Hamiltonian cycle on the 3-cube $Q_3$ has length~$8$.
+It is realised by the standard 3-bit Gray code:
+\[ 000\to001\to011\to010\to110\to111\to101\to100\to000.
+\]
+
+\begin{proposition}\label{prop:gray-code}
+Identify the vertices of $Q_3$ with binary strings in $\{0,1\}^3$, adjacent when
+they differ in exactly one bitxactly one bit. Then there exists a cyclic ordering
+$v_0,\dots,v_7$ of the vertices such that consecutive vertices differ in exactly one bitxactly
+one bit and $v_7$ is adjacent to $v_0$. Equivalently, $Q_3$ admits a
+\emph{3-bit cyclic Gray code} of length $8$.
+\end{proposition}
+
+\begin{proof}
+One explicit cyclic Gray code is
+\[
+000,\ 001,\ 011,\ 010,\ 110,\ 111,\ 101,\ 100,
+\]
+which visits all vertices exactly once and flips one bit at each step; the final
+string $100$ is adjacent to $000$.
+\end{proof} 
+
+\begin{remark}
+In applications one may map the $20$ tokens to a fixed list of domain-specific primitives.
+Such identifications are external to the algebra developed here.
+\end{remark}
+
+\subsection{The phase group \texorpdfstring{$\ZZ/8\ZZ$}{Z/8Z}} \paragraph{Phase group.}\label{def:phase}
+The \emph{phase group} is $\ZZ/8\ZZ$ with addition modulo~$8$.
+ Write $\omega=e^{-2\pi i/8}$, the primitive 8th root of unity.
+The characters of $\ZZ/8\ZZ$ are $\chi_k(t)=\omega^{kt}$ for
+$k=0,1,\ldots,7$. \subsection{Mode structure and the DFT-8}\label{ssec:dft8} A signal $f:\ZZ/8\ZZ\to\CC$ has Fourier coefficients
+\begin{equation}\label{eq:dft8} \hat f(k)=\frac{1}{\sqrt8}\sum_{t=0}^{7}f(t)\,\omega^{kt}, \qquad k=0,1,\ldots,7.
+\end{equation}
+The modes decompose into:
+\begin{enumerate}[label=(\alph*),nosep]
+\item DC mode ($k=0$): constant component.
+\item Conjugate pairs ($k=1,7$), ($k=2,6$), ($k=3,5$): mode~$k$ and mode~$8{-}k$ are complex conjugates; their sum is real.
+\item Self-conjugate mode ($k=4$): the Nyquist mode, which is already real ($\omega^{4t}=(-1)^t$).
+\end{enumerate} \subsection{The neutral subspace and mode counting} A signal is \emph{neutral} (or DC-free) if
+$\sum_{t=0}^7 f(t)=0$, i.e.\ $\hat f(0)=0$. The neutral
+subspace of $\CC^8$ has dimension~$7$. \paragraph{Quantized mode tokens.}\label{def:mode-tokens}
+Fix four ``amplitude levels'' $\phig^0,\phig^1,\phig^2,\phig^3$ (a modeling choice, not derived from the cost axioms). We define the set of \emph{quantized mode tokens} for period~$8$ as follows:
+\begin{enumerate}[label=\textnormal{(\roman*)}, nosep]
+\item For each conjugate-pair family $(k,8{-}k)$ with $k\in\{1,2,3\}$ and each level $\phig^j$ ($j=0,1,2,3$), include one token $\mathsf{P}_{k,j}$.
+\item For the Nyquist character $(-1)^t$ (mode $k=4$), include two tokens at each level: a ``real'' token $\mathsf{N}^{\Re}_j$ and a ``phase-shifted'' token $\mathsf{N}^{\Im}_j$ (intended to represent an independent quadrature when signals are viewed over $\RR$).
+\end{enumerate}
+\begin{remark}\label{rem:four-levels}
+The choice of four amplitude levels $\{\phig^0,\phig^1,\phig^2,\phig^3\}$ is part of the modeling layer, not a consequence of the cost axioms.
+Any finite palette $A_L:=\{\phig^0,\phig^1,\dots,\phig^{L-1}\}$ with $L\ge1$ may be used in Definition~\ref{def:mode-tokens}, and the same counting argument gives
+$|\mathcal M\times A_L|=5L$ tokens (three conjugate-pair families and two Nyquist tokens per level).
+We fix $L=4$ only to keep the construction finite and concrete and to align the octave layer with a small, explicit set of $\phig$-scales coming from the arithmetic layer.
+\end{remark}
+
+\paragraph{Counting quantized mode tokens.}\label{prop:20modes}
+The set of quantized mode tokens in Definition~\ref{def:mode-tokens} has
+cardinality $20$.
+
+\begin{remark}
+In applications one may map the $20$ tokens to a fixed list of domain-specific primitives.
+Such identifications are external to the algebra developed here.
+\end{remark} %======================================================================
+
+
+
+
+
+% ====================
+% Section 4 (revised)
+% ====================
+\section{Unified Algebra and Application-Oriented Consequences}\label{sec:unified}
+We package the preceding layers into categorical structures and make the cross-layer links explicit. The goal is to express the resulting quadruple by universal properties (initiality/uniqueness up to isomorphism) and to summarize derived consequences that are directly useful in downstream constructions. 
+%====================================================================== 
+\begin{definition}\label{def:rec-alg}
+A \emph{Recognition Algebra} is a quadruple
+$(\mathcal C,\,\ZZ[\phig],\,\mathcal L,\,\ZZ/8\ZZ)$ where:
+\begin{enumerate}[nosep]
+\item $\mathcal C$ is a \emph{Cost Algebra}: a continuous function $\Jcost:\RR_{>0}\to\RR$ satisfying the RCL, $\Jcost(1)=0$, and $\left.\frac{d^2}{dt^2}\right|_{t=0}\Jcost(e^t)=1$.
+\item $\ZZ[\phig]$ is the \emph{$\phig$-Ring} with $\phig^2=\phig+1$, equipped with the Galois conjugation $\conj$ and the multiplicative norm~$\Nm$.
+\item $\mathcal L$ is a \emph{Ledger Algebra}: a graded abelian group of antisymmetric integer-valued events with vertex-wise conservation (zero divergence at each vertex).
+\item $\ZZ/8\ZZ$ is the \emph{Octave Algebra}: a cyclic phase group with a canonical DFT-8 structure and a set of 20 neutral mode tokens (Definition~\ref{def:mode-tokens} and Proposition~\ref{prop:20modes}).
+\end{enumerate}
+\end{definition} 
+
+\paragraph{A concrete model.} A Recognition Algebra exists. One explicit model is obtained by taking (i) the calibrated cost $\Jcost(x)=\tfrac12(x+x^{-1})-1$; (ii) the quadratic integer ring $\ZZ[\phig]$; (iii) any finite directed graph equipped with an antisymmetric integer circulation; and (iv) the phase group $\ZZ/8\ZZ$ together with a fixed Hamiltonian cycle presentation of $Q_3$. 
+
+\begin{theorem}\label{thm:master}
+Under the axioms specified in Definition~\ref{def:rec-alg}, the following
+components are canonical:
+\begin{enumerate}[nosep,label=\textup{(\roman*)}]
+\item Cost layer. The cost function is uniquely determined: \[ \Jcost(x)=\frac12(x{+}x^{-1})-1, \] i.e. it is the unique continuous solution of the RCL satisfying $\Jcost(1)=0$ and $\left.\frac{d^2}{dt^2}\right|_{t=0}\Jcost(e^t)=1$ (Theorem~\ref{thm:T5}).
+\item $\phig$ layer. The distinguished scale is uniquely determined: $\phig=(1{+}\sqrt5)/2$, the unique positive root of $x^2=x+1$ (see \S\ref{sec:phi}).
+\item Octave layer. The phase group is (non-canonically) isomorphic to $\ZZ/8\ZZ$ once a choice of $3$-cube/Hamiltonian presentation is fixed (Theorem~\ref{thm:T7}); and, given the modeling choice of four amplitude levels $\{1,\phig,\phig^2,\phig^3\}$, the mode-token set has cardinality $20$ (Definition~\ref{def:mode-tokens} and Proposition~\ref{prop:20modes}).
+\end{enumerate}
+The ledger layer $\mathcal L$ is \emph{not} uniquely determined: it is any
+antisymmetric integer flow on a finite vertex set satisfying the conservation
+axiom $\sum_{u\in V}w(v,u)=0$ for all $v$ (Definition~\ref{def:graded-ledger}).
+\end{theorem}
+
+\begin{proof}
+The cost-layer assertion is exactly Theorem~\ref{thm:T5}. The explicit value of $\phig$ is recalled in \S\ref{sec:phi}.
+The phase-group assertions are Theorem~\ref{thm:T7} and Proposition~\ref{prop:20modes}.
+For the ledger layer, Definition~\ref{def:graded-ledger} specifies the axioms but does
+not select a unique underlying graph or flow; hence there is generally a family
+of admissible ledgers.
+\end{proof}
+
+\paragraph{Hypercube cycle length.} Let $Q_D$ be the $D$-dimensional hypercube graph on $2^D$ vertices. Any Hamiltonian cycle in $Q_D$ has length $2^D$ (i.e., it contains exactly $2^D$ edges).
+
+
+\subsection{Layer categories and linked systems}\label{subsec:layercats}
+
+\subsubsection*{Packaging principle}
+The cost layer is the rigid core: once the ratio-composition axiom, mild regularity, and a calibration are fixed, the ratio cost is determined and its induced algebra is canonical.  The remaining layers (golden-scale arithmetic, conservation ledgers, and an eight-phase clock for periodic aggregation) are optional modules that can be coupled to the cost layer when an application calls for quantization, balance constraints, or periodic structure.  To make this modularity explicit, we view each layer as a small category (objects are admissible instances; morphisms preserve the defining structure) and then define a category of \emph{linked systems} whose morphisms also preserve the cross-layer bridge identities.
+
+\paragraph{Arithmetic layer.}
+Let $\mathsf{PhiRing}$ denote the category of pairs $(R,\phi)$ where $R$ is a commutative unital ring and $\phi\in R^\times$ satisfies $\phi^2-\phi-1=0$; morphisms are unital ring homomorphisms sending $\phi$ to $\phi'$.
+
+\paragraph{Ledger layer.}
+Fix a finite node set $V$ and an involution $^\dagger:V\to V$ with no fixed points (pairing of events).  Write $\mathsf{LedgerAlg}(V,^\dagger)$ for the category whose objects are real vector spaces of antisymmetric flows $F\subseteq \RR^{V\times V}$ satisfying $f(u,v)=-f(v,u)$ and node-wise conservation $\sum_{v\in V} f(u,v)=0$; morphisms are linear maps preserving these relations.
+
+\paragraph{Octave layer.}
+Let $\mathsf{OctaveAlg}$ be the category of cyclic groups of order $8$ (additively written) and group homomorphisms.  Up to isomorphism it has a single object, represented by $\ZZ/8\ZZ$.
+
+\paragraph{Linked layer systems.}
+Fix $(V,^\dagger)$ and an amplitude set $A=\{1,\phig,\phig^2,\phig^3\}\subset \RR_{>0}$.  An object of $\mathsf{LayerSys}^{+}(V,^\dagger;A)$ is a quadruple
+\[
+\mathcal L=(\mathcal C,\mathcal P,\mathcal Ldg,\mathcal O),
+\]
+where $\mathcal C$ is a calibrated ratio cost $\Jcost:\RR_{>0}\to\RR$, $\mathcal P\in\mathsf{PhiRing}$ is an arithmetic layer, $\mathcal Ldg\in\mathsf{LedgerAlg}(V,^\dagger)$ is a ledger layer, and $\mathcal O\in\mathsf{OctaveAlg}$ is an octave layer, together with the bridge axioms:
+\begin{enumerate}[label=(B\arabic*),nosep]
+\item\label{B1} (Cost--$\phi$) writing $\mathcal P=(R,\phi)$ and identifying $\phi$ with its positive real value, the cost satisfies $\Jcost(\phi)=(\sqrt5-2)/2$.
+\item\label{B2} ($\phi$--octave tokens) the mode-token set constructed from the DFT--$8$ neutral family $\mathcal M$ and the amplitude set $A$ has cardinality $|\mathcal M\times A|=20$.
+\end{enumerate}
+A morphism $\mathcal L\to\mathcal L'$ is a quadruple of morphisms in the corresponding layer categories whose components preserve \ref{B1}--\ref{B2} after transport.
+
+\paragraph{A canonical linked system.}
+Given $(V,^\dagger)$ and $A=\{1,\phig,\phig^2,\phig^3\}$, the constructions of \S\ref{sec:cost}, \S\ref{sec:phi}, \S\ref{sec:ledger}, and \S\ref{sec:octave} assemble into an object of $\mathsf{LayerSys}^{+}(V,^\dagger;A)$, and the bridge axioms are exactly the identities recorded in \S\ref{subsec:bridges}.
+\paperadd{The accompanying Lean development now formalizes the paper-facing categories $\mathsf{PhiRing}$, $\mathsf{LedgerAlg}$, $\mathsf{OctaveAlg}$, and $\mathsf{LayerSys}^{+}$ by explicit objects, morphisms, identities, compositions, and law theorems. At present, what is exhibited for $\mathsf{LayerSys}^{+}$ is the canonical bridge-compatible quadruple itself; no separate general initiality theorem for linked systems is claimed here.}
+
+
+\subsection{Cross-layer bridges}\label{subsec:bridges}
+The four layers are not independent; they are connected by explicit
+identities. \paragraph{Cost--$\phig$ bridge.}\label{prop:cost-phi} $\Jcost(\phig)=(\sqrt5-2)/2$ (Proposition~\ref{prop:Jphi}). Equivalently, $H(\phig)=\sqrt5/2$, where $H=\Jcost+1$.
+
+\paragraph{$\phig$--octave token count.}\label{prop:phi-octave} Fix the modeling choice of amplitude set $A=\{1,\phig,\phig^2,\phig^3\}\subset\RR_{>0}$. With the neutral mode families $\mathcal M$ of the DFT--$8$ construction, the set of mode tokens $\mathcal M\times A$ has cardinality $20$ (Definition~\ref{def:mode-tokens} and Proposition~\ref{prop:20modes}).
+
+\paragraph{Ledger--octave windowing.}\label{prop:ledger-octave} Four conjugate pairs of ledger events fill a single $8$-tick window with net flow zero (Proposition~\ref{prop:window}).
+
+\subsection{Automorphisms}\label{ssec:aut} We compute the automorphism group of each algebraic layer. \begin{theorem}\label{thm:aut}
+\begin{enumerate}[nosep,label=\textup{(\alph*)}]
+\item Cost Algebra. $\operatorname{Aut}(\Jcost)\cong\ZZ/2\ZZ$, generated by the inversion $\iota:x\mapsto x^{-1}$ (equivalently, $t\mapsto-t$ in log-coordinates).
+\item $\phig$-Ring. $\operatorname{Aut}(\ZZ[\phig]) =\operatorname{Gal}\bigl(\mathbb{Q}(\sqrt5)\big/\mathbb{Q}\bigr) \cong\ZZ/2\ZZ$, generated by the Galois conjugation $\conj:\phig\mapsto\psig=1{-}\phig$.
+\item Ledger Algebra. Every graded ledger admits the sign involution $w\mapsto-w$ (reversing all flows), which preserves both antisymmetry and conservation. Hence $\operatorname{Aut}(\mathcal L)$ contains a canonical $\ZZ/2\ZZ$ subgroup.
+\item Octave Algebra. $\operatorname{Aut}(\ZZ/8\ZZ)=(\ZZ/8\ZZ)^\times=\{1,3,5,7\} \cong\ZZ/2\ZZ\times\ZZ/2\ZZ$ (the Klein four-group).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) Let $\mu:\RR_{>0}\to\RR_{>0}$ be continuous, multiplicative, and bijective.
+Define $f:\RR\to\RR$ by $f(t):=\log\bigl(\mu(e^t)\bigr)$. Then $f$ is continuous and
+additive: $f(t+s)=f(t)+f(s)$, since $\mu(e^{t+s})=\mu(e^t e^s)=\mu(e^t)\mu(e^s)$.
+Hence $f(t)=\alpha t$ for some $\alpha\in\RR$ (a continuous additive map on $\RR$
+is linear). Therefore $\mu(x)=x^\alpha$, and bijectivity forces $\alpha\neq 0$.
+The condition $\Jcost\circ\mu=\Jcost$ becomes $\cosh(\alpha t)=\cosh t$ for all $t$
+(in log-coordinates), hence $\alpha=\pm1$. (b) $\ZZ[\phig]\cong\ZZ[X]/(X^2{-}X{-}1)$ is the ring of integers
+of $\mathbb{Q}(\sqrt5)$. Its automorphism group is the Galois group
+of the splitting field, which has order~$2$. (c) Write $w'=-w$. Antisymmetry:
+$w'(u,v)=-w(u,v)=w(v,u)=-w'(v,u)$.
+Conservation: for each $v$, $\sum_{u}w'(v,u)=-\sum_{u}w(v,u)=0$ since $\sigma(v)=0$. The involution $w\mapsto -w$ is therefore a ledger automorphism of order~$2$. (d) $\operatorname{Aut}(\ZZ/8\ZZ)$ consists of maps $t\mapsto kt$
+with $\gcd(k,8)=1$. The units mod~$8$ are $\{1,3,5,7\}$; each
+satisfies $k^2\equiv1\pmod{8}$, so every non-identity element has
+order~$2$ and the group is the Klein four-group.
+\end{proof} 
+
+\begin{remark}\label{rem:aut-compat}
+The cross-layer bridges constrain which combinations of layer
+automorphisms are globally consistent. In particular, the cost
+inversion $\iota:x\mapsto x^{-1}$ and the Galois conjugation
+$\conj:\phig\mapsto\psig$ are linked:
+$\Jcost(\phig)=\Jcost(\phig^{-1})$ by reciprocal symmetry, and
+$|\conj(\phig)|=|\psig|=1/\phig=\phig^{-1}$, so the two
+$\ZZ/2\ZZ$ actions are compatible via the Cost--$\phig$ bridge.
+\end{remark} %======================================================================
+
+\subsection{\texorpdfstring{\paperadd{Cost categories and universal properties}}{Cost categories and universal properties}}\label{sec:category}
+%======================================================================
+
+We now place Recognition Algebra in a categorical context to make the
+uniqueness (``zero free parameters'') claim precise. \subsection{The broad category of cost algebras}
+\begin{definition}\label{def:costcat}
+\begin{enumerate}[label=(\alph*),nosep]
+\item Objects. Pairs $(F_\kappa,\RR_{>0})$ where $F_\kappa:\RR_{>0}\to\RR$ is a continuous function satisfying the RCL~\eqref{eq:RCL} with $F_\kappa(1)=0$. By the d'Alembert classification (\S\ref{sec:intro}), the general solution is $F_\kappa(x)=\tfrac12(x^\kappa+x^{-\kappa})-1$ for a parameter $\kappa\ge0$.
+\item Morphisms. A morphism $(F_{\kappa_1},\RR_{>0})\to(F_{\kappa_2},\RR_{>0})$ is a continuous multiplicative map $\mu:\RR_{>0}\to\RR_{>0}$ (i.e.\ $\mu(xy)=\mu(x)\mu(y)$) that \emph{preserves cost}: $F_{\kappa_2}(\mu(x))=F_{\kappa_1}(x)$ for all $x>0$.
+\item Identity and composition are the usual ones.
+\end{enumerate}
+\end{definition} 
+
+{\color{paperblue}
+\begin{remark}\label{rem:costcat-reduced}
+Definition~\ref{def:costcat} is a reduced normal form: it starts after the binary combiner has already
+been identified with the RCL polynomial. Theorem~\ref{thm:full-unconditional} shows that, under the
+stronger closure hypotheses, this is not an extra modeling choice. Any abstract consistency law
+\[
+F(xy)+F(x/y)=P(F(x),F(y))
+\]
+collapses on the nonnegative cost range to the same polynomial \(P(u,v)=2uv+2u+2v\).
+\end{remark}
+}
+
+\begin{proposition}\label{prop:morph}
+Every continuous multiplicative map $\mu:\RR_{>0}\to\RR_{>0}$ has
+the form $\mu(x)=x^\alpha$ for some $\alpha\in\RR$. The
+cost-preservation condition
+$F_{\kappa_2}(x^\alpha)=F_{\kappa_1}(x)$ forces
+$\alpha\kappa_2=\pm\kappa_1$.
+\end{proposition}
+
+\begin{proof}
+Continuity and multiplicativity force $\mu(x)=x^\alpha$. Then
+$F_{\kappa_2}(x^\alpha)
+=\tfrac12(x^{\alpha\kappa_2}+x^{-\alpha\kappa_2})-1$.
+This equals
+$F_{\kappa_1}(x)=\tfrac12(x^{\kappa_1}+x^{-\kappa_1})-1$
+if and only if $\cosh(\alpha\kappa_2\, t)=\cosh(\kappa_1\, t)$ for
+all $t\in\RR$, which holds if and only if
+$\alpha\kappa_2=\pm\kappa_1$.
+\end{proof}
+
+\subsection{The calibrated subcategory and the universal property}
+\begin{definition}\label{def:cat}
+The category $\mathsf{RecAlg}$ is the full subcategory of
+$\mathsf{CostAlg}$ whose objects additionally satisfy the
+calibration $F''_{\!\log}(0)=1$ (equivalently, $\kappa=1$).
+\end{definition} 
+
+\begin{theorem}\label{thm:initial}
+Let $\Jcost$ denote the canonical cost function~\eqref{eq:Jdef}
+(the unique calibrated solution, $\kappa=1$).
+\begin{enumerate}[nosep,label=\textup{(\alph*)}]
+\item Uniqueness. $\mathsf{RecAlg}$ has exactly one object up to isomorphism: $(\Jcost,\RR_{>0})$.
+\item Automorphism group. $\operatorname{Aut}_{\mathsf{RecAlg}}(\Jcost) =\{\mathrm{id},\,\iota\}\cong\ZZ/2\ZZ$, where $\iota(x)=x^{-1}$.
+\item Initiality in $\mathsf{CostAlg}^{+}$. Let $\mathsf{CostAlg}^{+}$ be the wide subcategory of $\mathsf{CostAlg}$ whose morphisms are restricted to \emph{order-preserving} multiplicative maps (i.e.\ $\alpha>0$ in $\mu(x)=x^\alpha$). Then $(\Jcost,\RR_{>0})$ is an \emph{initial object} of $\mathsf{CostAlg}^{+}$: for every object $(F_\kappa,\RR_{>0})$ with $\kappa>0$, there is a unique morphism $\mu(x)=x^{1/\kappa}$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) The calibration $F''_{\!\log}(0)=\kappa^2=1$ with $\kappa\ge0$
+forces $\kappa=1$, hence $F=\Jcost$ (Theorem~\ref{thm:T5}). (b) By Proposition~\ref{prop:morph}, endomorphisms of
+$(\Jcost,\RR_{>0})$ are $\mu(x)=x^\alpha$ with
+$\alpha=\pm1$. Both are invertible, so
+$\operatorname{Aut}=\operatorname{End}
+=\{\mathrm{id},\,\iota\}\cong\ZZ/2\ZZ$. (c) Given $(F_\kappa,\RR_{>0})$ with $\kappa>0$,
+Proposition~\ref{prop:morph} requires $\alpha=\kappa_1/\kappa_2
+=1/\kappa>0$. This is the unique order-preserving morphism.
+Functoriality (composition with further morphisms) is verified by
+$x^{1/\kappa_1}\mapsto (x^{1/\kappa_1})^{\kappa_1/\kappa_2}
+=x^{1/\kappa_2}$.
+\end{proof} 
+
+\begin{remark}\label{rem:signed-cost-morphisms}
+\paperadd{The broad category $\mathsf{CostAlg}$ has a two-branch version of the same universal picture: for each \(\kappa>0\), there are exactly two morphisms \((\Jcost,\RR_{>0})\to(F_\kappa,\RR_{>0})\), namely \(x\mapsto x^{1/\kappa}\) and \(x\mapsto x^{-1/\kappa}\). Passing to \(\mathsf{CostAlg}^{+}\) removes the order-reversing branch and leaves the unique initial arrow of Theorem~\ref{thm:initial}(c).}
+\end{remark}
+
+\begin{corollary}\label{cor:zero-params}
+Within the categorical setting above, the \emph{cost layer} admits no free
+parameters: the calibrated object $(\Jcost,\RR_{>0})$ is unique up to
+isomorphism in $\mathsf{RecAlg}$ (and initial in $\mathsf{CostAlg}^{+}$).
+By contrast, additional structures discussed in later sections
+(e.g.\ the choice of a distinguished scale such as $\phig$,
+the specific pairing constraint $D=3$ leading to a period-$8$ clock,
+and the discrete amplitude set used to form the ``$20$ mode tokens'')
+are \emph{modeling choices or extra axioms} not derived from the RCL alone.
+\end{corollary} %======================================================================
+
+\subsection{\texorpdfstring{\paperadd{Domain instantiations}}{Domain instantiations}}\label{sec:domains}
+%======================================================================
+
+The algebraic quadruple of Definition~\ref{def:rec-alg} is a \emph{mathematical
+template}. One may \emph{instantiate} it by choosing concrete realizations of
+the four layers (cost, $\varphi$--ring, ledger, octave) in a given domain.
+Only the purely algebraic statements proved in earlier sections are asserted
+as theorems here. The examples below are therefore \emph{informal sketches}:
+they describe possible identifications used in the applied setting and should be read as modeling choices rather than mathematical
+consequences of the RCL alone (cf.~Subsection~\ref{subsec:dependence}).
+\begin{enumerate}[leftmargin=*]
+\item Qualia (interpretive mapping). A model may assign a mode label to a qualitative ``type'' and a $\varphi$--amplitude level (chosen as in Definition~\ref{def:mode-tokens}) to an ``intensity'' parameter. Ledger weights can be used to encode directed differences between states, subject to the conservation constraint of Section~\ref{sec:ledger}. Any such mapping is external to the present algebraic development.
+\item Ethics (ledger dynamics). One may model agents as vertices of a graded ledger and transfers as antisymmetric edge flows. The admissibility constraint is precisely the conservation law $\sum_{u}w(v,u)=0$ from Definition~\ref{def:graded-ledger}. Scalar costs can then be assigned to transfers using the calibrated function $\Jcost$ (Theorem~\ref{thm:T5}), but the interpretation as ``harm'' or ``virtue'' is not claimed as a theorem in this paper.
+\item Semantics (token systems). The finite token set $\mathcal{M}\times A$ of Section~\ref{sec:octave} provides a convenient discrete alphabet (of cardinality $20$ by Proposition~\ref{prop:20modes}). A semantics model may embed these tokens into a vector space or probability simplex and then choose an \paperadd{application-specific} distance or divergence. No particular embedding or metric is required for the algebraic results of this manuscript.
+\item Inquiry (octave indexing). The octave clock $\mathbb{Z}/8\mathbb{Z}$ of Section~\ref{sec:octave} can be used as a discrete index for an eight-fold classification (e.g.\ an ordered list of ``question types''). Such an identification is a modeling choice; the only mathematical statement used here is the group structure proved in Theorem~\ref{thm:T7}.
+\end{enumerate} %======================================================================
+
+
+\section*{Applications}
+The framework above is intended to be reusable in concrete settings where comparisons are intrinsically
+\emph{ratio-based} (multiplicative): once the ratio-cost layer is fixed (by the composition axiom plus
+regularity/admissibility and a calibration), the remaining algebraic layers can be attached to model
+domain-specific structure such as arithmetic constraints, conservation laws, and periodic aggregation.
+Below we give three application scenarios; each is stated at the level needed to plug into later work,
+rather than as abstract propositions.
+
+\subsection{Application: ratio-based drift detection from positive measurements}\label{subsec:app-drift}
+This application illustrates why the calibrated cost law matters in practice.  It shows how a ratio-only
+consistency principle forces a unique, parameter-free penalty for multiplicative drift, so thresholds and
+interpretations are comparable across devices once a calibration convention is fixed.
+
+\paragraph{\textbf{Problem.}}
+Suppose a device records a positive intensity $I_k>0$ (light power, RF power, concentration, or a similar
+magnitude).  Absolute scale may drift, but ratios between consecutive readings remain meaningful.  Define
+the multiplicative increments
+\[
+r_k:=\frac{I_{k+1}}{I_k}\in\RR_{>0}\qquad (k=0,\dots,n-1).
+\]
+We seek a nonnegative per-step cost $c(r)$ that measures inconsistency of a multiplicative change, using
+only ratio information and no free parameters.
+
+\paragraph{Invariance principle.}
+Ratios compose by multiplication: $r_{02}=r_{01}\,r_{12}$.  The recognition composition law requires that the
+combined increment and the imbalance increment determine one another through a single identity:
+\[
+J(r_{01}r_{12})+J(r_{01}/r_{12})
+=2J(r_{01})J(r_{12})+2J(r_{01})+2J(r_{12}).
+\]
+Together with $J(1)=0$ and the calibration $\left.\frac{d^2}{dt^2}\right|_{t=0}J(e^t)=1$, the paper proves that
+$J$ is uniquely forced:
+\[
+J(r)=\tfrac12\Bigl(r+r^{-1}\Bigr)-1=\cosh(\log r)-1.
+\]
+Thus the drift penalty is not chosen or fitted; it is fixed by the invariance and calibration requirements.
+
+\paragraph{Procedure.}
+Given readings $(I_0,\dots,I_n)$, compute $r_k=I_{k+1}/I_k$ and the per-step costs
+\[
+c_k:=J(r_k)=\tfrac12\Bigl(r_k+r_k^{-1}\Bigr)-1.
+\]
+A natural aggregate drift score is the sum $C:=\sum_{k=0}^{n-1} c_k$.  This score is scale-free, symmetric under
+inversion ($J(r)=J(1/r)$), and locally quadratic in the log-change:
+\[
+J(e^t)=\cosh(t)-1=\tfrac12 t^2+O(t^4)\qquad (t\to 0).
+\]
+
+\paragraph{Tiny numerical example.}
+Let $(I_0,I_1,I_2)=(100,110,105)$.  Then $r_0=1.1$ and $r_1=105/110\approx0.954545$, so
+\[
+J(1.1)\approx 0.004545,\qquad
+J(0.954545)\approx 0.001083,
+\]
+and $C\approx 0.005628$.  Larger multiplicative excursions produce larger cost symmetrically in $r$ and $1/r$.
+
+\paragraph{\textbf{Interpretation.}}
+This example makes the main message concrete: a single compositional invariance principle for ratio-based
+comparisons, together with a calibration that fixes physical units, uniquely determines the foundational
+cost law; the resulting drift score and its algebraic properties are forced rather than modeled.
+
+
+\subsection{Application: compositional calibration chains as a cost category}\label{subsec:app-calibration-category}
+Many measurement pipelines are \emph{compositional}: a reading is transferred through a sequence of
+devices or transforms (sensor $\rightarrow$ amplifier $\rightarrow$ ADC $\rightarrow$ software normalization),
+each step preserving information only up to multiplicative scale.  In this setting one naturally models
+each step as a \emph{morphism} carrying a positive gain ratio, and compares morphisms by the canonical
+ratio-cost $\Jcost$.
+
+\paragraph{\textbf{Problem.}}
+Suppose you have multiple calibration routes between two endpoints (e.g.\ two labs, or two instruments),
+and each route is a chain of multiplicative gains.  You want a route-independent, model-free way to
+score and compare chains, and to detect when two purportedly equivalent calibration routes disagree.
+
+\paragraph{Category viewpoint.}
+Let objects be device states, and let a morphism $f:s\to t$ carry a gain ratio $\rho(f)\in\RR_{>0}$.
+Composition satisfies $\rho(g\circ f)=\rho(g)\rho(f)$.  The canonical cost produces a functorial
+penalty
+\[
+\mathrm{Cost}(f):=\Jcost(\rho(f)),
+\qquad
+\mathrm{Cost}(g\circ f)=\Jcost(\rho(g)\rho(f)),
+\]
+so that re-parenthesizing a chain does not change its score.
+
+\paragraph{What this enables.}
+(i) \emph{Best-path calibration:} among competing calibration chains, choose the chain minimizing the
+sum of per-step costs (a shortest-path problem on a directed multigraph of calibration steps).
+(ii) \emph{Route consistency checks:} for two routes with gains $\rho_1,\rho_2$, the discrepancy is the
+single scalar $\Jcost(\rho_1/\rho_2)$, comparable across platforms once the calibration convention is fixed.
+(iii) \emph{Composable certificates:} if each step is certified within tolerance, the meaning-set stability
+bounds control the induced ambiguity of the composed calibration.
+
+
+\subsection{Application: conservation-aware ledger reconciliation with periodic aggregation}\label{subsec:app-ledger}
+Operational data often come with two independent structures: \emph{conservation} (mass/energy/flow
+balance) and \emph{periodic reporting} (daily/weekly windows).  The unified framework couples these
+to the canonical ratio-cost so that multiplicative discrepancies can be compared while respecting balance
+constraints and aggregation.
+
+\paragraph{\textbf{Problem.}}
+Consider a microgrid or supply-chain network with nodes $V$ and directed transactions $E$.
+Each edge carries a positive reported amount (energy, inventory, or monetary value) and the operator
+expects nodewise conservation up to known injections/withdrawals.  Reports arrive in fixed windows
+(e.g.\ 15-minute intervals or daily totals).  You want to (a) reconcile reports with conservation, and
+(b) flag anomalous edges/windows where multiplicative drift is most plausible.
+
+\paragraph{\textbf{Model within the framework.}}
+Represent windowed totals by the window operator $\mathcal W$ (periodic aggregation layer) and represent
+ledger feasibility as a conservative-flow constraint (conservation layer).  Compare a reported edge value
+$\widehat{x}$ to a reconciled value $x$ by the canonical defect divergence $d(\widehat{x},x)=\Jcost(\widehat{x}/x)$.
+
+\paragraph{What this enables.}
+(i) \emph{Constraint-respecting reconciliation:} find a feasible conservative flow $x$ closest (in aggregate
+defect divergence) to the reported data $\widehat{x}$.
+(ii) \emph{Window-local anomaly localization:} because windowing is shift-consistent, anomalies can be
+attributed to specific windows and edges without artifacts from the chosen reporting origin.
+(iii) \emph{Interpretable multiplicative error budgets:} penalties are on ratios, so “5\% drift” has the same
+meaning regardless of unit scale.
+
+
+
+
+\section*{Conclusion}
+We formulated an axiomatic ``cost layer'' driven by a scalar composition principle and showed that the induced functional constraints reduce to the classical d'Alembert equation under mild regularity. Under an explicit calibration at the neutral element, this reduction yields a canonical closed-form model for the ratio cost and, with a stated branch-selection hypothesis, a corresponding uniqueness statement among admissible solutions. We then organized the associated constructions into compatible algebraic packages-covering arithmetic operations, conservation-type constraints, and periodic aggregation-so that the main identities can be reused as lemmas across applications. Finally, we linked the abstract layer to discrete combinatorial structure by isolating the hypercube setting $Q_D$ and proving the existence of a Hamiltonian cycle of length $2^D$, which serves as a concrete periodic scaffold for aggregation. Overall, the paper supplies a coherent axiomatic-to-structural pipeline: from a single composition law to an explicit canonical model and a small toolkit of algebraic/categorical consequences.
+\paperadd{The strengthened full unconditional theorem sharpens this picture further: in the formal development, once one allows an a priori unknown combiner \(P\) but imposes the corresponding closure hypotheses, the framework forces not just the cost profile \(F=\Jcost\) but the composition polynomial itself, namely \(P(u,v)=2uv+2u+2v\) on \([0,\infty)^2\).}
+
+\begin{thebibliography}{10}
+
+\bibitem{aczel1966}
+J.~Acz\'el,
+\emph{Lectures on Functional Equations and Their Applications},
+Academic Press, New York, 1966.
+
+\bibitem{aczel_dhombres1989}
+J.~Acz\'el and J.~Dhombres,
+\emph{Functional Equations in Several Variables},
+Cambridge University Press, Cambridge, 1989.
+
+\bibitem{bourbaki1970}
+N.~Bourbaki,
+\emph{Alg\`ebre}, Chapters~1--3,
+Hermann, Paris, 1970.
+
+\bibitem{ireland_rosen}
+K.~Ireland and M.~Rosen,
+\emph{A Classical Introduction to Modern Number Theory},
+2nd ed., Springer, New York, 1990.
+
+\bibitem{marcus1977}
+D.~A.~Marcus,
+\emph{Number Fields},
+Springer, New York, 1977.
+
+\bibitem{diestel2017}
+R.~Diestel,
+\emph{Graph Theory},
+5th ed., Springer, Berlin, 2017.
+
+\bibitem{terras1999}
+A.~Terras,
+\emph{Fourier Analysis on Finite Groups and Applications},
+Cambridge University Press, Cambridge, 1999.
+
+\bibitem{Kuczma}
+M.~Kuczma,
+\emph{An Introduction to the Theory of Functional Equations and Inequalities},
+2nd ed., Birkh\"auser, Basel, 2009.
+
+\end{thebibliography}
+
+\end{document}
