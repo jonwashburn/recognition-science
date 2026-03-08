@@ -44,6 +44,7 @@
 | The Continuum Limit of Recognition Science | `papers/tex/RS_Continuum_Limit.tex` |
 | Self-Reference and the Recognition Operator | `papers/tex/RS_Self_Reference_Recognition_Operator.tex` |
 | Bridge Calculus Between Layers of Description | `papers/tex/bridge_calculus_regime_semantics_rs.tex` |
+| Full Unconditional Closure: Lean and Proof | `papers/tex/Full_Unconditional_Closure_Lean_and_Proof.tex` |
 
 ---
 
@@ -337,6 +338,8 @@
 | Protein Folding (standalone) | `papers/tex/RS_Protein_Folding.tex` |
 | Molecular Biology from RS | `papers/tex/RS_Biology_Molecular.tex` |
 | Binding Problem of Subjective Experience | `papers/tex/RS_Consciousness_Binding.tex` |
+| Geometric Identity of Mass and Suffering | `papers/tex/geometric_identity_mass_and_suffering.tex` |
+| GCIC: Response to Two Open Problems | `papers/tex/GCIC_Response_Two_Problems.tex` |
 
 ---
 
@@ -381,6 +384,7 @@
 | P vs NP from RS | `papers/tex/RS_PvsNP.tex` |
 | Axiomatic Proof of RH | `papers/tex/RS_Axiomatic_Proof_RH.tex` |
 | Algorithmic Cost and the Halting Problem | `papers/tex/RS_Algorithmic_Cost_Halting.tex` |
+| Frustrated Phase Pinch and the Riemann Hypothesis | `papers/pdf/Riemann-Frustrated-Phase-Pinch.pdf` |
 
 ---
 
@@ -418,7 +422,7 @@
 
 | Category | Count |
 |----------|-------|
-| I. Foundation | 34 |
+| I. Foundation | 35 |
 | II. Fundamental Constants | 8 |
 | III. Particle Physics & Standard Model | 26 |
 | IV. Neutrino Physics | 4 |
@@ -433,10 +437,10 @@
 | XIII. Experimental Anomalies | 16 |
 | XIV. Quantum Foundations | 13 |
 | XV. Chemistry & Materials | 2 |
-| XVI. Biology | 13 |
+| XVI. Biology | 15 |
 | XVII. Philosophy of Physics | 9 |
-| XVIII. Mathematics | 21 |
+| XVIII. Mathematics | 22 |
 | XIX. Overview, Synthesis & QFT | 15 |
 | XX. Economics & Social Science | 1 |
-| **Total** | **268** |
+| **Total** | **272** |
 

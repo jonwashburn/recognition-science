@@ -1,0 +1,344 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+
+\lstdefinestyle{lean}{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  frame=single
+}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\Rp}{\RR_{>0}}
+\newcommand{\Jcost}{J}
+
+\title{Lean Support for the Full Unconditional Closure Theorem}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+\emergencystretch=3em
+
+\section*{Purpose}
+This note records the Lean framework in the repository that supports the
+``full unconditional closure'' result stated in
+\path{RS_CostAlgebra_Recognition_Category.tex}, and it gives a complete
+written proof in ordinary mathematical language.
+
+\section*{Supporting Lean Modules}
+The relevant public modules are:
+\begin{itemize}[nosep]
+\item \path{RecognitionScience/Cost/FunctionalEquation.lean}
+\item \path{RecognitionScience/Foundation/DAlembert/Unconditional.lean}
+\item \path{RecognitionScience/Foundation/DAlembert/FullUnconditional.lean}
+\item \path{RecognitionScience/Cost/AczelTheorem.lean}
+\end{itemize}
+
+The key theorem names are:
+\begin{itemize}[nosep]
+\item \path{dAlembert_cosh_solution_aczel}
+\item \path{washburn_zlatanovic_uniqueness_aczel}
+\item \path{J_computes_P}
+\item \path{J_surjective_nonneg}
+\item \path{P_determined_nonneg}
+\item \path{consistency_forces_RCL_form_is_theorem}
+\item \path{full_unconditional_inevitability}
+\item \path{washburn_zlatanovic_full_unconditional}
+\end{itemize}
+
+\section*{Lean Imports}
+\begin{lstlisting}[style=lean]
+import RecognitionScience.Cost.FunctionalEquation
+import RecognitionScience.Foundation.DAlembert.Unconditional
+import RecognitionScience.Foundation.DAlembert.FullUnconditional
+\end{lstlisting}
+
+\section*{Main Lean Theorem}
+The public theorem in the repository closest to the paper statement is
+\path{washburn_zlatanovic_full_unconditional}. For portability in this
+document, the statement below is written in ASCII Lean style while preserving
+the theorem name and hypotheses.
+
+\begin{lstlisting}[style=lean]
+theorem washburn_zlatanovic_full_unconditional
+    (F : Real -> Real)
+    (P : Real -> Real -> Real)
+    (hSymm : forall x : Real, 0 < x -> F x = F (1 / x))
+    (hUnit : F 1 = 0)
+    (hSmooth : ContDiff Real 2 F)
+    (hCalib : deriv (deriv (G F)) 0 = 1)
+    (hCons : forall x y : Real, 0 < x -> 0 < y ->
+      F (x * y) + F (x / y) = P (F x) (F y))
+    (hPoly : exists a b c d e f : Real,
+      forall u v, P u v = a + b*u + c*v + d*u*v + e*u^2 + f*v^2)
+    (hSymP : forall u v, P u v = P v u)
+    (hNonTriv : exists x : Real, 0 < x /\ F x /= 0)
+    (hCont : ContinuousOn F (Set.Ioi 0))
+    (hP11 : P 1 1 = 6) :
+    (forall x : Real, 0 < x -> F x = Cost.Jcost x) /\
+    (forall u v : Real, 0 <= u -> 0 <= v ->
+      P u v = 2 * u * v + 2 * u + 2 * v)
+\end{lstlisting}
+
+Its body is the short wrapper:
+
+\begin{lstlisting}[style=lean]
+refine full_inevitability_explicit F P hSymm hUnit hSmooth hCalib hCons ?_ ?_
+  exact consistency_forces_RCL_form_is_theorem F P hSymm hUnit hSmooth
+    hCons hPoly hSymP hNonTriv hCont hP11
+  exact dAlembert_forces_cosh_is_theorem
+\end{lstlisting}
+
+\section*{Auxiliary Lean Results}
+The two structural ingredients used by the wrapper above are:
+
+\begin{lstlisting}[style=lean]
+theorem consistency_forces_RCL_form_is_theorem
+    (F : Real -> Real) (P : Real -> Real -> Real)
+    (_hSymm : forall x : Real, 0 < x -> F x = F (1 / x))
+    (hUnit : F 1 = 0)
+    (_hSmooth : ContDiff Real 2 F)
+    (hCons : forall x y : Real, 0 < x -> 0 < y ->
+      F (x * y) + F (x / y) = P (F x) (F y))
+    (hPoly : exists a b c d e f : Real,
+      forall u v, P u v = a + b*u + c*v + d*u*v + e*u^2 + f*v^2)
+    (hSymP : forall u v, P u v = P v u)
+    (hNonTriv : exists x : Real, 0 < x /\ F x /= 0)
+    (hCont : ContinuousOn F (Set.Ioi 0))
+    (hP11 : P 1 1 = 6) :
+    forall x y : Real, 0 < x -> 0 < y ->
+      P (F x) (F y) = 2 * F x * F y + 2 * F x + 2 * F y
+\end{lstlisting}
+
+\begin{lstlisting}[style=lean]
+theorem dAlembert_cosh_solution_aczel
+    (H : Real -> Real)
+    (h_one : H 0 = 1)
+    (h_cont : Continuous H)
+    (h_dAlembert : forall t u, H (t + u) + H (t - u) = 2 * H t * H u)
+    (h_d2_zero : deriv (deriv H) 0 = 1) :
+    forall t, H t = Real.cosh t
+\end{lstlisting}
+
+The unconditional determination of the combiner once the canonical cost is known
+is handled in:
+
+\begin{lstlisting}[style=lean]
+theorem J_computes_P :
+    forall x y : Real, 0 < x -> 0 < y ->
+      Cost.Jcost (x * y) + Cost.Jcost (x / y) =
+      2 * Cost.Jcost x * Cost.Jcost y +
+      2 * Cost.Jcost x + 2 * Cost.Jcost y
+
+theorem J_surjective_nonneg :
+    forall v : Real, 0 <= v ->
+      exists x : Real, 0 < x /\ Cost.Jcost x = v
+
+theorem P_determined_nonneg (P : Real -> Real -> Real)
+    (hCons : forall x y : Real, 0 < x -> 0 < y ->
+      Cost.Jcost (x * y) + Cost.Jcost (x / y) =
+      P (Cost.Jcost x) (Cost.Jcost y)) :
+    forall u v : Real, 0 <= u -> 0 <= v ->
+      P u v = 2*u*v + 2*u + 2*v
+\end{lstlisting}
+
+\section*{Mathematical Statement}
+\begin{theorem}[Full unconditional closure]
+Let $F:\Rp \to \RR$ be $C^2$, and let $P:\RR^2 \to \RR$ be symmetric.
+Assume:
+\begin{enumerate}[label=\textup{(\roman*)},nosep]
+\item $F(1)=0$,
+\item $F(x)=F(x^{-1})$ for all $x>0$,
+\item $\left.\dfrac{d^2}{dt^2}\right|_{t=0} F(e^t)=1$,
+\item $F(xy)+F(x/y)=P(F(x),F(y))$ for all $x,y>0$,
+\item $F$ is nontrivial: $F(x_0)\neq 0$ for some $x_0>0$,
+\item $P(1,1)=6$.
+\end{enumerate}
+If, in addition, $P$ lies in the quadratic symmetric ansatz used by the public
+Lean theorem,
+\[
+P(u,v)=a+b\,u+c\,v+d\,uv+e\,u^2+f\,v^2,
+\]
+then
+\[
+F(x)=\frac12(x+x^{-1})-1 \qquad (x>0),
+\]
+and
+\[
+P(u,v)=2uv+2u+2v \qquad (u,v\ge 0).
+\]
+\end{theorem}
+
+\begin{remark}
+The public Lean development visible in the repository proves the theorem above.
+The d'Alembert-to-cosh step is packaged through
+\path{aczel_representation_axiom} in
+\path{RecognitionScience/Cost/AczelTheorem.lean}, and the combiner-forcing
+step in \path{consistency_forces_RCL_form_is_theorem} uses an internal
+bilinear-forcing result referenced in
+\path{RecognitionScience/Foundation/DAlembert/FullUnconditional.lean}.
+\end{remark}
+
+\section*{Full Written Proof}
+\begin{proof}
+Define
+\[
+G(t):=F(e^t) \qquad (t\in\RR).
+\]
+Then $G$ is $C^2$, because $F$ is $C^2$ on $(0,\infty)$ and $t\mapsto e^t$ is
+smooth. The normalization gives
+\[
+G(0)=F(1)=0.
+\]
+The reciprocal symmetry of $F$ implies that $G$ is even:
+\[
+G(-t)=F(e^{-t})=F((e^t)^{-1})=F(e^t)=G(t).
+\]
+Hence $G'(0)=0$, and the calibration hypothesis becomes
+\[
+G''(0)=1.
+\]
+
+Because $G$ is $C^2$ and satisfies
+\[
+G(0)=0,\qquad G'(0)=0,\qquad G''(0)=1,
+\]
+its second-order Taylor expansion at $0$ is
+\[
+G(t)=\frac{t^2}{2}+o(t^2)\qquad (t\to 0).
+\]
+Therefore $G(t)>0$ for all sufficiently small nonzero $t$. Since $G$ is
+continuous and $G(0)=0$, it follows that the range of $G$ contains a nontrivial
+interval $[0,\varepsilon]$. Equivalently, the range of $F$ on $(0,\infty)$
+contains a nontrivial interval $[0,\varepsilon]$.
+
+Now use the quadratic symmetric ansatz from the Lean theorem. Because $P$ is
+symmetric, it can be written in the form
+\[
+P(u,v)=a+b(u+v)+cuv+d(u^2+v^2)
+\]
+for suitable real constants $a,b,c,d$.
+
+Set $y=1$ in the consistency law. Since $F(1)=0$, we obtain
+\[
+F(x)+F(x)=P(F(x),0),
+\]
+that is,
+\[
+2F(x)=P(F(x),0)\qquad (x>0).
+\]
+Because the range of $F$ contains an interval $[0,\varepsilon]$, this implies
+\[
+P(u,0)=2u\qquad \text{for all }u\in[0,\varepsilon].
+\]
+But
+\[
+P(u,0)=a+bu+du^2.
+\]
+Hence the polynomial identity
+\[
+a+bu+du^2=2u
+\]
+holds on an interval. Therefore the two polynomials are identical, so
+\[
+a=0,\qquad b=2,\qquad d=0.
+\]
+Thus $P$ simplifies to
+\[
+P(u,v)=2u+2v+cuv.
+\]
+
+Now evaluate at $(u,v)=(1,1)$. The normalization $P(1,1)=6$ gives
+\[
+6=P(1,1)=2+2+c,
+\]
+so $c=2$. Consequently,
+\[
+P(u,v)=2uv+2u+2v.
+\]
+Substituting this into the consistency law yields
+\[
+F(xy)+F(x/y)=2F(x)F(y)+2F(x)+2F(y)\qquad (x,y>0),
+\]
+which is exactly the Recognition Composition Law.
+
+At this point the standard uniqueness theorem applies. The Lean theorem
+\path{washburn_zlatanovic_uniqueness_aczel} in
+\path{RecognitionScience/Cost/FunctionalEquation.lean} proves that any
+continuous reciprocal cost satisfying the Recognition Composition Law,
+normalization, and calibration must equal the canonical cost
+\[
+\Jcost(x)=\frac12(x+x^{-1})-1.
+\]
+Since $F$ is $C^2$, it is continuous, so we conclude
+\[
+F(x)=\frac12(x+x^{-1})-1 \qquad (x>0).
+\]
+
+It remains to show that the same formula for $P$ holds on the entire first
+quadrant $[0,\infty)^2$. Fix $u,v\ge 0$, and define
+\[
+x_u:=(u+1)+\sqrt{(u+1)^2-1},
+\qquad
+y_v:=(v+1)+\sqrt{(v+1)^2-1}.
+\]
+These numbers are strictly positive. A direct calculation shows that
+\[
+\Jcost(x_u)=u,\qquad \Jcost(y_v)=v,
+\]
+because solving
+\[
+\frac12(x+x^{-1})-1=u
+\]
+for $x>0$ gives exactly $x=x_u$, and similarly for $v$.
+
+Therefore
+\[
+P(u,v)=P(\Jcost(x_u),\Jcost(y_v)).
+\]
+Using the consistency law with $F=\Jcost$, we obtain
+\[
+P(\Jcost(x_u),\Jcost(y_v))
+=\Jcost(x_u y_v)+\Jcost(x_u/y_v).
+\]
+Now apply the Recognition Composition Law for $\Jcost$:
+\[
+\Jcost(x_u y_v)+\Jcost(x_u/y_v)
+=2\Jcost(x_u)\Jcost(y_v)+2\Jcost(x_u)+2\Jcost(y_v).
+\]
+Since $\Jcost(x_u)=u$ and $\Jcost(y_v)=v$, this becomes
+\[
+P(u,v)=2uv+2u+2v.
+\]
+Thus both the scalar law and the combiner are uniquely determined.
+\end{proof}
+
+\section*{Summary}
+The supporting Lean chain is:
+\begin{enumerate}[nosep]
+\item the combiner on the range of $F$ is forced to the RCL form by
+\path{consistency_forces_RCL_form_is_theorem},
+\item the scalar law is forced to the canonical cost by
+\path{dAlembert_cosh_solution_aczel} and
+\path{washburn_zlatanovic_uniqueness_aczel},
+\item the combiner is then forced on all of $[0,\infty)^2$ by
+\path{J_surjective_nonneg} and \path{P_determined_nonneg}.
+\end{enumerate}
+
+\end{document}

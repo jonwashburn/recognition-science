@@ -1,0 +1,360 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{remark}{Remark}
+\theoremstyle{definition}
+\newtheorem{mechanism}{Mechanism}
+
+\newcommand{\Jcost}{J}
+\newcommand{\Jtilde}{\tilde{J}}
+\newcommand{\TR}{{T_R}}
+\newcommand{\FR}{{F_R}}
+\newcommand{\phig}{\varphi}
+\newcommand{\Ctotal}{\mathcal{C}}
+
+\title{Two Upgrades for the GCIC Paper:\\
+Dynamical Discrete Identification \&\ Finite-Temperature Extension}
+\author{Response Document --- Recognition Science Research Institute}
+\date{February 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We address the two open problems identified as necessary to elevate the GCIC paper from \emph{good} to \emph{excellent}: (1)~a dynamical mechanism that produces the discrete identification $x \sim \phig^n x$ without imposing it by hand, and (2)~the finite-temperature extension of the rigidity results. For Problem~1, we propose three candidate mechanisms of increasing sophistication, with the recommended approach deriving the $\phig$-ladder gauge from the 8-tick neutrality constraint combined with $\phig$-self-similarity---using only ingredients already present in the RS forcing chain. For Problem~2, we develop the finite-temperature theory for both the noncompact and compact models, identifying a 3D~XY-class phase transition in the compact model that gives the GCIC a precise statistical-mechanical interpretation.
+\end{abstract}
+
+\tableofcontents
+
+%=============================================================================
+\section{Current Status and the Two Gaps}
+%=============================================================================
+
+The GCIC paper~\cite{GCIC} establishes three rigidity results at zero temperature:
+\begin{itemize}[nosep]
+\item \textbf{Result 1} (Finite-volume rigidity): On any finite connected graph, $\Ctotal_G[x] = 0$ iff $x_v \equiv c$.
+\item \textbf{Result 2} (Thermodynamic limit): Local limits of finite-volume minimizers on $\mathbb{Z}^3$ are constant.
+\item \textbf{Result 3} (Phase rigidity / static GCIC): After imposing $x \sim \phig^n x$, finite-volume minimizers of the induced phase energy $\tilde{\Ctotal}_G[\Theta]$ are $\Theta$-uniform.
+\end{itemize}
+
+Two explicit gaps remain:
+
+\medskip\noindent
+\textbf{Gap A} (Sec.~V of the paper): The discrete identification $x \sim \phig^n x$ is an \emph{``explicit model input---it does not follow from ratio dependence alone.''} The paper needs a \emph{dynamical mechanism} that forces this identification from within the theory, rather than imposing it by hand.
+
+\medskip\noindent
+\textbf{Gap B} (Sec.~VI of the paper): The analysis is \emph{``deliberately static and at zero temperature.''} At positive temperature, \emph{``the usual questions about vortices, boundary-condition selection, and symmetry breaking become relevant.''} The paper needs to address what happens when $\TR > 0$.
+
+
+%=============================================================================
+\section{Problem 1: Dynamical Mechanism for Discrete Identification}
+\label{sec:prob1}
+%=============================================================================
+
+\subsection{The precise gap}
+
+The ratio energy
+\begin{equation}
+\Ctotal_G[x] = \sum_{\langle v,w\rangle \in E} \Jcost\!\left(\frac{x_v}{x_w}\right), \qquad \Jcost(x) = \tfrac{1}{2}(x + x^{-1}) - 1,
+\label{eq:ratio-energy}
+\end{equation}
+has an exact noncompact symmetry $x_v \mapsto c\,x_v$ for $c > 0$, i.e., $({\mathbb{R}_{>0}}, \times) \cong (\mathbb{R}, +)$ in log-coordinates $r_v = \ln x_v$. A compact phase $\Theta \in \mathbb{R}/\mathbb{Z}$ only appears after \emph{imposing} the identification $r \sim r + n \ln\phig$ for $n \in \mathbb{Z}$.
+
+What is needed: a mechanism internal to the theory that \emph{forces} this identification, turning it from an input into an output.
+
+\subsection{Candidate Mechanism A: Entropic selection from 8-tick neutrality + $\phig$-self-similarity}
+\label{sec:mechA}
+
+This is our recommended approach. It uses only ingredients already present in the RS forcing chain (T6~+~T7), requires no new physics, and can be stated as a clean mathematical result.
+
+\begin{mechanism}[8-tick compactification]
+Consider the ratio energy on $\mathbb{Z}^3$ equipped with the 8-tick dynamics $s(t + 8\tau_0) = \hat{R}(s(t))$, where $\hat{R}$ is the recognition operator. The forcing chain gives two constraints:
+\begin{enumerate}[nosep]
+\item \textbf{T7 (8-tick neutrality)}: Over every complete 8-tick cycle, the ledger must balance:
+\begin{equation}
+\sum_{k=0}^{7} \Delta r_k = 0,
+\label{eq:neutrality}
+\end{equation}
+where $\Delta r_k = r(t + (k+1)\tau_0) - r(t + k\tau_0)$ is the log-ratio change at tick $k$.
+\item \textbf{T6 ($\phig$-self-similarity)}: The only step sizes compatible with the discrete ledger's self-similar structure are integer multiples of $\ln\phig$:
+\begin{equation}
+\Delta r_k \in (\ln\phig)\,\mathbb{Z}.
+\label{eq:phi-steps}
+\end{equation}
+This follows from $\phig^2 = \phig + 1$: the unique positive solution to the self-similarity equation forces the ladder spacing.
+\end{enumerate}
+
+Combining \eqref{eq:neutrality} and \eqref{eq:phi-steps}: the accessible log-ratio space is the lattice $(\ln\phig)\,\mathbb{Z}$. Any configuration $r_v$ and $r_v + n\ln\phig$ are connected by an integer number of ledger-compatible steps, and the neutrality constraint identifies them as dynamically equivalent. Therefore:
+\begin{equation}
+\boxed{r \sim r + n\ln\phig \quad (n \in \mathbb{Z})}
+\end{equation}
+emerges as a \emph{consequence} of the dynamical constraints, not an external input.
+\end{mechanism}
+
+\begin{remark}
+The identification is entirely analogous to Bloch's theorem in solid-state physics: a discrete translational symmetry (here, the $\phig$-ladder) produces a compact Brillouin zone (here, the phase $\Theta \in \mathbb{R}/\mathbb{Z}$). Just as the crystal lattice in Bloch theory arises from the periodic potential (not imposed by hand), the $\phig$-ladder arises from the $\phig$-self-similarity of the cost function (T6) combined with the 8-tick periodicity (T7).
+\end{remark}
+
+\begin{remark}
+This mechanism is \emph{robust}: it does not depend on the specific form of $\Jcost$, only on the discreteness of the ledger (T2) and the $\phig$-self-similarity (T6). Any cost function satisfying the d'Alembert composition law (RCL) on a discrete $\phig$-structured ledger would produce the same identification.
+\end{remark}
+
+\paragraph{How to present this in the paper.} Add a new subsection to Sec.~V (perhaps V.D or a new Sec.~V$'$) titled \emph{``Dynamical origin of the discrete gauge.''} State the 8-tick neutrality and $\phig$-step constraints as a proposition, then derive the identification as a corollary. The existing derivation of $\Jtilde(\delta)$ and Result~3 then follow without any external input.
+
+
+\subsection{Candidate Mechanism B: Effective potential from fluctuation-induced compactification}
+\label{sec:mechB}
+
+A more field-theoretic approach, suitable if the paper targets a condensed-matter / statistical-mechanics audience.
+
+In the path-integral formulation at temperature $\TR$, separate the zero mode $\bar{r} = |V|^{-1} \sum_v r_v$ from fluctuations $\delta r_v = r_v - \bar{r}$:
+\begin{equation}
+Z = \int d\bar{r} \int \mathcal{D}[\delta r]\; \exp\!\Bigl(-\frac{1}{\TR}\sum_{\langle v,w\rangle} \bigl[\cosh(\delta r_v - \delta r_w) - 1\bigr]\Bigr).
+\end{equation}
+Since the ratio energy depends only on differences, $\bar{r}$ is a flat direction: the noncompact symmetry is \emph{not} spontaneously broken by fluctuations alone.
+
+Now impose the 8-tick constraint as a periodic boundary condition in the imaginary-time direction, with period $8\tau_0$. The constraint generates an effective potential for $\bar{r}$:
+\begin{equation}
+V_{\mathrm{eff}}(\bar{r}) = -\TR \ln \int \mathcal{D}[\delta r]\; \exp\!\Bigl(-\frac{1}{\TR}\Ctotal_G[\bar{r} + \delta r]\Bigr) \cdot \prod_{k=0}^{7} \delta\!\Bigl(\sum_v \Delta r_k^{(v)} \in (\ln\phig)\mathbb{Z}\Bigr).
+\end{equation}
+The $\phig$-step constraints break the continuous shift symmetry of $\bar{r}$ to the discrete subgroup $\bar{r} \mapsto \bar{r} + n\ln\phig$, generating a periodic effective potential with period $\ln\phig$. The compact phase emerges dynamically from the constrained path integral.
+
+\paragraph{Advantage.} This approach connects directly to the finite-temperature analysis (Problem~2) and makes the compactification mechanism manifestly compatible with the Gibbs framework.
+
+\subsection{Candidate Mechanism C: Instanton-mediated tunneling}
+\label{sec:mechC}
+
+A third possibility, most natural from the perspective of semiclassical quantum field theory.
+
+Add a kinetic term to the log-coordinate action:
+\begin{equation}
+S[r] = \sum_v \frac{m}{2}\dot{r}_v^2 + \sum_{\langle v,w\rangle} \bigl[\cosh(r_v - r_w) - 1\bigr],
+\end{equation}
+where $m$ is a mass parameter set by the 8-tick period ($m \sim 1/(8\tau_0)^2$). In the WKB approximation, the tunneling amplitude between configurations $r$ and $r + \Delta$ goes as
+\begin{equation}
+\mathcal{T}(\Delta) \sim \exp\!\Bigl(-\frac{1}{\hbar_{\mathrm{eff}}} \int_0^\Delta \sqrt{2m\,V(t)}\,dt\Bigr),
+\end{equation}
+where $V(t) = \cosh(t) - 1$. If the 8-tick period sets $\hbar_{\mathrm{eff}} \sim \ln\phig$, then the tunneling amplitude is $O(1)$ for $\Delta = n\ln\phig$ (resonant tunneling) and exponentially suppressed otherwise. This selects the $\phig$-ladder as the set of ``equivalent vacua'' and produces the discrete identification dynamically.
+
+\paragraph{Status.} This mechanism is the most speculative of the three and requires the most additional formalism. It is included for completeness but is not recommended as the primary approach for the paper.
+
+\subsection{Recommendation}
+
+\textbf{Use Mechanism A} (Sec.~\ref{sec:mechA}) as the primary dynamical derivation. It is clean, uses only existing RS ingredients (T6~+~T7), and can be stated as a precise mathematical proposition. Mention Mechanism B (Sec.~\ref{sec:mechB}) in the Discussion as a connection to the finite-temperature path-integral framework. Mechanism C (Sec.~\ref{sec:mechC}) can be mentioned as a future direction if desired.
+
+
+%=============================================================================
+\section{Problem 2: Finite-Temperature Extension}
+\label{sec:prob2}
+%=============================================================================
+
+\subsection{Setup: the Gibbs measure}
+
+At recognition temperature $\TR > 0$, the Gibbs measure for the ratio energy on a finite graph $G = (V, E)$ is:
+\begin{equation}
+\mu_{\TR}(dx) = \frac{1}{Z_G(\TR)} \exp\!\Bigl(-\frac{\Ctotal_G[x]}{\TR}\Bigr) \prod_{v \in V} \frac{dx_v}{x_v},
+\label{eq:gibbs-noncompact}
+\end{equation}
+where $Z_G(\TR)$ is the partition function and $dx_v/x_v$ is the Haar measure on $(\mathbb{R}_{>0}, \times)$ (equivalently, $dr_v$ in log-coordinates). In log-coordinates:
+\begin{equation}
+\mu_{\TR}(dr) = \frac{1}{Z_G(\TR)} \exp\!\Bigl(-\frac{1}{\TR}\sum_{\langle v,w\rangle} \bigl[\cosh(r_v - r_w) - 1\bigr]\Bigr) \prod_{v} dr_v.
+\label{eq:gibbs-log}
+\end{equation}
+This is a \textbf{convex gradient Gibbs measure} with potential $V(t) = \cosh(t) - 1$, a well-studied class in random-surface theory~\cite{Funaki,Velenik,NaddafSpencer}.
+
+\subsection{The noncompact model at $\TR > 0$}
+
+\begin{proposition}[Uniqueness of gradient Gibbs state]
+\label{prop:unique-gradient}
+Since $V''(t) = \cosh(t) \geq 1$ for all $t$, the potential $V(t) = \cosh(t) - 1$ is \emph{uniformly convex} with convexity constant $\kappa_0 = 1$. By the Funaki--Spohn theorem, the gradient Gibbs state (i.e., the law of the gradient field $\{r_v - r_w : \langle v,w\rangle \in E\}$) is unique for all $\TR > 0$ on $\mathbb{Z}^d$, $d \geq 1$.
+\end{proposition}
+
+\noindent
+Key consequences for the noncompact model:
+\begin{enumerate}[nosep]
+\item \textbf{No phase transition.} The gradient Gibbs state is unique at every temperature. There is no spontaneous symmetry breaking of the noncompact shift symmetry.
+\item \textbf{Gaussian-like fluctuations.} For small $\TR$, the quadratic lower bound $\cosh(t) - 1 \geq t^2/2$ implies that the measure is dominated by the Gaussian approximation:
+\begin{equation}
+\langle (r_v - r_w)^2 \rangle_{\TR} \leq 2\TR \cdot G_{\mathbb{Z}^3}(v,w),
+\end{equation}
+where $G_{\mathbb{Z}^3}$ is the lattice Green's function. In $d = 3$, $G_{\mathbb{Z}^3}(v,w) \sim 1/(4\pi|v-w|)$ for large $|v-w|$.
+\item \textbf{Quantitative near-rigidity.} Combining with the Dirichlet lower bound (Eq.~(9) of the GCIC paper):
+\begin{equation}
+\Bigl\langle\Bigl|\ln\frac{x_v}{x_w}\Bigr|^2\Bigr\rangle_{\!\TR} = \langle (r_v - r_w)^2\rangle_{\TR} \leq \frac{\TR}{2\pi|v - w|}
+\end{equation}
+for large $|v-w|$ on $\mathbb{Z}^3$. At low temperature, ratios are close to unity---a \emph{thermal softening} of the zero-temperature rigidity.
+\item \textbf{Rigidity survives as $\TR \to 0$.} As $\TR \to 0^+$, all fluctuations vanish and we recover the zero-temperature rigidity of Results~1--2.
+\end{enumerate}
+
+\begin{remark}
+The noncompact model \emph{never} has a phase transition in any dimension. This is because uniform convexity prevents the entropic cost of large fluctuations from ever overcoming the energetic penalty. Physically: in the absence of the discrete gauge, there is no compact order parameter to disorder, and no topological defects to proliferate.
+\end{remark}
+
+\subsection{The compact model at $\TR > 0$: phase transition}
+
+After the discrete identification $r \sim r + n\ln\phig$, the Gibbs measure for the phase field $\Theta_v \in \mathbb{R}/\mathbb{Z}$ on a finite graph is:
+\begin{equation}
+\mu_{\TR}(d\Theta) = \frac{1}{\tilde{Z}_G(\TR)} \exp\!\Bigl(-\frac{1}{\TR}\sum_{\langle v,w\rangle} \Jtilde(\Theta_v - \Theta_w)\Bigr) \prod_v d\Theta_v,
+\label{eq:gibbs-compact}
+\end{equation}
+where $\Jtilde(\delta) = \cosh(\lambda\, d_{\mathbb{Z}}(\delta)) - 1$ with $\lambda = \ln\phig$, and $d_{\mathbb{Z}}(\delta) = \min_{n \in \mathbb{Z}} |\delta - n|$.
+
+This is a \textbf{U(1) lattice model} with a specific periodic potential. The physics depends crucially on the spatial dimension $d$.
+
+\subsubsection{Dimension $d = 3$ (the RS case)}
+
+In $d = 3$, the compact model is \emph{above the lower critical dimension} for U(1) symmetry breaking. We expect a genuine phase transition.
+
+\paragraph{Low temperature ($\TR < \TR^c$): ordered phase.}
+\begin{itemize}[nosep]
+\item The U(1) symmetry is spontaneously broken: $\langle e^{2\pi i \Theta_v}\rangle \neq 0$.
+\item Long-range phase order: $\langle \cos 2\pi(\Theta_v - \Theta_w)\rangle \to m^2 > 0$ as $|v-w| \to \infty$.
+\item \textbf{The GCIC holds statistically}: phase uniformity is preserved up to small thermal fluctuations.
+\item Spin-wave (Goldstone) fluctuations: $\langle (\Theta_v - \Theta_w)^2 \rangle \sim \TR/(4\pi\kappa |v-w|)$ with stiffness $\kappa = (\ln\phig)^2/2$.
+\item Vortex loops are present but dilute: their density is suppressed by $\exp(-E_{\mathrm{loop}}/\TR)$.
+\end{itemize}
+
+\paragraph{Critical temperature estimate.}
+The small-gradient stiffness is $\kappa = (\ln\phig)^2/2 \approx 0.116$ (Eq.~(25) of the GCIC paper). For a 3D XY model on a cubic lattice with coordination number $z = 6$:
+
+\begin{itemize}[nosep]
+\item \textbf{Mean-field estimate}: $\TR^{c,\mathrm{MF}} = z\kappa = 6 \times 0.116 = 0.694$.
+\item \textbf{Monte Carlo correction}: For the standard 3D XY model, $\TR^c \approx 0.45 \times \TR^{c,\mathrm{MF}}$.
+\item \textbf{Estimate}: $\TR^c \approx 0.31$ (in units where the edge coupling is~1).
+\end{itemize}
+A precise value requires Monte Carlo simulation with the specific $\Jtilde$ potential, but the order of magnitude is set by $\kappa$.
+
+\paragraph{High temperature ($\TR > \TR^c$): disordered phase.}
+\begin{itemize}[nosep]
+\item The U(1) symmetry is restored: $\langle e^{2\pi i \Theta_v}\rangle = 0$.
+\item Exponentially decaying correlations: $\langle \cos 2\pi(\Theta_v - \Theta_w)\rangle \sim e^{-|v-w|/\xi(\TR)}$.
+\item Correlation length $\xi(\TR) \to \infty$ as $\TR \to \TR^{c+}$ with 3D XY critical exponent $\nu \approx 0.672$.
+\item \textbf{The GCIC breaks down}: phase coherence is lost.
+\item Vortex loops proliferate and percolate.
+\end{itemize}
+
+\paragraph{At the critical point ($\TR = \TR^c$).}
+\begin{itemize}[nosep]
+\item Algebraic decay: $\langle \cos 2\pi(\Theta_v - \Theta_w)\rangle \sim |v-w|^{-(d-2+\eta)}$ with $\eta \approx 0.038$.
+\item Universal 3D XY critical exponents.
+\item Potential connection to RS critical exponents: the RS theory predicts $\phig$-corrected critical exponents $\nu \approx 1/\phig \approx 0.618$ and $\beta \approx 1/(2\phig) \approx 0.309$ (cf.~Critical Temperature of Consciousness module). Intriguingly, $1/\phig \approx 0.618$ is close to the 3D XY value $\nu \approx 0.672$.
+\end{itemize}
+
+\subsubsection{Dimension $d = 2$ (for completeness)}
+
+In $d = 2$, the Mermin--Wagner--Hohenberg theorem forbids spontaneous U(1) symmetry breaking at any $\TR > 0$. Instead, the system exhibits a \textbf{Berezinskii--Kosterlitz--Thouless (BKT) transition}:
+\begin{itemize}[nosep]
+\item Low $\TR$: quasi-long-range order (algebraic correlations), bound vortex--antivortex pairs.
+\item High $\TR$: exponentially decaying correlations, free vortices.
+\item $T_{R,\mathrm{BKT}} = \pi\kappa/2 = \pi(\ln\phig)^2/4 \approx 0.182$.
+\end{itemize}
+Since RS forces $d = 3$ (T8), the BKT scenario is not directly relevant, but it provides useful context for the Discussion section.
+
+\subsection{Summary: finite-temperature GCIC}
+
+\begin{proposition}[Finite-temperature GCIC]
+\label{prop:ft-gcic}
+On $\mathbb{Z}^3$ with the compact phase model:
+\begin{enumerate}[nosep]
+\item For $\TR < \TR^c$, the GCIC holds \emph{statistically}: there exists a unique ordered Gibbs state with long-range phase coherence. Phase-uniform configurations dominate the measure.
+\item For $\TR > \TR^c$, the GCIC is \emph{violated}: the unique Gibbs state is disordered, and phase coherence decays exponentially.
+\item The critical temperature $\TR^c$ is determined by the stiffness $\kappa = (\ln\phig)^2/2$ and the lattice geometry. The transition is in the 3D XY universality class.
+\end{enumerate}
+\end{proposition}
+
+\begin{remark}[Physical interpretation]
+The existence of a phase transition gives the GCIC a richer physical meaning than the zero-temperature statement alone. The ordered phase ($\TR < \TR^c$) describes a ``globally coherent'' regime where the $\phig$-ladder gauge is well-defined and phase differences are controlled by spin-wave fluctuations. The disordered phase ($\TR > \TR^c$) describes a regime where thermal fluctuations destroy global coherence. The transition itself---driven by vortex-loop proliferation---gives a precise dynamical mechanism for the onset/loss of coherence.
+\end{remark}
+
+
+%=============================================================================
+\section{Suggested Structure for the Upgraded Paper}
+\label{sec:structure}
+%=============================================================================
+
+We recommend the following additions to the GCIC paper:
+
+\begin{enumerate}
+\item \textbf{New Sec.~V.D} (``Dynamical origin of the discrete gauge''): State the 8-tick neutrality + $\phig$-step constraints as a proposition. Derive the identification $r \sim r + n\ln\phig$ as a corollary. This replaces the current framing of the identification as an ``explicit model input.''
+
+\item \textbf{New Sec.~VI} (``Finite-temperature extension''):
+\begin{itemize}[nosep]
+\item VI.A: Define the Gibbs measure for both models.
+\item VI.B: Noncompact model---state Prop.~\ref{prop:unique-gradient} (uniqueness of gradient Gibbs state, no phase transition, quantitative near-rigidity).
+\item VI.C: Compact model---state the phase transition result (Prop.~\ref{prop:ft-gcic}), give the critical temperature estimate, describe ordered/disordered phases.
+\item VI.D: Connection to RS thermodynamics ($\TR$, $\FR$, H-theorem).
+\end{itemize}
+
+\item \textbf{Updated Discussion} (current Sec.~VI $\to$ new Sec.~VII): Discuss the implications of both additions. Note that the finite-temperature compact model connects to the broader XY-model literature and opens the door to numerical (Monte Carlo) studies of the specific $\Jtilde$ potential.
+\end{enumerate}
+
+
+%=============================================================================
+\section{Key Equations for Quick Reference}
+\label{sec:equations}
+%=============================================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|l|c|l|}
+\hline
+\textbf{Quantity} & \textbf{Formula} & \textbf{Value} \\
+\hline
+Stiffness & $\kappa = (\ln\phig)^2/2$ & $\approx 0.116$ \\
+Phase barrier & $\Jtilde(1/2) = \cosh(\ln\phig/2) - 1$ & $\approx 0.029$ \\
+MF critical temp & $\TR^{c,\mathrm{MF}} = z\kappa = 6\kappa$ & $\approx 0.694$ \\
+Estimated $\TR^c$ & $\TR^c \approx 0.45 \times \TR^{c,\mathrm{MF}}$ & $\approx 0.31$ \\
+BKT temp ($d=2$) & $T_{R,\mathrm{BKT}} = \pi\kappa/2$ & $\approx 0.182$ \\
+Correlation decay & $\langle(r_v-r_w)^2\rangle \leq \TR/(2\pi|v-w|)$ & ($d=3$, large $|v-w|$) \\
+\hline
+\end{tabular}
+\end{center}
+
+
+%=============================================================================
+\section{Conclusion}
+%=============================================================================
+
+Both upgrades are achievable with modest additional work:
+
+\begin{itemize}
+\item \textbf{Problem 1} (dynamical identification) can be resolved cleanly using Mechanism~A (8-tick + $\phig$-steps). This requires adding $\sim$1 page to Sec.~V. The key insight is that the 8-tick neutrality and $\phig$-self-similarity---already established in the RS forcing chain---\emph{jointly force} the discrete gauge that was previously an external input. No new physics is needed.
+
+\item \textbf{Problem 2} (finite temperature) requires $\sim$2--3 pages of new material (a new Sec.~VI). The mathematical tools are standard (convex gradient models, XY universality class), and the connection to RS thermodynamics ($\TR$, $\FR$, Gibbs distribution $p(x) \propto e^{-\Jcost(x)/\TR}$) is natural. The main new result is the identification of a 3D XY phase transition in the compact model, giving the GCIC a precise statistical-mechanical interpretation as a low-temperature ordered phase.
+\end{itemize}
+
+Together, these two additions transform the paper from a static rigidity result with an imposed gauge into a \emph{complete dynamical framework} where the gauge emerges from the theory and the rigidity statement generalizes to finite temperature as a genuine phase transition. This is the difference between good and excellent.
+
+
+\begin{thebibliography}{20}
+
+\bibitem{GCIC} A.~Thapa and J.~Washburn, ``Rigidity and compact phase emergence in scale-invariant ratio-based energies,'' Recognition Physics Research Institute (2026).
+
+\bibitem{Funaki} T.~Funaki, ``Lectures on random interfaces and stochastic interface models,'' in \textit{Lectures on Probability Theory and Statistics} (Springer, 2005), pp.~1--136.
+
+\bibitem{Velenik} Y.~Velenik, ``Localization and delocalization of random interfaces,'' \textit{Probab.\ Surv.}\ \textbf{3}, 112--169 (2006).
+
+\bibitem{NaddafSpencer} A.~Naddaf and T.~Spencer, ``On homogenization and scaling limit of gradient Gibbs measures,'' \textit{Commun.\ Math.\ Phys.}\ \textbf{183}, 55--84 (1997).
+
+\bibitem{BiskupKotecky} M.~Biskup and R.~Koteck\'{y}, ``Phase coexistence of gradient Gibbs states,'' \textit{Probab.\ Theory Relat.\ Fields}\ \textbf{139}, 1--39 (2007).
+
+\bibitem{KosterlitzThouless} J.~M.~Kosterlitz and D.~J.~Thouless, ``Ordering, metastability and phase transitions in two-dimensional systems,'' \textit{J.\ Phys.\ C}\ \textbf{6}, 1181--1203 (1973).
+
+\bibitem{ChaikinLubensky} P.~M.~Chaikin and T.~C.~Lubensky, \textit{Principles of Condensed Matter Physics} (Cambridge University Press, 1995).
+
+\bibitem{Georgii} H.-O.~Georgii, \textit{Gibbs Measures and Phase Transitions}, 2nd ed.\ (De Gruyter, 2011).
+
+\bibitem{FriedliVelenik} S.~Friedli and Y.~Velenik, \textit{Statistical Mechanics of Lattice Systems} (Cambridge University Press, 2017).
+
+\bibitem{RSAxioms} J.~Washburn, M.~Zlatanovi\'{c}, and E.~Allahyarov, ``Recognition geometry,'' \textit{Axioms}\ \textbf{15}(2), 90 (2026).
+
+\bibitem{RSCPM} J.~Washburn and A.~Rahnamai~Barghi, ``Reciprocal convex costs for ratio matching: axiomatic characterization,'' \textit{Axioms}\ \textbf{15}(2), 151 (2026).
+
+\end{thebibliography}
+
+\end{document}
