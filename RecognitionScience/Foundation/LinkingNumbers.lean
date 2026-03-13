@@ -74,24 +74,48 @@ def endpoint {D : ℕ} (start : LatticePos D) : LatticePath D → LatticePos D
 def is_geometrically_closed {D : ℕ} (start : LatticePos D) (p : LatticePath D) : Prop :=
   endpoint start p = start
 
+/-- Applying a step changes coordinate k by exactly step_displacement. -/
+theorem apply_step_coord {D : ℕ} (pos : LatticePos D) (s : LatticeStep D) (k : Fin D) :
+    apply_step pos s k = pos k + step_displacement s k := by
+  cases s with
+  | plus a =>
+    simp only [apply_step, step_displacement]
+    by_cases h : a = k
+    · simp [h, Function.update_same]
+    · rw [Function.update_noteq (Ne.symm h)]
+      simp [h]
+  | minus a =>
+    simp only [apply_step, step_displacement]
+    by_cases h : a = k
+    · simp [h, Function.update_same]
+    · rw [Function.update_noteq (Ne.symm h)]
+      simp [h]
+  | stay =>
+    simp [apply_step, step_displacement]
+
+/-- The endpoint at coordinate k equals start at k plus the winding number. -/
+theorem endpoint_eq_start_plus_winding {D : ℕ} (start : LatticePos D) (p : LatticePath D) (k : Fin D) :
+    endpoint start p k = start k + winding_number p k := by
+  induction p with
+  | nil => simp [endpoint, winding_number]
+  | cons s rest ih =>
+    rw [endpoint, winding_cons, apply_step_coord, ih]
+    ring
+
 /-- For the origin, geometric closure = algebraic closure (zero winding). -/
 theorem closed_iff_zero_winding {D : ℕ} (p : LatticePath D) :
     is_geometrically_closed (origin D) p ↔ is_closed p := by
   unfold is_geometrically_closed is_closed
   constructor
+  · intro h k
+    have heq := congr_fun h k
+    rw [endpoint_eq_start_plus_winding (origin D) p k, origin] at heq
+    omega
   · intro h
-    intro k
-    induction p with
-    | nil => simp [winding_number]
-    | cons s rest ih =>
-      simp [endpoint, origin] at h
-      simp [winding_number, step_displacement]
-      sorry -- technical: endpoint computation matches winding number sum
-  · intro h
-    induction p with
-    | nil => simp [endpoint]
-    | cons s rest ih =>
-      sorry -- reverse direction
+    ext k
+    rw [endpoint_eq_start_plus_winding, origin]
+    simp
+    exact h k
 
 /-! ## Part 2: The Hopf Link in ℤ³ -/
 

@@ -117,7 +117,33 @@ theorem lifetime_decreases (M₁ M₂ : ℝ) (hM₁ : 1 < M₁) (h : M₁ < M₂
   have hpow : M₁ ^ (3.9 : ℝ) < M₂ ^ (3.9 : ℝ) :=
     Real.rpow_lt_rpow (le_of_lt hM₁pos) h (by norm_num)
   -- Structural fact: M^(-2.9) is decreasing → ms_lifetime M₂ < ms_lifetime M₁
-  sorry -- proof_obligation: t_MS ∝ M^(-2.9) is decreasing in M
+  apply (div_lt_div_iff₀ hL₂ hL₁).mpr
+  -- Need: (nuclear_efficiency * 0.7 * M₂) * M₁^3.9 < (nuclear_efficiency * 0.7 * M₁) * M₂^3.9
+  -- Equiv: M₂ * M₁^3.9 < M₁ * M₂^3.9  ↔  M₁^2.9 < M₂^2.9  (divide by M₁*M₂ > 0)
+  have hdenom : 0 < M₁ * M₂ := mul_pos hM₁pos hM₂pos
+  have h_core : M₂ * M₁ ^ (3.9 : ℝ) < M₁ * M₂ ^ (3.9 : ℝ) := by
+    rw [← div_lt_div_iff_of_pos_right hdenom]
+    have h1 : M₂ * M₁ ^ (3.9 : ℝ) / (M₁ * M₂) = M₁ ^ (2.9 : ℝ) := by
+      field_simp
+      have heq : M₁ * M₁ ^ (2.9 : ℝ) = M₁ ^ (3.9 : ℝ) := by
+        rw [← Real.rpow_one M₁, ← Real.rpow_mul (le_of_lt hM₁pos) (1 : ℝ) (2.9 : ℝ),
+            one_mul, ← Real.rpow_add hM₁pos (1 : ℝ) (2.9 : ℝ)]
+        norm_num
+      rw [heq]
+    have h2 : M₁ * M₂ ^ (3.9 : ℝ) / (M₁ * M₂) = M₂ ^ (2.9 : ℝ) := by
+      field_simp
+      have heq : M₂ * M₂ ^ (2.9 : ℝ) = M₂ ^ (3.9 : ℝ) := by
+        rw [← Real.rpow_one M₂, ← Real.rpow_mul (le_of_lt hM₂pos) (1 : ℝ) (2.9 : ℝ),
+            one_mul, ← Real.rpow_add hM₂pos (1 : ℝ) (2.9 : ℝ)]
+        norm_num
+      rw [heq]
+    rw [h1, h2]
+    exact Real.rpow_lt_rpow (le_of_lt hM₁pos) h (by norm_num)
+  have h_coef : 0 < (7e-3 : ℝ) * 0.7 := by norm_num
+  calc (7e-3 : ℝ) * 0.7 * M₂ * M₁ ^ (3.9 : ℝ)
+      = ((7e-3 : ℝ) * 0.7) * (M₂ * M₁ ^ (3.9 : ℝ)) := by ring
+    _ < ((7e-3 : ℝ) * 0.7) * (M₁ * M₂ ^ (3.9 : ℝ)) := mul_lt_mul_of_pos_left h_core h_coef
+    _ = (7e-3 : ℝ) * 0.7 * M₁ * M₂ ^ (3.9 : ℝ) := by ring
 
 /-- **SOLAR LIFETIME**: t_MS(M_sun) ≈ 10 Gyr. -/
 theorem solar_lifetime_approx :

@@ -1,4 +1,5 @@
 import Mathlib
+import Mathlib.Analysis.Calculus.Taylor
 import RecognitionScience.Cost
 import RecognitionScience.Cost.Convexity
 import RecognitionScience.Foundation.LawOfExistence
@@ -229,7 +230,235 @@ noncomputable def lattice_spacing : ℝ := 1
 theorem continuum_limit_second_order (f : ℝ → ℝ) (x a : ℝ) (ha : a ≠ 0)
     (hf : ContDiff ℝ 4 f) :
     ∃ (C : ℝ), |(f (x + a) + f (x - a) - 2 * f x) / a ^ 2 - deriv (deriv f) x| ≤ C * a ^ 2 := by
-  sorry
+  -- Reduce to a > 0: the expression is even in a, so we can replace a by |a|
+  have heven : (f (x + a) + f (x - a) - 2 * f x) / a ^ 2 =
+      (f (x + |a|) + f (x - |a|) - 2 * f x) / |a| ^ 2 := by
+    rw [sq_abs, abs_mul_abs_self]
+    congr 1
+    by_cases ha_sign : 0 ≤ a
+    · rw [abs_of_nonneg ha_sign]
+    · rw [abs_of_neg (not_le.mp ha_sign)]
+      simp only [neg_add_cancel, sub_neg_eq_add]
+  have ha_abs_ne : |a| ≠ 0 := abs_ne_zero.mpr ha
+  have ha_abs_pos : 0 < |a| := abs_pos.mpr ha
+  -- Reparametrize: g(t) = f(x + t), so g(0) = f(x), g(|a|) = f(x+|a|), g(-|a|) = f(x-|a|)
+  -- and g''(0) = deriv (deriv f) x. The finite difference is (g(|a|) + g(-|a|) - 2*g(0))/|a|².
+  set g := fun t => f (x + t) with hg_def
+  have hg_contdiff : ContDiff ℝ 4 g := by
+    rw [hg_def]
+    exact hf.comp (contDiff_add_const x)
+  have hg'' : deriv (deriv g) 0 = deriv (deriv f) x := by
+    have h1 : deriv g = fun t => deriv f (x + t) := by
+      ext t
+      simp [g]
+      rw [deriv.scomp (x := t) (f := f) (g := fun u => x + u)
+        (hf.differentiable (by decide)).differentiableAt
+        (differentiableAt_id.add_const x)]
+    rw [h1]
+    rw [deriv.scomp (x := 0) (f := deriv f) (g := fun u => x + u)
+      (ContDiff.differentiable (ContDiff.deriv hf (by decide)) (by decide)).differentiableAt
+      (differentiableAt_id.add_const x)]
+    simp
+  -- Taylor to order 3: g(t) = g(0) + t*g'(0) + t²/2*g''(0) + t³/6*g'''(0) + O(t⁴)
+  -- So g(|a|) + g(-|a|) - 2*g(0) = |a|²*g''(0) + |a|⁴/12*(g⁽⁴⁾(ξ₊)+g⁽⁴⁾(ξ₋))
+  -- Error = |a|⁴/12 * (g⁽⁴⁾(ξ₊)+g⁽⁴⁾(ξ₋)) / |a|² = |a|²/12 * (g⁽⁴⁾(ξ₊)+g⁽⁴⁾(ξ₋)) ≤ C*|a|²
+  set b := |a| with hb_def
+  have hb_pos : 0 < b := ha_abs_pos
+  have hIcc_pos : ContDiffOn ℝ 4 g (Set.Icc 0 b) := hg_contdiff.contDiffOn
+  set g_neg := fun t => g (-t) with hg_neg_def
+  have hg_neg_contdiff : ContDiff ℝ 4 g_neg := by
+    rw [hg_neg_def, hg_def]
+    exact hf.comp ((contDiff_add_const x).comp contDiff_neg)
+  have hg_neg_Icc : ContDiffOn ℝ 4 g_neg (Set.Icc 0 b) := hg_neg_contdiff.contDiffOn
+  obtain ⟨Cp, hCp⟩ := exists_taylor_mean_remainder_bound (le_of_lt hb_pos) (le_refl b) hIcc_pos
+  obtain ⟨Cn, hCn⟩ := exists_taylor_mean_remainder_bound (le_of_lt hb_pos) (le_refl b) hg_neg_Icc
+  -- exists_taylor_mean_remainder_bound uses n+1 smoothness for remainder (x-a)^(n+1). For n=3, remainder O(b^4).
+  -- The theorem: ∃ C, ∀ x ∈ Icc a b, ‖f x - taylorWithinEval f n (Icc a b) a x‖ ≤ C * (x - a)^(n+1)
+  -- So for n=3: |g(b) - taylorWithinEval g 3 (Icc 0 b) 0 b| ≤ Cp * b^4
+  -- And |g(-b) - taylorWithinEval g 3 (Icc (-b) 0) (-b) (-b)| = 0 (eval at base). We need g(0) - Taylor_{-b}(0).
+  -- |g(0) - taylorWithinEval g 3 (Icc (-b) 0) (-b) 0| ≤ Cn * b^4
+  -- taylorWithinEval g 3 (Icc 0 b) 0 b = g(0) + b*g'(0) + b²/2*g''(0) + b³/6*g'''(0)
+  -- taylorWithinEval g 3 (Icc (-b) 0) (-b) 0 = g(-b) + b*g'(-b) + b²/2*g''(-b) + b³/6*g'''(-b)
+  -- So g(0) = g(-b) + b*g'(-b) + b²/2*g''(-b) + b³/6*g'''(-b) + R0, |R0| ≤ Cn*b^4
+  -- Thus g(-b) = g(0) - b*g'(-b) - b²/2*g''(-b) - b³/6*g'''(-b) - R0
+  -- And g(b) = g(0) + b*g'(0) + b²/2*g''(0) + b³/6*g'''(0) + Rb, |Rb| ≤ Cp*b^4
+  -- g(b) + g(-b) = 2*g(0) + b²*g''(0) + b*(g'(0)-g'(-b)) + b²/2*(g''(0)-g''(-b)) + b³/6*(g'''(0)-g'''(-b)) + Rb - R0
+  -- By MVT: g'(0)-g'(-b) = g''(ξ1)*b, g''(0)-g''(-b) = g'''(ξ2)*b, g'''(0)-g'''(-b) = g⁽⁴⁾(ξ3)*b
+  -- So the extra terms are O(b²), O(b³), O(b⁴). We get g(b)+g(-b)-2*g(0) = b²*g''(0) + O(b⁴).
+  -- So (g(b)+g(-b)-2*g(0))/b² - g''(0) = O(b²). We need the constant.
+  -- From hRn_eq: g(0) = taylor_neg + R₋ = g(-b) + b*g'(-b) + b²/2*g''(-b) + b³/6*g'''(-b) + R₋
+  -- So g(-b) = g(0) - b*g'(-b) - b²/2*g''(-b) - b³/6*g'''(-b) - R₋
+  -- g(b) = g(0) + b*g'(0) + b²/2*g''(0) + b³/6*g'''(0) + R₊
+  -- g(b) + g(-b) = 2*g(0) + b²*g''(0) + b*(g'(0)-g'(-b)) + b²/2*(g''(0)-g''(-b)) + b³/6*(g'''(0)-g'''(-b)) + R₊ - R₋
+  -- The odd terms: b*(g'(0)-g'(-b)) = b * ∫_{-b}^0 g'' = b² * g''(ξ) for some ξ. So this is b² * g''(ξ).
+  -- b²/2*(g''(0)-g''(-b)) = b²/2 * b * g'''(η) = b³ * g'''(η)/2 = O(b³)
+  -- b³/6*(g'''(0)-g'''(-b)) = b⁴ * g⁽⁴⁾(ζ)/6 = O(b⁴)
+  -- So g(b)+g(-b) = 2*g(0) + b²*g''(0) + b²*g''(ξ) + O(b³) = 2*g(0) + b²*(g''(0)+g''(ξ)) + O(b³)
+  -- That gives (g(b)+g(-b)-2*g(0))/b² - g''(0) = g''(ξ) + O(b) = O(1) + O(b). Not O(b²)!
+  -- The Lagrange remainder for Taylor order 3 gives remainder = g⁽⁴⁾(ξ)*b⁴/4!. So we have:
+  -- g(b) = g(0) + b*g'(0) + b²/2*g''(0) + b³/6*g'''(0) + g⁽⁴⁾(ξ₊)*b⁴/24
+  -- g(-b) = g(0) - b*g'(0) + b²/2*g''(0) - b³/6*g'''(0) + g⁽⁴⁾(ξ₋)*b⁴/24
+  -- Sum = 2*g(0) + b²*g''(0) + b⁴/24*(g⁽⁴⁾(ξ₊)+g⁽⁴⁾(ξ₋))
+  -- So (sum - 2*g(0))/b² - g''(0) = b²/24*(g⁽⁴⁾(ξ₊)+g⁽⁴⁾(ξ₋)) ≤ b² * (2*M)/24
+  -- The taylor_mean_remainder_lagrange_iteratedDeriv gives remainder for order n, so for n=3 we get (n+1)=4th derivative. Good.
+  -- So R₊ = g⁽⁴⁾(ξp)*b⁴/24, R₋ = g⁽⁴⁾(ξn)*b⁴/24.
+  -- g(b) = P₃(0→b) + R₊, g(0) = P₃(-b→0) + R₋
+  -- P₃(0→b) = g(0) + b*g'(0) + b²/2*g''(0) + b³/6*g'''(0)
+  -- P₃(-b→0) = g(-b) + b*g'(-b) + b²/2*g''(-b) + b³/6*g'''(-b)  [since 0-(-b)=b]
+  -- So g(0) = g(-b) + b*g'(-b) + b²/2*g''(-b) + b³/6*g'''(-b) + R₋
+  -- g(-b) = g(0) - b*g'(-b) - b²/2*g''(-b) - b³/6*g'''(-b) - R₋
+  -- g(b) = g(0) + b*g'(0) + b²/2*g''(0) + b³/6*g'''(0) + R₊
+  -- Adding: g(b)+g(-b) = 2*g(0) + b²*g''(0) + b*(g'(0)-g'(-b)) + b²/2*(g''(0)-g''(-b)) + b³/6*(g'''(0)-g'''(-b)) + R₊ - R₋
+  -- By Taylor Lagrange on g' from -b to 0: g'(0) - g'(-b) = g''(ξ₁)*b. So b*(g'(0)-g'(-b)) = b²*g''(ξ₁).
+  -- Similarly g''(0)-g''(-b) = g'''(ξ₂)*b, so b²/2*(g''(0)-g''(-b)) = b³*g'''(ξ₂)/2.
+  -- And g'''(0)-g'''(-b) = g⁽⁴⁾(ξ₃)*b, so b³/6*(g'''(0)-g'''(-b)) = b⁴*g⁽⁴⁾(ξ₃)/6.
+  -- So g(b)+g(-b) = 2*g(0) + b²*g''(0) + b²*g''(ξ₁) + b³*g'''(ξ₂)/2 + b⁴*g⁽⁴⁾(ξ₃)/6 + R₊ - R₋
+  -- The b²*g''(ξ₁) term is the problem: g''(ξ₁) need not equal g''(0). So we get
+  -- (g(b)+g(-b)-2*g(0))/b² = g''(0) + g''(ξ₁) + O(b) + O(b²) + (R₊-R₋)/b²
+  -- = 2*g''(0) + (g''(ξ₁)-g''(0)) + O(b) + (R₊-R₋)/b². The (R₊-R₋)/b² = O(b²). But g''(ξ₁)-g''(0) = O(b).
+  -- So we get error = O(b) + O(b²). For small b that's O(b). We need O(b²)!
+  -- I was wrong. Let me use Taylor to order 2 (quadratic) with remainder O(h³). Then:
+  -- g(b) = g(0) + b*g'(0) + b²/2*g''(0) + R₊, R₊ = g'''(\xi₊)*b³/6
+  -- g(-b) = g(0) - b*g'(0) + b²/2*g''(0) + R₋, R₋ = g'''(\xi₋)*(-b)³/6 = -g'''(\xi₋)*b³/6
+  -- Sum = 2*g(0) + b²*g''(0) + R₊ + R₋ = 2*g(0) + b²*g''(0) + b³/6*(g'''(\xi₊) - g'''(\xi₋))
+  -- So (sum - 2*g(0))/b² - g''(0) = b/6*(g'''(\xi₊) - g'''(\xi₋)) = O(b). Still not O(b²).
+  -- The correct analysis: we need the 4th order expansion. The odd terms cancel in the sum:
+  -- g(b) + g(-b) = 2*g(0) + b²*g''(0) + 2*(b⁴/24)*g⁽⁴⁾(ξ) = 2*g(0) + b²*g''(0) + b⁴/12*g⁽⁴⁾(ξ)
+  -- for some ξ in (-b,b) - actually we get ξ₊ and ξ₋. So (g(b)+g(-b)-2*g(0))/b² - g''(0) = b²/12*(g⁽⁴⁾(ξ₊)+g⁽⁴⁾(ξ₋))/2?
+  -- No: g(b)+g(-b) = 2*g(0) + b²*g''(0) + b⁴/24*(g⁽⁴⁾(ξ₊)+g⁽⁴⁾(ξ₋))
+  -- So error = b⁴/24*(g⁽⁴⁾(ξ₊)+g⁽⁴⁾(ξ₋))/b² = b²/24*(g⁽⁴⁾(ξ₊)+g⁽⁴⁾(ξ₋)) ≤ b² * 2*M/24 = b²*M/12.
+  -- So we need the 4th order Taylor. taylor_mean_remainder_lagrange_iteratedDeriv with n=3 gives remainder with iteratedDeriv 4.
+  -- So hRp and hRn are correct. The key is that taylorWithinEval g 3 expands to order 3 (terms 0,1,2,3), and the remainder involves the 4th derivative.
+  -- So g(b) = taylor_3 + iteratedDeriv 4 g ξp * b^4 / 24
+  -- g(0) = taylor_3(-b→0) + iteratedDeriv 4 g ξn * b^4 / 24
+  -- taylor_3 at 0 to order 3: g(0) + b*g'(0) + b²/2*g''(0) + b³/6*g'''(0)
+  -- taylor_3 at -b to order 3 evaluated at 0: g(-b) + b*g'(-b) + b²/2*g''(-b) + b³/6*g'''(-b)
+  -- So g(b) = g(0) + b*g'(0) + b²/2*g''(0) + b³/6*g'''(0) + R₊
+  -- g(0) = g(-b) + b*g'(-b) + b²/2*g''(-b) + b³/6*g'''(-b) + R₋
+  -- Thus g(-b) = g(0) - b*g'(-b) - b²/2*g''(-b) - b³/6*g'''(-b) - R₋
+  -- g(b) + g(-b) = 2*g(0) + b²*g''(0) + b*(g'(0)-g'(-b)) + b²/2*(g''(0)-g''(-b)) + b³/6*(g'''(0)-g'''(-b)) + R₊ - R₋
+  -- Use Taylor on g' with remainder: g'(0) = g'(-b) + b*g''(-b) + b²/2*g'''(\eta) + b³/6*g⁽⁴⁾(\zeta). So g'(0)-g'(-b) = b*g''(-b) + O(b²).
+  -- Then b*(g'(0)-g'(-b)) = b²*g''(-b) + O(b³). So we have g''(0) + g''(-b) + ... That's 2*g''(0) + (g''(-b)-g''(0)) + ... = 2*g''(0) + O(b).
+  -- So (g(b)+g(-b)-2*g(0))/b² = 2*g''(0) + O(b) + (R₊-R₋)/b². And (R₊-R₋)/b² = O(b²). So we get 2*g''(0) + O(b). That would mean the finite difference approximates 2*g''(0), not g''(0)! 
+  -- Wait, (g(b)+g(-b)-2*g(0))/b² = g''(0) + O(b²) is what we want. Let me rederive.
+  -- g(b) = g(0) + b*g'(0) + b²/2*g''(0) + b³/6*g'''(0) + b⁴/24*g⁽⁴⁾(ξ₊)
+  -- g(-b) = g(0) - b*g'(0) + b²/2*g''(0) - b³/6*g'''(0) + b⁴/24*g⁽⁴⁾(ξ₋)
+  -- Sum = 2*g(0) + b²*g''(0) + b⁴/24*(g⁽⁴⁾(ξ₊)+g⁽⁴⁾(ξ₋))
+  -- So (sum - 2*g(0))/b² = g''(0) + b²/24*(g⁽⁴⁾(ξ₊)+g⁽⁴⁾(ξ₋))
+  -- Error = b²/24*(g⁽⁴⁾(ξ₊)+g⁽⁴⁾(ξ₋)) ≤ b² * 2*M/24 = b²*M/12. Good!
+  -- The taylor_mean_remainder_lagrange_iteratedDeriv with n=3 gives f(x) - P_3(x) = f⁽⁴⁾(x')*(x-x₀)⁴/4!.
+  -- So g(b) - P_3(0→b) = g⁽⁴⁾(ξp)*b⁴/24. And g(0) - P_3(-b→0) = g⁽⁴⁾(ξn)*b⁴/24.
+  -- P_3(0→b) = g(0) + b*g'(0) + b²/2*g''(0) + b³/6*g'''(0)
+  -- P_3(-b→0) = g(-b) + b*g'(-b) + b²/2*g''(-b) + b³/6*g'''(-b)
+  -- So g(b) = P_3(0→b) + R₊ and g(0) = P_3(-b→0) + R₋
+  -- Hence g(-b) = g(0) - b*g'(-b) - b²/2*g''(-b) - b³/6*g'''(-b) - R₋
+  -- And g(b) = g(0) + b*g'(0) + b²/2*g''(0) + b³/6*g'''(0) + R₊
+  -- Add: g(b)+g(-b) = 2*g(0) + b²*g''(0) + b*(g'(0)-g'(-b)) + b²/2*(g''(0)-g''(-b)) + b³/6*(g'''(0)-g'''(-b)) + R₊ - R₋
+  -- By symmetry of the Taylor expansion of g at 0: g(b) + g(-b) = 2*g(0) + b²*g''(0) + 2*(b⁴/24)*[g⁽⁴⁾(ξ₊)+g⁽⁴⁾(ξ₋)]/2? No.
+  -- The two remainders R₊ and R₋ are for different expansions. R₊ = g⁽⁴⁾(ξp)*b⁴/24, R₋ = g⁽⁴⁾(ξn)*b⁴/24.
+  -- So R₊ - R₋ = b⁴/24*(g⁽⁴⁾(ξp) - g⁽⁴⁾(ξn)). The other terms b*(g'(0)-g'(-b)) etc. - we need to show they cancel or are O(b⁴).
+  -- g'(0) - g'(-b) = g''(0)*b + g'''(0)*b²/2 + g⁽⁴⁾(η)*b³/6. So b*(g'(0)-g'(-b)) = b²*g''(0) + O(b³).
+  -- That would give g(b)+g(-b) = 2*g(0) + b²*g''(0) + b²*g''(0) + ... = 2*g(0) + 2*b²*g''(0) + ... That's wrong!
+  -- Let me recalc g'(-b). Taylor of g' at 0: g'(t) = g'(0) + t*g''(0) + t²/2*g'''(0) + O(t³). So g'(-b) = g'(0) - b*g''(0) + b²/2*g'''(0) + O(b³).
+  -- So g'(0) - g'(-b) = b*g''(0) - b²/2*g'''(0) + O(b³). Then b*(g'(0)-g'(-b)) = b²*g''(0) - b³*g'''(0)/2 + O(b⁴).
+  -- Similarly g''(0) - g''(-b) = b*g'''(0) + O(b²), so b²/2*(g''(0)-g''(-b)) = b³*g'''(0)/2 + O(b⁴).
+  -- And g'''(0) - g'''(-b) = b*g⁽⁴⁾(ζ) + O(b²), so b³/6*(g'''(0)-g'''(-b)) = b⁴*g⁽⁴⁾(ζ)/6 + O(b⁵).
+  -- Sum of the correction terms: b²*g''(0) - b³*g'''(0)/2 + b³*g'''(0)/2 + b⁴*g⁽⁴⁾(ζ)/6 = b²*g''(0) + b⁴*g⁽⁴⁾(ζ)/6.
+  -- So g(b)+g(-b) = 2*g(0) + b²*g''(0) + b²*g''(0) + b⁴*g⁽⁴⁾(ζ)/6 + R₊ - R₋ = 2*g(0) + 2*b²*g''(0) + O(b⁴).
+  -- That would mean (g(b)+g(-b)-2*g(0))/b² = 2*g''(0) + O(b²). So the finite difference would approximate 2*g''(0)! That's wrong - the centered difference (g(b)+g(-b)-2*g(0))/b² should approximate g''(0).
+  -- Let me recompute g'(-b) from Taylor at 0: g'(-b) = g'(0) + (-b)*g''(0) + (-b)²/2*g'''(0) + (-b)³/6*g⁽⁴⁾(ξ) = g'(0) - b*g''(0) + b²/2*g'''(0) - b³/6*g⁽⁴⁾(ξ).
+  -- So g'(0) - g'(-b) = b*g''(0) - b²/2*g'''(0) + b³/6*g⁽⁴⁾(ξ). Good.
+  -- Then b*(g'(0)-g'(-b)) = b²*g''(0) - b³*g'''(0)/2 + b⁴*g⁽⁴⁾(ξ)/6.
+  -- g''(0) - g''(-b) = b*g'''(0) - b²/2*g⁽⁴⁾(η). So b²/2*(g''(0)-g''(-b)) = b³*g'''(0)/2 - b⁴*g⁽⁴⁾(η)/4.
+  -- g'''(0) - g'''(-b) = b*g⁽⁴⁾(ζ). So b³/6*(g'''(0)-g'''(-b)) = b⁴*g⁽⁴⁾(ζ)/6.
+  -- Sum: b²*g''(0) - b³*g'''(0)/2 + b³*g'''(0)/2 - b⁴*g⁽⁴⁾(η)/4 + b⁴*g⁽⁴⁾(ζ)/6 + b⁴*g⁽⁴⁾(ξ)/6
+  -- = b²*g''(0) + b⁴*( -g⁽⁴⁾(η)/4 + g⁽⁴⁾(ζ)/6 + g⁽⁴⁾(ξ)/6 ).
+  -- So g(b)+g(-b) = 2*g(0) + b²*g''(0) + b²*g''(0) + b⁴*[...] + R₊ - R₋ = 2*g(0) + 2*b²*g''(0) + O(b⁴).
+  -- I keep getting 2*g''(0). Let me check the standard formula: (f(x+h) + f(x-h) - 2*f(x))/h² → f''(x) as h→0. So it should tend to g''(0), not 2*g''(0). So the coefficient of b² should be 1*g''(0). Let me rederive from scratch.
+  -- g(b) = g(0) + b*g'(0) + b²/2*g''(0) + b³/6*g'''(0) + b⁴/24*g⁽⁴⁾(ξ₊)
+  -- g(-b) = g(0) - b*g'(0) + b²/2*g''(0) - b³/6*g'''(0) + b⁴/24*g⁽⁴⁾(ξ₋)
+  -- g(b) + g(-b) = 2*g(0) + b²*g''(0) + b⁴/24*(g⁽⁴⁾(ξ₊)+g⁽⁴⁾(ξ₋))
+  -- So (g(b)+g(-b)-2*g(0))/b² = g''(0) + b²/24*(g⁽⁴⁾(ξ₊)+g⁽⁴⁾(ξ₋))
+  -- Yes! The coefficient of g''(0) is b²/2 + b²/2 = b², so (g(b)+g(-b)-2*g(0))/b² = g''(0) + O(b²). Good.
+  -- So the direct Taylor expansion works. The issue with my earlier calculation was that I was mixing the Taylor expansion of g at 0 (for g(b)) with the Taylor expansion of g at -b (for g(0)). When I add them, the intermediate terms don't simplify to just b²*g''(0). The direct approach: use taylor_mean_remainder_lagrange_iteratedDeriv for g(b) with base 0, and for g(-b) with base 0 (evaluating at -b). For that we need the interval to include both b and -b. So Icc (-b) b. And we need two applications: f(b) - Taylor_0(b) and f(-b) - Taylor_0(-b). The theorem requires x₀ < x. For g(b): x₀=0, x=b. For g(-b): we need x₀=-b, x=0. So we get g(0) - Taylor_{-b}(0) = R. That gives g(-b) in terms of g(0), not the other way around. To get g(-b) = Taylor_0(-b) + R, we would need the theorem with x < x₀. There might be a version for that, or we can use the fact that g(-b) = g(b) when we substitute b→-b in the expansion... Actually g is not even. So we need both expansions. The key insight: the Taylor polynomial at 0 evaluated at -b is g(0) + (-b)*g'(0) + (-b)²/2*g''(0) + (-b)³/6*g'''(0) = g(0) - b*g'(0) + b²/2*g''(0) - b³/6*g'''(0). So g(-b) - Taylor_0(-b) = R₋. The theorem with x₀=-b, x=0 gives g(0) - Taylor_{-b}(0) = R. We need g(-b) - Taylor_0(-b). The Taylor polynomial at 0 evaluated at -b: that's taylorWithinEval g 3 (Icc (-b) b) 0 (-b). For that we need 0 to be the left endpoint? No, the theorem has Icc x₀ x with x₀ < x. So we need x₀ < x. For evaluating at -b with base 0, we'd need -b < 0, so x₀ = -b, x = 0. Then the theorem gives g(0) - taylorWithinEval g 3 (Icc (-b) 0) (-b) 0 = R. So taylorWithinEval g 3 (Icc (-b) 0) (-b) 0 = g(0) - R = g(-b) + b*g'(-b) + b²/2*g''(-b) + b³/6*g'''(-b). So g(0) = g(-b) + b*g'(-b) + b²/2*g''(-b) + b³/6*g'''(-b) + R. So g(-b) = g(0) - b*g'(-b) - b²/2*g''(-b) - b³/6*g'''(-b) - R. That's what we had. The direct expansion g(-b) = Taylor_0(-b) + R would need a version of Taylor with x < x₀. Let me check if Mathlib has that... Or we could use the identity g(-b) = (g_neg)(b) where g_neg(t) = g(-t). Then g_neg(b) = g(-b). And g_neg has the same smoothness. Taylor of g_neg at 0: g_neg(b) = g_neg(0) + b*g_neg'(0) + b²/2*g_neg''(0) + b³/6*g_neg'''(0) + R. And g_neg(0)=g(0), g_neg'(0)=-g'(0), g_neg''(0)=g''(0), g_neg'''(0)=-g'''(0). So g(-b) = g(0) - b*g'(0) + b²/2*g''(0) - b³/6*g'''(0) + R. Perfect! So we can get both expansions. For g_neg, we need ContDiffOn ℝ 4 (fun t => g (-t)) (Icc 0 b). And that's hg_contdiff.contDiffOn for g composed with neg, which is ContDiff. So we have g(b) = g(0) + b*g'(0) + b²/2*g''(0) + b³/6*g'''(0) + R₊ and g(-b) = g(0) - b*g'(0) + b²/2*g''(0) - b³/6*g'''(0) + R₋. Sum = 2*g(0) + b²*g''(0) + R₊ + R₋. So (sum - 2*g(0))/b² - g''(0) = (R₊ + R₋)/b² = b²/24*(g⁽⁴⁾(ξ₊)+g⁽⁴⁾(ξ₋)) ≤ b² * 2*M/24. So C = M/12 works, where M = max |g⁽⁴⁾| on [-b,b].
+  -- exists_taylor_mean_remainder_bound gives |g(b) - P₃(b)| ≤ Cp*b⁴ and |g_neg(b) - P₃_neg(b)| ≤ Cn*b⁴
+  -- where P₃(b)=g(0)+b*g'(0)+b²/2*g''(0)+b³/6*g'''(0), P₃_neg(b)=g(0)-b*g'(0)+b²/2*g''(0)-b³/6*g'''(0)
+  -- So g(b)+g(-b) = 2*g(0) + b²*g''(0) + (R₊+R₋), hence |(g(b)+g(-b)-2*g(0))/b² - g''(0)| ≤ (Cp+Cn)*b²
+  have hRpos : |g b - taylorWithinEval g 3 (Set.Icc 0 b) 0 b| ≤ Cp * b ^ 4 := by
+    simpa [Real.norm_eq_abs] using hCp b (Set.right_mem_Icc.mpr (le_refl b))
+  have hRneg : |g (-b) - taylorWithinEval g_neg 3 (Set.Icc 0 b) 0 b| ≤ Cn * b ^ 4 := by
+    simpa [Real.norm_eq_abs, hg_neg_def] using hCn b (Set.right_mem_Icc.mpr (le_refl b))
+  have huv : UniqueDiffOn ℝ (Set.Icc 0 b) := uniqueDiffOn_Icc hb_pos
+  have h0_mem : (0 : ℝ) ∈ Set.Icc 0 b := Set.left_mem_Icc.mpr (le_refl 0)
+  have h_id_g : ∀ k, k < 4 → iteratedDerivWithin k g (Set.Icc 0 b) 0 = iteratedDeriv k g 0 := fun k hk =>
+    iteratedDerivWithin_eq_iteratedDeriv huv
+      ((hg_contdiff.contDiffAt).of_le (by norm_cast; omega)) h0_mem
+  have h_id_neg : ∀ k, k < 4 → iteratedDerivWithin k g_neg (Set.Icc 0 b) 0 = iteratedDeriv k g_neg 0 :=
+    fun k hk => iteratedDerivWithin_eq_iteratedDeriv huv
+      ((hg_neg_contdiff.contDiffAt).of_le (by norm_cast; omega)) h0_mem
+  have htaylor_sum : taylorWithinEval g 3 (Set.Icc 0 b) 0 b + taylorWithinEval g_neg 3 (Set.Icc 0 b) 0 b =
+      2 * g 0 + deriv (deriv g) 0 * b ^ 2 := by
+    rw [taylor_within_apply, taylor_within_apply]
+    congr 2
+    · refine Finset.sum_congr rfl (fun k hk => ?_)
+      rw [h_id_g k (Finset.mem_range.mp hk)]
+    · refine Finset.sum_congr rfl (fun k hk => ?_)
+      rw [h_id_neg k (Finset.mem_range.mp hk)]
+    simp only [Finset.sum_range_succ, Finset.sum_range_one,
+      iteratedDeriv_zero, iteratedDeriv_one, iteratedDeriv_succ, iteratedDeriv_two,
+      Nat.factorial_zero, Nat.factorial_one, Nat.factorial_two, Nat.factorial_three,
+      Nat.cast_one, Nat.cast_two, sub_self, zero_pow (by norm_num), mul_zero, add_zero]
+    have hd : deriv g_neg = fun t => -deriv g (-t) := by
+      ext t; rw [hg_neg_def]
+      simp [deriv.scomp (f := g) (g := Neg.neg)
+        (hg_contdiff.differentiable (by decide)).differentiableAt differentiableAt_neg]
+    have hd2 : deriv (deriv g_neg) = fun t => deriv (deriv g) (-t) := by
+      ext t; rw [deriv.scomp (f := deriv g) (g := Neg.neg)
+        (ContDiff.differentiable (ContDiff.deriv hg_contdiff (by decide)) (by decide)).differentiableAt
+        differentiableAt_neg]
+      simp
+    have hd3 : iteratedDeriv 3 g_neg = fun t => -iteratedDeriv 3 g (-t) := by
+      ext t
+      rw [iteratedDeriv_succ, iteratedDeriv_succ, hd2]
+      have : deriv (fun t => iteratedDeriv 2 g (-t)) t = -iteratedDeriv 3 g (-t) := by
+        rw [deriv.scomp (f := iteratedDeriv 2 g) (g := Neg.neg)
+          (hg_contdiff.iteratedDeriv 2).differentiable.differentiableAt differentiableAt_neg]
+        simp
+      rw [iteratedDeriv_succ, iteratedDeriv_one, this]
+    ring_nf
+    simp only [hg_neg_def]
+    congr 1
+    · have : deriv g_neg 0 = -deriv g 0 := by simp [hd]
+      have : deriv (deriv g_neg) 0 = deriv (deriv g) 0 := by simp [hd2]
+      have : iteratedDeriv 3 g_neg 0 = -iteratedDeriv 3 g 0 := by simp [hd3]
+      ring_nf
+      rw [this, this, this]
+      ring
+    · ring
+  have hsum : g b + g (-b) = 2 * g 0 + deriv (deriv g) 0 * b ^ 2 +
+      (g b - taylorWithinEval g 3 (Set.Icc 0 b) 0 b) +
+      (g (-b) - taylorWithinEval g_neg 3 (Set.Icc 0 b) 0 b) := by
+    linarith [htaylor_sum]
+  have herr : |(g b + g (-b) - 2 * g 0) / b ^ 2 - deriv (deriv g) 0| ≤ (Cp + Cn) * b ^ 2 := by
+    rw [hsum]
+    simp only [add_sub_cancel]
+    rw [div_add_div_same, div_sub_div_same (g b - _) _ _ (pow_ne_zero 2 (ne_of_gt hb_pos)),
+      sub_eq_add_neg]
+    have hb2_pos : 0 < b ^ 2 := pow_pos hb_pos 2
+    calc |(g b - taylorWithinEval g 3 (Set.Icc 0 b) 0 b + (g (-b) - taylorWithinEval g_neg 3 (Set.Icc 0 b) 0 b)) / b ^ 2|
+        ≤ |(g b - taylorWithinEval g 3 (Set.Icc 0 b) 0 b) / b ^ 2| +
+          |(g (-b) - taylorWithinEval g_neg 3 (Set.Icc 0 b) 0 b) / b ^ 2| := by
+          rw [div_add_div_same]
+          exact abs_add _ _
+      _ = |g b - taylorWithinEval g 3 (Set.Icc 0 b) 0 b| / b ^ 2 +
+          |g (-b) - taylorWithinEval g_neg 3 (Set.Icc 0 b) 0 b| / b ^ 2 := by
+          rw [abs_div, abs_div, abs_of_pos hb2_pos, abs_of_pos hb2_pos]
+      _ ≤ Cp * b ^ 4 / b ^ 2 + Cn * b ^ 4 / b ^ 2 := by
+          gcongr
+      _ = (Cp + Cn) * b ^ 2 := by field_simp [pow_ne_zero 2 (ne_of_gt hb_pos)]; ring
+  use Cp + Cn
+  rw [heven, hb_def, hg_def, hg'']
+  exact herr
 
 /-! ## Part 5: Universality Class -/
 

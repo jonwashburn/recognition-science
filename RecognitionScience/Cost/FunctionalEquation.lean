@@ -3,7 +3,7 @@ import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.Calculus.MeanValue
 import Mathlib.Analysis.Calculus.Taylor
 import RecognitionScience.Cost
--- import RecognitionScience.Cost.AczelTheorem  -- [excluded from public release]
+import RecognitionScience.Cost.AczelTheorem
 
 open RecognitionScience
 
@@ -523,7 +523,8 @@ theorem ode_cosh_uniqueness (H : ℝ → ℝ)
 
     For now, this is stated as a hypothesis that follows from Aczél's theorem. -/
 def dAlembert_continuous_implies_smooth_hypothesis (H : ℝ → ℝ) : Prop :=
-  H 0 = 1 → Continuous H → (∀ t u, H (t+u) + H (t-u) = 2 * H t * H u) → ContDiff ℝ ⊤ H
+  H 0 = 1 → Continuous H → (∀ t u, H (t+u) + H (t-u) = 2 * H t * H u) →
+    ContDiff ℝ (↑(⊤ : ℕ∞)) H
 
 /-- **d'Alembert to ODE derivation.**
 
@@ -562,7 +563,8 @@ theorem dAlembert_cosh_solution
   have h_even : Function.Even H := dAlembert_even H h_one h_dAlembert
   have h_deriv_zero : deriv H 0 = 0 := by
     have h_smooth := h_smooth_hyp h_one h_cont h_dAlembert
-    have h_diff : DifferentiableAt ℝ H 0 := h_smooth.differentiable (by decide : (⊤ : WithTop ℕ∞) ≠ 0) |>.differentiableAt
+    have h_diff : DifferentiableAt ℝ H 0 := by
+      exact h_smooth.differentiable (by simp : ((↑(⊤ : ℕ∞)) : WithTop ℕ∞) ≠ 0) |>.differentiableAt
     exact even_deriv_at_zero H h_even h_diff
   exact ode_cosh_uniqueness H h_ode h_one h_deriv_zero h_cont_hyp h_diff_hyp h_bootstrap_hyp
 
@@ -862,12 +864,12 @@ end Constructive
 /-! ## Aczél's Theorem and the ODE Derivation
 
 These results close the five regularity hypothesis gaps in `washburn_zlatanovic_uniqueness`.
-After adding the single Aczél axiom, all five `_hypothesis` defs become provable, and
+With the Aczél regularity step now proved internally, all five `_hypothesis` defs become provable, and
 a clean no-hypothesis version of the uniqueness theorem follows.
 -/
 
 /-- The `dAlembert_continuous_implies_smooth_hypothesis` holds for every H,
-    as a direct consequence of the Aczél axiom. -/
+    as a direct consequence of the proved Aczél smoothness theorem. -/
 theorem dAlembert_smooth_of_aczel (H : ℝ → ℝ) :
     dAlembert_continuous_implies_smooth_hypothesis H :=
   fun h_one h_cont h_dAlembert => aczel_dAlembert_smooth H h_one h_cont h_dAlembert
@@ -881,11 +883,13 @@ theorem dAlembert_smooth_of_aczel (H : ℝ → ℝ) :
     Differentiating g twice and evaluating at 0 gives 2H(t)H''(0) = 2H(t).
     Hence 2H''(t) = 2H(t), so H''(t) = H(t). -/
 theorem dAlembert_to_ODE_theorem (H : ℝ → ℝ)
-    (h_smooth : ContDiff ℝ ⊤ H)
+    (h_smooth : ContDiff ℝ (↑(⊤ : ℕ∞)) H)
     (h_dAlembert : ∀ t u, H (t+u) + H (t-u) = 2 * H t * H u)
     (h_d2_zero : deriv (deriv H) 0 = 1) :
     ∀ t, deriv (deriv H) t = H t := by
-  have hCDiff2 : ContDiff ℝ 2 H := h_smooth.of_le le_top
+  have hCDiff2 : ContDiff ℝ 2 H := by
+    exact h_smooth.of_le <| by
+      exact WithTop.coe_le_coe.2 (show (2 : ℕ∞) ≤ ⊤ by simp)
   have hDiff : Differentiable ℝ H :=
     hCDiff2.differentiable (by decide : (2 : WithTop ℕ∞) ≠ 0)
   have hCDiff1_H' : ContDiff ℝ 1 (deriv H) := by
@@ -954,22 +958,34 @@ theorem dAlembert_to_ODE_theorem (H : ℝ → ℝ)
     rw [congr_fun (congr_arg deriv hfirst_fun) 0, hsecond.deriv, h_d2_zero, mul_one]
   rw [lhs_eq, rhs_eq] at key; linarith
 
-/-- ODE regularity (3): any H with ContDiff ℝ ⊤ satisfies `ode_regularity_continuous_hypothesis`. -/
-theorem ode_regularity_continuous_of_smooth {H : ℝ → ℝ} (h : ContDiff ℝ ⊤ H) :
+/-- ODE regularity (3): any H with smooth `ContDiff` index satisfies
+`ode_regularity_continuous_hypothesis`. -/
+theorem ode_regularity_continuous_of_smooth {H : ℝ → ℝ}
+    (h : ContDiff ℝ (↑(⊤ : ℕ∞)) H) :
     ode_regularity_continuous_hypothesis H :=
   fun _ => h.continuous
 
-/-- ODE regularity (4): any H with ContDiff ℝ ⊤ satisfies `ode_regularity_differentiable_hypothesis`. -/
-theorem ode_regularity_differentiable_of_smooth {H : ℝ → ℝ} (h : ContDiff ℝ ⊤ H) :
+/-- ODE regularity (4): any H with smooth `ContDiff` index satisfies
+`ode_regularity_differentiable_hypothesis`. -/
+theorem ode_regularity_differentiable_of_smooth {H : ℝ → ℝ}
+    (h : ContDiff ℝ (↑(⊤ : ℕ∞)) H) :
     ode_regularity_differentiable_hypothesis H :=
-  fun _ _ => (h.of_le le_top : ContDiff ℝ 1 H).differentiable (by decide : (1 : WithTop ℕ∞) ≠ 0)
+  fun _ _ => by
+    have h1 : ContDiff ℝ 1 H := by
+      exact h.of_le <| by
+        exact WithTop.coe_le_coe.2 (show (1 : ℕ∞) ≤ ⊤ by simp)
+    exact h1.differentiable (by decide : (1 : WithTop ℕ∞) ≠ 0)
 
-/-- ODE regularity (5): any H with ContDiff ℝ ⊤ satisfies `ode_linear_regularity_bootstrap_hypothesis`. -/
-theorem ode_regularity_bootstrap_of_smooth {H : ℝ → ℝ} (h : ContDiff ℝ ⊤ H) :
+/-- ODE regularity (5): any H with smooth `ContDiff` index satisfies
+`ode_linear_regularity_bootstrap_hypothesis`. -/
+theorem ode_regularity_bootstrap_of_smooth {H : ℝ → ℝ}
+    (h : ContDiff ℝ (↑(⊤ : ℕ∞)) H) :
     ode_linear_regularity_bootstrap_hypothesis H :=
-  fun _ _ _ => h.of_le le_top
+  fun _ _ _ => by
+    exact h.of_le <| by
+      exact WithTop.coe_le_coe.2 (show (2 : ℕ∞) ≤ ⊤ by simp)
 
-/-- **Theorem (d'Alembert → cosh, Aczél form)**: Using only the Aczél axiom, a continuous
+/-- **Theorem (d'Alembert → cosh, Aczél form)**: Using the proved Aczél smoothness step, a continuous
     solution to d'Alembert with H(0) = 1 and H''(0) = 1 must equal cosh.
 
     This is the clean version of `dAlembert_cosh_solution`, requiring no regularity params. -/
@@ -980,20 +996,27 @@ theorem dAlembert_cosh_solution_aczel
     (h_dAlembert : ∀ t u, H (t+u) + H (t-u) = 2 * H t * H u)
     (h_d2_zero : deriv (deriv H) 0 = 1) :
     ∀ t, H t = Real.cosh t := by
-  have h_smooth : ContDiff ℝ ⊤ H := aczel_dAlembert_smooth H h_one h_cont h_dAlembert
+  have h_smooth : ContDiff ℝ (↑(⊤ : ℕ∞)) H :=
+    aczel_dAlembert_smooth H h_one h_cont h_dAlembert
   have hDiff : Differentiable ℝ H :=
-    (h_smooth.of_le le_top : ContDiff ℝ 1 H).differentiable (by decide : (1 : WithTop ℕ∞) ≠ 0)
+    by
+      have h1 : ContDiff ℝ 1 H := by
+        exact h_smooth.of_le <| by
+          exact WithTop.coe_le_coe.2 (show (1 : ℕ∞) ≤ ⊤ by simp)
+      exact h1.differentiable (by decide : (1 : WithTop ℕ∞) ≠ 0)
   have h_even : Function.Even H := dAlembert_even H h_one h_dAlembert
   have h_H'0 : deriv H 0 = 0 := even_deriv_at_zero H h_even hDiff.differentiableAt
   have h_ode : ∀ t, deriv (deriv H) t = H t :=
     dAlembert_to_ODE_theorem H h_smooth h_dAlembert h_d2_zero
-  have h_C2 : ContDiff ℝ 2 H := h_smooth.of_le le_top
+  have h_C2 : ContDiff ℝ 2 H := by
+    exact h_smooth.of_le <| by
+      exact WithTop.coe_le_coe.2 (show (2 : ℕ∞) ≤ ⊤ by simp)
   exact ode_cosh_uniqueness_contdiff H h_C2 h_ode h_one h_H'0
 
 /-- **Theorem (Washburn-Zlatanović, clean form)**: The J-cost function is the unique
     reciprocal cost satisfying the RCL, normalization, calibration, and continuity.
 
-    This version uses the global Aczél axiom internally and requires NO regularity
+    This version uses the proved Aczél smoothness theorem internally and requires NO regularity
     hypothesis parameters from the caller. -/
 theorem washburn_zlatanovic_uniqueness_aczel (F : ℝ → ℝ)
     (hRecip : IsReciprocalCost F)
