@@ -1,6 +1,6 @@
 # Recognition Science — Lean 4 Formalization
 
-A machine-verified derivation of fundamental physics from a single functional equation.
+A Lean 4 formalization and certificate suite centered on a single functional equation.
 
 ## What This Is
 
@@ -35,96 +35,61 @@ m = A_s · φ^(r − 8 + gap(Z))                     [all fermion masses]
 
 ---
 
+## Current Public Snapshot
+
+The repaired public snapshot currently contains:
+
+- **175 Lean files**
+- **1,486 theorem/lemma declarations**
+- **32,185 lines of Lean source**
+- **36 verification certificate modules**
+- A successful package-wide `lake build`
+
+In this public snapshot:
+
+- The historically named theorem `aczel_representation_axiom` is now **proved internally** in Lean.
+- The **full d'Alembert inevitability chain** builds successfully, including `Foundation/DAlembert/FullUnconditional.lean`.
+- The repository is **not yet globally `sorry`-free**; some peripheral modules still contain admitted placeholders.
+
 ## Repository Structure
 
 ```
 RecognitionScience/
-├── Constants.lean                    # φ, ℏ = φ⁻⁵, G, κ = 8φ⁵
-├── Cost.lean                         # J(x) = ½(x + x⁻¹) − 1
-├── Constants/
-│   ├── AlphaDerivation.lean          # α⁻¹ from cube geometry
-│   ├── FineStructureConstant.lean    # α properties
-│   └── GapWeight.lean                # w₈ DFT projection weight
-├── Cost/
+├── Constants/                        # 5 files
+├── Cost/                             # 17 files
+│   ├── AczelTheorem.lean             # Internal Aczél smoothness proof
 │   ├── FunctionalEquation.lean       # RCL → d'Alembert → J uniqueness
-│   ├── JcostCore.lean                # J-cost core properties
-│   ├── Convexity.lean                # J convexity
-│   └── Calibration.lean              # λ=1 calibration
-├── Foundation/
-│   ├── LogicFromCost.lean            # T0: Logic from cost
-│   ├── PhiForcing.lean               # T6: φ² = φ + 1
-│   ├── EightTick.lean                # T7: 8-tick period, spin-statistics
-│   ├── DimensionForcing.lean         # T8: D = 3
-│   ├── DAlembert/                    # RCL inevitability proofs
-│   ├── TimeEmergence.lean            # Arrow of time
-│   ├── InitialCondition.lean         # Low-entropy initial state
-│   ├── ParticleGenerations.lean      # 3 generations from D = 3
-│   ├── QuarkColors.lean              # 3 colors from D = 3
-│   ├── HierarchyDissolution.lean     # No hierarchy problem
-│   ├── Determinism.lean              # Determinism from J-cost
-│   └── UnifiedForcingChain.lean      # T0–T8 chain
-├── Masses/                           # 26 files — complete mass framework
-│   ├── MassLaw.lean                  # m = A_s · φ^(r−8+gap(Z))
-│   ├── BaselineDerivation.lean       # r_e=2, r_q=4, r_ν=−54
-│   ├── Anchor.lean                   # Sector yardsticks from cube geometry
-│   ├── AnchorDerivation.lean         # Full anchor chain derivation
-│   ├── GapFunctionForcing.lean       # gap(Z) = log_φ(1+Z/φ) uniqueness
-│   ├── MassRatiosProved.lean         # Mass ratios = φ^Δr
-│   ├── MassHierarchy.lean            # Mass hierarchy structure
-│   ├── LeptonMassLadder.lean         # e/μ/τ mass ladder
-│   ├── JCostPerturbation.lean        # J-cost perturbation theory (1633 lines)
-│   ├── CoherenceExponent.lean        # E_coh = φ⁻⁵ derivation
-│   ├── ZMapForcing.lean              # Charge index Z-map
-│   ├── RungConstructor/              # Rung construction machinery
-│   ├── Ribbons/                      # Ribbon algebra for mass braids
-│   └── ...                           # + 13 more supporting modules
-├── Gravity/                          # 18 files — complete gravity framework
-│   ├── ZeroParameterGravity.lean     # κ = 8φ⁵, equivalence principle
-│   ├── EquivalencePrinciple.lean     # m_inertial = m_grav
-│   ├── NoGraviton.lean               # Gravity is emergent
-│   ├── PropagationSpeed.lean         # c_grav = c (exact)
-│   ├── ILG.lean                      # Inherent Lattice Gravity core
-│   ├── ILGDerivation.lean            # ILG time-kernel, flat rotation curves
-│   ├── GravityDerivation.lean        # G-001 through G-007
-│   ├── GravityParameters.lean        # Complete parameter table (340 lines)
-│   ├── RunningG.lean                 # Running gravitational coupling
-│   ├── RunningGDerivation.lean       # Running G derivation chain
-│   ├── RotationILG.lean              # Galaxy rotation from ILG
-│   ├── BTFREmergence.lean            # Baryonic Tully-Fisher emergence
-│   ├── RAREmergence.lean             # Radial Acceleration Relation
-│   ├── CausalKernelChain.lean        # Causal kernel structure (305 lines)
-│   └── ...                           # + 4 more supporting modules
-├── Cost/
-│   ├── FunctionalEquation.lean       # RCL → d'Alembert → J uniqueness
-│   ├── JcostCore.lean                # J-cost core properties
-│   ├── AczelTheorem.lean             # Aczél smoothness theorem
 │   ├── Convexity.lean                # J strict convexity
 │   ├── Derivative.lean               # J derivatives and bounds
-│   ├── ClassicalResults.lean         # Classical functional equation results
-│   ├── Ndim/                         # N-dimensional cost extension (9 files)
-│   └── ...                           # Calibration, FixedPoint
-├── Physics/
-│   ├── ForcingChainUnification.lean  # Cost–φ consistency, zero-parameter structure
-│   └── ThreeGenerations.lean         # Three generations from D = 3
-├── Patterns/
-│   ├── GrayCycle.lean                # Gray code Hamiltonian cycle on Q₃
-│   └── ...                           # Pattern infrastructure
-├── Derivations/
-│   └── MassToLight.lean              # φ-power mass-to-light bridge
-├── Unification/
-│   ├── RSMasterTheorem.lean          # Master theorem
-│   └── AllConstantsFromPhi.lean      # All constants from φ
-└── Verification/                     # 32 machine-checked certificates
-    ├── Tier1Cert.lean                # T0–T8 forcing chain
-    ├── Tier2Cert.lean                # Constants + masses
-    └── ...                           # See certificate catalog below
+│   └── Ndim/                         # N-dimensional cost extension
+├── Foundation/                       # 33 files
+│   ├── DAlembert/
+│   │   ├── Inevitability.lean        # Bilinear family forced
+│   │   ├── DegreeExclusion.lean      # Degree-3 combiner exclusion
+│   │   ├── WLOGAlphaOne.lean         # α-rescaling is WLOG
+│   │   ├── Unconditional.lean        # P computed from J
+│   │   └── FullUnconditional.lean    # Full inevitability chain
+│   ├── UnifiedForcingChain.lean      # T0–T8 chain
+│   └── ...                           # Additional foundation modules
+├── Gravity/                          # 19 files
+├── Masses/                           # 28 files
+├── Numerics/                         # 12 files
+├── Papers/                           # 4 files
+├── Physics/                          # 14 files
+├── Patterns/                         # 1 file
+├── Derivations/                      # 1 file
+├── Unification/                      # 2 files
+├── Verification/                     # 36 certificate modules
+├── Cost.lean                         # Root namespace module
+├── Constants.lean                    # Root namespace module
+└── Patterns.lean                     # Root namespace module
 ```
 
 ---
 
 ## Verification Certificates
 
-The `Verification/` directory contains **32 machine-checked certificates** — Lean structures that bundle related theorems and verify them in a single `verified` predicate. Each certificate is independently checkable.
+The `Verification/` directory contains **36 machine-checked certificate modules** — Lean structures that bundle related theorems and verify them in a single `verified` predicate. Each certificate is independently checkable.
 
 ### Master Certificates
 
@@ -238,12 +203,13 @@ lake build            # build all Recognition Science modules
 
 ## Verification Status
 
-- **122 Lean files** across 10 directories
-- **90 core derivation modules** + **36 verification certificates**
-- **Zero `sorry`** — every theorem is fully proved
-- **Zero forbidden placeholders** — no `admit`, no `native_decide` on non-decidable propositions
-
-One axiom is used: `aczel_representation_axiom` in `Cost/FunctionalEquation.lean`, encoding the Aczél smoothness condition for the d'Alembert functional equation (a standard result in functional equation theory; Aczél, 1966).
+- **175 Lean files** in the current public snapshot
+- **1,486 theorem/lemma declarations**
+- **36 verification certificate modules**
+- **Successful package-wide `lake build`**
+- **Aczél smoothness internalized**: `aczel_representation_axiom` is now a theorem in `Cost/AczelTheorem.lean`
+- **Full d'Alembert inevitability chain restored**: `Foundation/DAlembert/FullUnconditional.lean` builds successfully
+- **Not yet globally `sorry`-free**: some peripheral modules still contain admitted placeholders
 
 ## Papers
 

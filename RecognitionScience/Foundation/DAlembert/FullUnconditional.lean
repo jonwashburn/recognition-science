@@ -2,7 +2,7 @@ import Mathlib
 import RecognitionScience.Cost
 import RecognitionScience.Cost.FunctionalEquation
 import RecognitionScience.Foundation.DAlembert.Unconditional
--- import RecognitionScience.Foundation.DAlembert.Inevitability  -- [excluded from public release]
+import RecognitionScience.Foundation.DAlembert.Inevitability
 
 /-!
 # Full Unconditional RCL Inevitability

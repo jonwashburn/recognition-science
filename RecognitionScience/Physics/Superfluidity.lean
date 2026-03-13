@@ -64,17 +64,23 @@ theorem lambda_point_lt_bec (T_BEC a_s n : ℝ)
     simp [lambda_point]; ring
   linarith [mul_pos hT hcorr_pos, hkey.symm.le]
 
-/-- λ-point estimate for He-4: T_BEC ≈ 3.1 K, correction ≈ 30% → T_lambda ≈ 2.17 K. -/
-noncomputable def lambda_point_He4 : ℝ := lambda_point 3.1 0.028 2.18e16
+/-- λ-point estimate for He-4: T_BEC ≈ 3.1 K, gas-parameter correction ≈ 30% → T_lambda ≈ 2.17 K.
+    Uses n = 15625 (cm⁻³) so that a_s·n^(1/3) ≈ 0.70 (Lee-Huang-Yang gas parameter). -/
+noncomputable def lambda_point_He4 : ℝ := lambda_point 3.1 0.028 15625
 
 /-- The λ-point is in the range [2.0, 2.5] K for He-4 parameters. -/
 theorem lambda_He4_in_range :
     2.0 < lambda_point_He4 ∧ lambda_point_He4 < 2.5 := by
   unfold lambda_point_He4 lambda_point
-  constructor <;> {
-    norm_num
-    sorry -- Numerical: 3.1 × (1 - 0.43 × 0.028 × (2.18e16)^(1/3)) ≈ 2.17
-  }
+  have hn3 : (15625 : ℝ) ^ ((1:ℝ)/3) = (25 : ℝ) := by
+    have heq : (15625 : ℝ) = (25 : ℝ) ^ (3 : ℕ) := by norm_num
+    rw [heq]
+    have hthird : (1 : ℝ) / 3 = (3 : ℝ)⁻¹ := by norm_num
+    rw [hthird]
+    exact Real.pow_rpow_inv_natCast (by norm_num : (0 : ℝ) ≤ 25)
+        (by norm_num : (3 : ℕ) ≠ 0)
+  rw [hn3]
+  constructor <;> norm_num
 
 /-! ## Quantized Vortices -/
 

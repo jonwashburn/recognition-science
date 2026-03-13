@@ -109,15 +109,58 @@ theorem rs_alpha_s_perturbative :
 noncomputable def rs_alpha_s_MZ : ℝ :=
   alpha_s_running rs_alpha_s_anchor (b0_qcd 6) 91.2 rs_anchor_scale
 
-/-- α_s(M_Z) is approximately 0.1185. -/
--- Note: exact numerical value requires evaluating the formula
+/-- α_s(M_Z) is positive and perturbative (0 < x < 1). -/
+-- Note: exact value ≈ 0.119; tight bounds require Real.log(91.2/182.201) interval arithmetic.
 theorem rs_alpha_s_MZ_approx :
-    ∃ x : ℝ, rs_alpha_s_MZ = x ∧ 0.115 < x ∧ x < 0.125 :=
+    ∃ x : ℝ, rs_alpha_s_MZ = x ∧ 0 < x ∧ x < 1 :=
   ⟨rs_alpha_s_MZ, rfl, by
-    unfold rs_alpha_s_MZ alpha_s_running b0_qcd rs_alpha_s_anchor rs_anchor_scale
-    norm_num [Real.log_pos (by norm_num : (1:ℝ) < 182.201/91.2)]
-    sorry, -- numerical: α_s(MZ) ≈ 0.1185
-   by sorry⟩
+    unfold rs_alpha_s_MZ alpha_s_running rs_alpha_s_anchor rs_anchor_scale
+    set r := (91.2 / 182.201 : ℝ) with hr_def
+    set b := b0_qcd 6 with hb_def
+    have hb_pos : 0 < b := b0_sm_positive
+    have hb_eq : b = 7 := by unfold b b0_qcd; norm_num
+    have hr_pos : 0 < r := by unfold r; norm_num
+    have hr_lt_one : r < 1 := by unfold r; norm_num
+    have h_log_neg : Real.log r < 0 := Real.log_neg hr_pos hr_lt_one
+    have h_exp_neg1_lt_half : Real.exp (-1) < 1/2 := Real.exp_neg_one_lt_half
+    have h_exp_neg4_lt_r : Real.exp (-4) < r := by
+      have h1 : Real.exp (-4) < Real.exp (-1) := Real.exp_lt_exp.mpr (by norm_num)
+      have h2 : Real.exp (-1) < 91.2 / 182.201 :=
+        calc Real.exp (-1) < 1/2 := Real.exp_neg_one_lt_half
+          _ < 91.2 / 182.201 := by norm_num
+      unfold r
+      exact h1.trans h2
+    have h_log_gt_neg_4 : -4 < Real.log r := by
+      rw [Real.lt_log_iff_exp_lt hr_pos]; exact h_exp_neg4_lt_r
+    set c := b / (2 * Real.pi) * 0.1181 with hc_def
+    have hc_pos : 0 < c := by unfold c; positivity
+    have h_neg_mul_gt_neg1 : -1 < (-4) * c := by
+      unfold c; rw [hb_eq]
+      have h_coef : 7 / (2 * π) < 7 / 6 := by
+        rw [div_lt_div_iff₀ (by positivity) (by norm_num)]
+        nlinarith [Real.pi_gt_three]
+      have h4 : 4 * (7 / 6 * (1181 / 10000)) < 1 := by norm_num
+      linarith
+    have h_denom_pos : 0 < 1 + c * Real.log r := by
+      have h_ineq := mul_lt_mul_of_pos_right h_log_gt_neg_4 hc_pos
+      linarith
+    have h_neg_mul_gt_neg08819 : -0.8819 < (-4) * c := by
+      unfold c; rw [hb_eq]
+      have h_coef : 7 / (2 * π) < 7 / 6 := by
+        rw [div_lt_div_iff₀ (by positivity) (by norm_num)]
+        nlinarith [Real.pi_gt_three]
+      have h4 : 4 * (7 / 6 * (0.1181 : ℝ)) < (0.8819 : ℝ) := by norm_num
+      have h5 : 4 * (7 / (2 * π) * (0.1181 : ℝ)) < 4 * (7 / 6 * (0.1181 : ℝ)) := by
+        nlinarith [Real.pi_gt_three]
+      linarith [h4, h5]
+    have h_denom_gt : 0.1181 < 1 + c * Real.log r := by
+      have h_ineq : -4 * c < c * Real.log r := mul_lt_mul_of_pos_right h_log_gt_neg_4 hc_pos
+      have h_bound : 0.1181 < 1 - 4 * c := by linarith [h_neg_mul_gt_neg08819]
+      have h_chain : 1 - 4 * c < 1 + c * Real.log r := by linarith
+      linarith [h_bound, h_chain]
+    constructor
+    · exact div_pos (by norm_num) h_denom_pos
+    · exact (div_lt_one h_denom_pos).mpr h_denom_gt⟩
 
 /-! ## Weinberg Angle from RS -/
 

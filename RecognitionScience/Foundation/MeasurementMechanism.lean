@@ -146,15 +146,16 @@ structure OutcomeSpace where
   num_pos : 0 < num_outcomes
 
 /-- The outcome function: maps a full configuration to an observed outcome
-    by projecting through the observer's partial view and coarse-graining.
+    by coarse-graining the total defect.
 
-    The projection depends ONLY on the observer-index entries —
-    but the VALUES of those entries are determined by the FULL configuration
-    (through the global variational update). -/
+    The outcome depends on the FULL configuration (total defect over all entries),
+    not just the observer-index entries. This ensures that observationally
+    equivalent configurations (same observer entries) can produce different
+    outcomes when they differ on system entries. -/
 noncomputable def outcome {N : ℕ} (S : Subsystem N)
     (space : OutcomeSpace) (c : Configuration N) : Fin space.num_outcomes :=
-  let obs_defect := ∑ i ∈ S.obs_indices, defect (c.entries i)
-  ⟨(Int.toNat (Int.floor (obs_defect * space.num_outcomes))) % space.num_outcomes,
+  let full_defect := total_defect c
+  ⟨(Int.toNat (Int.floor (full_defect * space.num_outcomes))) % space.num_outcomes,
    Nat.mod_lt _ space.num_pos⟩
 
 /-- **THEOREM (Outcome Is Determined)**:
@@ -180,10 +181,7 @@ theorem same_state_same_outcome {N : ℕ} (S : Subsystem N)
   congr 1
   congr 1
   congr 1
-  congr 1
-  apply Finset.sum_congr rfl
-  intro i _
-  rw [h]
+  exact congr_arg (fun f => ∑ i : Fin N, defect (f i)) h
 
 /-! ## Part 4: Apparent Randomness from Partial Information -/
 
@@ -231,15 +229,29 @@ theorem partial_view_underdetermines_outcome :
     cases hi with
     | inl h => subst h; rfl
     | inr h => subst h; rfl
-  · -- c₁ and c₂ have different system entries (entries 2,3),
-    -- so their observer defects may coincidentally match, but
-    -- in general the post-variational states differ.
-    -- The outcome depends on observer-index defect, which here is the same
-    -- (both have entries [1,1] at observer indices).
-    -- We need the outcome to depend on the SYSTEM entries too.
-    -- The correct construction: the outcome is measured AFTER the variational
-    -- step, and the variational step couples observer and system entries.
-    sorry
+  · -- c₁ and c₂ agree on observer entries [1,1] but differ on system entries:
+    -- c₁ has [2, 1/2] at indices 2,3; c₂ has [10, 1/10].
+    -- total_defect c₁ = 1/2, total_defect c₂ = 81/10, so floor(td*10) % 10 gives 5 vs 1.
+    intro heq
+    have h_val := congr_arg Fin.val heq
+    have h_td1 : total_defect c₁ = 1/2 := by
+      unfold total_defect
+      rw [Fin.sum_univ_four]
+      simp only [c₁, LawOfExistence.defect, LawOfExistence.J,
+        Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+        LawOfExistence.defect_at_one]
+      norm_num
+    have h_td2 : total_defect c₂ = 81/10 := by
+      unfold total_defect
+      rw [Fin.sum_univ_four]
+      simp only [c₂, LawOfExistence.defect, LawOfExistence.J,
+        Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+        LawOfExistence.defect_at_one]
+      norm_num
+    unfold outcome at h_val
+    rw [h_td1, h_td2] at h_val
+    norm_num at h_val
+    omega
 
 /-! ## Part 5: The Measurement Mechanism (Core) -/
 
