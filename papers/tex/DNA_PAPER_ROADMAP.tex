@@ -1,0 +1,508 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{microtype}
+
+\setlist[itemize]{leftmargin=*}
+\setlist[enumerate]{leftmargin=*}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\title{\textbf{DNA Paper Roadmap}\\Second-Pass Publication Plan}
+\author{Recognition Science DNA Program}
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Status}
+Second-pass publication roadmap after the March 2026 Lean DNA buildout.
+
+This document is the paper plan, not the open-problems ledger. Its purpose is to decide:
+\begin{itemize}
+\item which DNA papers are strongest now,
+\item which claims are already supported by the Lean surface,
+\item which papers need one more computational or empirical pass,
+\item and what order gives the best mix of scientific impact, clarity, and publishability.
+\end{itemize}
+
+\section*{What Changed Since The First Pass}
+The main constraint is no longer whether the theory can be formalized at all. A substantial Tier 2 / Tier 3 Lean layer now exists and \texttt{IndisputableMonolith.Genetics} builds cleanly.
+
+The new backbone includes:
+\begin{itemize}
+\item reusable cost and certificate infrastructure:
+\begin{itemize}
+\item \texttt{MutationModel.lean}
+\item \texttt{CompositeJCost.lean}
+\item \texttt{OptimizationCertificate.lean}
+\end{itemize}
+\item strengthened Tier 2 theory packages:
+\begin{itemize}
+\item \texttt{IntronPlacementOptimality.lean}
+\item \texttt{GearboxSelectivity.lean}
+\item \texttt{ZParityDegeneracyTable.lean}
+\item \texttt{WobbleZParity.lean}
+\item \texttt{ConservationHierarchy.lean}
+\end{itemize}
+\item Tier 3 theorem shells and certificate interfaces:
+\begin{itemize}
+\item \texttt{CodonAssignmentObjective.lean}
+\item \texttt{CodonAssignmentOptimality.lean}
+\item \texttt{WTokenAssignmentBridge.lean}
+\item \texttt{DegeneracySearchSpace.lean}
+\item \texttt{CodonAssignmentGlobalOptimality.lean}
+\item \texttt{SyntheticFalsifierAssays.lean}
+\end{itemize}
+\end{itemize}
+
+This changes the paper program materially. The main bottleneck now is evidence packaging, deterministic computation, and reviewer-facing framing, not missing Lean scaffolding.
+
+\section*{Executive Summary}
+
+\subsection*{Tier A: Draft Now}
+\begin{enumerate}
+\item \textbf{The standard genetic code is not locally optimal under simple chemical distance}
+\item \textbf{Z-parity and the hierarchy of conservation in the genetic code}
+\item \textbf{Toward a zero-junk genome} (revise and reissue as the anchor paper)
+\item \textbf{Sex as phase-debt cancellation} (draft once one clean toy model is added)
+\end{enumerate}
+
+\subsection*{Tier B: One More Computational Or Validation Pass}
+\begin{enumerate}[start=5]
+\item \textbf{Intron positioning from helical phase stress}
+\item \textbf{The molecular gearbox: phi-ladder timing in biology}
+\item \textbf{Synthetic biology falsifiers for the RS DNA framework} as a design / assay paper
+\end{enumerate}
+
+\subsection*{Tier C: Flagship Long-Horizon Papers}
+\begin{enumerate}[start=8]
+\item \textbf{Deriving the exact codon-to-amino-acid assignment}
+\item \textbf{Global J-cost optimality of the genetic code}
+\end{enumerate}
+
+\section*{Portfolio At A Glance}
+\footnotesize
+\begin{longtable}{@{}p{0.03\textwidth}p{0.22\textwidth}p{0.12\textwidth}p{0.14\textwidth}p{0.22\textwidth}p{0.19\textwidth}@{}}
+\toprule
+\# & Paper & Readiness now & Lean status & Main blocker & Best role \\
+\midrule
+1 & Code not chemically optimal & Write now & Strong & Publication-grade benchmark package & Sharp computational result \\
+2 & Sex as phase-debt cancellation & Near-write & Strong core & Standard genetics translation + toy simulation & Conceptual theory paper \\
+3 & Zero-junk genome & Revise now & Strong & Figures and tighter framing & Anchor / platform paper \\
+4 & Intron positioning & One more pass & Theory-ready & Predictor + gene benchmark & Genomics paper \\
+5 & Molecular gearbox & One more pass & Theory-ready & Mechanism tightening + spectroscopy review & Biophysics bridge paper \\
+6 & Z-parity hierarchy & Write now & Very strong & Interpretation + figures & Small clean paper \\
+7 & Exact codon assignment & Not yet claim-ready & Interface-ready & Composite metric calibration + local certificates & Flagship derivation \\
+8 & Global J-cost optimality & Long-horizon & Interface-ready & Search reduction + certified computation & Flagship theorem / computation \\
+9 & Synthetic falsifiers & Design-paper ready & Interface-ready & Construct definitions + assay path + collaborators & Experimental strategy paper \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section*{Shared Paper Rules}
+Every DNA paper should obey the same discipline:
+\begin{itemize}
+\item \texttt{Theorem}: cite a named Lean result and the exact module that contains it.
+\item \texttt{Model}: clearly label abstractions formalized as definitions / interfaces but not yet experimentally anchored.
+\item \texttt{Hypothesis}: explicitly state what would falsify the claim.
+\item \texttt{Computation}: ship deterministic scripts, frozen outputs, and result tables.
+\item \texttt{Scope}: do not claim ``RS proves X biologically'' when Lean only proves the structural shell.
+\end{itemize}
+
+Every paper package should also include:
+\begin{itemize}
+\item one paragraph explaining what is formally proved,
+\item one paragraph explaining what remains model-level,
+\item one reviewer-facing comparison to the closest standard literature,
+\item a methods appendix with scripts and dataset versions,
+\item and a table mapping major claims to theorem / model / hypothesis.
+\end{itemize}
+
+\section*{Current Lean Baseline For The Paper Program}
+
+\subsection*{Codon objective and optimization}
+\begin{itemize}
+\item \texttt{CodonNeighborCost}
+\item \texttt{ErrorImpactMatrix}
+\item \texttt{MutationModel}
+\item \texttt{CompositeJCost}
+\item \texttt{CodonAssignmentObjective}
+\item \texttt{CodonAssignmentOptimality}
+\item \texttt{CodonAssignmentGlobalOptimality}
+\item \texttt{DegeneracySearchSpace}
+\end{itemize}
+This is the backbone for Papers 1, 8, and 9.
+
+\subsection*{Wobble, parity, and conservation}
+\begin{itemize}
+\item \texttt{AminoAcidZClassification}
+\item \texttt{ZInvariantPipeline}
+\item \texttt{ZParityDegeneracyTable}
+\item \texttt{WobbleZParity}
+\item \texttt{ConservationHierarchy}
+\end{itemize}
+This is the backbone for Paper 6 and part of Paper 3.
+
+\subsection*{Helical phase and intron placement}
+\begin{itemize}
+\item \texttt{IntronStructure}
+\item \texttt{PhaseAlignmentLayer}
+\item \texttt{HelicalPhaseModel}
+\item \texttt{IntronPlacementOptimality}
+\end{itemize}
+This is the backbone for Paper 5 and part of Paper 3.
+
+\subsection*{Timing, FOLD, and gearbox}
+\begin{itemize}
+\item \texttt{TemporalCoordinationLayer}
+\item \texttt{ChromosomePhaseProfile}
+\item \texttt{HydrationGearbox}
+\item \texttt{GearboxSelectivity}
+\end{itemize}
+This is the backbone for Papers 2, 6, and part of Paper 3.
+
+\subsection*{Bridge layer to WTokens and synthetic tests}
+\begin{itemize}
+\item \texttt{WTokenAssignmentBridge}
+\item \texttt{SyntheticFalsifierAssays}
+\item \texttt{OptimizationCertificate}
+\end{itemize}
+This is the backbone for Papers 7, 8, and 9.
+
+All of the above modules are currently \texttt{sorry}-free and \texttt{axiom}-free.
+
+\section*{Detailed Paper Plans}
+
+\subsection*{1. The Standard Genetic Code Is Not Locally Optimal Under Simple Chemical Distance}
+\textbf{Why this should be written now.} This is still the sharpest tactical result in the program. It is concrete, computational, reproducible, and easy to explain: under a naive chemistry-only metric, the standard code is not locally optimal, so the true biological objective must be richer.
+
+\textbf{Lean base now in place.}
+\begin{itemize}
+\item \texttt{AminoAcidZClassification}
+\item \texttt{CodonNeighborCost}
+\item \texttt{ErrorImpactMatrix}
+\item \texttt{MutationModel}
+\item \texttt{CompositeJCost}
+\item \texttt{CodonAssignmentObjective}
+\item \texttt{CodonAssignmentOptimality}
+\end{itemize}
+
+\textbf{Strongest honest claim.} The standard genetic code does not minimize a simple chemical-distance objective. Any serious optimality theory of the code must include additional structure, and RS gives a principled place to look for it.
+
+\textbf{Still needed before submission.}
+\begin{itemize}
+\item deterministic optimizer reruns
+\item frozen result tables
+\item random-code baseline
+\item degeneracy-preserving shuffle baseline
+\item pairwise-swap histogram
+\item annealing convergence figure
+\item supplement listing the best improving swaps
+\end{itemize}
+
+\textbf{Suggested title.} \emph{The Standard Genetic Code Is Not Locally Optimal Under Simple Chemical Distance}
+
+\textbf{Priority.} Highest.
+
+\subsection*{2. Sex as Phase-Debt Cancellation}
+\textbf{Why this is still high value.} This remains the strongest conceptual biology result outside the zero-junk platform paper. It gives RS a structural answer to why recombination helps.
+
+\textbf{Lean base now in place.}
+\begin{itemize}
+\item \texttt{TemporalCoordinationLayer}
+\item \texttt{ChromosomePhaseProfile}
+\end{itemize}
+
+\textbf{Strongest honest claim.} The FOLD operator annihilates antisymmetric phase debt and asexual inheritance does not. This gives a formal structural analogue of recombination advantage.
+
+\textbf{Still needed before submission.}
+\begin{itemize}
+\item one explicit toy model of debt accumulation across generations
+\item one section translating the 8-register language into standard genetics language
+\item one engagement section with Muller's ratchet, Hill-Robertson interference, and recombination advantage
+\item one paragraph on what the register entries could physically mean
+\end{itemize}
+
+\textbf{Priority.} Very high, but draft after the toy model exists.
+
+\subsection*{3. Toward a Zero-Junk Genome}
+\textbf{Why this remains essential.} This is the platform paper. It should frame the entire DNA program and point to the sharper specialist papers.
+
+\textbf{Current status.} Already drafted in \texttt{papers/tex/RS\_DNA\_Zero\_Junk\_Framework.tex}.
+
+\textbf{What is stronger now than before.}
+\begin{itemize}
+\item full parity / degeneracy tables
+\item explicit conservation hierarchy
+\item helical phase stress shell
+\item composite-cost interfaces
+\item synthetic falsifier interfaces
+\end{itemize}
+
+\textbf{Second-pass improvements.}
+\begin{itemize}
+\item update the formalization summary to reflect the expanded genetics namespace
+\item add a figure for the five-layer genome decomposition
+\item add a codon-space figure
+\item add an intron phase figure
+\item move the most speculative ledger-balance language further into hypothesis framing
+\end{itemize}
+
+\textbf{Priority.} High, as the anchor preprint.
+
+\subsection*{4. Z-Parity and the Hierarchy of Conservation in the Genetic Code}
+\textbf{Why this moved up.} This paper is much more ready than it was on the first pass. The core theorem package exists and the story is clean.
+
+\textbf{Lean base now in place.}
+\begin{itemize}
+\item \texttt{ZInvariantPipeline}
+\item \texttt{AminoAcidZClassification}
+\item \texttt{ZParityDegeneracyTable}
+\item \texttt{WobbleZParity}
+\item \texttt{ConservationHierarchy}
+\end{itemize}
+
+\textbf{Strongest honest claim.} Synonymous wobble substitutions can preserve amino-acid identity while breaking codon-level Z-parity, yielding a formal conservation hierarchy:
+\[
+\text{amino-acid identity} > \text{chemical similarity} > \text{Z-parity}.
+\]
+
+\textbf{Still needed before submission.}
+\begin{itemize}
+\item one compact visual table for all family classes
+\item two or three examples beyond valine in the narrative section
+\item one careful interpretation section on what parity-like structure could mean biologically
+\end{itemize}
+
+\textbf{Priority.} Write now.
+
+\subsection*{5. Intron Positioning from Helical Phase Stress}
+\textbf{Why this is important.} This is the most direct genomics test of the framework. If the predictor works, it is a real sequence-to-structure claim.
+
+\textbf{Lean base now in place.}
+\begin{itemize}
+\item \texttt{IntronStructure}
+\item \texttt{PhaseAlignmentLayer}
+\item \texttt{HelicalPhaseModel}
+\item \texttt{IntronPlacementOptimality}
+\end{itemize}
+
+\textbf{Strongest honest claim.} The theory now supports a dataset-independent notion of phase stress and candidate spacer insertion sites. What is missing is the empirical validation layer.
+
+\textbf{Still needed before submission.}
+\begin{itemize}
+\item predictor implementation
+\item curated benchmark genes
+\item null-model comparisons
+\item sensitivity analysis across transcript sets and annotation releases
+\end{itemize}
+
+\textbf{Priority.} One more strong validation pass.
+
+\subsection*{6. The Molecular Gearbox: Phi-Ladder Timing in Biology}
+\textbf{Why this matters.} This is the biophysics bridge paper linking the DNA program to water structure, molecular timing, and possibly circadian-scale dynamics.
+
+\textbf{Lean base now in place.}
+\begin{itemize}
+\item \texttt{BioClocking}
+\item \texttt{HydrationGearbox}
+\item \texttt{GearboxRungs}
+\item \texttt{GearboxSelectivity}
+\item \texttt{Water/Constants}
+\end{itemize}
+
+\textbf{Strongest honest claim.} The current formal surface supports a phi-selective timing architecture and a rung-witness catalog. The mechanism is still partly interpretive and needs a tighter literature-facing section.
+
+\textbf{Still needed before submission.}
+\begin{itemize}
+\item clean separation between theorem and mechanism
+\item spectroscopy literature review
+\item tighter physical argument for phi-selective filtering
+\item more careful mapping from rungs to known biological timescales
+\end{itemize}
+
+\textbf{Priority.} One more mechanism-tightening pass.
+
+\subsection*{7. Synthetic Biology Falsifiers for the RS DNA Framework}
+\textbf{Why this should not wait too long.} This paper is strategically important because it converts the framework into an experimental program. The Lean layer now has explicit assay predicates and RS-violating construct interfaces.
+
+\textbf{Lean base now in place.}
+\begin{itemize}
+\item \texttt{SyntheticFalsifierAssays}
+\item \texttt{DegeneracySearchSpace}
+\item \texttt{CodonAssignmentGlobalOptimality}
+\item \texttt{IntronPlacementOptimality}
+\item \texttt{CompositeJCost}
+\end{itemize}
+
+\textbf{Strongest honest claim.} We can now write a design paper describing construct classes and predicted assay failures, even before wet-lab collaboration exists.
+
+\textbf{Still needed before submission.}
+\begin{itemize}
+\item concrete construct classes
+\item assay definitions
+\item expected qualitative effect directions
+\item collaborator-facing experimental roadmap
+\end{itemize}
+
+\textbf{Priority.} Strategically high as a design / roadmap paper.
+
+\subsection*{8. Deriving the Exact Codon-to-Amino-Acid Assignment}
+\textbf{Why this is flagship.} If solved, this is the crown-jewel derivation: not just why there are 64 codons and 20 amino acids, but why the specific map is what it is.
+
+\textbf{Lean base now in place.}
+\begin{itemize}
+\item \texttt{CodonAssignmentObjective}
+\item \texttt{CodonAssignmentOptimality}
+\item \texttt{WTokenAssignmentBridge}
+\item \texttt{CompositeJCost}
+\item \texttt{OptimizationCertificate}
+\end{itemize}
+
+\textbf{Why it is still not ready.} The theorem shell exists, but the composite cost is not yet calibrated well enough to support a strong biological claim.
+
+\textbf{Still needed before submission.}
+\begin{itemize}
+\item a defensible composite metric
+\item local optimality certificates under that metric
+\item a clean bridge from WToken candidate classes to amino-acid classes
+\item a careful statement of uniqueness versus near-uniqueness
+\end{itemize}
+
+\textbf{Priority.} Strategic flagship, not yet a full-paper claim.
+
+\subsection*{9. Global J-Cost Optimality of the Genetic Code}
+\textbf{Why this is still the hardest paper.} This is the strongest possible optimality paper and the least forgiving one. Reviewer scrutiny will be intense because the claim is global and the search space is enormous.
+
+\textbf{Lean base now in place.}
+\begin{itemize}
+\item \texttt{DegeneracySearchSpace}
+\item \texttt{CodonAssignmentGlobalOptimality}
+\item \texttt{OptimizationCertificate}
+\item \texttt{CompositeJCost}
+\end{itemize}
+
+\textbf{Still needed before submission.}
+\begin{itemize}
+\item combinatorial reductions that materially shrink the search space
+\item certified exhaustive or bounded search over the reduced space
+\item clear distinction between pattern-level and assignment-level optimality
+\item a supplement explaining exactly what the certificates cover
+\end{itemize}
+
+\textbf{Priority.} Long-horizon flagship.
+
+\section*{Recommended Writing Order}
+
+\subsection*{Best tactical sequence for actual papers}
+\begin{enumerate}
+\item \textbf{The Standard Genetic Code Is Not Locally Optimal Under Simple Chemical Distance}
+\item \textbf{Z-Parity and the Hierarchy of Conservation in the Genetic Code}
+\item \textbf{Toward a Zero-Junk Genome} as revised anchor preprint
+\item \textbf{Sex as Phase-Debt Cancellation}
+\item \textbf{Intron Positioning from Helical Phase Stress}
+\item \textbf{The Molecular Gearbox}
+\item \textbf{Synthetic Biology Falsifiers} as a design paper
+\end{enumerate}
+
+\subsection*{Best flagship sequence}
+\begin{enumerate}
+\item \textbf{Deriving the Exact Codon-to-Amino-Acid Assignment}
+\item \textbf{Global J-Cost Optimality of the Genetic Code}
+\end{enumerate}
+
+\textbf{Why this order now.}
+\begin{itemize}
+\item Paper 1 gives the sharpest clean result.
+\item Paper 4 is small, legible, and helps build credibility fast.
+\item Paper 3 anchors the full DNA program.
+\item Paper 2 gives the strongest conceptual biology derivation once the toy model is added.
+\item Papers 5 and 6 need one more validation / mechanism pass.
+\item Papers 8 and 9 should only be written when the evidence package is genuinely ready.
+\end{itemize}
+
+\section*{Shared Assets To Build Once And Reuse Everywhere}
+\begin{itemize}
+\item a theorem ledger mapping claim, module, theorem name, and status
+\item a common codon-space figure set
+\item a common intron / helix figure set
+\item deterministic optimizer result bundles
+\item a standard literature comparison appendix
+\item a shared glossary mapping RS language to standard biology language
+\end{itemize}
+
+\section*{Immediate Next Actions}
+\textbf{Paper 1 package}
+\begin{itemize}
+\item freeze optimizer outputs
+\item regenerate swap tables and baselines
+\item draft methods and results first
+\end{itemize}
+
+\textbf{Paper 4 package}
+\begin{itemize}
+\item turn the new parity modules into one compact figure and one table
+\item draft this as the fastest small paper
+\end{itemize}
+
+\textbf{Paper 3 package}
+\begin{itemize}
+\item revise \texttt{papers/tex/RS\_DNA\_Zero\_Junk\_Framework.tex}
+\item add figures
+\item update the formalization section to reflect the expanded Lean surface
+\end{itemize}
+
+\textbf{Paper 2 package}
+\begin{itemize}
+\item build one toy simulation of debt accumulation under asexual inheritance
+\item write the translation section into mainstream recombination language
+\end{itemize}
+
+\textbf{Paper 5 package}
+\begin{itemize}
+\item implement a first intron predictor
+\item benchmark against at least one null model
+\end{itemize}
+
+\textbf{Paper 6 package}
+\begin{itemize}
+\item separate proved statements from mechanistic conjectures more aggressively
+\item tighten the spectroscopy and water-cluster section
+\end{itemize}
+
+\section*{Bottom-Line Recommendation}
+If the goal is best immediate submission, do:
+\begin{enumerate}
+\item \textbf{Code not chemically optimal}
+\item \textbf{Z-parity hierarchy}
+\item \textbf{Zero-junk genome} as revised anchor
+\end{enumerate}
+
+If the goal is best conceptual impact, do:
+\begin{enumerate}
+\item \textbf{Code not chemically optimal}
+\item \textbf{Sex as phase-debt cancellation}
+\item \textbf{Zero-junk genome}
+\end{enumerate}
+
+If the goal is ultimate flagship value, keep working toward:
+\begin{enumerate}
+\item \textbf{Exact codon assignment}
+\item \textbf{Global J-cost optimality}
+\item \textbf{Synthetic falsifiers}
+\end{enumerate}
+
+The key second-pass conclusion is simple: the DNA paper program is now strong enough that the next bottleneck is not Lean formalization. It is paper architecture, deterministic computation, validation datasets, and reviewer-facing framing. The smaller and sharper papers should start now while the flagship derivation papers continue maturing in parallel.
+
+\end{document}

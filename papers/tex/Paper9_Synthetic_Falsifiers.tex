@@ -1,0 +1,377 @@
+\documentclass[11pt,twocolumn]{article}
+
+\usepackage[margin=0.85in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage{authblk}
+\usepackage[numbers]{natbib}
+\usepackage{enumitem}
+\setlist{nosep}
+
+\hypersetup{colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black}
+
+\title{Synthetic Falsifiers for Recognition Science Predictions\\in Genome Architecture}
+
+\author[1]{Jonathan Washburn}
+\affil[1]{Independent Researcher}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We define a formal framework for testing the Recognition Science (RS)
+theory of genome architecture against synthetic biology constructs. Three
+machine-checked assay predicates are formalized in Lean~4: (1)~a
+\textbf{degeneracy assay} that tests whether a synthetic code preserves the
+standard degeneracy pattern; (2)~a \textbf{wobble assay} that tests whether
+the clean-wobble family-box count is maintained; and (3)~an
+\textbf{optimality assay} that tests whether the synthetic code achieves
+lower total weighted mutation cost than the standard code. A synthetic
+construct that fails any assay constitutes a formal falsifier of the RS
+framework. The standard code is proved to pass all three assays. We
+describe five classes of synthetic constructs---reduced-redundancy codes,
+phase-misaligned introns, sub-threshold introns, repeat-depleted genomes,
+and clock-disrupted timing elements---each designed to probe a specific
+layer of the RS five-layer genome decomposition. This is a design paper:
+it specifies the constructs, assays, and predicted outcomes, but does not
+report experimental results. The purpose is to convert the RS framework
+from a post-hoc interpretation into an experimentally falsifiable program.
+\end{abstract}
+
+\section{Introduction}
+
+A theoretical framework that cannot be falsified is not science. The RS
+theory of genome architecture~\cite{Washburn2025, Paper4} makes specific
+structural predictions: the standard genetic code minimizes a
+position-weighted mutation cost~\cite{Paper2}, introns are positioned by
+helical phase stress~\cite{Paper7}, wobble degeneracy dominates the codon
+table~\cite{Paper3}, and the FOLD operator confers a categorical advantage
+to sexual reproduction~\cite{Paper6}.
+
+Each of these predictions can in principle be tested by constructing
+synthetic codes or genomic architectures that violate the predicted
+constraints and measuring the phenotypic consequences. This paper defines
+the formal assay framework and specifies five classes of synthetic
+falsifier constructs.
+
+The key contribution is that the assay predicates are \textbf{formalized
+in Lean~4}. The wobble assay is decidable (equality of natural numbers);
+the degeneracy and optimality assays are logical propositions over the
+formalized code. The standard code is proved to pass all three assays, so
+any construct that fails at least one is a formal falsifier---a
+machine-checkable witness that the RS prediction is violated.
+
+\section{The Assay Framework}
+
+\subsection{Synthetic Constructs}
+
+A \textbf{synthetic construct} is a codon assignment---a bijection on the
+20 amino acid labels that relabels which amino acid each codon family
+encodes. The standard code is the identity assignment:
+
+\begin{quote}
+\texttt{standardConstruct} has \texttt{assignment := standardAssignment}
+\end{quote}
+
+\noindent (equivalently, \texttt{ofAssignment standardAssignment}).
+Both are defined in \texttt{SyntheticFalsifierAssays.lean}.
+
+\subsection{Three Assay Predicates}
+
+\textbf{Assay 1: Degeneracy.}
+A construct passes the degeneracy assay if and only if its assignment
+respects the standard degeneracy classes:
+\[
+  \texttt{degeneracyAssay}(s) \;\Leftrightarrow\;
+  \texttt{respectsDegeneracyClass}(s.\texttt{assignment}).
+\]
+A construct that reassigns a 6-fold amino acid to a 2-fold codon family
+fails this assay.
+
+\textbf{Assay 2: Wobble.}
+A construct passes the wobble assay if the number of family boxes with
+clean wobble symmetry (all four third-position variants synonymous, or a
+clean pyrimidine/purine $2{+}2$ split) equals the standard count:
+\[
+  \texttt{wobbleAssay}(s) \;\Leftrightarrow\;
+  \texttt{assignedCleanWobbleCount}(s.\texttt{assignment}) =
+  \texttt{cleanWobbleCount}.
+\]
+The standard code has 14 of 16 clean family boxes~\cite{Paper3}. A
+reassignment that breaks this count fails the wobble assay.
+
+\textbf{Assay 3: Optimality.}
+A construct passes the optimality assay if the standard code's total
+weighted mutation cost is no greater than the construct's cost:
+\[
+  \texttt{optimalityAssay}(w, s) \;\Leftrightarrow\;
+  \texttt{standardAssignmentCost}(w) \leq
+  \texttt{totalAssignmentCost}(w, s.\texttt{assignment}).
+\]
+A construct that achieves strictly lower cost than the standard code under
+the chosen weight vector $w$ fails the optimality assay.
+
+\subsection{Falsifier Definition}
+
+A construct is \textbf{RS-violating} if it fails at least one of the three
+assays:
+\[
+  \texttt{rsViolatingConstruct}(w, s) \;\Leftrightarrow\;
+  \neg\,\texttt{degeneracyAssay}(s) \;\lor\;
+  \neg\,\texttt{wobbleAssay}(s) \;\lor\;
+  \neg\,\texttt{optimalityAssay}(w, s).
+\]
+A \texttt{SyntheticFalsifier} packages the construct together with a
+proof that it violates at least one assay.
+
+\subsection{The Standard Code Passes All Assays}
+
+\begin{quote}
+\textbf{Theorem} (\texttt{standardConstruct\_not\_falsifier}).
+For any weight vector $w$, the standard code is not an RS-violating
+construct: $\neg\,\texttt{rsViolatingConstruct}(w,
+\texttt{standardConstruct})$.
+\end{quote}
+
+The proof proceeds by showing that the standard code passes each assay
+individually:
+\begin{itemize}
+\item \texttt{standardConstruct\_passes\_degeneracyAssay}:
+  the identity assignment respects all degeneracy classes.
+\item \texttt{standardConstruct\_passes\_wobbleAssay}:
+  the identity assignment preserves the clean-wobble count.
+\item \texttt{standardConstruct\_passes\_optimalityAssay}:
+  the identity assignment's cost equals its own cost ($\leq$ is
+  reflexive).
+\end{itemize}
+
+\section{Five Classes of Falsifier Constructs}
+
+Each class targets a specific layer of the RS five-layer genome
+decomposition~\cite{Paper4}.
+
+\subsection{Class 1: Reduced-Redundancy Codes}
+
+\textbf{Target layer}: Error correction.
+
+\textbf{Construct}: Reassign amino acids to reduce average degeneracy
+below the standard $61/20 \approx 3.05$. For example, split current
+4-fold families into pairs of 2-fold families by introducing new amino
+acid assignments at the wobble position.
+
+\textbf{Predicted assay outcome}: Fails the wobble assay (clean-wobble
+count drops below 14) and may fail the optimality assay (reduced
+redundancy increases vulnerability to point mutations).
+
+\textbf{Falsifier for RS}: If a reduced-redundancy code shows
+\emph{improved} fitness in a controlled expression system, the RS
+prediction that the current redundancy level is error-optimal is wrong.
+
+\subsection{Class 2: Phase-Misaligned Introns}
+
+\textbf{Target layer}: Phase alignment.
+
+\textbf{Construct}: Insert synthetic introns at positions that violate
+the helical phase-stress model: not on the half-octave grid
+($p \not\equiv 0 \pmod{4}$), and at low-stress rather than high-stress
+sites.
+
+\textbf{Predicted assay outcome}: Reduced splicing efficiency or gene
+expression, measurable by RT-qPCR or ribosome profiling.
+
+\textbf{Falsifier for RS}: If phase-misaligned introns produce
+\emph{equal or better} expression than phase-aligned introns of the same
+length, the helical-phase model~\cite{Paper7} is wrong.
+
+\subsection{Class 3: Sub-Threshold Introns}
+
+\textbf{Target layer}: Phase alignment (minimal intron size).
+
+\textbf{Construct}: Engineer introns shorter than the predicted minimal
+size of $8\varphi^5 \approx 89$~bp. Test introns of 50, 60, 70, and
+80~bp.
+
+\textbf{Predicted assay outcome}: Introns below $\sim$85~bp should show
+impaired splicing or reduced expression in mammalian cells.
+
+\textbf{Falsifier for RS}: If introns of 50--60~bp splice efficiently and
+support normal expression in mammalian cells, the $8\varphi^5$
+prediction~\cite{Paper7} is wrong.
+
+\subsection{Class 4: Repeat-Depleted Genomes}
+
+\textbf{Target layer}: Ledger balance.
+
+\textbf{Construct}: Systematically delete repetitive elements (SINEs,
+LINEs, LTR retrotransposons) from a defined genomic region while
+preserving all annotated genes and regulatory elements.
+
+\textbf{Predicted assay outcome}: Impaired gene regulation, chromatin
+organization, or replication timing in the depleted region.
+
+\textbf{Falsifier for RS}: If repeat depletion has no measurable
+phenotypic consequence (beyond the directly deleted elements), the
+ledger-balance hypothesis~\cite{Paper4} is wrong.
+
+\subsection{Class 5: Clock-Disrupted Timing Elements}
+
+\textbf{Target layer}: Temporal coordination.
+
+\textbf{Construct}: Mutate or delete non-coding elements predicted to
+implement $\varphi$-ladder timing (e.g., clock gene regulatory regions,
+replication-timing control elements) and measure the effect on downstream
+timing phenotypes.
+
+\textbf{Predicted assay outcome}: Disrupted biological timing at the
+specific $\varphi$-ladder rung corresponding to the deleted element.
+
+\textbf{Falsifier for RS}: If deletion of a predicted clock element has
+no effect on any timing phenotype, the gearbox model~\cite{Paper8} is
+wrong for that rung.
+
+\section{Formal Verification}
+
+The assay predicates and all structural theorems are formalized in
+Lean~4 (version 4.27.0) with Mathlib. The principal module is
+\texttt{SyntheticFalsifierAssays.lean}, which imports:
+
+\begin{itemize}
+\item \texttt{CodonAssignmentGlobalOptimality.lean}: the
+  \texttt{GlobalAssignmentCounterexampleCertificate} type.
+\item \texttt{CodonAssignmentOptimality.lean}: the \texttt{swapImproves}
+  predicate.
+\item \texttt{FamilyBoxAnalysis.lean}: \texttt{allFamilyBoxes},
+  \texttt{cleanWobbleCount}, \texttt{hasCleanWobble}.
+\item \texttt{DegeneracySearchSpace.lean}:
+  \texttt{respectsDegeneracyClass},
+  \texttt{standardAssignment\_respectsDegeneracyClass}.
+\end{itemize}
+
+Key theorems:
+\begin{itemize}
+\item \texttt{standardConstruct\_not\_falsifier}: the standard code
+  passes all three assays.
+\item \texttt{degeneracyFailure\_yields\_falsifier}: any assignment that
+  violates degeneracy classes is a falsifier.
+\item \texttt{wobbleFailure\_yields\_falsifier}: any assignment that
+  changes the clean-wobble count is a falsifier.
+\item \texttt{costImprovement\_yields\_falsifier}: any assignment that
+  strictly reduces total cost is a falsifier.
+\item \texttt{improvingSwap\_yields\_falsifier}: any improving pairwise
+  swap is a falsifier.
+\item \texttt{globalCounterexample\_yields\_falsifier}: any global
+  counterexample certificate is a falsifier.
+\end{itemize}
+
+The module contains zero axioms and zero \texttt{sorry} assertions.
+
+\section{Discussion}
+
+\subsection{Why a Design Paper}
+
+This paper specifies constructs, assays, and predictions but does not
+report experimental results. The purpose is to convert the RS framework
+from a post-hoc interpretation into a pre-registered experimental program.
+Each construct class can be independently tested by a synthetic biology
+or genomics laboratory without requiring acceptance of the broader RS
+theory.
+
+\subsection{Prioritization}
+
+The five construct classes differ in experimental difficulty:
+
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+Class & Difficulty & Technology \\
+\midrule
+1. Reduced redundancy & Medium & Expanded genetic codes \\
+2. Phase-misaligned introns & Low & Synthetic gene design \\
+3. Sub-threshold introns & Low & Minigene reporters \\
+4. Repeat depletion & High & CRISPR-based deletion \\
+5. Clock disruption & High & Enhancer/promoter KO \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Classes 2 and 3 are the easiest to test and should be prioritized. A
+single well-controlled experiment showing that phase-misaligned introns
+splice as well as phase-aligned ones would refute the helical-phase model.
+
+\subsection{Relation to Existing Synthetic Code Work}
+
+The expanded genetic code community~\cite{Chin2017} has already
+engineered organisms with reassigned codons (e.g., \emph{E.~coli} with
+all TAG codons reassigned). These experiments test codon \emph{identity},
+not codon \emph{optimality}. The RS falsifier framework asks a different
+question: not whether a reassigned code \emph{can work}, but whether it
+\emph{outperforms} the standard code on the RS-predicted objective.
+
+\subsection{Scope}
+
+The assay framework currently covers codon-level properties (degeneracy,
+wobble, cost). It does not yet cover intron-level or timing-level
+properties, which would require extending the Lean formalization with
+sequence-level predicates. Classes 2--5 are specified as construct
+descriptions, not as formalized assay predicates.
+
+\section{Conclusion}
+
+The RS theory of genome architecture generates specific, testable
+predictions at every layer of the five-layer decomposition. This paper
+defines a formal assay framework (three machine-checked predicates) and
+five classes of synthetic falsifier constructs designed to probe each
+layer independently. The standard code is proved to pass all assays. Any
+construct that fails at least one assay is a formal, machine-checkable
+falsifier. The immediate experimental priorities are phase-misaligned
+introns and sub-threshold introns, both of which can be tested with
+standard synthetic gene design.
+
+\section*{Data Availability}
+
+All Lean source files are in the \texttt{reality} repository under
+\texttt{IndisputableMonolith/Genetics/}.
+
+\begin{thebibliography}{99}
+\bibitem{Chin2017}
+Chin, J.W. (2017). Expanding and reprogramming the genetic code.
+\textit{Nature} \textbf{550}(7674), 53--60.
+
+\bibitem{Paper2}
+Washburn, J. (2026). The standard genetic code is globally optimal under
+position-weighted mutation cost. \textit{In preparation}.
+
+\bibitem{Paper3}
+Washburn, J. (2026). Z-parity and the hierarchy of conservation in the
+genetic code. \textit{In preparation}.
+
+\bibitem{Paper4}
+Washburn, J. (2026). Toward a zero-junk genome: Recognition Science
+predictions for DNA as Z-invariant storage. \textit{In preparation}.
+
+\bibitem{Paper6}
+Washburn, J. (2026). Sex as phase-debt cancellation: a formal derivation
+of recombination advantage. \textit{In preparation}.
+
+\bibitem{Paper7}
+Washburn, J. (2026). Predicting intron placement from helical phase
+stress. \textit{In preparation}.
+
+\bibitem{Paper8}
+Washburn, J. (2026). The molecular gearbox: a $\varphi$-selective
+architecture for biological timing. \textit{In preparation}.
+
+\bibitem{Washburn2025}
+Washburn, J. (2025). The Algebra of Reality: A Recognition Science
+Derivation of Physical Law. \textit{Axioms} \textbf{15}(2), 90.
+\end{thebibliography}
+
+\end{document}

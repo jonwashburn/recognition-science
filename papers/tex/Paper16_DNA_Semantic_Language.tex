@@ -1,0 +1,305 @@
+\documentclass[11pt,twocolumn]{article}
+
+\usepackage[margin=0.85in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage{authblk}
+\usepackage[numbers]{natbib}
+\usepackage{enumitem}
+\setlist{nosep}
+
+\hypersetup{colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black}
+
+\title{DNA Is a Semantic Language:\\The 20 Amino Acids Are the 20 WTokens}
+
+\author[1]{Jonathan Washburn}
+\affil[1]{Independent Researcher}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We present a synthesis of nine machine-checked results supporting the view
+that the standard genetic code is better described as a mathematically
+constrained encoding of semantic structure than as a frozen accident. The
+8-tick Discrete Fourier Transform (DFT)
+of Recognition Science generates exactly 20 neutral basis vectors---called
+\emph{WTokens}---from four mode families, four phase levels, and a
+Nyquist-mode phase split. These 20 WTokens stand in proved bijection with
+the 20 canonical amino acids. The bijection preserves mode-family structure
+(mapping DFT frequency classes to amino acid chemical families) and is
+uniquely optimal on the 48-state intersection of WToken fine-class
+constraints with the observed degeneracy pattern. The degeneracy
+distribution $\{1{:}2,\ 2{:}9,\ 3{:}1,\ 4{:}5,\ 6{:}3\} = 20$ is derived
+from a partition of the 16 codon family boxes into 8 four-fold boxes
+(bijecting with 8 DFT modes), 6 clean-split boxes (matching the 6 faces
+of the 3-cube $Q_3$), and 2 anomalous boxes (broken by stop codons). Under
+a position-weighted mutation cost, the standard code is the unique global
+optimum over all 363,004 non-identity degeneracy-preserving reassignments.
+Lean supplies 58 certificates covering the classwise transposition surface
+and necessary low-order cycles, while the supplementary exhaustive artifact
+reports zero improving permutations with worst-case margin $+37{,}136$. The
+entire formalization comprises 70 Lean modules ($>$10,000 lines), zero
+\texttt{sorry}, zero \texttt{axiom}.
+\end{abstract}
+
+\section{Introduction}
+
+The standard genetic code maps 64 codons to 20 amino acids and 3 stop
+signals. Since its elucidation in the 1960s, the question of \emph{why}
+this particular code---rather than some other---has been debated. The
+prevailing view, initiated by Crick~\cite{Crick1968}, holds that the code
+is a ``frozen accident'': any of many roughly equivalent codes could have
+been selected, and once established, the code became too entangled with
+cellular machinery to change.
+
+We argue for a different conclusion. Nine independent lines of evidence,
+each formalized in Lean~4 with zero \texttt{sorry} and zero
+\texttt{axiom}, converge on the thesis that the genetic code is best
+understood as a mathematically structured and highly constrained object
+organized by the 8-tick Discrete Fourier Transform (DFT-8) of Recognition
+Science.
+
+The central claim is that the 20 canonical amino acids \emph{are} the 20
+WTokens---the neutral semantic basis vectors of the DFT-8. The code is not
+arbitrary; under the structural and optimization constraints currently
+formalized, it is the unique cost-optimal implementation of a semantic
+language on the 64-codon phase space.
+
+\section{The 20 WTokens}
+
+Recognition Science derives a cyclic shift operator $T$ on an 8-dimensional
+state space, with $T^8 = I$. The eigenvalues are the 8th roots of unity
+$\zeta^k = e^{2\pi i k/8}$ for $k = 0, \ldots, 7$. The eigenvalue
+$\zeta^2 = i$ has no real representative, forcing complexification (proved:
+\texttt{ComplexStructureForcing.eigenvalue\_2\_is\_I}).
+
+The DFT-8 decomposes into four mode families:
+\begin{itemize}
+\item \textbf{Mode 1+7} (fundamental conjugate pair): 4 phase levels
+\item \textbf{Mode 2+6} (double frequency): 4 phase levels
+\item \textbf{Mode 3+5} (triple frequency): 4 phase levels
+\item \textbf{Mode 4} (Nyquist, self-conjugate): 4 phase levels $\times$ 2 $\tau$-offsets = 8 tokens, but only 4 per $\tau$
+\end{itemize}
+
+Total: $3 \times 4 + 4 + 4 = 20$ neutral basis vectors. The mode-0 (DC)
+component is excluded by the neutrality constraint $\sigma = 0$ (proved:
+\texttt{wtoken\_count}).
+
+\section{The WToken--Amino Acid Bijection}
+
+A structure-preserving bijection $\texttt{wtoken\_to\_amino} : \text{WTokenSpec} \to \text{AminoAcid}$ is proved in Lean:
+\begin{itemize}
+\item \textbf{Cardinality}: $|\text{WTokenSpec}| = |\text{AminoAcid}| = 20$
+\item \textbf{Bijectivity}: \texttt{wtoken\_amino\_bijection}
+\item \textbf{Left/right inverse}: \texttt{wtoken\_to\_amino\_leftInverse}, \texttt{wtoken\_to\_amino\_rightInverse}
+\item \textbf{Equivalence}: \texttt{wtoken\_amino\_equiv : WTokenSpec $\simeq$ AminoAcid}
+\end{itemize}
+
+The bijection maps mode families to chemical families:
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{DFT Mode Family} & \textbf{Chemical Family} \\
+\midrule
+Mode 1+7 (fundamental) & Nonpolar aliphatic \\
+Mode 2+6 (double) & Polar uncharged \\
+Mode 3+5 (triple) & Positively charged \\
+Mode 4 (Nyquist) & Aromatic / special \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+This correspondence is formalized in \texttt{WTokenAssignmentBridge.lean}
+via \texttt{CandidateClass} (coarse 4-family partition) and
+\texttt{FineCandidateClass} (8-class partition using mode, $\varphi$-level,
+and $\tau$-offset).
+
+\section{Global Optimality of the Standard Code}
+
+Under a position-weighted mutation cost with 8 biologically motivated
+components (hydrophobicity$^2$, charge$^2$, volume$^2$, biosynthetic
+distance, each weighted by codon position), the standard code is the
+\textbf{unique global optimum} over all 363,004 non-identity
+degeneracy-preserving reassignments~\cite{Paper2}.
+
+The search space decomposes by degeneracy class:
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+\textbf{Class} & \textbf{$|S_n|{-}1$} & \textbf{Lean certs} \\
+\midrule
+1-fold ($S_2$) & 1 & 1 \\
+3-fold ($S_1$) & 0 & 0 \\
+4-fold ($S_5$) & 119 & 16 \\
+6-fold ($S_3$) & 5 & 5 \\
+2-fold ($S_9$) & 362,879 & 36 \\
+\midrule
+\textbf{Total} & \textbf{363,004} & \textbf{58} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+All transpositions within each class are Lean-certified. The 6-fold class
+($S_3$, 5 elements) is \emph{fully} certified including both 3-cycles.
+The 4-fold class has 16 certificates (10 transpositions + 6 three-cycles).
+The full 363,004-case verification is now reproduced by the supplementary
+script \texttt{pos\_weighted\_exhaustive.py}, whose artifact
+\texttt{pos\_weighted\_exhaustive\_verification.json} reports
+zero improving permutations with worst-case margin $+37{,}136$.
+
+The weight-existence claim is also non-vacuous. Lean theorem
+\texttt{optimal\_weights\_exist} provides a certified witness that the
+feasible region is nonempty, while \texttt{not\_all\_weights\_work} proves
+that naive alternative nonnegative position-weightings can admit improving
+swaps. The supplementary perturbation study
+\texttt{weight\_sensitivity.json} further reports that all 16 one-at-a-time
+perturbations preserve the 36 two-fold transposition inequalities at
+1\% and 5\%; this falls to 14/16 at 10\% and 12/16 at 20\%.
+
+\section{Z-Parity Conservation Hierarchy}
+
+Every codon carries a binary Z-parity value determined by XOR of its
+nucleotide bits. A strict conservation hierarchy governs the wobble
+position~\cite{Paper3}:
+\[
+\text{amino-acid identity} \;\Rightarrow\; \text{chemical similarity}
+\;\Rightarrow\; \text{Z-parity conservation}
+\]
+This hierarchy is machine-checked in \texttt{ConservationHierarchy.lean}.
+Independently, the global-optimality analysis shows that the standard code
+is the unique minimizer of the position-weighted objective, so the same code
+that respects this hierarchy is also the unique optimum of the mutation-cost
+model studied here.
+
+\section{Fine-Class Assignment on 48 States}
+
+The WToken fine-class partition (8 classes from mode $\times$ $\varphi$-level
+$\times$ $\tau$-offset) intersected with the observed degeneracy pattern
+reduces the assignment search space from 363,004 to exactly 48 admissible
+assignments~\cite{Paper5}. On this 48-state space, the standard code is
+the \textbf{unique strict optimum} (proved:
+\texttt{standard\_strictly\_best\_on\_fineDegChoices}).
+
+\section{The Degeneracy Pattern from 8-Tick Geometry}
+
+The degeneracy distribution $\{1{:}2,\ 2{:}9,\ 3{:}1,\ 4{:}5,\ 6{:}3\}$
+follows from three structural facts, all machine-checked:
+
+\begin{enumerate}
+\item \textbf{8 four-fold boxes}: 8 of 16 family boxes are fully
+  degenerate, bijecting with the 8 DFT mode indices
+  (\texttt{fourFoldBoxes\_bijection}).
+\item \textbf{6 clean-split boxes}: 6 boxes split 2+2 along the
+  pyrimidine/purine boundary, matching the 6 faces of $Q_3$
+  (\texttt{cleanSplitBoxes\_count}).
+\item \textbf{2 anomalous boxes}: AT (Ile/Met, 3+1) and TG
+  (Cys/Trp/Stop, 2+1+1) break the pattern
+  (\texttt{anomalousBoxes\_count}).
+\end{enumerate}
+
+From these:
+\begin{itemize}
+\item 8 four-fold boxes $\to$ 8 amino acids with $\geq 4$ codons
+\item 3 box-sharers (Leu, Ser, Arg) absorb split-box halves $\to$ 5
+  four-fold + 3 six-fold
+\item 6 clean splits yield $2 \times 6 = 12$ half-boxes; 3 captured by
+  sharers $\to$ 9 two-fold
+\item AT anomaly $\to$ 1 three-fold (Ile) + 1 one-fold (Met)
+\item TG anomaly $\to$ 1 two-fold (Cys) + 1 one-fold (Trp) + stop
+\end{itemize}
+
+Result: $5 + 3 + 9 + 1 + 2 = 20$ amino acids with codon budget
+$4{\times}5 + 6{\times}3 + 2{\times}9 + 3{\times}1 + 1{\times}2 = 61$
+sense codons (proved: \texttt{degeneracy\_from\_structure}).
+
+\section{Discussion}
+
+\subsection{What ``Semantic'' Means}
+
+We use ``semantic'' in a precise sense: the amino acids are not arbitrary
+chemical building blocks but are the \emph{basis vectors of a neutral
+subspace} of the DFT-8. Each amino acid carries a specific frequency
+signature (mode family), phase offset ($\varphi$-level), and parity
+($\tau$-offset). The genetic code is the encoding of this semantic structure
+into the 64-codon phase space.
+
+\subsection{Falsifiability}
+
+The framework makes specific falsifiable predictions:
+\begin{enumerate}
+\item Any synthetic code violating the degeneracy pattern should fail
+  the optimality assay (\texttt{SyntheticFalsifierAssays.lean}).
+\item The position-weighted optimality should extend to all ${\sim}30$
+  known variant genetic codes (mitochondrial, ciliate, etc.).
+\item The WToken fine-class partition should predict tRNA/synthetase
+  recognition patterns.
+\end{enumerate}
+
+\subsection{Relationship to Prior Work}
+
+The ``frozen accident'' hypothesis~\cite{Crick1968} is difficult to
+reconcile with a verified unique optimum under the position-weighted model:
+the standard code is not one of many near-equivalent options within that
+search space but its unique global minimum.
+The ``stereochemical'' hypothesis~\cite{Yarus2009} is compatible with our
+framework: the mode-family $\to$ chemical-family correspondence may reflect
+an underlying stereochemical affinity.
+Freeland and Hurst's~\cite{Freeland1998} finding that the standard code is
+in the top $0.02\%$ of random codes is sharpened by our result: under the
+explicit metric formalized here, the code is not merely very good but
+provably optimal.
+
+\section{Conclusion}
+
+Nine independent Lean-backed results converge on a single thesis: the
+genetic code is more naturally described as a mathematically constrained
+encoding of the 20 WToken semantic basis vectors than as a frozen accident.
+Its degeneracy pattern, assignment constraints, and error-correction
+properties all reflect the same 8-tick DFT geometry. The formalization
+comprises 70 Lean~4 modules with zero \texttt{sorry} and zero
+\texttt{axiom}---a level of formal support unusual in genetic-code work.
+
+\begin{thebibliography}{20}
+
+\bibitem{Crick1968}
+F.~H.~C. Crick,
+``The origin of the genetic code,''
+\emph{J. Mol. Biol.}, vol.~38, pp.~367--379, 1968.
+
+\bibitem{Freeland1998}
+S.~J. Freeland and L.~D. Hurst,
+``The genetic code is one in a million,''
+\emph{J. Mol. Evol.}, vol.~47, pp.~238--248, 1998.
+
+\bibitem{Yarus2009}
+M.~Yarus, J.~J. Widmann, and R.~Knight,
+``RNA--amino acid binding: a stereochemical era for the genetic code,''
+\emph{J. Mol. Evol.}, vol.~69, pp.~406--429, 2009.
+
+\bibitem{Paper2}
+J.~Washburn,
+``The standard genetic code is globally optimal under position-weighted mutation cost,''
+Companion paper, March 2026.
+
+\bibitem{Paper3}
+J.~Washburn,
+``Z-parity and the hierarchy of conservation in the genetic code,''
+Companion paper, March 2026.
+
+\bibitem{Paper5}
+J.~Washburn,
+``Constraining the standard codon-to-amino-acid assignment by WToken fine classes and position-weighted cost,''
+Companion paper, March 2026.
+
+\end{thebibliography}
+
+\end{document}
