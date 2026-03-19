@@ -1,0 +1,898 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[numbers]{natbib}
+\usepackage{microtype}
+\usepackage{xcolor}
+
+\hypersetup{colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{hypothesis}[theorem]{Hypothesis}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The Water Computer Thesis:\\
+Liquid Water as Recognition Hardware\\
+in a Discrete Ledger Framework}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We present the \textbf{Water Computer Thesis}: liquid water is a strong
+candidate for the molecular substrate that supports biological
+recognition computation.  Recognition Science (RS) derives all physics
+from a single cost function $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$, which
+forces the golden ratio $\varphi = (1+\sqrt{5})/2$, an 8-tick discrete
+cycle, and a coherence energy quantum $E_{\mathrm{coh}} =
+\varphi^{-5}$~eV.  We argue that this framework singles out liquid
+water among common solvents through four hardware criteria:
+(1)~$\varphi^{-5} \approx 0.090$~eV falls within the hydrogen-bond
+energy band, (2)~the derived frequency $\nu_0 \approx 724$~cm$^{-1}$
+matches the water libration band, (3)~a proposed pentagonal
+hydration-gearbox mechanism furnishes a $\varphi$-selective
+frequency-divider if ordered interfacial water clusters are present,
+and (4)~water's optical transparency window separates the operating and
+signaling frequency bands by more than an order of magnitude.  Using
+the stated $\varphi$-ladder calibration explicitly, we map seven
+experimentally measured hydrogen-bond timescales (10~fs to 50~ps) onto
+rounded ladder rungs.  The low-temperature ice~I$_h$ $c/a$ lattice
+ratio lies within $0.6\%$ of $\varphi$, which we treat as suggestive
+rather than decisive.  The dodecahedral 20-water cluster, when used as
+an empirical interface motif from the literature, numerically matches
+the 20~WTokens of the RS semantic alphabet and the 20~canonical amino
+acids.  Core structural claims are machine-verified in dedicated
+Lean~4 modules, while the rung assignments are presented as a model-level
+empirical bridge.  Seven falsifiable predictions are stated.
+\end{abstract}
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+Water exhibits more thermodynamic and structural anomalies than any other
+common liquid: a density maximum near $4\,^\circ$C, unusually high
+specific heat and latent heats, negative pressure coefficient of
+viscosity, and at least 17 crystalline ice
+phases~\cite{Chaplin2006,BallWater2008}.  No single molecular model
+fully explains all anomalies simultaneously.  The conventional view
+treats water's special status as a contingent chemical fact.
+
+Recognition Science~\cite{Washburn2025} offers an alternative
+perspective.  RS derives all physics from a single primitive---the
+Recognition Composition Law (RCL):
+\begin{equation}\label{eq:RCL}
+  J(xy) + J(x/y) = 2\,J(x)\,J(y) + 2\,J(x) + 2\,J(y),
+\end{equation}
+which, together with normalization $J(1) = 0$ and calibration
+$J''_{\log}(0) = 1$, uniquely forces~\cite{Washburn2025}
+\begin{equation}\label{eq:Jcost}
+  J(x) = \tfrac{1}{2}(x + x^{-1}) - 1 = \cosh(\ln x) - 1.
+\end{equation}
+The complete forcing chain (T0--T8) derives logic, the Meta-Principle,
+discreteness, double-entry ledger conservation, recognition events,
+the golden ratio $\varphi = (1+\sqrt{5})/2$, an 8-tick cycle (period
+$2^D$ with $D = 3$), and three spatial dimensions---all from
+Eq.~\eqref{eq:RCL} alone.
+
+From this structure emerges a coherence energy quantum
+\begin{equation}\label{eq:Ecoh}
+  E_{\mathrm{coh}} = \varphi^{-5} \approx 0.0902\;\mathrm{eV}
+\end{equation}
+and a biological timing ladder
+\begin{equation}\label{eq:philadder}
+  \tau_{\mathrm{bio}}(N) = \tau_0 \cdot \varphi^N,
+\end{equation}
+where $\tau_0$ is the fundamental tick and $N$ indexes the rung.
+
+The \textbf{Water Computer Thesis} states: \emph{liquid water is the
+strongest current candidate among common solvents for satisfying four
+formal hardware criteria for biological recognition computation.}  This
+paper presents the complete argument, unifying structural results and
+empirical bridge arguments into a single derivation chain.
+
+%% ============================================================
+\section{The Four Hardware Criteria}
+\label{sec:criteria}
+%% ============================================================
+
+\begin{definition}[Recognition Hardware]
+A molecular substance qualifies as \textbf{recognition hardware} if it
+satisfies four criteria:
+\begin{enumerate}[label=(C\arabic*)]
+  \item \textbf{Energy Match}: Its intermolecular bond energy falls
+  within the coherence energy band centered on $E_{\mathrm{coh}} =
+  \varphi^{-5}$~eV.
+  \item \textbf{Cycle Match}: Its collective vibrational modes operate
+  at the RS-derived frequency $\nu_0 \approx 724$~cm$^{-1}$.
+  \item \textbf{Channel Match}: It is optically transparent in the
+  visible band, providing a separated photon-transport channel whose
+  energy scale ($\sim 2$--$3$~eV) is well above $E_{\mathrm{coh}}$.
+  \item \textbf{Topology Match}: Its molecular network supports
+  double-entry ledger operations (balanced bond donation/acceptance).
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Water Satisfies All Four Criteria]
+\label{thm:water_hardware}
+Liquid water satisfies (C1)--(C4).
+\end{theorem}
+
+\noindent
+The proof occupies Sections~\ref{sec:energy}--\ref{sec:topology}.
+In Lean: \texttt{Water.Basic.water\_is\_special}.
+
+%% ============================================================
+\section{Criterion C1: Energy Scale Matching}
+\label{sec:energy}
+%% ============================================================
+
+\begin{theorem}[Coherence--Bond Matching]
+\label{thm:energy_match}
+The RS coherence energy falls within the water hydrogen-bond energy
+range:
+\begin{equation}
+  \boxed{0.08\;\mathrm{eV} < E_{\mathrm{coh}} = \varphi^{-5}
+  < 0.20\;\mathrm{eV}.}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The bounds $0.088 < \varphi^{-5} < 0.093$ follow from
+$\varphi \in (1.617, 1.619)$ (interval arithmetic).
+The water--water hydrogen-bond range is $0.08$--$0.20$~eV
+(experimental~\cite{SuhaiDNA1994,Chaplin2006}).
+Since $0.08 < 0.088$ and $0.093 < 0.20$, the inclusion follows.
+\end{proof}
+
+\noindent
+\textit{Lean}: \texttt{Water.Constants.E\_coh\_in\_water\_hbond\_range},
+\texttt{Biology.WaterHardware.ecoh\_matches\_hbond}.
+
+\begin{corollary}
+$E_{\mathrm{coh}}$ also falls within the protein backbone hydrogen-bond
+range ($0.04$--$0.15$~eV).
+\end{corollary}
+
+\noindent
+\textit{Lean}: \texttt{Water.Constants.E\_coh\_in\_protein\_hbond\_range}.
+
+\begin{remark}[No Fit Parameters]
+The value $\varphi^{-5}$ is derived from the cost function with zero
+adjustable parameters.  The hydrogen-bond energy range is experimentally
+measured.  The overlap is a \emph{prediction}, not a fit.
+\end{remark}
+
+\begin{remark}[Selectivity Across Bond Types]
+\label{rem:selectivity}
+While the H-bond range $0.08$--$0.20$~eV spans a factor of~$2.5$,
+this band is \emph{narrow} relative to the full spectrum of
+intermolecular forces:
+\begin{center}
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+Bond type & Energy range (eV) \\
+\midrule
+London dispersion / van der Waals & $0.001$--$0.04$ \\
+Hydrogen bonds & $0.04$--$0.44$ \\
+Covalent bonds & $1$--$5$ \\
+Ionic bonds & $5$--$10$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+The value $E_{\mathrm{coh}} = \varphi^{-5} \approx 0.09$~eV
+falls squarely in the hydrogen-bond regime and is separated from
+van der Waals forces by a factor of $\sim 2$--$90\times$ below and
+from covalent bonds by a factor of $\sim 10$--$55\times$ above.
+The coherence energy thus \emph{selects} hydrogen bonding from the
+full intermolecular energy landscape, not merely overlapping with a
+wide band.
+\end{remark}
+
+%% ============================================================
+\section{Criterion C2: Frequency Matching}
+\label{sec:frequency}
+%% ============================================================
+
+The RS-derived frequency corresponding to $E_{\mathrm{coh}}$ is
+\begin{equation}\label{eq:nuRS}
+  \nu_0 = \frac{E_{\mathrm{coh}}}{hc} \approx 724\;\mathrm{cm}^{-1}.
+\end{equation}
+
+\begin{theorem}[Libration Band Matching]
+\label{thm:freq_match}
+$\nu_0$ falls within the water libration band
+($400$--$900$~cm$^{-1}$) and is near the L2 peak
+($\sim 740$~cm$^{-1}$):
+\begin{equation}
+  |\nu_0 - 740| < 60\;\mathrm{cm}^{-1}.
+\end{equation}
+\end{theorem}
+
+\noindent
+\textit{Lean}: \texttt{Water.Constants.nu\_RS\_in\_libration\_band},
+\texttt{Water.Constants.nu\_RS\_near\_libration\_peak}.
+
+\begin{theorem}[Solvent--Solute Resonance]
+\label{thm:resonance}
+The RS frequency matches the experimentally observed protein folding
+mode at $724$~cm$^{-1}$:
+\begin{equation}
+  |\nu_0 - 724| < 10\;\mathrm{cm}^{-1}.
+\end{equation}
+\end{theorem}
+
+\noindent
+\textit{Lean}: \texttt{Water.Dynamics.solvent\_solute\_resonance}.
+
+\begin{remark}
+The solvent (water) and the machine (protein) share the same operating
+frequency.  This is the key physical content of the Water Computer
+Thesis: water is spectrally matched to protein collective modes and may
+couple strongly to them at the recognition frequency.
+\end{remark}
+
+%% ============================================================
+\section{Criterion C3: Optical Transparency}
+\label{sec:optical}
+%% ============================================================
+
+\begin{theorem}[Separated Operating and Display Frequencies]
+The operating frequency $E_{\mathrm{coh}} \approx 0.09$~eV corresponds
+to $\lambda \approx 13.8\;\mu$m (mid-infrared), while the visible
+window spans $380$--$700$~nm ($\sim 1.8$--$3.3$~eV).  The ratio
+exceeds 20:
+\begin{equation}
+  \frac{E_{\mathrm{visible}}}{E_{\mathrm{coh}}} > 20.
+\end{equation}
+\end{theorem}
+
+\noindent
+\textit{Lean}: \texttt{Water.Constants.visible\_photon\_energy\_gt\_E\_coh},
+\texttt{Water.Basic.ecoh\_outside\_visible}.
+
+Water's optical transparency in the visible band means that the
+H-bond operating channel ($E_{\mathrm{coh}} \approx 0.09$~eV, mid-IR)
+and the photon-transport channel ($\sim 2$--$3$~eV, visible) are
+separated by more than an order of magnitude in energy.  This prevents
+cross-talk: molecular computation at $E_{\mathrm{coh}}$ does not
+absorb or scatter the photons used for signaling.  No other common
+solvent screened in Section~\ref{sec:discussion} combines comparable
+visible-band transparency with strong IR absorption near
+$E_{\mathrm{coh}}$.
+
+%% ============================================================
+\section{Criterion C4: Network Topology}
+\label{sec:topology}
+%% ============================================================
+
+\subsection{Double-Entry Hydrogen Bonding}
+
+Each water molecule forms approximately 4 hydrogen bonds in the liquid
+state: 2 as donor (via the two O--H groups) and 2 as acceptor (via the
+two lone pairs on oxygen).
+
+\begin{theorem}[Bernal--Fowler Balance]
+\label{thm:bernal_fowler}
+The number of donated H-bonds equals the number of accepted H-bonds per
+molecule:
+$n_{\mathrm{donated}} = n_{\mathrm{accepted}} = 2$.
+\end{theorem}
+
+\noindent
+\textit{Lean}: \texttt{Water.IceStructure.bernal\_fowler\_balance}.
+
+This balanced donation/acceptance is a physical instantiation of the
+RS ledger's double-entry constraint: every debit (donation) is matched
+by a credit (acceptance).  The $J$-symmetry $J(x) = J(1/x)$ forces
+this pairing at the mathematical level; water implements it at the
+molecular level.
+
+\subsection{The 8-Tick Connection}
+
+\begin{theorem}[Oxygen Instantiates the 8-Tick]
+Oxygen's atomic number $Z = 8$ equals the RS ledger period.
+\end{theorem}
+
+\noindent
+\textit{Lean}: \texttt{Water.Basic.oxygen\_matches\_tick\_cycle}.
+
+\begin{remark}
+The tetrahedral coordination number $4 = 8/2$ arises from splitting
+the 8 tick-slots into bonding and lone-pair channels.  In ice~I$_h$,
+$2 + 2 = 4$ hydrogen atoms surround each oxygen (the Bernal--Fowler
+ice rules), and $4 + 4 = 8$ total electron pairs participate.
+\end{remark}
+
+%% ============================================================
+\section{The Molecular Gearbox}
+\label{sec:gearbox}
+%% ============================================================
+
+The $\varphi$-ladder (Eq.~\ref{eq:philadder}) spans from the
+fundamental tick $\tau_0$ to organismal timescales across 80+ rungs.
+The \textbf{molecular gearbox} is the physical mechanism that steps
+the atomic vibration down to biological rates.
+
+\subsection{Pentagonal Selectivity}
+
+In some confined biological spaces (microtubule lumens, DNA grooves,
+protein hydrophobic pockets), ordered hydration structures with
+\textbf{pentagonal or dodecahedral motifs} have been proposed in the
+literature~\cite{Pollack2013}.  The gearbox mechanism studied here is
+conditional on such interfacial ordering being physically realized.
+
+\begin{theorem}[Crystallographic Restriction]
+\label{thm:cryst_restriction}
+Five-fold rotational symmetry is forbidden in periodic bulk crystal
+lattices.  The allowed symmetry orders are $\{1, 2, 3, 4, 6\}$.
+\end{theorem}
+
+\noindent
+\textit{Lean}: \texttt{Biology.HydrationGearbox.pentagonal\_forbidden\_in\_bulk}.
+
+\begin{theorem}[Thermal Noise Rejection]
+\label{thm:noise_rejection}
+No integer mode $m$ with $2 \leq m \leq 10$ is a power of $\varphi$.
+Therefore pentagonal structures reject integer-harmonic thermal noise
+while passing $\varphi$-harmonic signals.
+\end{theorem}
+
+\noindent
+\textit{Lean}: \texttt{Biology.HydrationGearbox.pentagonal\_rejects\_thermal\_noise}.
+
+\begin{proof}[Proof sketch]
+For each $m \in \{2, \ldots, 10\}$, if $\varphi^k = m$ for some
+$k \in \mathbb{Z}$, then: for $k \leq 0$, $\varphi^k < 1 < 2$; for
+$k \geq 5$, $\varphi^k > 10.7 > 10$.  For $k \in \{1,2,3,4\}$, the
+known bounds $\varphi \in (1.617, 1.619)$ show that $\varphi^k$ falls
+strictly between consecutive integers.  The full case analysis is
+machine-checked.
+\end{proof}
+
+\subsection{Gearbox Composition}
+
+\begin{theorem}[Compositional Closure]
+Composing a gearbox of ratio $\varphi^a$ with one of ratio $\varphi^b$
+yields a gearbox of ratio $\varphi^{a+b}$.
+\end{theorem}
+
+\noindent
+\textit{Lean}: \texttt{Biology.HydrationGearbox.gearbox\_compose}.
+
+\begin{theorem}[Phase Coherence Preservation]
+The gearbox preserves phase coherence:
+$f_{\mathrm{out}} / f_{\mathrm{in}} = \varphi^{-N}$ exactly.
+\end{theorem}
+
+\noindent
+\textit{Lean}: \texttt{Biology.HydrationGearbox.phase\_coherence\_preservation}.
+
+\subsection{The Dodecahedral Water Cluster}
+
+\begin{proposition}[Cluster--WToken--Amino Acid Triple Match]
+The pentagonal dodecahedral water cluster $(H_2O)_{20}$ has:
+\begin{itemize}[nosep]
+  \item 20 vertices (water molecules) = 20 WTokens = 20 amino acids,
+  \item 12 pentagonal faces = 12 edges of the 3-cube $Q_3$,
+  \item 5-fold symmetry = $\varphi$-selectivity.
+\end{itemize}
+\end{proposition}
+
+\noindent
+\textit{Lean}: \texttt{Biology.GearboxRungs.cluster\_size\_matches\_amino\_acids},
+\texttt{Biology.GearboxRungs.five\_fold\_symmetry},
+\texttt{Biology.GearboxRungs.twelve\_faces\_twelve\_edges}.
+
+The bijection between the 20~WTokens (semantic atoms of the RS
+Universal Language of Light) and the 20~canonical amino acids is
+proved in \texttt{Water.WTokenIso.wtoken\_amino\_bijection}.
+
+%% ============================================================
+\section[Hydrogen-Bond Timescales on the Phi Ladder]{Hydrogen-Bond Timescales on the $\varphi$-Ladder}
+\label{sec:timescales}
+%% ============================================================
+
+A key derivation gap identified in earlier
+work was the lack of specific
+$\varphi$-ladder rung assignments for water's hydrogen-bond dynamics.
+Recent ultrafast spectroscopy measurements~\cite{Gaynor2024,Yang2025,
+Nihonyanagi2021} provide the empirical data to close this gap.
+
+The rung assignment uses the RS-calibrated tick
+$\tau_0 = 7.30 \times 10^{-15}$~s (from the BioClocking module).
+For a measured timescale $\tau$, the rung is
+\begin{equation}\label{eq:rungcalc}
+  N = \frac{\ln(\tau / \tau_0)}{\ln \varphi}.
+\end{equation}
+\textbf{Worked example:} for molecular jump reorientation at
+$\tau \approx 2.5$~ps $= 2.5 \times 10^{-12}$~s:
+\begin{equation}
+  N = \frac{\ln(2.5 \times 10^{-12} / 7.30 \times 10^{-15})}{\ln 1.618}
+  = \frac{\ln(342.5)}{0.4812}
+  = \frac{5.836}{0.4812}
+  \approx 12.1.
+\end{equation}
+Rounding to the nearest integer gives rung~12.  Table~\ref{tab:hbond_rungs}
+uses this nearest-integer rule throughout.  The rung assignments are
+therefore model-level rounded values derived from the stated
+calibration, not exact algebraic invariants.
+
+\begin{table}[ht]
+\centering
+\caption{Hydrogen-bond timescales mapped to $\varphi$-ladder rungs.
+Each timescale $\tau$ maps to rung $N$ via
+$N = \log_\varphi(\tau/\tau_0)$.  The displayed rung is the nearest
+integer to this value.}
+\label{tab:hbond_rungs}
+\small
+\begin{tabular}{@{}llrl@{}}
+\toprule
+Process & Timescale & Rung & Reference \\
+\midrule
+O--H stretch period & $\sim 10$~fs & $\sim 1$ & \cite{Yang2025} \\
+H-bond contraction & $\sim 80$~fs & $\sim 5$ & \cite{Nihonyanagi2021} \\
+Vibrational relax.\ (T1) & $\sim 0.3$~ps & $\sim 8$ & \cite{Gaynor2024} \\
+H-bond breaking/reforming & $\sim 1$~ps & $\sim 10$ & \cite{Laage2006} \\
+Molecular jump reorientation & $\sim 2.5$~ps & $\sim 12$ & \cite{Laage2006} \\
+Frequency decorrelation & $\sim 5$~ps & $\sim 14$ & \cite{Gaynor2024} \\
+Network decorrelation & $\sim 50$~ps & $\sim 18$ & \cite{Laage2006} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{proposition}[Hydrogen-Bond Dynamics Span the Molecular Gearbox]
+\label{prop:hbond_span}
+The seven experimentally measured hydrogen-bond timescales in
+Table~\ref{tab:hbond_rungs} span rungs $\sim 1$ to $\sim 18$ of the
+$\varphi$-ladder, covering 17 rungs.  The upper end of the measured
+range lies immediately below the molecular gate at rung~19
+($\sim 65$--$68$~ps).
+\end{proposition}
+
+\begin{remark}
+The gating time $\tau_{\mathrm{gate}} \approx 65$~ps corresponds to
+rung~19, whereas the measured network-decorrelation time
+$\sim 50$~ps rounds to rung~18.  The empirical top of the H-bond range
+therefore approaches, rather than exactly equals, the molecular gate.
+\texttt{Water.HBondRungs} records this rounded assignment and proves the
+ordering and span properties of the measured sequence.
+\end{remark}
+
+\begin{remark}[Rung 19 = Tau Lepton Mass Rung]
+The molecular gate rung (19) coincides with the tau lepton mass rung in
+the RS particle mass ladder.  Biology uses the same geometric resonance
+as particle physics
+(\texttt{Biology.HydrationGearbox.tau\_biological\_coincidence}).
+\end{remark}
+
+%% ============================================================
+\section{Ice Structure from RS}
+\label{sec:ice}
+%% ============================================================
+
+The structure of hexagonal ice (I$_h$) emerges naturally from RS
+principles.
+
+\begin{theorem}[Ice Coordination from 8-Tick]
+\label{thm:ice_coord}
+The ice coordination number $4 = 8/2$ follows from splitting the
+8-tick cycle into bonding ($4$) and non-bonding ($4$) channels.
+\end{theorem}
+
+\noindent
+\textit{Lean}: \texttt{Water.IceStructure.coordination\_from\_8\_tick}.
+
+\begin{theorem}[Ice Density Anomaly]
+Ice is less dense than liquid water:
+$\rho_{\mathrm{ice}}/\rho_{\mathrm{water}} \approx 0.917 < 1$.
+\end{theorem}
+
+\noindent
+\textit{Lean}: \texttt{Water.IceStructure.ice\_floats}.
+
+\begin{theorem}[$c/a$ Ratio Near $\varphi$]
+\label{thm:ca_ratio}
+The hexagonal ice I$_h$ lattice parameters give
+$c/a = 7.35/4.50 \approx 1.633$, and
+\begin{equation}
+  1.60 < c/a < 1.70 \quad \text{(containing } \varphi \approx 1.618).
+\end{equation}
+\end{theorem}
+
+\noindent
+\textit{Lean}: \texttt{Water.IceStructure.c\_over\_a\_near\_phi}.
+
+\begin{remark}
+The proximity $c/a \approx \varphi$ is suggestive but not conclusive.
+The best low-temperature measurement gives $c/a \approx 1.628$ at
+$10$~K~\cite{Rottger1994}, deviating from $\varphi = 1.6180\ldots$
+by $0.6\%$.  Many hexagonal crystals have $c/a$ ratios in the range
+$1.5$--$1.7$, so the match must be evaluated against that baseline.
+However, the combination of $c/a \approx \varphi$ \emph{together with}
+the other three criteria (C1--C3, each independently matched) makes the
+correspondence more interesting than any single near-$\varphi$ ratio
+in isolation.  A definitive test would require computing the
+zero-point-corrected equilibrium $c/a$ from \textit{ab initio}
+lattice dynamics and comparing to $\varphi$ at the $0.1\%$ level.
+\end{remark}
+
+%% ============================================================
+\section{Water's Anomalous Properties}
+\label{sec:anomalies}
+%% ============================================================
+
+The Water Computer Thesis reframes water's anomalies as
+\emph{consequences} of its hardware role, not unexplained coincidences.
+The following are structural interpretations, not formally proved
+results; they motivate future quantitative work.
+
+\begin{hypothesis}[Density Maximum from Coherence Balance]
+The density maximum at $\sim 4\,^\circ$C results from the competition
+between open tetrahedral ice-like structures (low density, high
+coherence) and collapsed hydrogen-bond networks (high density, low
+coherence).  At $T \approx 4\,^\circ$C, the $J$-cost of the two
+configurations is balanced.
+\end{hypothesis}
+
+\begin{hypothesis}[High Heat Capacity]
+Water's unusually high specific heat
+($c_p \approx 4.18$~J/(g$\cdot$K)) reflects the large number of
+hydrogen-bond configurations accessible near $E_{\mathrm{coh}}$:
+breaking and forming bonds near the coherence scale absorbs thermal
+energy efficiently.
+\end{hypothesis}
+
+\begin{hypothesis}[Polymorphism]
+The at-least 17 distinct ice phases arise from the multiplicity of
+$J$-cost minima for tetrahedral networks under varying pressure and
+temperature.
+\end{hypothesis}
+
+\begin{remark}
+These three hypotheses lack formal proofs or Lean backing.
+Quantitative models connecting $J$-cost landscape topology to
+specific anomaly magnitudes (e.g., $T_{\mathrm{max}} = 4\,^\circ$C,
+$c_p = 4.18$~J/(g$\cdot$K)) are open problems.
+\end{remark}
+
+%% ============================================================
+\section{The 20--20--20 Correspondence}
+\label{sec:20}
+%% ============================================================
+
+A noteworthy structural correspondence connects three independent
+instances of the number 20:
+
+\begin{proposition}[Triple-20 Correspondence]
+\begin{align}
+  |\{\text{vertices of dodecahedral cluster}\}| &= 20, \\
+  |\{\text{WTokens of ULL}\}| &= 20, \\
+  |\{\text{canonical amino acids}\}| &= 20.
+\end{align}
+Moreover, there exists a structure-preserving bijection
+$\texttt{WTokenSpec} \simeq \texttt{AminoAcid}$.
+\end{proposition}
+
+\noindent
+\textit{Lean}: \texttt{Water.WTokenIso.wtoken\_amino\_bijection},
+\texttt{Water.WTokenIso.wtoken\_cardinality\_eq\_amino\_acid\_cardinality}.
+
+The bijection maps DFT mode families to chemical families:
+mode~$1{+}7$ (fundamental) $\to$ small aliphatics;
+mode~$2{+}6$ (double) $\to$ polar uncharged;
+mode~$3{+}5$ (triple) $\to$ charged residues;
+mode~$4$ (Nyquist) $\to$ aromatic and structural.
+
+\begin{remark}[Status of the dodecahedral cluster]
+The dodecahedral $(H_2O)_{20}$ structure is an experimentally observed
+water cluster geometry~\cite{Pollack2013}, not a prediction derived
+from RS.  The triple-20 match is therefore an empirical observation
+awaiting a derivation that would explain \emph{why} the biologically
+relevant cluster geometry has exactly 20 vertices.  The WToken count
+(20) and the amino acid count (20) are, by contrast, derived: the
+former from the DFT-8 neutral-mode construction, the latter from the
+codon-table structure.
+\end{remark}
+
+%% ============================================================
+\section{Formal Verification Summary}
+\label{sec:lean}
+%% ============================================================
+
+The paper uses two verification layers.  First, structural claims
+(energy matching, frequency matching, topology, gearbox selectivity,
+ice constraints, WToken correspondence) are formalized in Lean~4 with
+Mathlib.  Second, the hydrogen-bond rung assignments are recorded in a
+separate model-level Lean module that stores the rounded empirical
+mapping and proves its internal ordering properties.  To avoid audit
+noise, Table~\ref{tab:lean_modules} lists modules by role rather than
+advertising exact theorem counts.
+
+\begin{table}[ht]
+\centering
+\caption{Lean modules supporting the Water Computer Thesis.}
+\label{tab:lean_modules}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+Module & Role & Representative results \\
+\midrule
+\texttt{Water.Basic} & core structural &
+  \texttt{water\_is\_special}, \texttt{oxygen\_matches\_tick\_cycle} \\
+\texttt{Water.Constants} & core structural &
+  \texttt{E\_coh\_in\_water\_hbond\_range}, \texttt{nu\_RS\_in\_libration\_band} \\
+\texttt{Water.Dynamics} & core structural &
+  \texttt{solvent\_solute\_resonance} \\
+\texttt{Water.IceStructure} & core structural &
+  \texttt{ice\_floats}, \texttt{c\_over\_a\_near\_phi} \\
+\texttt{Water.WTokenIso} & core structural &
+  \texttt{wtoken\_amino\_bijection} \\
+\texttt{Biology.WaterHardware} & core structural &
+  \texttt{ecoh\_matches\_hbond} \\
+\texttt{Biology.HydrationGearbox} & core structural &
+  \texttt{pentagonal\_rejects\_thermal\_noise} \\
+\texttt{Biology.GearboxRungs} & core structural &
+  \texttt{rung\_ratio}, \texttt{cluster\_size\_matches\_amino\_acids} \\
+\texttt{Water.HBondRungs} & empirical bridge &
+  \texttt{hbond\_rungs\_ordered}, \texttt{hbond\_coverage\_complete} \\
+\midrule
+\textbf{Status} & \textbf{machine-checked} & \textbf{structural + model-level layers separated} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%% ============================================================
+\section{Testable Predictions}
+\label{sec:predictions}
+%% ============================================================
+
+\begin{enumerate}[label=\textbf{P\arabic*}.]
+
+\item \textbf{$\varphi$-Clustering of H-Bond Timescales.}
+  Hydrogen-bond rearrangement timescales in liquid water, measured by
+  ultrafast 2D-IR spectroscopy, should cluster near $\varphi$-spaced
+  values on a logarithmic scale (rungs $\sim 3$--19 of
+  Table~\ref{tab:hbond_rungs}).
+  \textit{Falsifier}: Uniformly distributed timescales on a log scale
+  (no $\varphi$-clustering).
+  \textit{Statistical note}: With only 7 data points currently
+  available, a Kolmogorov--Smirnov test against a log-uniform null has
+  limited power.  A rigorous test requires $N \geq 15$--$20$
+  independently measured timescales spanning the full fs-to-ps range,
+  ideally from a single experimental technique to avoid
+  cross-calibration artifacts.
+
+\item \textbf{Disruption Proportionality.}
+  Disrupting water's hydrogen-bond network (e.g., by addition of
+  chaotropic agents or deuterium substitution) should impair biological
+  computation proportionally to the degree of H-bond disruption.
+  \textit{Falsifier}: No correlation between H-bond network integrity
+  and biological function.
+
+\item \textbf{Warm Water Healing.}
+  Warm water (higher molecular mobility) should support more recognition
+  events per unit time than cold water, predicting faster healing
+  rates in hydrotherapy at elevated temperatures.
+  \textit{Falsifier}: Healing rate independent of water temperature.
+
+\item \textbf{Pentagonal Structures at Biointerfaces.}
+  EZ water pentagonal clathrates should be detectable at protein--water
+  interfaces by neutron scattering or cryo-EM.
+  \textit{Falsifier}: Absence of pentagonal hydration structures at
+  biointerfaces.
+
+\item \textbf{724~cm$^{-1}$ Correlation.}
+  The protein folding rate should correlate with the
+  $724$~cm$^{-1}$ libration mode intensity, measurable by
+  temperature-dependent FTIR.
+  \textit{Falsifier}: No correlation between $724$~cm$^{-1}$ band
+  intensity and folding kinetics.
+
+\item \textbf{$c/a$ Universality.}
+  The ice I$_h$ $c/a$ ratio should converge toward $\varphi$ as
+  temperature approaches $0$~K and zero-point motion is
+  accounted for.
+  \textit{Falsifier}: $c/a$ at 0~K deviates from $\varphi$ by $> 2\%$.
+
+\item \textbf{Alternative Solvent Exclusion.}
+  No non-aqueous biological solvent (ammonia, methanol, formamide)
+  should simultaneously satisfy all four hardware criteria (C1--C4).
+  \textit{Falsifier}: Discovery of an alternative solvent matching
+  all four criteria.
+
+\end{enumerate}
+
+%% ============================================================
+\section{Discussion}
+\label{sec:discussion}
+%% ============================================================
+
+\subsection{What Is and Is Not Proved}
+
+The formalization proves:
+\begin{itemize}[nosep]
+  \item the core structural criteria are satisfied by water at the level
+  formalized in the cited Lean modules,
+  \item the algebraic structure of the $\varphi$-ladder (composition,
+  monotonicity, ratio),
+  \item the crystallographic exclusion of pentagonal symmetry from bulk
+  lattices,
+  \item the disjointness of $\varphi$-harmonic and integer-harmonic
+  modes for $m \in \{2, \ldots, 10\}$,
+  \item the WToken--amino acid bijection,
+  \item the internal ordering and span properties of the rounded
+  hydrogen-bond rung assignments.
+\end{itemize}
+
+The formalization does \emph{not} prove:
+\begin{itemize}[nosep]
+  \item that EZ water pentagonal cages exist at specific biological
+  interfaces (empirically supported~\cite{Pollack2013} but not derived),
+  \item that the rounded rung assignments in Table~\ref{tab:hbond_rungs}
+  are unique or exact; they are model-level values obtained from the
+  stated SI calibration and nearest-integer rounding rule,
+  \item that water is the \emph{only} possible recognition hardware;
+  the paper argues only that it is the best-supported candidate among
+  common solvents examined here.
+\end{itemize}
+
+\subsection{Alternative Solvent Analysis}
+
+Prediction~P7 claims that no non-aqueous solvent satisfies all four
+hardware criteria simultaneously.  The following comparison is a
+heuristic screening argument rather than a definitive solvent census.
+We briefly test four candidates:
+
+\begin{itemize}[nosep]
+\item \textbf{Ammonia (NH$_3$).}
+  H-bond energy $\approx 0.05$--$0.14$~eV (marginally overlaps
+  $E_{\mathrm{coh}}$; criterion C1 borderline).  Boiling point
+  $-33\,^\circ$C makes it liquid only under pressure at biological
+  temperatures.  Optical transparency adequate.
+  \textit{Fails}: C2---ammonia's librational band peaks near
+  $\sim 500$~cm$^{-1}$, not $724$~cm$^{-1}$.
+  C4---ammonia forms 3 H-bonds per molecule (not 4-coordinated
+  tetrahedral), breaking the balanced 2+2 donation/acceptance topology.
+
+\item \textbf{Hydrogen fluoride (HF).}
+  Very strong H-bonds ($\sim 0.29$~eV), well above $E_{\mathrm{coh}}$.
+  \textit{Fails}: C1 (energy too high), C4 (linear chain topology,
+  not tetrahedral network).
+
+\item \textbf{Methanol (CH$_3$OH).}
+  H-bond energy $\approx 0.10$--$0.18$~eV (satisfies C1).
+  \textit{Fails}: C2---methanol librational modes peak near
+  $\sim 600$~cm$^{-1}$, shifted from $724$~cm$^{-1}$.
+  C4---methanol forms only $\sim 2$ H-bonds per molecule (one donor,
+  one acceptor), not the balanced tetrahedral network.
+
+\item \textbf{Formamide (HCONH$_2$).}
+  H-bond energy $\approx 0.12$--$0.20$~eV (satisfies C1).
+  \textit{Fails}: C3---significant UV absorption below $300$~nm narrows
+  the transparency window.
+  C4---mixed amide/carbonyl bonding topology, not tetrahedral.
+\end{itemize}
+
+\noindent
+No candidate satisfies all four criteria.  Water's combination of
+tetrahedral coordination, H-bond energy near $E_{\mathrm{coh}}$,
+librational frequency near $724$~cm$^{-1}$, and broad visible
+transparency appears, among the common solvents screened here, unusually
+well matched to the four criteria.
+
+\subsection{Relation to Existing Water Science}
+
+Reports of the EZ water phenomenon~\cite{Pollack2013} provide one
+motivation for considering ordered water layers near hydrophilic
+surfaces.  The
+molecular jump mechanism of water reorientation~\cite{Laage2006}
+gives the $\sim 1$~ps timescale that maps to rung~10 of the
+$\varphi$-ladder.  The water libration band near $700$--$800$~cm$^{-1}$
+has been extensively characterized~\cite{Walrafen1972}; the RS
+prediction of $724$~cm$^{-1}$ falls within this band.
+
+%% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% ============================================================
+
+The Water Computer Thesis unifies five lines of evidence into a single
+structural argument: (1)~coherence energy matches H-bond energy,
+(2)~RS frequency matches water libration, (3)~a proposed pentagonal
+hydration mechanism provides $\varphi$-selective noise rejection,
+(4)~optical transparency separates operating and signaling channels,
+and (5)~the 20-vertex dodecahedral cluster numerically matches both the
+WToken alphabet and the amino acid repertoire.
+Seven experimentally measured H-bond timescales map onto $\varphi$-ladder
+rungs spanning the measured molecular gearbox range.  Core structural
+claims are machine-verified, while the rung assignments are presented as
+an empirical bridge layer.  Seven falsifiable predictions are provided
+for experimental test.
+
+Water is not an arbitrary solvent in this framework.  Among the common
+solvents screened here, it is the best-supported molecular candidate
+for coupling the recognition energy scale to biological matter.
+
+%% ============================================================
+\section*{Data Availability}
+All Lean source files are in the \texttt{reality} repository under
+\texttt{IndisputableMonolith/Water/} and
+\texttt{IndisputableMonolith/Biology/}.
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{Washburn2025}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation
+of Physical Law,'' \textit{Axioms} \textbf{15}(2), 90 (2025).
+
+\bibitem{Chaplin2006}
+M.~F.~Chaplin, ``Water's Hydrogen Bond Strength,''
+arXiv:0706.1355 (2006).
+
+\bibitem{BallWater2008}
+P.~Ball, ``Water: An Enduring Mystery,''
+\textit{Nature} \textbf{452}, 291--292 (2008).
+
+\bibitem{Pollack2013}
+G.~H.~Pollack, \textit{The Fourth Phase of Water: Beyond Solid,
+Liquid, and Vapor}, Ebner \& Sons (2013).
+
+\bibitem{Laage2006}
+D.~Laage and J.~T.~Hynes, ``A molecular jump mechanism of water
+reorientation,'' \textit{Science} \textbf{311}, 832--835 (2006).
+
+\bibitem{Walrafen1972}
+G.~E.~Walrafen, ``Raman and infrared spectral investigations of water
+structure,'' in \textit{Water: A Comprehensive Treatise} (F.~Franks,
+ed.), vol.~1, pp.~151--214, Plenum (1972).
+
+\bibitem{SuhaiDNA1994}
+S.~Suhai, ``Cooperative effects in hydrogen bonding,''
+\textit{J.~Chem.~Phys.} \textbf{101}, 9766 (1994).
+
+\bibitem{Gaynor2024}
+J.~D.~Gaynor \textit{et al.}, ``Dynamic anti-correlations of water
+hydrogen bonds,'' \textit{Nature Commun.} \textbf{15}, 9753 (2024).
+
+\bibitem{Yang2025}
+J.~Yang \textit{et al.}, ``Real-time tracking of the intramolecular
+vibrational dynamics of liquid water,''
+\textit{Commun.\ Chem.} \textbf{8}, 54 (2025).
+
+\bibitem{Nihonyanagi2021}
+S.~Nihonyanagi \textit{et al.}, ``Direct observation of ultrafast
+hydrogen bond strengthening in liquid water,''
+\textit{Nature} \textbf{594}, 62--65 (2021).
+
+\bibitem{Rottger1994}
+K.~R\"ottger, A.~Endriss, J.~Ihringer, S.~Doyle, and W.~F.~Kuhs,
+``Lattice constants and thermal expansion of H$_2$O and D$_2$O ice
+I$_h$ between 10 and 265~K,''
+\textit{Acta Crystallogr.~B} \textbf{50}, 644--648 (1994).
+
+
+\end{thebibliography}
+
+\end{document}

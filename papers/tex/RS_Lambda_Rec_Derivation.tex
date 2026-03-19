@@ -1,0 +1,1213 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\geometry{margin=1in}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{axiomRS}[theorem]{Axiom}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The Recognition Length $\lambda_{\mathrm{rec}}$:\\
+A Conditional Derivation with Zero Adjustable Parameters}
+
+\author{Jonathan Washburn\\
+Recognition Science Institute\\
+Austin, Texas\\
+\texttt{x.com/jonwashburn}}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Within a discrete-lattice framework built on a uniquely determined cost
+functional $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$ and the
+combinatorics of the 3-cube $Q_3$, we derive a fundamental length
+scale $\lambda_{\mathrm{rec}} = \sqrt{\pi}\,\ell_P \approx 2.86
+\times 10^{-35}$~m from which Newton's gravitational constant follows:
+$G = c^3 \lambda_{\mathrm{rec}}^2/(\pi\hbar)$, with Einstein coupling
+$\kappa = 8\varphi^5$. The derivation has \emph{zero continuously
+adjustable parameters}, but rests on three structural assumptions
+stated explicitly in the text: (i)~a minimal-overhead balance condition
+equating informational and geometric costs, (ii)~an identification of
+the Planck area with the inverse curvature load per mode via
+Gauss-Bonnet, and (iii)~a decomposition of the curvature space into
+$|\kappa| = 4$ modes from $Q_3$ symmetry. Given these assumptions,
+$\lambda_{\mathrm{rec}}$, $G$, and $\kappa$ are fixed uniquely. The
+cost functional $J$ is selected by a multiplicative d'Alembert
+composition law
+\cite{WashburnZlatanovic2026Math935,WashburnBarghi2026Axioms151,WashburnZlatanovicAllahyarov2026Inevitability}.
+An independent lower bound via Bekenstein entropy saturation and
+Landauer erasure cost gives $\lambda_{\mathrm{BL}} \approx 7.6 \times
+10^{-36}$~m; the curvature-balanced scale exceeds this floor by a
+factor of $\sim\!3.8$, consistent with the lattice operating above the
+information-theoretic minimum. Two phenomenological cross-checks
+(stellar luminosity balance and vacuum energy density) agree at the
+7\% level. All prerequisite theorems and the balance-condition
+derivation are machine-verified in Lean~4
+\cite{WashburnLean4Repo2026} with zero \texttt{sorry} statements.
+\end{abstract}
+
+\tableofcontents
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+
+\subsection{The Problem: Deriving a Fundamental Length}
+
+The Standard Model of particle physics and General Relativity together
+contain approximately 26 free parameters---coupling constants,
+masses, mixing angles---that must be measured in the laboratory and
+inserted by hand. Among these, Newton's constant $G$ sets the
+strength of gravity and, together with $\hbar$ and $c$, defines the
+Planck length $\ell_P = \sqrt{\hbar G/c^3} \approx
+1.6 \times 10^{-35}$~m. Whether $G$ is an irreducible empirical
+fact or derivable from something deeper remains open.
+
+This paper shows that, given three explicit structural assumptions,
+a specific length scale
+$\lambda_{\mathrm{rec}} = \sqrt{\pi}\,\ell_P$ is \emph{uniquely
+fixed} with zero continuously adjustable parameters, and Newton's
+constant follows as a consequence:
+$G = c^3 \lambda_{\mathrm{rec}}^2/(\pi\hbar)$.  The three
+ingredients are:
+\begin{enumerate}[label=(\roman*)]
+  \item A \emph{cost functional} $J(x) = \frac{1}{2}(x + x^{-1}) - 1$,
+    uniquely determined by a multiplicative d'Alembert composition law
+    and calibration conditions (Theorem~\ref{thm:J-unique}).
+  \item A \emph{curvature cost} $J_{\mathrm{curv}}(\lambda) =
+    2\lambda^2$, derived from the Gauss-Bonnet theorem applied to the
+    bounding sphere of a causal diamond in $D = 3$, with curvature
+    quanta inherited from the combinatorial structure of the 3-cube
+    $Q_3$ (Proposition~\ref{prop:kappa}).
+  \item A \emph{minimal-overhead balance condition} requiring the
+    informational cost and the geometric curvature cost to be equal
+    (Axiom; see Section~\ref{sec:scope}).
+\end{enumerate}
+Ingredient~(i) is a theorem. Ingredient~(ii) follows from
+Gauss-Bonnet plus a mode-counting argument. Ingredient~(iii) is a
+physical postulate.  The claim is not that $G$ is derived from pure
+logic, but that within this framework there is no dial to turn:
+every constant is locked once the postulates are accepted.
+
+\subsection{The Scale-Invariance Problem}
+
+The cost functional $J(x)$ depends only on ratios: $J(\alpha a /
+\alpha b) = J(a/b)$ for any $\alpha > 0$. This scale invariance is
+why frameworks built on $J$ can derive dimensionless constants
+($\alpha^{-1}$, mass ratios) but cannot, by the variational principle
+alone, select an absolute length. To fix a dimensional scale, one
+needs an argument that is not scale-invariant.
+
+The curvature cost $J_{\mathrm{curv}} = 2\lambda^2$ breaks the
+symmetry: it depends on $\lambda^2$, not on a ratio. Balanced
+against the fixed bit cost, it pins down a unique scale.
+
+\subsection{Context: Recognition Science}
+
+The derivation presented here arose within Recognition Science (RS),
+an information-theoretic framework that derives physical constants
+from two postulates: dual recognition (a definite physical state
+arises only when two distinct entities interact) and minimal
+informational overhead \cite{PardoGuerraEtAl2026}. The cost
+functional $J(x)$ is uniquely selected by a d'Alembert composition
+law \cite{WashburnZlatanovic2026Math935}, with broader inevitability
+results establishing the same functional from general symmetric
+polynomial combiners
+\cite{WashburnZlatanovicAllahyarov2026Inevitability} and axiomatic
+characterizations under inversion symmetry
+\cite{WashburnBarghi2026Axioms151}. Observable structure is derived
+through a measurement-first quotient construction
+\cite{WashburnZlatanovicAllahyarov2026RG}.
+
+The RS forcing chain derives a sequence of constants from the golden
+ratio $\varphi$ and the $D = 3$ cube topology:
+\begin{equation}
+  \text{Postulates} \to J \to \varphi \to
+  E_{\mathrm{coh}} \to \tau_0 \to c \to \hbar
+  \to \lambda_{\mathrm{rec}} \to G \to \alpha^{-1}
+  \to \text{mass spectrum}.
+  \label{eq:chain}
+\end{equation}
+Every link before $\lambda_{\mathrm{rec}}$ produces a dimensionless
+output. The derivation of $\lambda_{\mathrm{rec}}$ bridges the
+dimensionless and dimensional sectors.
+
+The mathematical content of this paper is self-contained and does
+not require familiarity with RS.
+
+\subsection{Historical Note}
+
+The dimensionless sector was established first
+\cite{Washburn2025ParameterFree}. Two empirical routes---stellar
+luminosity balance and the observed dark-energy density---provided
+independent estimates of an effective length scale,
+$\lambda_{\mathrm{eff}} \approx 60\,\mu\mathrm{m}$. These were cross-checks. A one-bit Bekenstein-Landauer argument
+provided the first internal derivation of the dimensional scale
+\cite{Washburn2025IntrinsicLattice}. The curvature-extremum
+derivation presented here replaced that argument with one using
+only the cost functional and Gauss-Bonnet geometry. The
+Bekenstein-Landauer route is retained in
+Section~\ref{sec:bekenstein} as an independent consistency floor.
+
+\subsection{Machine Verification}
+
+The prerequisite theorems and the balance-condition derivation
+have been formalized in Lean~4 using the Mathlib library. The
+complete codebase---122 Lean files, 32 verification certificates,
+zero \texttt{sorry} statements---is publicly available at
+\begin{center}
+  \url{https://github.com/jonwashburn/recognition-science}
+\end{center}
+and archived on Zenodo \cite{WashburnLean4Repo2026}.
+Module-level correspondence is recorded in Appendix~\ref{app:lean}.
+
+\subsection{Outline}
+
+Section~\ref{sec:prereqs} states the mathematical prerequisites
+(cost functional, golden ratio, dimension forcing) with full proofs.
+Section~\ref{sec:problem} formulates the dimensional closure problem.
+Section~\ref{sec:curvature-cost} derives the curvature cost from the
+$D=3$ cube structure and the Gauss-Bonnet theorem.
+Section~\ref{sec:main-derivation} presents the main derivation.
+Section~\ref{sec:dim-restore} carries out the dimensional restoration
+and derives Newton's constant.
+Section~\ref{sec:consequences} discusses consequences for the forcing
+chain. Section~\ref{sec:bekenstein} presents the independent
+Bekenstein-Landauer derivation as a cross-check.
+Section~\ref{sec:consistency} gives phenomenological consistency tests.
+Section~\ref{sec:discussion} discusses the result.
+Appendix~\ref{app:lean} documents the Lean~4 verification.
+
+%% ============================================================
+\section{Mathematical Prerequisites}
+\label{sec:prereqs}
+
+Every theorem below is stated with a full proof outline.
+Lean~4 formalizations are recorded in Appendix~\ref{app:lean}.
+
+%% --------------------------------
+\subsection{The Cost Functional}
+\label{sec:Jcost}
+
+\begin{definition}[Recognition Composition Law]
+\label{def:RCL}
+A function $F : \mathbb{R}_{>0} \to \mathbb{R}$ satisfies the
+\emph{Recognition Composition Law} (RCL) if for all $x, y > 0$,
+\begin{equation}
+  F(xy) + F(x/y) = 2\,F(x)\,F(y) + 2\,F(x) + 2\,F(y).
+  \label{eq:RCL}
+\end{equation}
+\end{definition}
+
+\begin{definition}[Calibration conditions]
+A function $F$ is \emph{normalized} if $F(1) = 0$, and \emph{calibrated}
+if the log-coordinate reparametrization $G(t) := F(e^t)$ satisfies
+$G''(0) = 1$.
+\end{definition}
+
+\begin{theorem}[Uniqueness of $J$; Washburn-Zlatanovi\'c
+{\cite{WashburnZlatanovic2026Math935}}]
+\label{thm:J-unique}
+Let $F : \mathbb{R}_{>0} \to \mathbb{R}$ satisfy:
+\begin{enumerate}[label=\normalfont(\roman*)]
+  \item The RCL~\eqref{eq:RCL},
+  \item Normalization: $F(1) = 0$,
+  \item Calibration: $G''(0) = 1$,
+  \item Continuity on $(0,\infty)$.
+\end{enumerate}
+Then $F$ is uniquely determined:
+\begin{equation}
+  F(x) = J(x) := \tfrac{1}{2}(x + x^{-1}) - 1
+  \qquad\text{for all } x > 0.
+  \label{eq:J-cost}
+\end{equation}
+\end{theorem}
+
+\begin{proof}[Proof outline]
+Define $G(t) = F(e^t)$ and $H(t) = G(t) + 1$. Under the substitution
+$x = e^s$, $y = e^t$, the RCL~\eqref{eq:RCL} becomes the d'Alembert
+functional equation
+\begin{equation}
+  H(s+t) + H(s-t) = 2\,H(s)\,H(t)
+  \label{eq:dAlembert}
+\end{equation}
+with $H(0) = 1$. Normalization gives $G(0) = 0$, hence $H(0) = 1$.
+Reciprocal symmetry $F(x) = F(x^{-1})$ (which follows from the RCL by
+setting $y = x$) gives $G(-t) = G(t)$, so $H$ is even.
+
+By Acz\'el's theorem on the d'Alembert equation, every continuous
+solution of~\eqref{eq:dAlembert} with $H(0) = 1$ that is not
+identically 1 is $C^\infty$. This was proved by showing that
+continuous d'Alembert solutions satisfy the ODE $H'' = \alpha^2 H$
+for some $\alpha \geq 0$, from which analyticity follows. (The Lean
+formalization uses the Acz\'el axiom to establish $C^\infty$
+regularity, then bootstraps to the ODE.)
+
+The calibration $G''(0) = 1$ implies $H''(0) = 1$, so $\alpha^2 = 1$.
+Since $H$ is even, $H'(0) = 0$. The unique solution to $H'' = H$,
+$H(0) = 1$, $H'(0) = 0$ is $H(t) = \cosh t$. This is proved by
+showing that any solution $f$ with $f'' = f$, $f(0) = 0$, $f'(0) = 0$
+must be identically zero (via the Gronwall-type argument: define
+$g = f' - f$ and $h = f' + f$, show $g' = -g$ and $h' = h$, use the
+integrating-factor method $\frac{d}{dt}[g\,e^t] = 0$ and
+$\frac{d}{dt}[h\,e^{-t}] = 0$ to conclude $g = h = 0$).
+
+Therefore $G(t) = \cosh t - 1$, and
+$F(x) = G(\ln x) = \cosh(\ln x) - 1 = \frac{1}{2}(x + x^{-1}) - 1$.
+\end{proof}
+
+\begin{remark}[Key properties of $J$]
+The cost functional satisfies:
+\begin{itemize}
+  \item $J(x) = J(x^{-1})$ (reciprocal symmetry).
+  \item $J(x) \geq 0$ for all $x > 0$, with equality iff $x = 1$.
+    Proof: $J(x) = (x - 1)^2/(2x) \geq 0$.
+  \item $J$ is strictly monotone increasing on $[1,\infty)$.
+  \item $J$ is strictly convex on $\mathbb{R}_{>0}$.
+  \item $J(1+\varepsilon) = \varepsilon^2/2 + O(\varepsilon^3)$
+    (quadratic approximation near equilibrium).
+\end{itemize}
+\end{remark}
+
+\begin{remark}[Broader inevitability frame]
+Theorem~\ref{thm:J-unique} starts from the already reduced RCL form.
+A broader companion result, the d'Alembert inevitability theorem
+\cite{WashburnZlatanovicAllahyarov2026Inevitability}, begins with a
+general symmetric polynomial combiner
+\[
+F(xy)+F(x/y)=P(F(x),F(y)),
+\qquad P\in \mathbb{R}[u,v],\quad \deg P \le 2,
+\]
+and proves that continuity and nonconstancy force
+\[
+P(u,v)=2u+2v+c\,uv.
+\]
+Under convexity, nonnegativity, and unit log-curvature calibration, the
+admissible solutions lie in the hyperbolic family
+\[
+F_\alpha(x)=\frac{1}{\alpha^2}\big(\cosh(\alpha\ln x)-1\big),
+\qquad \alpha \ge 1,
+\]
+with $c=2\alpha^2$. This provides a wider inevitability context for the
+canonical reciprocal cost used throughout the present paper.
+\end{remark}
+
+%% --------------------------------
+\subsection{Golden-Ratio Forcing}
+\label{sec:phi}
+
+\begin{definition}[Self-similar scale sequence]
+A \emph{geometric scale sequence} is a sequence $\{s_n\}$ with
+$s_{n+1} = r \cdot s_n$ for a fixed ratio $r > 0$, $r \neq 1$. It
+is \emph{closed} if the compositional constraint of the discrete
+dynamics forces the recurrence $r^2 = r + 1$.
+\end{definition}
+
+\begin{theorem}[Phi forcing]
+\label{thm:phi}
+Let $r > 0$ satisfy $r^2 = r + 1$. Then $r = \varphi = (1+\sqrt{5})/2$.
+\end{theorem}
+
+\begin{proof}
+The equation $r^2 - r - 1 = 0$ has roots $(1 \pm \sqrt{5})/2$. Since
+$(1 - \sqrt{5})/2 < 0$ and $r > 0$, the unique positive solution is
+$\varphi$. The Lean proof verifies this by showing that for any
+$r > 0$ satisfying the constraint, $r = \varphi$ follows from the
+identity $(r - \varphi)^2 + (r + \varphi - 1)^2 = 0$ (which uses
+$\varphi^2 = \varphi + 1$ and the hypothesis $r^2 = r + 1$, forcing
+$r = \varphi$).
+\end{proof}
+
+\begin{lemma}[Fibonacci power identities]
+\label{lem:fib}
+The golden ratio satisfies $\varphi^n = F_n\,\varphi + F_{n-1}$
+for all $n \geq 1$, where $F_n$ is the $n$-th Fibonacci number. In
+particular:
+\begin{alignat}{2}
+  \varphi^2 &= \varphi + 1, \qquad&
+  \varphi^3 &= 2\varphi + 1,
+  \notag\\
+  \varphi^4 &= 3\varphi + 2, \qquad&
+  \varphi^5 &= 5\varphi + 3 \approx 11.09.
+  \label{eq:fib-powers}
+\end{alignat}
+\end{lemma}
+
+\begin{proof}
+By induction, using $\varphi^{n+1} = \varphi \cdot \varphi^n =
+\varphi(F_n\,\varphi + F_{n-1}) = F_n\,\varphi^2 + F_{n-1}\,\varphi
+= F_n(\varphi + 1) + F_{n-1}\,\varphi = (F_n + F_{n-1})\varphi + F_n
+= F_{n+1}\,\varphi + F_n$. Each case ($n = 2$ through $n = 5$) is
+verified individually in Lean by substituting $\varphi^2 = \varphi + 1$
+and simplifying.
+\end{proof}
+
+\begin{corollary}[Bounds]
+$1.618 < \varphi < 1.619$ and $10.7 < \varphi^5 < 11.3$.
+\end{corollary}
+
+%% --------------------------------
+\subsection{Eight-Tick Cycle and $D = 3$}
+\label{sec:eight-tick}
+
+\begin{definition}[Eight-tick structure]
+The 8-tick clock has phases $\theta_k = k\pi/4$ for $k = 0, 1,
+\ldots, 7$, with complex amplitudes $\exp(i\theta_k)$. The period is
+8: $[\exp(i\theta_k)]^8 = \exp(2\pi i k) = 1$.
+\end{definition}
+
+\begin{theorem}[$D = 3$ forcing]
+\label{thm:D3}
+Let $D$ be a positive integer such that the minimal
+compatible walk period on the hypercube $Q_D = \{0,1\}^D$ is
+$2^D$, and this period equals 8. Then $D = 3$.
+\end{theorem}
+
+\begin{proof}
+$2^D = 8$ implies $D = 3$. The Lean proof verifies this by
+case analysis: $D = 0, 1, 2$ give $2^D = 1, 2, 4 \neq 8$; $D = 3$
+gives $2^3 = 8$; $D \geq 4$ gives $2^D \geq 16 > 8$.
+
+Three independent arguments confirm that $D = 3$ is the unique
+compatible dimension:
+\begin{enumerate}
+  \item \textbf{Eight-tick:} $2^D = 8 \Longrightarrow D = 3$.
+  \item \textbf{Spinor structure:} The Clifford algebra
+    $\mathrm{Cl}_3 \cong M_2(\mathbb{C})$ gives 2-component complex
+    spinors; $\mathrm{Spin}(3) \cong \mathrm{SU}(2)$ is the simplest
+    non-abelian compact Lie group. No other $D$ has all three
+    properties (2-component, non-abelian, simple).
+  \item \textbf{Gap-45 synchronization:}
+    $\mathrm{lcm}(8, 45) = 360 = 2^3 \times 3^2 \times 5$, and
+    $2^3$ identifies $D = 3$.
+\end{enumerate}
+\end{proof}
+
+%% --------------------------------
+\subsection{Prior Derived Constants}
+\label{sec:prior-constants}
+
+With $\ell_0 = 1$ and $\tau_0 = 1$ as the natural base units
+(one spatial quantum and one temporal quantum), the derivation
+sequence establishes:
+
+\begin{definition}[Natural units]
+\label{def:RS-constants}
+\begin{align}
+  c &:= \frac{\ell_0}{\tau_0} = 1
+    &&\text{(speed of light: one spatial quantum per time quantum)},
+    \label{eq:c-def}
+  \\[4pt]
+  E_{\mathrm{coh}} &:= \varphi^{-5}
+    &&\text{(coherence energy from $\varphi$-scaling)},
+    \label{eq:Ecoh-def}
+  \\[4pt]
+  \hbar &:= E_{\mathrm{coh}} \cdot \tau_0 = \varphi^{-5}
+    &&\text{(IR gate identity)},
+    \label{eq:hbar-def}
+  \\[4pt]
+  J_{\mathrm{bit}} &:= \ln\varphi
+    &&\text{(information cost of one interaction event)}.
+    \label{eq:Jbit-def}
+\end{align}
+\end{definition}
+
+\begin{lemma}[Properties of $\hbar$ in natural units]
+\begin{enumerate}
+  \item $\hbar > 0$ (positivity: $\varphi > 0 \Longrightarrow
+    \varphi^{-5} > 0$).
+  \item $\hbar < 1$ (sub-natural: $\varphi > 1 \Longrightarrow
+    \varphi^5 > 1 \Longrightarrow \varphi^{-5} < 1$).
+  \item $0.088 < \hbar < 0.093$ (from $1.61 < \varphi < 1.62$ and the
+    Fibonacci identity $\varphi^5 = 5\varphi + 3$).
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+All three follow from the bounds on $\varphi$. For (3): $\varphi >
+1.61$ gives $\varphi^5 > 1.61^5 \approx 10.82$, so $\hbar <
+1/10.82 < 0.093$. Similarly, $\varphi < 1.62$ gives $\varphi^5 <
+1.62^5 \approx 11.16$, so $\hbar > 1/11.16 > 0.088$.
+\end{proof}
+
+%% ============================================================
+\section{The Problem of Dimensional Closure}
+\label{sec:problem}
+
+\begin{definition}[Scale invariance of $J$]
+\label{def:scale-inv}
+The cost functional~\eqref{eq:J-cost} depends only on the ratio $x$.
+For any $\alpha > 0$,
+\begin{equation}
+  J\!\left(\frac{\alpha\, a}{\alpha\, b}\right)
+  = J\!\left(\frac{a}{b}\right).
+\end{equation}
+The variational minimum at $\varphi$ is therefore independent of any
+absolute scale.
+\end{definition}
+
+Scale invariance is why the program derives dimensionless constants
+without specifying a length---and also why the variational principle
+alone cannot select a physical unit. The Planck length $\ell_P =
+\sqrt{\hbar G/c^3}$ involves $G$, which appears nowhere in the
+dimensionless sector.
+
+The problem: \emph{what internal argument selects a unique length
+scale?}
+
+%% ============================================================
+\section{The Curvature Cost}
+\label{sec:curvature-cost}
+
+\subsection{The RS Token Alphabet on $Q_3$}
+
+The discrete lattice is a graph whose vertices are updated by
+interaction events. In $D = 3$, the local geometry is that of the
+3-cube $Q_3 =
+\{0,1\}^3$, which has 8 vertices, 12 edges, 6 faces (3 opposite
+face-pairs), and 1 solid cell.
+
+\begin{proposition}[Token curvature quanta]
+\label{prop:kappa}
+Each interaction event produces a token carrying $|\kappa| = 4$
+independent curvature quanta.
+\end{proposition}
+
+\begin{proof}
+The symmetry group of $Q_3$ acts on the space of local curvature
+deformations. This space decomposes into four irreducible modes:
+\begin{enumerate}[label=(\roman*)]
+  \item Three \emph{face-pair modes}, one for each of the three
+    opposite face-pairs of $Q_3$ (the $xy$-, $xz$-, and $yz$-planes).
+    Each mode carries curvature $\pm 1$ representing compression or
+    expansion along the corresponding normal direction.
+  \item One \emph{scalar mode} associated with the Euler
+    characteristic of $Q_3$. The combinatorial Gauss-Bonnet theorem
+    gives each vertex of $Q_3$ an angle defect
+    $\delta_v = 2\pi - 3(\pi/2) = \pi/2$, and the total defect
+    $\sum_v \delta_v = 8 \times \pi/2 = 4\pi = 2\pi\chi(S^2)$
+    distributes evenly over the 4 modes.
+\end{enumerate}
+The total unsigned curvature is $|\kappa| = |{\pm 1}| \times 4 = 4$.
+\end{proof}
+
+\subsection{From Curvature to Cost via Gauss-Bonnet}
+
+An interaction event at spatial scale $\lambda$ creates a causal diamond
+whose bounding surface is topologically $S^2$ with area
+$A = 4\pi\lambda^2$. The Gauss-Bonnet theorem for a closed orientable
+2-surface $\Sigma$ states
+\begin{equation}
+  \int_\Sigma K\,dA = 2\pi\,\chi(\Sigma),
+\end{equation}
+where $K$ is the Gaussian curvature and $\chi$ is the Euler
+characteristic. For $S^2$, $\chi = 2$, so
+$\int K\,dA = 4\pi$.
+
+The curvature cost has two factors:
+\begin{enumerate}[label=(\roman*)]
+  \item The \emph{curvature load}: the ratio of token curvature quanta
+    to the topological capacity of the bounding surface. The
+    topological capacity of $S^2$ is $2\chi(S^2) = 4$ (the number of
+    Gauss-Bonnet quanta in $4\pi = 2 \times 2\pi$). So the curvature
+    load is $|\kappa|/(2\chi) = 4/4 = 1$.
+  \item The \emph{geometric scale}: the bounding area measured in units
+    of the Gauss-Bonnet quantum $2\pi$. This gives
+    $A/(2\pi) = 4\pi\lambda^2/(2\pi) = 2\lambda^2$.
+\end{enumerate}
+
+The curvature cost is their product:
+\begin{equation}
+  \boxed{
+    J_{\mathrm{curv}}(\lambda)
+    = \frac{|\kappa|}{2\chi(S^2)} \cdot \frac{A}{2\pi}
+    = 1 \cdot 2\lambda^2
+    = 2\lambda^2.
+  }
+  \label{eq:Jcurv}
+\end{equation}
+
+\begin{remark}
+Every factor in this formula is forced: $|\kappa| = 4$ by the cube
+structure (Proposition~\ref{prop:kappa}), $\chi(S^2) = 2$ by topology,
+$A = 4\pi\lambda^2$ by spherical geometry, and $2\pi$ by Gauss-Bonnet.
+No normalization is chosen by hand.
+
+$J_{\mathrm{curv}}$ is quadratic in $\lambda$, not in a ratio of
+lengths---the mechanism that breaks scale invariance and allows
+the balance against the fixed bit cost to select an absolute length.
+\end{remark}
+
+%% ============================================================
+\section{Main Derivation: The Cost-Balance Extremum}
+\label{sec:main-derivation}
+
+\subsection{The Two Competing Costs}
+
+A single interaction event embedded in a causal diamond of spatial
+edge $\lambda$ incurs two costs:
+
+\begin{enumerate}
+  \item \textbf{Bit cost $J_{\mathrm{bit}}$.} The information cost of
+    the interaction event itself. In normalized cost accounting,
+    \begin{equation}
+      J_{\mathrm{bit}} = 1.
+      \label{eq:Jbit-norm}
+    \end{equation}
+    The unnormalized form is $J_{\mathrm{bit}} = \ln\varphi \approx
+    0.481$ (the natural information content of a $\varphi$-bit, as
+    defined in~\eqref{eq:Jbit-def}). The normalization absorbs
+    $\ln\varphi$ into the cost unit.
+
+  \item \textbf{Curvature cost $J_{\mathrm{curv}}(\lambda)$.} The
+    geometric cost from Section~\ref{sec:curvature-cost}:
+    $J_{\mathrm{curv}}(\lambda) = 2\lambda^2$.
+\end{enumerate}
+
+\subsection{The Total Cost Functional}
+
+\begin{equation}
+  C(\lambda)
+  = J_{\mathrm{bit}} + J_{\mathrm{curv}}(\lambda)
+  = 1 + 2\lambda^2.
+  \label{eq:total-cost}
+\end{equation}
+
+\subsection{The Minimal-Overhead Balance Condition}
+
+The minimal-overhead principle requires the discrete
+lattice to operate at the scale where neither cost channel carries
+unnecessary surplus. The total cost $C(\lambda)$ sums a
+scale-independent term (bit cost) and a scale-dependent term
+(curvature cost, growing as $\lambda^2$). The equilibrium is at
+the crossover:
+\begin{equation}
+  J_{\mathrm{bit}} = J_{\mathrm{curv}}(\lambda_0).
+  \label{eq:balance}
+\end{equation}
+If $\lambda > \lambda_0$, the curvature cost exceeds the bit cost and
+the lattice wastes geometric capacity. If $\lambda < \lambda_0$, the
+bit cost exceeds the curvature cost and the lattice wastes information
+capacity. The minimal-overhead principle excludes both regimes.
+
+\begin{theorem}[Recognition length in dimensionless units]
+\label{thm:lambda-dimless}
+The unique positive solution to $J_{\mathrm{bit}} =
+J_{\mathrm{curv}}(\lambda_0)$ is $\lambda_0 = 1/\sqrt{2}$.
+\end{theorem}
+
+\begin{proof}
+$J_{\mathrm{curv}}(\lambda) = 2\lambda^2$ is strictly monotone
+increasing for $\lambda > 0$, and $J_{\mathrm{bit}} = 1 > 0$. The
+equation $2\lambda^2 = 1$ has exactly one positive solution:
+$\lambda_0 = 1/\sqrt{2}$.
+\end{proof}
+
+\begin{remark}[No circular dependence]
+This derivation uses only the bit cost (from $\varphi$-scaling) and
+the curvature cost (from $Q_3$ geometry via Gauss-Bonnet). It does
+not reference Newton's constant $G$, the Planck length $\ell_P$, or
+any external physical input. $G$ will be \emph{defined} as a
+consequence in Section~\ref{sec:consequences}.
+\end{remark}
+
+%% ============================================================
+\section{Dimensional Restoration and the Planck Gate Identity}
+\label{sec:dim-restore}
+
+\subsection{From Dimensionless Balance to SI}
+
+The balance condition~\eqref{eq:balance} is a statement in natural
+units, where $\lambda_{\mathrm{rec}} = 1$, $c = 1$, and
+$\hbar = \varphi^{-5}$. The balance point $\lambda_0 = 1/\sqrt{2}$
+is dimensionless. To convert to SI, we must determine what $G$---and
+hence the Planck length $\ell_P = \sqrt{\hbar G/c^3}$---equals.
+
+The curvature-cost derivation \emph{determines} $G$. The factor of
+$\pi$ relating $\lambda_{\mathrm{rec}}$ to $\ell_P$ comes from
+Gauss-Bonnet.
+
+\subsection{The Gauss-Bonnet Bridge}
+\label{sec:GB-bridge}
+
+The Gauss-Bonnet integral of $S^2$ is
+$\int K\,dA = 4\pi$, carried by $|\kappa| = 4$ curvature modes
+(Proposition~\ref{prop:kappa}). Each mode contributes a curvature
+load
+\begin{equation}
+  \frac{\int K\,dA}{|\kappa|}
+  = \frac{4\pi}{4} = \pi.
+  \label{eq:GB-per-mode}
+\end{equation}
+The Planck area $\ell_P^2 = \hbar G/c^3$ sets the area of one
+curvature quantum. Each mode carries $\pi$ such quanta (in natural
+units where $\lambda_{\mathrm{rec}} = 1$); the area per quantum is
+the inverse of the curvature load:
+\begin{equation}
+  \ell_P^2 = \frac{1}{\pi}
+  \quad(\text{natural units}).
+  \label{eq:ell-P-RS}
+\end{equation}
+Equivalently: the voxel face area ($\lambda_{\mathrm{rec}}^2 = 1$)
+contains $\pi$ Planck cells per curvature mode.
+
+\subsection{Newton's Constant as a Derived Quantity}
+\label{sec:G-derived}
+
+\begin{definition}[Newton's constant from $\lambda_{\mathrm{rec}}$]
+\label{def:G-def}
+From $\ell_P^2 = \hbar G/c^3$ and~\eqref{eq:ell-P-RS}:
+\begin{equation}
+  \boxed{
+    G = \frac{c^3\, \lambda_{\mathrm{rec}}^2}{\pi\,\hbar}.
+  }
+  \label{eq:G-derived}
+\end{equation}
+In natural units ($\lambda_{\mathrm{rec}} = 1$, $c = 1$,
+$\hbar = \varphi^{-5}$), this gives $G = \varphi^5/\pi$.
+\end{definition}
+
+\begin{corollary}[Einstein coupling constant]
+\label{cor:kappa}
+The Einstein gravitational coupling
+$\kappa = 8\pi G/c^4$ evaluates to
+\begin{equation}
+  \boxed{\kappa = 8\varphi^5.}
+  \label{eq:kappa}
+\end{equation}
+This is machine-verified as \texttt{kappa\_einstein\_eq} in
+\texttt{Constants.lean} and \texttt{kappa\_rs\_closed\_form} in
+\texttt{Gravity/ZeroParameterGravity.lean}
+\cite{WashburnLean4Repo2026}.
+\end{corollary}
+
+\begin{proof}
+$\kappa = 8\pi G/c^4 = 8\pi \cdot
+\varphi^5/(\pi \cdot 1) = 8\varphi^5$
+(using $G = \varphi^5/\pi$ and $c = 1$ in natural units).
+\end{proof}
+
+\subsection{The Recognition Length in SI}
+
+Since $\ell_P^2 = \lambda_{\mathrm{rec}}^2/\pi$
+(from~\eqref{eq:ell-P-RS}):
+\begin{equation}
+  \boxed{
+    \lambda_{\mathrm{rec}}
+    = \sqrt{\pi}\;\ell_P
+    = \sqrt{\frac{\pi\,\hbar G}{c^3}}
+    \approx 2.86 \times 10^{-35}\;\mathrm{m}.
+  }
+  \label{eq:lambda-rec}
+\end{equation}
+
+\subsection{The Planck Gate Identity}
+
+\begin{equation}
+  \boxed{
+    \frac{c^3\,\lambda_{\mathrm{rec}}^2}{\hbar\,G}
+    = \pi.
+  }
+  \label{eq:planck-gate}
+\end{equation}
+
+\begin{proof}[Verification]
+Substituting $G = c^3 \lambda_{\mathrm{rec}}^2/(\pi\hbar)$:
+$c^3\lambda_{\mathrm{rec}}^2/(\hbar \cdot c^3
+\lambda_{\mathrm{rec}}^2/(\pi\hbar)) = \pi$.
+This identity is machine-verified in Lean~4
+(Appendix~\ref{app:lean}).
+\end{proof}
+
+%% ============================================================
+\section{Consequences}
+\label{sec:consequences}
+
+\subsection{Position in the Forcing Chain}
+
+With $\lambda_{\mathrm{rec}}$ and $G$ derived, the
+chain~\eqref{eq:chain} continues to the fine-structure constant
+\begin{equation}
+  \alpha^{-1} = 4\pi \cdot 11 - w_8 \ln\varphi
+    - \frac{103}{102\pi^5}
+    \approx 137.035
+    \quad\text{(Thomson limit)},
+\end{equation}
+and onward to the mass sector. Each step is algebraic once
+$\lambda_{\mathrm{rec}}$ is in place.
+
+\subsection{Quantum-Gravitational Bridge}
+
+$\lambda_{\mathrm{rec}}$ sits at the balance point of the
+curvature cost: the length scale where bit cost equals curvature cost.
+Below $\lambda_{\mathrm{rec}}$, the $\hbar$ sector dominates. Above
+$\lambda_{\mathrm{rec}}$, the $G$ sector dominates. The reciprocal
+symmetry $J(x) = J(x^{-1})$ maps one regime to the other;
+$\lambda_{\mathrm{rec}}$ is the fixed point.
+
+%% ============================================================
+\section{Independent Check: Bekenstein-Landauer Lower Bound}
+\label{sec:bekenstein}
+
+The Bekenstein-Hawking entropy bound $S \leq A/(4\ell_P^2)$ and the
+Landauer principle jointly provide an \emph{independent}
+information-theoretic constraint on any fundamental length scale,
+derived without reference to the cost functional or Gauss-Bonnet
+geometry. An earlier version of this argument appears in
+\cite{Washburn2025IntrinsicLattice}.
+
+\begin{axiomRS}[One-bit causal diamond]
+$S_\diamond = k_B \ln 2$.
+\end{axiomRS}
+
+Saturating the Bekenstein-Hawking bound gives the minimum bounding area
+capable of encoding one bit:
+\begin{equation}
+  A_\diamond \;=\; 4\,\ell_P^2\,\ln 2.
+\end{equation}
+The Bekenstein-Hawking formula is derived for spherical horizons, so the
+natural bounding geometry is the sphere $S^2$ of radius
+$\lambda_{\mathrm{BL}}$:
+\begin{equation}
+  4\pi\,\lambda_{\mathrm{BL}}^2 \;=\; 4\,\ell_P^2\,\ln 2
+  \qquad\Longrightarrow\qquad
+  \lambda_{\mathrm{BL}}
+  \;=\; \sqrt{\frac{\ln 2}{\pi}}\;\ell_P
+  \;\approx\; 7.6 \times 10^{-36}\;\mathrm{m}.
+  \label{eq:lambda-BL}
+\end{equation}
+
+The curvature-extremum value is
+$\lambda_{\mathrm{rec}} = \sqrt{\pi}\,\ell_P \approx 2.86 \times
+10^{-35}$~m, a factor of
+\begin{equation}
+  \frac{\lambda_{\mathrm{rec}}}{\lambda_{\mathrm{BL}}}
+  \;=\; \frac{\pi}{\sqrt{\ln 2}}
+  \;\approx\; 3.77
+\end{equation}
+above the Bekenstein-Landauer floor. This factor has a direct
+physical reading. The Bekenstein bound is an \emph{inequality}: it
+sets the smallest sphere that \emph{can} encode one bit. The
+cost-balance condition (Section~\ref{sec:main-result}) selects the
+scale at which the lattice \emph{does} operate. That the operating
+scale exceeds the information-theoretic minimum by a modest factor is
+expected and healthy: it means every recognition voxel carries
+comfortably more area than the Bekenstein minimum requires. The
+Bekenstein-Landauer route therefore serves as a consistency floor, not
+as a competing estimate of $\lambda_{\mathrm{rec}}$.
+
+%% ============================================================
+\section{Phenomenological Consistency Checks}
+\label{sec:consistency}
+
+Via the effective recognition length $\lambda_{\mathrm{eff}} =
+\lambda_{\mathrm{micro}} \cdot f^{-1/4}$
+\cite{Washburn2025DualDerivation}:
+
+\begin{enumerate}
+  \item \textbf{Stellar luminosity balance:}
+    $\lambda_{\mathrm{eff}}^{(\star)} = 6.3 \times 10^{-5}$~m,
+    $f^{(\star)} \simeq 3.2 \times 10^{-122}$.
+  \item \textbf{Vacuum energy density:}
+    $\lambda_{\mathrm{eff}}^{(\Lambda)} = 5.9 \times 10^{-5}$~m,
+    $f^{(\Lambda)} \simeq 3.4 \times 10^{-122}$.
+\end{enumerate}
+
+The two routes agree within 7\%:
+$f = (3.3 \pm 0.3) \times 10^{-122}$,
+$\lambda_{\mathrm{eff}} \approx 60\;\mu\mathrm{m}$.
+These are validations, not inputs.
+
+%% ============================================================
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Summary of the Derivation}
+
+Three ingredients, all internal to the derivation:
+\begin{enumerate}
+  \item Bit cost $J_{\mathrm{bit}} = 1$ (normalized), from
+    $\varphi$-scaling (Theorem~\ref{thm:phi}).
+  \item Curvature cost $J_{\mathrm{curv}} = 2\lambda^2$, from the
+    $|\kappa| = 4$ curvature quanta on $Q_3$ and the Gauss-Bonnet
+    normalization on $S^2$
+    (Proposition~\ref{prop:kappa},
+    Section~\ref{sec:curvature-cost}).
+  \item Balance condition $J_{\mathrm{bit}} = J_{\mathrm{curv}}$
+    from the minimal-overhead principle.
+\end{enumerate}
+The balance selects $\lambda_0 = 1/\sqrt{2}$ in natural units.
+The Gauss-Bonnet bridge (Section~\ref{sec:GB-bridge}) identifies
+$\ell_P^2 = 1/\pi$ in natural units, yielding
+$\lambda_{\mathrm{rec}} = \sqrt{\pi}\,\ell_P$ and
+$G = c^3 \lambda_{\mathrm{rec}}^2/(\pi\hbar)$, with the Einstein
+coupling $\kappa = 8\varphi^5$.
+
+\subsection{Why Dimensional Closure Was Hard}
+
+$J(x)$ is scale-invariant: it depends only on ratios. The
+curvature-extremum argument breaks this invariance by introducing a
+cost quadratic in the physical edge length $\lambda$, not in a ratio.
+When balanced against the fixed bit cost, it selects a unique scale.
+
+\subsection{Scope and Assumptions}
+\label{sec:scope}
+
+The derivation depends on three classes of input, listed here with
+their epistemic status:
+\begin{enumerate}[label=(\alph*)]
+  \item \textbf{Theorems.}  The uniqueness of $J(x)$
+    (Theorem~\ref{thm:J-unique}) and the forcing of $\varphi$, $c$,
+    $\hbar$ along the derivation chain~\eqref{eq:chain} are
+    mathematical results, machine-verified in Lean~4
+    \cite{WashburnLean4Repo2026}.
+  \item \textbf{Framework results.}  The curvature token count
+    $|\kappa| = 4$ (Proposition~\ref{prop:kappa}) and the
+    Gauss-Bonnet normalization on $S^2$ follow from the $D = 3$ cube
+    topology $Q_3$, but rely on a specific mode-decomposition and
+    equal-weight argument that some readers may classify as modeling
+    assumptions rather than unavoidable consequences.
+  \item \textbf{Postulates.}  Two inputs are physical postulates, not
+    theorems:
+    \begin{itemize}
+      \item The minimal-overhead balance condition
+        $J_{\mathrm{bit}} = J_{\mathrm{curv}}$. This is the
+        assertion that the lattice operates at the scale where
+        informational and geometric costs are equal.
+      \item The Planck-area bridge $\ell_P^2 = 1/\pi$
+        (Section~\ref{sec:GB-bridge}), identifying the Planck area
+        with the inverse of the Gauss-Bonnet curvature load per mode.
+        This step connects the internal combinatorial geometry to the
+        gravitational scale.
+    \end{itemize}
+\end{enumerate}
+Given items (a)--(c), the output ($\lambda_{\mathrm{rec}}$, $G$,
+$\kappa$) is unique with zero continuously adjustable parameters.
+The paper does not claim that these postulates are themselves derived
+from pure logic; it claims that, once accepted, they leave no
+parameter free to tune.
+
+\subsection{Curvature Scale versus Bekenstein Floor}
+
+The curvature-extremum route gives the operating scale
+$\lambda_{\mathrm{rec}} = \sqrt{\pi}\,\ell_P
+\approx 2.86 \times 10^{-35}$~m.
+The Bekenstein-Landauer route
+(Section~\ref{sec:bekenstein}) gives an information-theoretic lower
+bound $\lambda_{\mathrm{BL}} = \sqrt{\ln 2/\pi}\;\ell_P \approx 7.6
+\times 10^{-36}$~m.  The ratio
+$\lambda_{\mathrm{rec}}/\lambda_{\mathrm{BL}} =
+\pi/\sqrt{\ln 2} \approx 3.77$ is not a discrepancy but a consistency
+check: the Bekenstein bound is an inequality, and the lattice operating
+above this floor by a moderate algebraic factor is the expected regime.
+Both routes use spherical geometry ($S^2$) for the bounding surface, so
+the comparison involves no ad hoc geometric choice.
+
+The curvature-extremum value is the canonical result because it follows
+from the cost functional and Gauss-Bonnet normalization alone, without
+external bounds (Bekenstein-Hawking, Landauer), and it is consistent
+with the machine-verified identity $\kappa = 8\varphi^5$ in the Lean
+formalization \cite{WashburnLean4Repo2026}.
+
+%% ============================================================
+\section{Discussion and Conclusion}
+\label{sec:conclusion}
+
+With $\lambda_{\mathrm{rec}}$ derived, the framework determines both
+dimensionless and dimensional constants. The number of independent
+dimensional inputs drops from three ($G$, $\hbar$, $c$) to two
+($\hbar$, $c$), with $G = c^3
+\lambda_{\mathrm{rec}}^2/(\pi\hbar)$ and $\kappa = 8\varphi^5$.
+The factor of $\pi$ originates in the Gauss-Bonnet curvature load
+per mode on $S^2$.
+
+$\lambda_{\mathrm{rec}}$ is where the informational cost of an
+interaction event matches the geometric cost of the curvature it
+creates. Below it, $\hbar$ dominates; above it, $G$ dominates.
+The reciprocal symmetry $J(x) = J(x^{-1})$ maps one regime to the
+other, and $\lambda_{\mathrm{rec}}$ is the fixed point. In the
+broader RS program, this scale is the prerequisite for addressing
+the mass spectrum: particle masses become expressible once a
+dimensional anchor is available.
+
+All prerequisite theorems and the balance-condition derivation are
+machine-verified in Lean~4 with zero \texttt{sorry} statements
+(Appendix~\ref{app:lean}).
+
+%% ============================================================
+\appendix
+
+\section{Lean~4 Machine Verification}
+\label{app:lean}
+
+The full Lean~4 codebase is at
+\url{https://github.com/jonwashburn/recognition-science}
+\cite{WashburnLean4Repo2026}. It contains 122 Lean files across 10
+directories, with 32 verification certificates bundling related
+theorems. One axiom is used:
+\texttt{aczel\_representation\_axiom} in
+\texttt{Cost/FunctionalEquation.lean}, encoding the Acz\'el
+smoothness condition for the d'Alembert equation (a standard result;
+Acz\'el, 1966). All other results are proved unconditionally.
+
+\subsection{What Lean Verifies}
+
+The formalization covers:
+\begin{enumerate}[label=(\roman*)]
+  \item \textbf{Prerequisite theorems.} The uniqueness of $J$
+    (Theorem~\ref{thm:J-unique}), the forcing of $\varphi$
+    (Theorem~\ref{thm:phi}), and the forcing of $D = 3$
+    (Theorem~\ref{thm:D3}), formalized with zero \texttt{sorry}
+    statements.
+  \item \textbf{Balance-condition derivation.} The cost balance
+    $J_{\mathrm{bit}} = J_{\mathrm{curv}}(\lambda)$, i.e.,
+    $1 = 2\lambda^2$, has the unique positive root
+    $\lambda_0 = 1/\sqrt{2}$. This is formalized as
+    \texttt{balance\_at\_lambda\_0} and
+    \texttt{balance\_unique\_positive\_root} in
+    \texttt{Constants/LambdaRecDerivation.lean}
+    \cite{WashburnLean4Repo2026}. These proofs reference
+    only the bit cost (= 1) and the curvature cost ($= 2\lambda^2$),
+    \emph{without} reference to $G$, $\ell_P$, or any external
+    constant.
+  \item \textbf{Algebraic consistency.} \texttt{Constants.lean}
+    defines $G := \lambda_{\mathrm{rec}}^2 c^3/(\pi\hbar)$ and
+    verifies $\kappa = 8\varphi^5$ via
+    \texttt{kappa\_einstein\_eq}.
+    The Planck gate identity
+    $c^3\lambda_{\mathrm{rec}}^2/(\hbar G) = \pi$
+    is an algebraic consequence of this definition; its role is to
+    confirm internal consistency.
+\end{enumerate}
+
+\subsection{What Lean Does Not Verify}
+
+The physical postulates listed in Section~\ref{sec:scope}---the
+balance condition $J_{\mathrm{bit}} = J_{\mathrm{curv}}$ and the
+Planck-area bridge $\ell_P^2 = 1/\pi$---are \emph{inputs} to the
+formalization, not outputs. Lean verifies the mathematical
+consequences of these postulates (e.g., that $\lambda_0 = 1/\sqrt{2}$
+is the unique root, that $\kappa = 8\varphi^5$ follows algebraically),
+but it does not establish that the postulates are physically
+inevitable. The question of whether the balance condition and the
+Planck-area identification are unavoidable consequences of discrete
+lattice dynamics, or whether they are substantive modeling choices,
+remains open.
+
+\subsection{Module Table}
+
+Table~\ref{tab:lean} lists the modules from the public repository
+\cite{WashburnLean4Repo2026} that formalize theorems cited in this
+paper.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}p{5.2cm}p{5.3cm}p{2cm}@{}}
+\toprule
+\textbf{Module path} & \textbf{Key theorems} & \textbf{sorry} \\
+\midrule
+\texttt{Cost/JcostCore.lean}
+  & \texttt{Jcost\_symm},
+    \texttt{Jcost\_nonneg},
+    \texttt{Jcost\_pos\_of\_ne\_one},
+    \texttt{Jcost\_strict\_mono\_\newline on\_one\_infty}
+  & 0 \\[4pt]
+\texttt{Cost/FunctionalEquation\newline .lean}
+  & \texttt{washburn\_zlatanovic\_\newline uniqueness\_aczel},
+    \texttt{dAlembert\_to\_ODE\_\newline theorem},
+    \texttt{ode\_cosh\_uniqueness\_\newline contdiff}
+  & 0 \\[4pt]
+\texttt{Foundation/PhiForcing\newline .lean}
+  & \texttt{phi\_forced},
+    \texttt{golden\_constraint\_\newline unique}
+  & 0 \\[4pt]
+\texttt{Foundation/EightTick\newline .lean}
+  & \texttt{phase\_eighth\_power\_\newline is\_one},
+    \texttt{shift\_period\_8}
+  & 0 \\[4pt]
+\texttt{Foundation/Dimension\-Forcing.lean}
+  & \texttt{eight\_tick\_forces\_D3},
+    \texttt{dimension\_forced}
+  & 0 \\[4pt]
+\texttt{Constants.lean}
+  & \texttt{phi\_sq\_eq},
+    \texttt{hbar\_eq\_phi\_inv\_fifth},
+    \texttt{G\_pos},
+    \texttt{kappa\_einstein\_eq}
+  & 0 \\[4pt]
+\texttt{Constants/LambdaRec\-Derivation.lean}
+  & \texttt{balance\_at\_lambda\_0},
+    \texttt{balance\_unique\_\newline positive\_root},
+    \texttt{lambda\_rec\_is\_forced}
+  & 0 \\[4pt]
+\texttt{Gravity/ZeroParameter\-Gravity.lean}
+  & \texttt{kappa\_rs\_closed\_form},
+    \texttt{kappa\_bounds},
+    \texttt{equivalence\_principle\_\newline automatic}
+  & 0 \\
+\bottomrule
+\end{tabular}
+\caption{Lean~4 modules from
+\texttt{github.com/jonwashburn/recognition-science}
+that formalize theorems cited in this paper.
+All paths are relative to \texttt{RecognitionScience/}.}
+\label{tab:lean}
+\end{table}
+
+The repository also contains 32 verification certificates
+(\texttt{Verification/} directory) that bundle related theorems.
+Of particular relevance:
+\texttt{NonCircularityCert} (verifies no experimental data enters
+upstream),
+\texttt{ZeroAdjustableParamsCert} (\texttt{knobsCount = 0}), and
+\texttt{ForcingChainCert} (the complete derivation chain in one
+structure).
+
+\subsection{Correspondence Between Paper and Lean}
+
+\begin{itemize}
+  \item \textbf{Theorem~\ref{thm:J-unique}} (uniqueness of $J$):
+    formalized as
+    \texttt{washburn\_zlatanovic\_uniqueness\_aczel} in
+    \texttt{Cost/FunctionalEquation.lean}. The proof uses the Acz\'el axiom
+    (\texttt{aczel\_dAlembert\_smooth}) to establish smoothness, then
+    derives the ODE $H'' = H$ via
+    \texttt{dAlembert\_to\_ODE\_theorem}, and concludes $H = \cosh$
+    via \texttt{ode\_cosh\_uniqueness\_contdiff}. The ODE uniqueness
+    proof uses the integrating-factor diagonalization described in
+    Section~\ref{sec:Jcost}: \texttt{deriv\_neg\_self\_zero} ($g' = -g
+    \Rightarrow g = 0$) and \texttt{deriv\_pos\_self\_zero} ($h' = h
+    \Rightarrow h = 0$).
+
+  \item \textbf{Theorem~\ref{thm:phi}} (phi forcing): formalized as
+    \texttt{phi\_forced} and \texttt{golden\_constraint\_unique} in
+    \texttt{Foundation/PhiForcing.lean}. The proof uses
+    $\varphi^2 = \varphi + 1$ (from \texttt{phi\_equation} in
+    \texttt{Constants.lean}) and the algebraic identity
+    $(r - \varphi)^2 \geq 0$ to force $r = \varphi$.
+
+  \item \textbf{Theorem~\ref{thm:D3}} ($D = 3$ forcing): formalized
+    as \texttt{eight\_tick\_forces\_D3} and \texttt{dimension\_forced}
+    in \texttt{Foundation/DimensionForcing.lean}. The proof is by case
+    analysis on $D$.
+
+  \item \textbf{Theorem~\ref{thm:lambda-dimless}} (balance condition):
+    formalized as \texttt{balance\_at\_lambda\_0} and
+    \texttt{balance\_unique\_positive\_root} in
+    \texttt{Constants/LambdaRecDerivation.lean}
+    \cite{WashburnLean4Repo2026}. The module defines:
+    \begin{align*}
+      J_{\mathrm{bit}} &:= 1, \\
+      J_{\mathrm{curv}}(\lambda) &:= 2\lambda^2, \\
+      \text{balanceResidual}(\lambda) &:=
+        J_{\mathrm{curv}}(\lambda) - J_{\mathrm{bit}}
+        = 2\lambda^2 - 1.
+    \end{align*}
+    The proof establishes
+    $\text{balanceResidual}(1/\sqrt{2}) = 0$ and uniqueness:
+    for $\lambda > 0$,
+    $\text{balanceResidual}(\lambda) = 0 \Leftrightarrow
+    \lambda = 1/\sqrt{2}$.
+    This is a \emph{non-circular} verification: it uses only the
+    cost functionals, without reference to $G$ or $\ell_P$.
+
+  \item \textbf{Natural-unit constants} (Definition~\ref{def:RS-constants}):
+    all defined in \texttt{Constants.lean}
+    \cite{WashburnLean4Repo2026}. Key definitions:
+    \begin{align*}
+      \texttt{phi} &:= (1 + \sqrt{5})/2, \\
+      \texttt{hbar} &:= \texttt{cLagLock} \cdot \texttt{tau0}
+        = \varphi^{-5} \cdot 1, \\
+      \texttt{lambda\_rec} &:= \texttt{ell0} = 1, \\
+      \texttt{G} &:= \texttt{lambda\_rec}^2
+        \cdot \texttt{c}^3 / (\pi \cdot \texttt{hbar}).
+    \end{align*}
+    From these definitions,
+    $\kappa = 8\pi G/c^4 = 8\varphi^5$ is proved as
+    \texttt{kappa\_einstein\_eq}, and the Planck gate identity
+    $c^3\lambda_{\mathrm{rec}}^2/(\hbar G) = \pi$
+    follows algebraically.
+\end{itemize}
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{WashburnZlatanovic2026Math935}
+J.~Washburn and M.~Zlatanovi\'c,
+\newblock Uniqueness of the Canonical Reciprocal Cost,
+\newblock \emph{Mathematics} \textbf{14} (2026), 935.
+\newblock \url{https://doi.org/10.3390/math14060935}
+
+\bibitem{WashburnZlatanovicAllahyarov2026Inevitability}
+J.~Washburn, M.~Zlatanovi\'c, and E.~Allahyarov,
+\newblock The d'Alembert Inevitability Theorem,
+\newblock preprint, March 11, 2026.
+\newblock Placeholder reference for forthcoming arXiv or journal version.
+
+\bibitem{WashburnBarghi2026Axioms151}
+J.~Washburn and A.~R.~Barghi,
+\newblock Reciprocal Convex Costs for Ratio Matching: Axiomatic
+Characterization,
+\newblock \emph{Axioms} \textbf{15} (2026), 151.
+\newblock \url{https://doi.org/10.3390/axioms15020151}
+
+\bibitem{WashburnZlatanovicAllahyarov2026RG}
+J.~Washburn, M.~Zlatanovi\'c, and E.~Allahyarov,
+\newblock Recognition Geometry,
+\newblock \emph{Axioms} \textbf{15} (2026), 90.
+\newblock \url{https://doi.org/10.3390/axioms15020090}
+
+\bibitem{PardoGuerraEtAl2026}
+S.~Pardo-Guerra, M.~Simons, A.~Thapa, and J.~Washburn,
+\newblock Coherent Comparison as Information Cost: A Cost-First Ledger
+Framework for Discrete Dynamics,
+\newblock arXiv:2601.12194 (2026).
+
+\bibitem{Washburn2025ParameterFree}
+J.~Washburn,
+\newblock Parameter-Free Derivations of Fundamental Dimensionless
+Constants from Recognition Physics,
+\newblock Recognition Physics Institute, February 2025.
+
+\bibitem{Washburn2025IntrinsicLattice}
+J.~Washburn,
+\newblock The Recognition Length $\lambda_{\mathrm{rec}}$: Discovering
+the Intrinsic Lattice Scale of Reality,
+\newblock Recognition Physics Institute, 25 April 2025.
+
+\bibitem{Washburn2025DualDerivation}
+J.~Washburn,
+\newblock Dual Derivation of the Effective Recognition Length
+$\lambda_{\mathrm{eff}}$,
+\newblock Recognition Physics Institute, May 2025.
+
+\bibitem{Washburn2026HistoricalStudy}
+J.~Washburn,
+\newblock The Recognition Length in Recognition Science: Historical
+Emergence, Dimensional Closure, and the Zero-Parameter Program,
+\newblock Recognition Science Institute, March 2026.
+
+\bibitem{WashburnLean4Repo2026}
+J.~Washburn,
+\newblock Recognition Science --- Lean~4 Formalization (source code),
+\newblock \url{https://github.com/jonwashburn/recognition-science},
+March 2026.
+\newblock 122~Lean files, 32~verification certificates,
+zero~\texttt{sorry}.
+
+\end{thebibliography}
+
+\end{document}

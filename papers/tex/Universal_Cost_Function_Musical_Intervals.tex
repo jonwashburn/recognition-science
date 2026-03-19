@@ -1,0 +1,844 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{natbib}
+\bibliographystyle{plainnat}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{A Universal Cost Function for Musical Intervals:\\
+Connecting Harmonic Structure, Emotional Valence,\\
+and Chromatic Architecture Through a Single Formula}
+
+\author{Jonathan Washburn\\
+Recognition Science Institute\\
+\texttt{jon@recognitionscience.com}}
+
+\date{March 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We study the function $J(r)=\tfrac{1}{2}(r+r^{-1})-1$ as a universal
+cost measure for musical frequency ratios.  The accompanying Lean
+formalization proves a uniqueness theorem for $J$ on the positive reals
+under an explicit hypothesis bundle comprising inversion symmetry, unit
+normalization, strict convexity, log-coordinate calibration, continuity
+on $(0,\infty)$, a cosh-add functional identity, and the regularity
+hypotheses used in the d'Alembert/ODE reduction.  Applying $J$ to
+standard just-intonation ratios produces a complete ordering of
+musical intervals---unison, minor third, major third, perfect fourth,
+tritone, perfect fifth, octave---that differs from traditional
+consonance rankings in specific, testable ways: notably, the perfect
+fifth has \emph{higher} $J$-cost than the minor third, major third,
+and perfect fourth.  We show that the fifth's structural importance
+arises instead from its role as the bridge ratio $12/8=3/2$ linking the
+chromatic octave to an 8-slot oscillation basis, with the twelve-fifths
+walk closing the octave to within $<2\%$ (the Pythagorean comma).  We
+introduce a signed asymmetry function $\sigma(r)=r-r^{-1}$ that
+serves as a comparative valence proxy: larger $\sigma$ corresponds to
+brighter affect, and the major third has larger positive skew than the
+minor third.  Finally, we extend $J$ from intervals to chords via a
+directed pairwise aggregate, defining coherence as
+$\mathrm{Coh}(C)=1/(1+\mathrm{Conflict}(C))$, and prove that lower
+aggregate $J$-cost implies higher coherence.  The core theorem surface
+cited explicitly in the paper has corresponding machine-checked proofs
+in the Lean~4 proof assistant.
+\end{abstract}
+
+\paragraph{Keywords.} Consonance, dissonance, cost function, musical
+intervals, valence, circle of fifths, Pythagorean comma, formal
+verification, just intonation
+
+% ====================================================================
+\section{Introduction}
+\label{sec:intro}
+
+Why do simple frequency ratios sound consonant?  This question has
+occupied acousticians since Pythagoras, yet no single quantitative
+measure commands universal agreement.  Helmholtz's roughness model
+\citep{helmholtz1863} appeals to beating between partials;
+Plomp--Levelt critical-bandwidth theory \citep{plomp1965} grounds
+dissonance in the basilar membrane; harmonic-template models
+\citep{parncutt2011} invoke pattern recognition in the auditory
+cortex.  Each captures part of the phenomenon.  The present paper asks a
+different question: how much of interval ordering, bridge structure,
+and signed asymmetry can be organized by a single closed-form cost
+function with no fitted parameters?
+
+This paper proposes such a function.  The cost
+\begin{equation}
+  \label{eq:jcost-intro}
+  J(r) = \tfrac{1}{2}\!\left(r + r^{-1}\right) - 1
+\end{equation}
+measures how far a positive ratio $r$ deviates from unity, and it does
+so with no free parameters beyond the definition itself.  We show:
+
+\begin{enumerate}[label=(\arabic*)]
+  \item the Lean development proves a uniqueness theorem for $J$ on
+    $\mathbb{R}_{>0}$ under an explicit symmetry/normalization/
+    convexity/calibration/functional-equation hypothesis bundle
+    (Section~\ref{sec:axioms});
+  \item $J$ produces a complete, strict ordering of the standard
+    just-intonation intervals (Section~\ref{sec:hierarchy});
+  \item the perfect fifth's structural importance comes from a
+    chromatic-bridge property, not from having the lowest cost
+    (Section~\ref{sec:fifth});
+  \item a signed companion function $\sigma(r)=r-r^{-1}$ gives a
+    parameter-free model of emotional valence
+    (Section~\ref{sec:valence});
+  \item extending $J$ to chords via pairwise aggregation yields a
+    monotone conflict-coherence framework
+    (Section~\ref{sec:conflict}).
+\end{enumerate}
+
+\noindent The core theorem surface cited by name below has been
+formally verified in the Lean~4 proof assistant \citep{moura2021} using
+the Mathlib library; the verification is summarised in
+Section~\ref{sec:lean}.
+
+% ====================================================================
+\section{Axiomatic Derivation of the Cost Function}
+\label{sec:axioms}
+
+\subsection{Motivating axioms}
+
+We seek a function $F\colon\mathbb{R}_{>0}\to\mathbb{R}$ satisfying:
+
+\begin{enumerate}[label=(A\arabic*)]
+  \item \textbf{Inversion symmetry.}  $F(r)=F(r^{-1})$ for all
+    $r>0$.
+  \item \textbf{Unit normalisation.}  $F(1)=0$.
+  \item \textbf{Strict convexity.}  $F$ is strictly convex on
+    $(0,\infty)$.
+  \item \textbf{Calibration.}  In logarithmic coordinates, define
+    $G(t):=F(e^t)$.  We require $G''(0)=1$.
+\end{enumerate}
+
+\noindent Axiom~(A1) says that the cost of an interval is the same
+whether one hears it as ascending or descending.  Axiom~(A2) says
+unison has zero cost.  Axiom~(A3) ensures a unique global minimum at
+$r=1$.  Axiom~(A4) fixes the overall scale so that $F$ is not merely
+determined up to a positive multiple.
+
+\medskip
+
+\noindent These four conditions are the conceptual package motivating
+the paper.  The machine-checked uniqueness theorem in Lean uses a
+strengthened explicit hypothesis bundle: in addition to the items above,
+it assumes continuity on $(0,\infty)$, a cosh-add functional identity,
+and the regularity hypotheses needed for the d'Alembert-to-ODE step.
+
+\subsection{Derivation}
+
+\begin{theorem}[Squared-ratio form]
+\label{thm:sq-form}
+For any $r>0$,
+\[
+  J(r) = \frac{(r-1)^2}{2r}.
+\]
+\end{theorem}
+
+\begin{proof}
+Expanding $J(r)=\tfrac{1}{2}(r+r^{-1})-1$ and multiplying through by
+$r>0$ gives $rJ(r)=\tfrac{1}{2}(r^2+1)-r=\tfrac{1}{2}(r-1)^2$.
+\end{proof}
+
+\noindent The squared-ratio form makes properties (A1)--(A4)
+transparent: the numerator $(r-1)^2$ is symmetric under
+$r\leftrightarrow r^{-1}$ when divided by $r$, vanishes at $r=1$, and
+is strictly convex.
+
+\begin{theorem}[Basic properties of $J$]
+\label{thm:basic}
+\leavevmode
+\begin{enumerate}[label=(\roman*)]
+  \item $J(1)=0$.
+  \item $J(r)=J(r^{-1})$ for all $r>0$.
+  \item $J(r)>0$ for all $r\neq 1$, $r>0$.
+  \item $J$ is strictly convex on $(0,\infty)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Properties (i)--(iii) follow immediately from the squared-ratio form:
+$(r-1)^2>0$ for $r\neq 1$ and $2r>0$.  Strict convexity (iv) is
+verified by computing $J''(r)=r^{-3}>0$ for $r>0$.
+\end{proof}
+
+\begin{theorem}[Uniqueness]
+\label{thm:unique}
+Let $F\colon\mathbb{R}_{>0}\to\mathbb{R}$ be continuous, satisfy
+(A1)--(A4), satisfy the cosh-add identity
+\[
+  G(s+t)+G(s-t)=2G(s)G(t)+2G(s)+2G(t), \qquad G(t):=F(e^t),
+\]
+and satisfy the regularity hypotheses needed to identify the associated
+continuous d'Alembert solution with $\cosh$.
+Then $F=J$ on $(0,\infty)$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Define $H(t):=G(t)+1$.  Then $H$ satisfies the classical d'Alembert
+equation $H(s+t)+H(s-t)=2H(s)H(t)$, with $H(0)=1$, $H$ continuous and
+even (from A1), and $H''(0)=G''(0)=1$ (from A4).  The only continuous
+solution of d'Alembert's equation with these boundary conditions is
+$H(t)=\cosh t$ \citep{aczel1966}.  Hence $G(t)=\cosh t-1$, and
+unwinding $F(r)=G(\log r)$ gives $F(r)=\cosh(\log r)-1=J(r)$.
+\end{proof}
+
+\begin{remark}
+The full formal proof of Theorem~\ref{thm:unique}, including the
+reduction from d'Alembert's equation to the cosh solution, is available
+through the theorems \texttt{CostUniqueness.T5\_uniqueness\_complete}
+and \texttt{CostUniqueness.unique\_cost\_on\_pos}.  In the latter, the
+complete machine-checked premise set is packaged into the structure
+\texttt{UniqueCostAxioms}.  Several regularity hypotheses for the ODE
+step are carried as explicit premises; they do not involve any
+\texttt{sorry} or \texttt{admit}.
+\end{remark}
+
+\subsection{The cosh representation}
+
+The identity $J(r)=\cosh(\log r)-1$ connects $J$ directly to the
+hyperbolic cosine.  Because $\cosh$ is the unique even solution of
+$y''=y$ with $y(0)=1$, this representation makes the
+information-theoretic content of $J$ visible: the cost of a ratio $r$
+is the excess of the geometric mean of $r$ and $r^{-1}$ over unity.
+
+% ====================================================================
+\section{The Interval-Cost Hierarchy}
+\label{sec:hierarchy}
+
+\subsection{\texorpdfstring{$J$-cost}{J-cost} of standard intervals}
+
+Applying $J$ to the standard just-intonation ratios yields exact
+rational values:
+
+\begin{table}[H]
+\centering
+\caption{$J$-cost of standard musical intervals in just intonation.}
+\label{tab:jcost}
+\begin{tabular}{@{}llcl@{}}
+\toprule
+Interval & Ratio $r$ & $J(r)$ & Decimal \\
+\midrule
+Unison        & $1/1$    & $0$          & $0$ \\
+Minor third   & $6/5$    & $1/60$       & $0.0167$ \\
+Major third   & $5/4$    & $1/40$       & $0.0250$ \\
+Perfect fourth& $4/3$    & $1/24$       & $0.0417$ \\
+Tritone       & $45/32$  & $169/2880$   & $0.0587$ \\
+Perfect fifth & $3/2$    & $1/12$       & $0.0833$ \\
+Octave        & $2/1$    & $1/4$        & $0.2500$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{theorem}[Complete interval-cost ordering]
+\label{thm:hierarchy}
+\[
+  J(1) \;<\; J\!\left(\tfrac{6}{5}\right)
+       \;<\; J\!\left(\tfrac{5}{4}\right)
+       \;<\; J\!\left(\tfrac{4}{3}\right)
+       \;<\; J\!\left(\tfrac{45}{32}\right)
+       \;<\; J\!\left(\tfrac{3}{2}\right)
+       \;<\; J(2).
+\]
+\end{theorem}
+
+\begin{proof}
+Each inequality reduces to a comparison of explicit rationals.  The
+formal proof is the Lean theorem
+\texttt{Consonance.extended\_ratio\_cost\_hierarchy}.
+\end{proof}
+
+\subsection{Superparticular intervals}
+
+A superparticular ratio is $(n+1)/n$ for a positive integer $n$.  These
+are the building blocks of just intonation: the octave ($n=1$), fifth
+($n=2$), fourth ($n=3$), major third ($n=4$), and minor third ($n=5$).
+
+\begin{theorem}[Superparticular cost formula]
+\label{thm:super}
+For every positive integer $n$,
+\[
+  J\!\left(\frac{n+1}{n}\right) = \frac{1}{2n(n+1)}.
+\]
+\end{theorem}
+
+\begin{proof}
+Direct computation from the squared-ratio form:
+$J\bigl(\frac{n+1}{n}\bigr) = \frac{(1/n)^2}{2\cdot(n+1)/n}
+= \frac{1}{2n(n+1)}$.
+\end{proof}
+
+\begin{corollary}[Superparticular cost is strictly decreasing]
+\label{cor:super-dec}
+If $1\leq m<n$, then
+$J\bigl(\frac{n+1}{n}\bigr) < J\bigl(\frac{m+1}{m}\bigr)$.
+\end{corollary}
+
+\begin{proof}
+$2n(n+1)>2m(m+1)$ when $n>m\geq 1$, so $1/(2n(n+1))<1/(2m(m+1))$.
+\end{proof}
+
+\noindent This means that \emph{smaller} superparticular intervals are
+\emph{less costly in the present model}---the minor third ($1/60$) beats the major third
+($1/40$), which beats the fourth ($1/24$), which beats the fifth
+($1/12$), which beats the octave ($1/4$).  The ordering is the reverse
+of what traditional consonance rankings predict for the fifth versus the
+thirds, and this reversal is a distinguishing, testable prediction of
+the $J$-cost framework.
+
+\subsection{Comparison with existing consonance theories}
+
+\begin{table}[H]
+\centering
+\caption{Ranking of intervals by three frameworks.  Lower rank = more
+consonant.  The $J$-cost ranking diverges at the fifth.}
+\label{tab:compare}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Interval & $J$-cost rank & Helmholtz rank & Harmonic template rank \\
+\midrule
+Unison        & 1 & 1 & 1 \\
+Minor third   & 2 & 5 & 5 \\
+Major third   & 3 & 4 & 4 \\
+Perfect fourth& 4 & 3 & 3 \\
+Perfect fifth & 6 & 2 & 2 \\
+Octave        & 7 & 6 & 6 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent The $J$-cost ordering agrees with tradition on unison (most
+consonant) and octave (least consonant among the standard intervals),
+but disagrees on the relative position of the fifth.  In the
+Helmholtz and harmonic-template frameworks, the perfect fifth is the
+second-most consonant interval.  In the $J$-cost framework, the fifth
+ranks sixth---above only the octave.  This is because $J$ measures
+deviation from unity: $3/2$ deviates more than $6/5$ or $5/4$.
+
+The disagreement is not a defect but a \emph{model-side prediction}.
+Within the present framework, $J$ should be read as an interval-strain
+ordering rather than as a complete replacement for all psychoacoustic
+preference judgments.  This is exactly where the $J$-cost picture
+becomes empirically distinctive.
+
+% ====================================================================
+\section{The Structural Role of the Perfect Fifth}
+\label{sec:fifth}
+
+If the fifth is not the lowest-cost interval, why is it so
+structurally important in Western music?  We argue that the answer
+lies in its role as a \emph{bridge ratio} between two independently
+motivated counting systems.
+
+\subsection{The 12/8 bridge}
+
+\begin{definition}[Chromatic bridge ratio]
+\label{def:bridge}
+The \emph{chromatic bridge ratio} is the quotient of the number of
+semitones per octave (12) and the number of slots in the DFT-8
+oscillation basis (8):
+\[
+  R_{\mathrm{bridge}} = \frac{12}{8} = \frac{3}{2}.
+\]
+\end{definition}
+
+\noindent The fact that this ratio \emph{is} the perfect fifth is
+the key structural observation.  It means that the perfect fifth is
+the interval that connects the chromatic counting system (12 semitones)
+to the oscillation counting system (8 time-slots).
+
+\subsection{The Pythagorean comma as a closure witness}
+
+Walking twelve perfect fifths around the circle of fifths and reducing
+by seven octaves gives:
+\begin{equation}
+  \label{eq:comma}
+  \frac{(3/2)^{12}}{2^7} = \frac{3^{12}}{2^{19}} \approx 1.01364.
+\end{equation}
+
+\begin{theorem}[Pythagorean comma bounds]
+\label{thm:comma}
+\[
+  1 \;<\; \frac{(3/2)^{12}}{2^7} \;<\; 1.02.
+\]
+\end{theorem}
+
+\begin{proof}
+Both inequalities are verified by exact rational arithmetic.  The
+formal proofs are \texttt{CircleOfFifths.pythagorean\_comma\_positive}
+and \texttt{CircleOfFifths.pythagorean\_comma\_small}.
+\end{proof}
+
+\noindent The twelve-fifths walk closes the octave with less than 2\%
+error.  This makes the fifth a \emph{low-error closure witness} for
+the chromatic system---a structural bridge, not a cost optimum.
+
+\begin{theorem}[The fifth is structural, not lowest-cost]
+\label{thm:fifth-not-lowest}
+\[
+  J\!\left(\tfrac{6}{5}\right) < J\!\left(\tfrac{3}{2}\right),\quad
+  J\!\left(\tfrac{5}{4}\right) < J\!\left(\tfrac{3}{2}\right),\quad
+  J\!\left(\tfrac{4}{3}\right) < J\!\left(\tfrac{3}{2}\right).
+\]
+\end{theorem}
+
+\noindent The formal proof is
+\texttt{ChromaticDerivation.fifth\_is\_structural\_not\_lowest\_cost}.
+
+\subsection{Harmonic relationships}
+
+The product rule $\text{fifth}\times\text{fourth}=\text{octave}$, i.e.\
+$(3/2)\cdot(4/3)=2$, is verified formally as
+\texttt{HarmonicModes.fifth\_times\_fourth\_eq\_octave}.  This reflects
+the well-known complementarity of the fifth and fourth within the
+octave and follows purely from arithmetic of the superparticular
+ratios.
+
+% ====================================================================
+\section{Emotional Valence as Ratio Asymmetry}
+\label{sec:valence}
+
+The cost function $J$ is symmetric under inversion: $J(r)=J(r^{-1})$.
+But the \emph{experience} of an interval is not symmetric---a major
+third sounds ``brighter'' than a minor third.  We capture this
+asymmetry with a signed companion function.
+
+\subsection{The ledger-skew function}
+
+\begin{definition}[Ledger skew]
+\label{def:skew}
+For $r>0$, the \emph{ledger skew} is
+\begin{equation}
+  \label{eq:skew}
+  \sigma(r) = r - r^{-1}.
+\end{equation}
+\end{definition}
+
+\noindent The function $\sigma$ captures the antisymmetric part of the
+ratio, complementing the symmetric part captured by $J$.  Together,
+$J$ and $\sigma$ decompose the ratio into a ``magnitude of deviation''
+and a ``direction of deviation.''
+
+\begin{theorem}[Properties of $\sigma$]
+\label{thm:skew-props}
+\leavevmode
+\begin{enumerate}[label=(\roman*)]
+  \item $\sigma(1)=0$.
+  \item $\sigma(r^{-1})=-\sigma(r)$ for all $r\neq 0$
+    \textup{(}antisymmetry\textup{)}.
+  \item $\sigma(r)>0$ for all $r>1$.
+  \item For $1<r_1<r_2<2$, $\sigma(r_1)<\sigma(r_2)$
+    \textup{(}skew increases with interval size within the
+    octave\textup{)}.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Properties (i)--(iii) are immediate.  Property (iv): on $(1,2)$ the
+derivative $\sigma'(r)=1+r^{-2}>0$, so $\sigma$ is strictly increasing.
+Formally, the Lean proof
+\texttt{Valence.skew\_increases\_with\_interval\_size} verifies (iv)
+using the bound $r_2^{-1}<r_1^{-1}$ when $r_1<r_2$.
+\end{proof}
+
+\subsection{Major versus minor}
+
+\begin{theorem}[Major-minor brightness distinction]
+\label{thm:major-minor}
+\[
+  0
+  \;<\;
+  \sigma\!\left(\tfrac{6}{5}\right)=\tfrac{11}{30}
+  \;<\;
+  \sigma\!\left(\tfrac{5}{4}\right)=\tfrac{9}{20}.
+\]
+\end{theorem}
+
+\begin{proof}
+Direct computation.  The formal proofs are
+\texttt{Valence.major\_third\_skew}, \texttt{Valence.minor\_third\_skew},
+\texttt{Valence.major\_third\_skew\_pos},
+\texttt{Valence.minor\_third\_skew\_pos}, and
+\texttt{Valence.major\_skew\_gt\_minor\_skew}.
+\end{proof}
+
+\noindent The major third has higher ledger skew than the minor third.
+In the present framework this supports a \emph{comparative brightness
+ordering}: both thirds have positive skew, but the major third is more
+``expansive'' (further from reciprocal symmetry on the positive side)
+than the minor third.  The quantitative skew difference is:
+
+\begin{theorem}[Valence difference]
+\label{thm:val-diff}
+\[
+  \sigma\!\left(\tfrac{5}{4}\right) - \sigma\!\left(\tfrac{6}{5}\right)
+  = \frac{1}{12}.
+\]
+\end{theorem}
+
+\begin{proof}
+The formal proof is
+\texttt{Valence.valence\_difference\_one\_twelfth}.
+\end{proof}
+
+\begin{remark}
+The valence model predicts that any interval with $r>1$ has positive
+skew, while its inversion $r^{-1}<1$ has negative skew.  The major/minor
+comparison is therefore not a sign flip but a difference in the
+magnitude of positive skew.  Formally, the relevant Lean ingredients are
+\texttt{ledgerSkew\_pos\_above\_one},
+\texttt{ledgerSkew\_neg\_below\_one},
+\texttt{ledgerSkew\_antisymmetric}, and
+\texttt{skew\_increases\_with\_interval\_size}.
+\end{remark}
+
+% ====================================================================
+\section{From Intervals to Chords: Conflict and Coherence}
+\label{sec:conflict}
+
+\subsection{Chord conflict}
+
+\begin{definition}[Chord conflict]
+\label{def:conflict}
+For a chord $C=\{f_1,\ldots,f_n\}$ with $f_i>0$, the
+\emph{chord conflict} is the directed aggregate of pairwise $J$-costs:
+\begin{equation}
+  \label{eq:conflict}
+  \mathrm{Conflict}(C) = \sum_{i\neq j} J\!\left(\frac{f_i}{f_j}\right).
+\end{equation}
+\end{definition}
+
+\noindent Because $J(r)=J(r^{-1})$, the directed aggregate equals
+twice the unordered pair sum $\sum_{i<j}J(f_i/f_j)$ when all notes
+are distinct.  We use the directed form because it matches the
+companion Lean implementation exactly.
+
+\begin{theorem}[Conflict is nonneg]
+\label{thm:conflict-nonneg}
+$\mathrm{Conflict}(C)\geq 0$ for every chord $C$.
+\end{theorem}
+
+\begin{proof}
+Each summand $J(f_i/f_j)\geq 0$ by Theorem~\ref{thm:basic}(iii),
+and the diagonal terms ($i=j$) contribute $J(1)=0$.  The formal proof
+is \texttt{ModeConflict.chordConflict\_nonneg}.
+\end{proof}
+
+\subsection{Chord coherence}
+
+\begin{definition}[Chord coherence]
+\label{def:coherence}
+\begin{equation}
+  \label{eq:coherence}
+  \mathrm{Coh}(C) = \frac{1}{1+\mathrm{Conflict}(C)}.
+\end{equation}
+\end{definition}
+
+\begin{proposition}[Coherence bounds]
+\label{prop:coh-bounds}
+$0<\mathrm{Coh}(C)\leq 1$ for every chord $C$.
+\end{proposition}
+
+\begin{proof}
+Since $\mathrm{Conflict}(C)\geq 0$, the denominator is $\geq 1$, so
+$\mathrm{Coh}\leq 1$.  Positivity of the denominator gives
+$\mathrm{Coh}>0$.  Formal proofs:
+\texttt{ModeConflict.chordCoherence\_pos} and
+\texttt{ModeConflict.chordCoherence\_le\_one}.
+\end{proof}
+
+\begin{theorem}[Monotonicity]
+\label{thm:mono}
+If $\mathrm{Conflict}(C_1)\leq\mathrm{Conflict}(C_2)$, then
+$\mathrm{Coh}(C_2)\leq\mathrm{Coh}(C_1)$.
+\end{theorem}
+
+\begin{proof}
+The map $x\mapsto 1/(1+x)$ is decreasing on $[0,\infty)$.  Formal
+proof: \texttt{ModeConflict.lowerConflict\_higherCoherence}.
+\end{proof}
+
+\noindent Theorem~\ref{thm:mono} is the central structural result
+for multi-note applications: among chords matched for other
+properties, those with lower aggregate $J$-cost are more coherent.
+This gives a parameter-free objective function for algorithmic
+composition and for downstream application layers that use coherence as
+an alignment modifier.
+
+\subsection{Effective alignment}
+
+In a downstream application layer \citep{washburn2026envelope}, the
+coherence score modulates a base alignment to yield an effective
+alignment $a_{\mathrm{eff}}=a\cdot\mathrm{Coh}(C)$.  The monotonicity
+theorem above guarantees that lower-conflict chords preserve at least as
+much alignment as higher-conflict chords, all else equal.  The
+corresponding downstream Lean theorem is
+\texttt{SoundHealing.lowerConflict\_reduces\_strain\_more}.
+
+% ====================================================================
+\section{Formal Verification}
+\label{sec:lean}
+
+The core theorem surface cited in this paper has corresponding
+machine-checked proofs in the Lean~4 proof assistant \citep{moura2021}.
+The cited modules build with zero \texttt{sorry} and zero
+\texttt{admit}.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Core Lean~4 theorem surface used in the paper.}
+\label{tab:lean}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Claim cluster & Key theorem(s) \\
+\midrule
+\texttt{Basic cost facts}
+  & \texttt{Jcost\_unit0} \\
+  & \texttt{Jcost\_symm} \\
+  & \texttt{Jcost\_nonneg} \\
+  & \texttt{Jcost\_pos\_of\_ne\_one} \\
+  & \texttt{Jcost\_eq\_sq} \\
+  & \texttt{Jcost\_eq\_zero\_iff} \\
+\texttt{Convexity}
+  & \texttt{Jcost\_strictConvexOn\_pos} \\
+\texttt{Uniqueness}
+  & \texttt{T5\_uniqueness\_complete} \\
+  & \texttt{unique\_cost\_on\_pos} \\
+\texttt{Interval values}
+  & \texttt{fifth\_jcost}, \texttt{fourth\_jcost}, etc. \\
+  & \texttt{fifth\_times\_fourth\_eq\_octave} \\
+\texttt{Hierarchy}
+  & \texttt{extended\_ratio\_cost\_hierarchy} \\
+  & \texttt{superparticular\_jcost} \\
+  & \texttt{superparticular\_jcost\_decreasing} \\
+  & \texttt{consonance\_is\_jcost} \\
+\texttt{Fifth as bridge}
+  & \texttt{twelve\_eight\_ratio\_is\_fifth} \\
+  & \texttt{pythagorean\_comma\_positive} \\
+  & \texttt{pythagorean\_comma\_small} \\
+  & \texttt{chromaticBridgeRatio\_eq\_fifth} \\
+  & \texttt{fifth\_is\_structural\_not\_lowest\_cost} \\
+  & \texttt{twelve\_step\_bridge\_is\_low\_error\_witness} \\
+\texttt{Valence}
+  & \texttt{major\_skew\_gt\_minor\_skew} \\
+  & \texttt{major\_third\_skew\_pos}, \texttt{minor\_third\_skew\_pos} \\
+  & \texttt{ledgerSkew\_antisymmetric} \\
+  & \texttt{ledgerSkew\_neg\_below\_one} \\
+  & \texttt{skew\_increases\_with\_interval\_size} \\
+  & \texttt{valence\_difference\_one\_twelfth} \\
+\texttt{Conflict/coherence}
+  & \texttt{chordConflict\_nonneg} \\
+  & \texttt{chordCoherence\_pos}, \texttt{chordCoherence\_le\_one} \\
+  & \texttt{lowerConflict\_higherCoherence} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent The full source code is available at
+\texttt{github.com/jonwashburn/reality} in the
+\texttt{IndisputableMonolith} directory.
+
+% ====================================================================
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{\texorpdfstring{What $J$-cost captures}{What J-cost captures}}
+
+The $J$-cost function provides a single, parameter-free measure of
+interval strain that is motivated by four transparent axioms (inversion
+symmetry, unit normalisation, strict convexity, calibration) and
+uniqueness-justified in the current formalization by a stronger explicit
+functional-equation hypothesis bundle.  It
+reproduces the qualitative observation that unison is maximally
+consonant and the octave is the most ``costly'' standard interval, and
+it provides exact rational values for every just-intonation ratio.  The
+superparticular cost formula $J((n+1)/n)=1/(2n(n+1))$ gives a clean
+parametric family that covers all of the traditional intervals.
+
+\subsection{\texorpdfstring{Where $J$-cost diverges from tradition}{Where J-cost diverges from tradition}}
+
+The most notable divergence is the ranking of the perfect fifth.
+Traditional frameworks place the fifth immediately after the unison and
+octave in consonance.  $J$-cost places it sixth out of seven standard
+intervals, behind both thirds and the fourth.
+
+This is not an error in the model; it is a structural prediction.  $J$
+measures deviation from unity, and $3/2$ deviates more than $6/5$,
+$5/4$, or $4/3$.  The fifth's cultural and structural prominence comes
+instead from its bridge property (Section~\ref{sec:fifth}).  Whether
+perceptual consonance tracks $J$-cost or roughness/template models is
+an empirical question.
+
+\subsection{The valence prediction}
+
+The $\sigma$-function prediction developed here is comparative rather
+than categorical: both the major and minor third have positive skew in
+the current formalization, but the major third has more.  This yields a
+parameter-free comparative account of major/minor brightness ordering
+that is testable via affective ratings of isolated intervals.
+
+\subsection{Limitations}
+
+\begin{enumerate}
+  \item \textbf{Just intonation only.}  The current framework applies
+    to exact rational ratios.  Extension to equal temperament, where
+    all intervals are irrational, requires a notion of ``nearest
+    rational approximation cost'' that is not yet formalised.
+
+  \item \textbf{Timbre is not modelled.}  $J$-cost applies to
+    fundamental frequency ratios and does not account for the spectral
+    content of real instruments, which affects perceived consonance.
+
+  \item \textbf{Cultural context.}  Consonance perception has a
+    well-documented cultural component \citep{mcdermott2016}.  $J$-cost
+    makes structural predictions about cost that may or may not align
+    with learned preference in every population.
+
+  \item \textbf{Uniqueness hypotheses.}  The uniqueness theorem
+    (Theorem~\ref{thm:unique}) requires the d'Alembert functional
+    equation together with additional explicit regularity hypotheses.
+    This package is natural in the Recognition Science framework but
+    should be evaluated on its own merits in a purely music-theoretic
+    context.
+\end{enumerate}
+
+\subsection{Future directions}
+
+\paragraph{Non-Western tuning systems.}
+Applying $J$-cost to the 22-\'{s}ruti system of Indian classical music,
+the 17-tone Arabic system, or Indonesian gamelan scales would test
+whether the cost hierarchy has cross-cultural predictive power.
+
+\paragraph{Chord-level predictions.}
+The conflict-coherence framework (Section~\ref{sec:conflict}) predicts
+that among triads, the chord with the lowest aggregate $J$-cost should
+produce the highest coherence.  This can be tested with EEG
+inter-frequency coherence measurements.
+
+\paragraph{Integration with roughness models.}
+$J$-cost and roughness models may capture orthogonal aspects of
+consonance perception.  A combined model---$J$-cost for structural
+strain, roughness for sensory dissonance---could outperform either
+alone.
+
+% ====================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+We have shown that a single function $J(r)=\tfrac{1}{2}(r+r^{-1})-1$,
+uniqueness-justified in the present formalization by an explicit bundle
+of symmetry, normalization, convexity, calibration, continuity, and
+functional-equation hypotheses, simultaneously
+produces:
+
+\begin{itemize}
+  \item a complete, strict ordering of standard musical intervals,
+  \item a structural explanation for the perfect fifth as the chromatic
+    bridge ratio rather than the lowest-cost interval,
+  \item a parameter-free comparative model of valence via the signed
+    asymmetry $\sigma(r)=r-r^{-1}$,
+  \item a monotone conflict-coherence framework for chords.
+\end{itemize}
+
+\noindent The framework makes specific predictions that differ from
+traditional consonance theories, particularly regarding the relative
+ranking of the perfect fifth.  The core theorem surface cited in the
+paper has been machine-checked in a proof assistant.  We invite
+empirical testing of the divergent predictions.
+
+% ====================================================================
+\section*{Acknowledgments}
+
+The author thanks the Recognition Science community for foundational
+discussions on cost-based physics, and the Lean~4 / Mathlib communities
+for the proof assistant infrastructure that enabled formal verification
+of these results.
+
+% ====================================================================
+\begin{thebibliography}{99}
+
+\bibitem[Acz{\'e}l, 1966]{aczel1966}
+Acz{\'e}l, J. (1966).
+\textit{Lectures on Functional Equations and Their Applications}.
+Academic Press.
+
+\bibitem[Amiot, 2016]{amiot2016}
+Amiot, E. (2016).
+\textit{Music Through Fourier Space: Discrete Fourier Transform in
+Music Theory}. Springer.
+
+\bibitem[Benson, 2006]{benson2006}
+Benson, D.~J. (2006).
+\textit{Music: A Mathematical Offering}. Cambridge University Press.
+
+\bibitem[Helmholtz, 1863]{helmholtz1863}
+von Helmholtz, H. (1863).
+\textit{Die Lehre von den Tonempfindungen als physiologische Grundlage
+f\"ur die Theorie der Musik}. Braunschweig: Vieweg.
+
+\bibitem[Mazzola, 2002]{mazzola2002}
+Mazzola, G. (2002).
+\textit{The Topos of Music: Geometric Logic of Concepts, Theory, and
+Performance}. Birkh\"auser.
+
+\bibitem[McDermott et al., 2016]{mcdermott2016}
+McDermott, J.~H., Schultz, A.~F., Undurraga, E.~A., \& Godoy, R.~A.
+(2016).
+Indifference to dissonance in native Amazonians reveals cultural
+variation in music perception.
+\textit{Nature}, 535(7613), 547--550.
+
+\bibitem[de Moura et al., 2021]{moura2021}
+de Moura, L., Kong, S., Avigad, J., van Doorn, F., \& von Raumer, J.
+(2021).
+The Lean 4 theorem prover and programming language.
+\textit{Automated Deduction---CADE 28}, LNAI 12699, 625--635.
+
+\bibitem[Parncutt \& Hair, 2011]{parncutt2011}
+Parncutt, R. \& Hair, G. (2011).
+Consonance and dissonance in music theory and psychology: disentangling
+roughness, harmonicity, and familiarity.
+\textit{Journal of the Acoustical Society of America}, 130(2), 776--788.
+
+\bibitem[Plomp \& Levelt, 1965]{plomp1965}
+Plomp, R. \& Levelt, W.~J.~M. (1965).
+Tonal consonance and critical bandwidth.
+\textit{Journal of the Acoustical Society of America}, 38(4), 548--560.
+
+\bibitem[Washburn, 2025]{washburn2025axioms}
+Washburn, J. (2025).
+Recognition Science: a cost-first foundation for physics.
+\textit{Axioms}, 14(x).
+
+\bibitem[Washburn, 2026]{washburn2026envelope}
+Washburn, J. (2026).
+Precision envelope targeting of neural oscillation bands: exact
+rhythmic formulas, a conflict-coherence framework, and a unique carrier
+theorem for the theta band.
+\textit{Manuscript submitted for publication}.
+
+\end{thebibliography}
+
+\end{document}
