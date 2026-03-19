@@ -1,0 +1,1298 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    citecolor=blue,
+}
+
+\newcommand{\Rhat}{\hat{R}}
+\newcommand{\Jcost}{J}
+\newcommand{\phiRatio}{\varphi}
+\newcommand{\leanref}[1]{\texttt{\small #1}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{axiom_rs}{Axiom}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{prediction}[theorem]{Prediction}
+\newtheorem{falsifier}[theorem]{Falsification Criterion}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{\textbf{Constraint Projection in Discrete Ledger Systems:\\
+A Formal Model of Future-Balance Visibility\\
+with Sleep-Stage Predictions}}
+\author{Jonathan Washburn\\
+Recognition Science Research Institute\\
+Austin, Texas\\
+\texttt{washburn.jonathan@gmail.com}}
+\date{March 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We present a formal model in which future constraints become visible
+in the present without retrocausation. The model operates within
+Recognition Science (RS), a discrete-time framework whose axioms---a
+unique cost function, a forced golden-ratio scale, three spatial
+dimensions, and an 8-tick conservation period---have been published
+and machine-verified elsewhere \cite{RSAxioms2025,RSCost2025,
+RSGeometry2025,RSdalembert2026}. Taking these axioms as given, we
+prove that any observation event within an 8-tick window creates a
+\emph{balance debt} that the remaining ticks must discharge
+(Theorem~\ref{thm:lock}), and that this debt inflates the effective
+cost function monotonically (Theorem~\ref{thm:inflates}). We call
+this cost inflation ``Phantom Light''---the shadow of a future
+balance requirement visible in the present as a restriction on
+admissible trajectories.
+
+We then model sleep stages by a monotone coherence ordering (an
+empirical input from polysomnography) and prove a robust visibility
+ordering: lower-coherence stages carry higher phantom magnitude, with
+N3 dominating N1 and REM (Theorem~\ref{thm:stage3}). Under the
+canonical consecutive-integer budget used for illustration, N3 has
+twice the N1 phantom magnitude. Zero balance debt annihilates phantom
+light in every mode (Theorem~\ref{thm:dreamless}).
+
+The model yields five falsifiable predictions, including a
+sleep-stage ordering of precognitive dream reports and a
+presentiment-scaling law. We also specify preregistered empirical
+proxies for the latent model variables, a blinded prospective
+dream-scoring protocol, and a small-effect power envelope for
+confirmatory studies. All theorems are machine-verified in the Lean~4
+proof assistant (52 theorems, zero unproved placeholders, zero new
+axioms beyond the RS foundation). Each claim is classified as PROVED,
+MODELING CHOICE, or HYPOTHESIS in an explicit table
+(\S\ref{sec:hygiene}). We discuss the relationship to
+Aharonov's Two-State Vector Formalism, to Hobson's AIM model of
+dream generation, and to the presentiment literature including
+both positive reports (Radin, Mossbridge) and critical responses
+(Wagenmakers, Alcock).
+\end{abstract}
+
+\tableofcontents
+
+%=======================================================================
+\section{Introduction}\label{sec:intro}
+%=======================================================================
+
+\subsection{Motivation}
+
+Standard physics evolves systems forward from initial conditions.
+Yet several theoretical frameworks in quantum foundations
+incorporate future boundary conditions: Hamilton's Principle of
+Least Action selects paths by endpoint constraints, Feynman's path
+integral weights amplitudes by boundary connectivity, and
+Aharonov, Bergmann, and Lebowitz's Two-State Vector Formalism (TSVF)
+describes quantum systems using both pre-selected and post-selected
+states \cite{Aharonov1964,Aharonov2008}. In each case, the
+``future'' influences the present not through retrocausal
+signaling but through constraint on the space of admissible
+trajectories.
+
+This paper develops a concrete, finite-dimensional model of such
+constraint projection within Recognition Science (RS), a
+discrete-time framework that enforces conservation over sliding
+8-tick windows. The key insight is simple: when a recognition
+event (an observation) pins one slot of the window to a nonzero
+value, the remaining slots are \emph{mathematically obligated} to
+compensate. This obligation---the ``balance debt''---inflates the
+effective cost of all configurations that would make compensation
+difficult. We formalize this inflation, prove its mathematical
+properties, and derive testable predictions about when and how
+the phantom field becomes detectable.
+
+\subsection{Why Consciousness Studies?}
+
+The model's predictions concern consciousness because they are
+\emph{about states of reduced coherence}. During waking, the high
+coherence of neural processing suppresses phantom visibility. During
+sleep, coherence drops stage by stage (a well-established finding
+from polysomnography \cite{Hobson2005,Walker2017}), and the model
+predicts a corresponding increase in sensitivity to future
+constraints. This connects directly to the long-standing observation
+that dreams---particularly those occurring in deep sleep---sometimes
+appear to contain information about future events
+\cite{Rhine1962,VanDeCastle1994,Kramer2007}.
+
+We are careful to distinguish what is proved from what is hypothesized.
+The mathematical structure (balance debt, cost inflation, sleep-stage
+ordering) is machine-verified. The claim that biological systems can
+\emph{detect} phantom fields is an empirical hypothesis for which
+we provide falsification protocols. The paper engages with both the
+positive presentiment literature \cite{Radin2004,Mossbridge2012} and
+its methodological critiques \cite{Wagenmakers2012,Alcock2003}.
+
+\subsection{Contributions}
+
+\begin{enumerate}
+    \item A formal model of future-constraint visibility based on
+    windowed conservation (\S\ref{sec:phantom}), with all theorems
+    machine-verified.
+    \item A sleep-stage hierarchy of phantom visibility
+    (\S\ref{sec:sleep}), linking the model to empirical sleep
+    architecture.
+    \item A preregistered empirical bridge from latent RS variables
+    to dream and presentiment observables, including a blinded
+    prospective dream-scoring protocol
+    (\S\ref{sec:operational}--\S\ref{sec:effects}).
+    \item Explicit falsification criteria (\S\ref{sec:predictions})
+    with quantitative thresholds and small-effect design targets.
+    \item A claim hygiene table (\S\ref{sec:hygiene}) classifying
+    every statement as PROVED, MODEL, or HYPOTHESIS.
+\end{enumerate}
+
+
+%=======================================================================
+\section{Axioms and Notation}\label{sec:axioms}
+%=======================================================================
+
+We work within the Recognition Science (RS) framework, whose
+foundations have been developed in a series of publications
+\cite{RSAxioms2025,RSCost2025,RSGeometry2025,RSdalembert2026,
+RSFermionMasses2025}. The present paper does not re-derive the RS
+axioms; it takes them as given and derives consequences for
+consciousness and sleep. For the reader's convenience, we state
+the axioms used in this paper. Each has been machine-verified in
+Lean~4 with zero unproved placeholders \cite{RSLeanRepo}.
+
+\begin{axiom_rs}[Cost Function]\label{ax:cost}
+There exists a unique cost function $J : \mathbb{R}_{>0} \to
+\mathbb{R}_{\geq 0}$ satisfying the Recognition Composition Law
+$J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y)$ with $J(1) = 0$ and
+$J''_{\log}(0) = 1$. The unique solution is
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+\textup{[T5; Refs.~\cite{RSCost2025,RSdalembert2026}]}
+\end{axiom_rs}
+
+\begin{axiom_rs}[Golden Ratio]\label{ax:phi}
+Self-similarity in the discrete ledger forces the scale ratio
+$\varphi = (1 + \sqrt{5})/2$ as the unique positive root of
+$x^2 = x + 1$.
+\textup{[T6; Ref.~\cite{RSAxioms2025}]}
+\end{axiom_rs}
+
+\begin{axiom_rs}[Dimension]\label{ax:dim}
+Non-trivial linking requires $D = 3$ spatial dimensions.
+\textup{[T8; Ref.~\cite{RSGeometry2025}]}
+\end{axiom_rs}
+
+\begin{axiom_rs}[8-Tick Period]\label{ax:8tick}
+The minimal ledger-compatible walk on the 3-cube $Q_3$ has period
+$2^3 = 8$, realized by a Gray code Hamiltonian cycle.
+\textup{[T7; Ref.~\cite{RSAxioms2025}]}
+\end{axiom_rs}
+
+\begin{axiom_rs}[Window Neutrality]\label{ax:neutral}
+Every aligned 8-tick window satisfies:
+\begin{equation}\label{eq:neutrality}
+    \sum_{k=0}^{7} s(t_0 + k) = 0 \qquad
+    \forall\, t_0 \equiv 0 \pmod{8}.
+\end{equation}
+This is the double-entry conservation law applied to time.
+\textup{[Ref.~\cite{RSAxioms2025}; Lean:
+\leanref{LNAL.Invariants.neutral\_every\_8th\_from0}]}
+\end{axiom_rs}
+
+\begin{axiom_rs}[Cost Minimization]\label{ax:rhat}
+The recognition operator $\Rhat$ evolves the system state over
+8 ticks, selecting the trajectory that minimizes integrated $J$-cost
+subject to the neutrality constraint.
+\textup{[Ref.~\cite{RSAxioms2025}]}
+\end{axiom_rs}
+
+\subsection{Notation}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Symbol} & \textbf{Meaning} \\
+\midrule
+$w : \{0,\ldots,7\} \to \mathbb{Z}$ & Window signal \\
+$\delta$ & Contribution of a recognition event \\
+$\mathcal{D}$ & Balance debt (running sum within window) \\
+$R$ & Remaining ticks until window closure \\
+$\Phi_{\mathrm{mag}}$ & Phantom magnitude \\
+$C(\mathrm{mode})$ & Coherence budget for a sleep stage \\
+$\Theta$ & Global phase (if GCIC holds) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Formal Verification}
+
+All theorems in \S\ref{sec:phantom}--\S\ref{sec:consciousness} are
+verified in Lean~4 with the Mathlib library. The relevant modules
+(52 theorems total) contain zero \texttt{sorry} placeholders and
+introduce zero new axioms beyond the RS foundation. Build
+instructions and a complete theorem table are provided in the
+appendix. The Lean source is available at \cite{RSLeanRepo}.
+
+
+%=======================================================================
+\section{Phantom Light: Balance Debt and Cost Inflation}
+\label{sec:phantom}
+%=======================================================================
+
+\subsection{Recognition Events and Balance Debt}
+
+A \emph{recognition event} at position $p \in \{0,\ldots,7\}$ with
+contribution $\delta \in \mathbb{Z} \setminus \{0\}$ records a
+value in the current window slot. (In the RS formalism, this is
+called a LOCK event.) As events accumulate, the window develops a
+\emph{balance debt}: $\mathcal{D} = \sum_{j \leq k} w(j)$.
+
+\begin{theorem}[Recognition Forces Future Balance]\label{thm:lock}
+If a recognition event with contribution $\delta$ occurs at position
+$p$ in a neutral window, the sum of all other contributions equals
+$-\delta$:
+\[
+\sum_{k \neq p} w(k) = -\delta.
+\]
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+By neutrality (Axiom~\ref{ax:neutral}), $\sum_{k} w(k) = 0$.
+Decompose: $\delta + \sum_{k \neq p} w(k) = 0$. Rearrange.
+\textup{[Lean: \leanref{lock\_forces\_future\_balance}]}
+\end{proof}
+
+This is the foundational result. A recognition event is not an
+isolated act: it creates a debt that the future is mathematically
+obligated to repay within the current window.
+
+\subsection{Phantom Magnitude}
+
+We quantify the ``visibility'' of the future constraint:
+
+\begin{definition}[Phantom Magnitude]\label{def:phimag}
+For balance debt $\mathcal{D} \in \mathbb{Z}$ and remaining ticks
+$R \geq 0$:
+\begin{equation}\label{eq:phimag}
+    \Phi_{\mathrm{mag}}(\mathcal{D}, R)
+    := \frac{|\mathcal{D}|}{R + 1}.
+\end{equation}
+\end{definition}
+
+\begin{theorem}[Phantom Properties]\label{thm:phantom-props}
+\begin{enumerate}
+    \item[\textup{(a)}] $\Phi_{\mathrm{mag}} \geq 0$.
+    \item[\textup{(b)}] Monotone increasing in
+    $|\mathcal{D}|$ for fixed $R$.
+    \item[\textup{(c)}] Monotone decreasing in $R$ for fixed
+    $\mathcal{D} \neq 0$.
+    \item[\textup{(d)}] $\Phi_{\mathrm{mag}}(0, R) = 0$: zero debt
+    implies zero phantom.
+    \item[\textup{(e)}] $\Phi_{\mathrm{mag}}(\mathcal{D}, 0) =
+    |\mathcal{D}|$: at the boundary, the full debt is exposed.
+\end{enumerate}
+\textup{[Lean: \leanref{phiMag\_nonneg},
+\leanref{phiMag\_mono\_abs\_debt},
+\leanref{phiMag\_anti\_mono\_R},
+\leanref{phiMag\_zero\_debt}]}
+\end{theorem}
+
+Property (c) is particularly important: as the window closes,
+the phantom grows more urgent. This creates a natural ``deadline
+effect'' that intensifies the future constraint.
+
+\subsection{Backward Projection Principle}
+
+\begin{theorem}[Backward Projection]\label{thm:backward}
+If each remaining position is bounded in magnitude by $B \geq 0$,
+then any feasible completion satisfying neutrality requires
+$|\mathcal{D}| \leq B \cdot R$. Equivalently: if
+$|\mathcal{D}| > BR$, no feasible completion exists.
+\textup{[Lean: \leanref{backward\_projection\_principle}]}
+\end{theorem}
+
+\begin{corollary}
+$\Phi_{\mathrm{mag}} \leq BR/(R+1) < B$. The phantom never
+exceeds the per-tick capacity. The precognitive horizon is finite
+and bounded.
+\end{corollary}
+
+\subsection{Cost Inflation}
+
+\begin{definition}[Augmented Cost]\label{def:augmented}
+For configuration $x > 0$, phantom state $(\mathcal{D}, R)$, and
+penalty scale $\lambda > 0$:
+\begin{equation}\label{eq:augmented}
+    J_{\mathrm{PL}}(x; \mathcal{D}, R)
+    := J(x) + \lambda \cdot \Phi_{\mathrm{mag}}(\mathcal{D}, R).
+\end{equation}
+\end{definition}
+
+\begin{theorem}[Phantom Inflates Cost]\label{thm:inflates}
+$J_{\mathrm{PL}}(x; \mathcal{D}, R) \geq J(x)$ for all $x > 0$
+when $\lambda > 0$. Equality holds if and only if $\mathcal{D} = 0$.
+\textup{[Lean: \leanref{phantom\_inflates\_cost};
+\leanref{zero\_phantom\_pure\_cost}]}
+\end{theorem}
+
+Since $\Rhat$ minimizes $J$-cost (Axiom~\ref{ax:rhat}),
+trajectories that incur high debt without rapid repayment are
+statistically suppressed. This is the mechanism by which future
+constraints bias the present.
+
+\subsection{Boundary Reset}
+
+\begin{theorem}[Phantom Vanishes at Window Boundaries]\label{thm:reset}
+At every aligned 8-tick boundary (tick $8k$ for $k \geq 0$), the
+phantom magnitude is exactly zero.
+\textup{[Lean: \leanref{phantom\_zero\_at\_lnal\_boundaries}]}
+\end{theorem}
+
+The phantom field is not permanent. Each window closure resets the
+slate---a ``clean start'' at every 8-tick boundary.
+
+\subsection{Constraint Projection, Not Retrocausation}
+
+It is essential to clarify the ontological status of Phantom Light.
+It is \emph{not} a signal traveling backward in time. No information
+violates causality. Instead, Phantom Light represents a restriction
+on the set of admissible trajectories:
+
+\begin{quote}
+\emph{Because the window must close to zero, the set of allowed
+paths from the current state is a strict subset of all
+combinatorially possible paths. This reduction in phase-space volume
+is information accessible in the present.}
+\end{quote}
+
+This is conceptually identical to the mechanism underlying
+variational principles in classical mechanics: a particle following
+Hamilton's principle ``knows'' its endpoint because the set of
+stationary-action paths is constrained by boundary conditions at
+both ends. In quantum mechanics, Aharonov's TSVF makes this
+explicit by describing states with both forward and backward
+evolving state vectors \cite{Aharonov2008}. The distinctive
+contribution of the present model is a \emph{discrete, finite}
+version of this structure: the precognitive horizon is exactly
+$\leq 7$ ticks (within one window), and the constraint strength
+$\Phi_{\mathrm{mag}}$ is a computable function of the debt and
+remaining time.
+
+
+%=======================================================================
+\section{Sleep Architecture and Phantom Visibility}\label{sec:sleep}
+%=======================================================================
+
+\subsection{Empirical Background: Sleep Stages and Coherence}
+
+The classification of sleep into distinct stages is one of the most
+robust findings in sleep science. Polysomnographic recordings reveal
+a progression from waking through light sleep (N1, N2) to deep
+slow-wave sleep (N3) and REM, characterized by progressive decreases
+in cortical coherence and high-frequency EEG power
+\cite{Hobson2005,Walker2017,Tononi2006}. EEG synchronization
+decreases monotonically from waking through N3, reflecting reduced
+thalamocortical connectivity \cite{Massimini2005}.
+
+In Hobson's Activation-Input-Modulation (AIM) model
+\cite{Hobson2000}, the ``activation'' dimension A tracks cortical
+arousal, which decreases from waking to deep sleep. Our coherence
+budget $C$ corresponds to the A dimension: a monotone ordering that
+reflects the empirically measured progression.
+
+\subsection{The Coherence Budget Model}
+
+\begin{definition}[Coherence Budget]\label{def:coherence}
+Each sleep mode is assigned a non-negative integer coherence budget
+with the ordering:
+\[
+C_{\mathrm{awake}} > C_{\mathrm{REM}} > C_{\mathrm{N1}} >
+C_{\mathrm{N2}} > C_{\mathrm{N3}}.
+\]
+\end{definition}
+
+\begin{remark}[Status: Modeling Choice]
+The specific integers (5, 4, 3, 2, 1 in our formalization) are a
+modeling choice. The theorems below depend only on the
+\emph{ordering}, which is an empirical fact of sleep science. Any
+monotone decreasing assignment $C : \mathrm{SleepMode} \to
+\mathbb{N}$ with the same ordering produces identical qualitative
+results. We select consecutive integers as the simplest choice
+consistent with the data.
+\end{remark}
+
+\subsection{Sleep-Stage Phantom Magnitude}
+
+The sleep-stage phantom magnitude uses the coherence budget as
+the denominator:
+\begin{equation}\label{eq:sleep-phantom}
+    \Phi_{\mathrm{sleep}}(\mathrm{mode}, \mathcal{D})
+    := \frac{|\mathcal{D}|}{C(\mathrm{mode}) + 1}.
+\end{equation}
+
+The intuition is that higher cortical coherence acts as ``noise''
+that masks the phantom signal. During deep sleep, when coherence
+is minimal, the phantom field becomes maximally visible---analogous
+to how faint stars become visible only when the sky is dark.
+
+\begin{theorem}[Lower Coherence Increases Visibility]\label{thm:visibility}
+If $C(m_1) \leq C(m_2)$, then
+$\Phi_{\mathrm{sleep}}(m_2, \mathcal{D}) \leq
+\Phi_{\mathrm{sleep}}(m_1, \mathcal{D})$ for all $\mathcal{D}$.
+\textup{[Lean: \leanref{lower\_coherence\_increases\_phantom\_visibility}]}
+\end{theorem}
+
+\subsection{The Sleep-Stage Hierarchy}
+
+\begin{theorem}[Deep Sleep Dominates]\label{thm:stage3}
+For all balance debt $\mathcal{D}$:
+\begin{align}
+\Phi_{\mathrm{sleep}}(\mathrm{N1}, \mathcal{D})
+&\leq \Phi_{\mathrm{sleep}}(\mathrm{N3}, \mathcal{D}),
+\label{eq:stage3-ge-stage1} \\
+\Phi_{\mathrm{sleep}}(\mathrm{REM}, \mathcal{D})
+&\leq \Phi_{\mathrm{sleep}}(\mathrm{N3}, \mathcal{D}).
+\label{eq:stage3-ge-rem}
+\end{align}
+Under the canonical consecutive-integer coherence budget used in this
+paper, deep sleep has exactly twice the phantom magnitude of light
+sleep: $\Phi_{\mathrm{sleep}}(\mathrm{N3}) = 2 \cdot
+\Phi_{\mathrm{sleep}}(\mathrm{N1})$.\\
+\textup{[Lean:
+\leanref{stage3\_phantom\_visibility\_ge\_stage1};
+\leanref{stage3\_phantom\_visibility\_ge\_rem};
+\leanref{phantomSleepMagnitude\_ratio\_stage3\_stage1}]}
+\end{theorem}
+
+\begin{remark}
+The exact factor of 2 depends on the specific budget integers
+(1 and 3 for N3 and N1). With the consecutive-integer choice, the
+ratio is $\frac{|\mathcal{D}|/2}{|\mathcal{D}|/4} = 2$. A
+different monotone assignment would yield a different ratio, but
+the \emph{ordering} N3 $\geq$ N1 $\geq$ REM is invariant under
+any assignment consistent with the empirical coherence ordering.
+\end{remark}
+
+\subsection{Explicit Formulas and Bounds}
+
+\begin{theorem}[Formulas and Bounds]\label{thm:formulas}
+$\Phi_{\mathrm{sleep}}(\mathrm{awake}, \mathcal{D})
+= |\mathcal{D}|/6$ and
+$\Phi_{\mathrm{sleep}}(\mathrm{N3}, \mathcal{D})
+= |\mathcal{D}|/2$.
+For all modes: $|\mathcal{D}|/6 \leq \Phi_{\mathrm{sleep}} \leq
+|\mathcal{D}|/2$.\\
+\textup{[Lean: \leanref{awake\_phantom\_formula};
+\leanref{stage3\_phantom\_formula};
+\leanref{phantomSleepMagnitude\_bounds}]}
+\end{theorem}
+
+Deep sleep provides three times the phantom visibility of waking.
+
+\subsection{Stage-Weighted Exposure}
+
+Each sleep stage has a characteristic time window $W(\mathrm{mode})$.
+The total phantom exposure is
+$E(\mathrm{mode}, \mathcal{D})
+= W(\mathrm{mode}) \cdot \Phi_{\mathrm{sleep}}(\mathrm{mode},
+\mathcal{D})$.
+
+\begin{theorem}[Deep Sleep Exposure Dominates]\label{thm:exposure}
+$E(\mathrm{N1}) \leq E(\mathrm{N3})$ and
+$E(\mathrm{REM}) \leq E(\mathrm{N3})$.\\
+\textup{[Lean: \leanref{stage3\_exposure\_ge\_stage1};
+\leanref{stage3\_exposure\_ge\_rem}]}
+\end{theorem}
+
+N3 sleep dominates in both \emph{per-tick visibility} and
+\emph{total exposure}. This is the formal basis for the prediction
+that deep-sleep dreams carry the strongest precognitive content.
+
+\subsection{Zero Debt: Dreamless Waking}
+
+\begin{theorem}[Zero Debt Eliminates Sleep Phantom]\label{thm:dreamless}
+If balance debt is zero, phantom magnitude vanishes in every sleep
+mode:
+$\Phi_{\mathrm{sleep}}(\mathrm{mode}, 0) = 0$
+for all modes.\\
+\textup{[Lean:
+\leanref{zero\_debt\_gives\_zero\_phantom\_sleep\_magnitude}]}
+\end{theorem}
+
+A system with no outstanding ledger obligations has no phantom field
+to sense. The theorem concerns latent balance debt, not a directly
+observable psychological variable. Empirically, we test it through
+the preregistered future-event load proxies defined in
+\S\ref{sec:operational}: nights followed by very low future-event load
+should yield fewer above-chance future matches.
+
+
+%=======================================================================
+\section{Ultradian Architecture}\label{sec:ultradian}
+%=======================================================================
+
+The 90-minute Basic Rest-Activity Cycle (BRAC) is one of the most
+robust findings in sleep science \cite{Kleitman1963,Aserinsky1953}.
+
+\begin{theorem}[Ultradian Count]\label{thm:ultradians}
+$\lfloor 1440 / 90 \rfloor = 16$ ultradian cycles tile each
+24-hour day.\\
+\textup{[Lean: \leanref{sixteen\_ultradians}]}
+\end{theorem}
+
+\begin{remark}[Status: Empirical Input]
+The 90-minute BRAC duration is an empirical input, not derived from
+RS axioms. We record it as a constant and prove only arithmetic
+consequences. We note that $90 = F_{11} + 1$ (where $F_{11} = 89$
+is the 11th Fibonacci number), which is structurally consistent
+with the $\varphi$-ladder architecture of RS but is not claimed as
+a derivation.
+\end{remark}
+
+
+%=======================================================================
+\section{Consciousness Interface}\label{sec:consciousness}
+%=======================================================================
+
+\subsection{Phantom Sensing}
+
+We model the detection of phantom fields by a boundary
+(a localized coherent subsystem in RS) through a sensitivity
+parameter $\sigma > 0$. The perceived phantom signal is:
+\[
+\mathrm{Perceived} = \sigma \cdot \Phi_{\mathrm{mag}}.
+\]
+
+\begin{theorem}[Positivity of Phantom Readout]\label{thm:sensing}
+If $\sigma > 0$ and $\mathcal{D} \neq 0$, then
+$\mathrm{Perceived} > 0$.\\
+\textup{[Lean: \leanref{precognition\_via\_phantom\_sensing}]}
+\end{theorem}
+
+\begin{remark}
+This is an algebraic tautology: a positive number times a positive
+number is positive. Its value lies not in its depth but in its
+\emph{precision}: it states exactly what is needed for a biological
+system to detect phantom fields. Whether $\sigma > 0$ for human
+neural systems is the central empirical question, addressed in
+\S\ref{sec:predictions}.
+\end{remark}
+
+\subsection{Response Time}
+
+\begin{theorem}[Response Time Law]\label{thm:response}
+For any phantom sensing configuration, there exists a positive
+response time $\tau = 1/(\Phi_{\mathrm{mag}} + 1) > 0$.
+Larger phantom magnitudes yield shorter response times.\\
+\textup{[Lean: \leanref{precognition\_response\_time\_law}]}
+\end{theorem}
+
+This predicts that high-stakes future events should be
+precognized \emph{earlier} than low-stakes events---a quantitative
+relationship between event magnitude and anticipation time.
+
+\subsection{Global Phase Coupling (Conditional)}
+
+\begin{theorem}[$\Theta$-Coupling Bound]\label{thm:theta}
+If the Global Co-Identity Constraint (GCIC) holds---i.e., all
+coherent subsystems share a single universal phase $\Theta$---then
+for any pair of subsystems, there exists a coupling coefficient
+$C = \cos(2\pi \cdot \Delta\Theta)$ with $|C| \leq 1$.\\
+\textup{[Lean: \leanref{remote\_viewing\_via\_theta}]}
+\end{theorem}
+
+\begin{remark}[Conditional on GCIC]
+GCIC is an internal hypothesis of RS, not a consequence of the
+axioms listed in \S\ref{sec:axioms}. All claims about non-local
+phantom sensing (remote viewing, telepathy) are \emph{strictly
+conditional} on GCIC. This paper does not argue for or against GCIC;
+it derives consequences conditional on it and provides falsification
+protocols.
+\end{remark}
+
+
+%=======================================================================
+\section{Predictions and Falsification}\label{sec:predictions}
+%=======================================================================
+
+\subsection{Empirical Bridge}
+
+The following predictions require only the RS axioms
+(\S\ref{sec:axioms}), the proved theorems
+(\S\ref{sec:phantom}--\S\ref{sec:consciousness}), the empirical
+coherence ordering, and the single assumption that biological
+neural systems have positive phantom sensitivity ($\sigma > 0$).
+
+\subsection{Operationalization for Dream and Presentiment Studies}
+\label{sec:operational}
+
+The formal variables $\mathcal{D}$, $R$, and
+$\Phi_{\mathrm{mag}}(\mathcal{D},R)$ are latent RS quantities. They
+are not directly observed in human experiments. For empirical work we
+therefore introduce preregistered proxies designed to preserve the
+two monotonicities proved in Theorem~\ref{thm:phantom-props}: larger
+debt should increase phantom strength, and shorter temporal distance
+should increase urgency.
+
+\paragraph{Dream studies.}
+For a night $n$ and horizon $H$ days, let $E_n(H)$ be the set of
+salient events that actually occur to the participant during the
+following horizon. After the horizon closes and blinded to dream text,
+each event $e \in E_n(H)$ receives an impact score
+$I_e \in \{0,1,2,3\}$ from a preregistered rubric and a temporal
+distance $d_e \in \{0,\ldots,H-1\}$ measured in days from the dream
+report. We then define the future-event load proxy
+\begin{equation}\label{eq:debt-proxy-dream}
+    \widehat{\mathcal{D}}_n(H)
+    := \sum_{e \in E_n(H)} \frac{I_e}{d_e + 1}.
+\end{equation}
+This is not the latent ledger debt itself; it is an observable proxy
+that tracks the model's two key monotones: event impact and temporal
+proximity.
+
+Each dream report should be time-stamped immediately on awakening,
+locked before the future interval opens, and scored only after the
+horizon closes. In the confirmatory design, each report is presented
+to independent judges together with one true future-event packet and
+three decoy packets matched for category and base rate. Judges, blind
+to sleep stage, chronology, and packet identity, rank the packets by
+match quality using a preregistered rubric. The primary endpoint is
+top-rank accuracy above the 25\% chance baseline; secondary endpoints
+include mean reciprocal rank and continuous similarity scores.
+Inter-rater reliability should reach Fleiss' $\kappa \geq 0.70$
+before confirmatory scoring proceeds.
+
+\paragraph{Presentiment studies.}
+For trial $t$, let $a_t \in \{1,2,3\}$ denote preregistered
+low/medium/high stimulus intensity assigned by hardware RNG, and let
+$r_t$ denote the number of preregistered pre-stimulus analysis bins
+remaining until onset. Define the empirical proxies
+\begin{equation}\label{eq:debt-proxy-presentiment}
+    \widehat{\mathcal{D}}_t := a_t,
+    \qquad
+    \widehat{\Phi}_t := \frac{a_t}{r_t + 1}.
+\end{equation}
+For a preregistered physiological summary statistic $Y_t$ (for
+example, baseline-corrected skin conductance or pupil dilation), the
+confirmatory question is whether the regression slope in
+$Y_t = \alpha + \beta \widehat{\Phi}_t + \varepsilon_t$ is positive.
+
+\subsection{Model-Based Effect-Size Envelope}\label{sec:effects}
+
+The theorems fix monotonicity, ordering, and certain canonical ratios,
+but they do not fix absolute human effect sizes because the biological
+sensitivity parameter $\sigma$ is not yet known. We therefore
+separate \emph{scale-free} consequences from \emph{study-design}
+amplitude expectations.
+
+If an empirical readout is locally linear in perceived phantom
+magnitude over the tested range, then
+\begin{equation}\label{eq:linear-readout}
+    \mathbb{E}[Y] = \alpha + \beta \widehat{\Phi},
+    \qquad \beta > 0.
+\end{equation}
+This yields three scale-free expectations:
+\begin{enumerate}
+    \item At fixed temporal lag, low/medium/high stimulus bins coded
+    as $(1,2,3)$ should show approximately a $1:2:3$ response
+    ordering.
+    \item At fixed stimulus intensity, adjacent pre-stimulus bins
+    should grow by the factor $(r+2)/(r+1)$ as onset approaches.
+    \item In sleep data, N3 should exceed N1 and REM for any monotone
+    coherence budget; the exact $2:1$ N3:N1 ratio is expected only
+    under the canonical consecutive-integer budget used here.
+\end{enumerate}
+
+Because ordinary waking experience does not reveal obvious
+precognitive perception, any human value of $\sigma$ must be small at
+the population level if it exists at all. Confirmatory studies should
+therefore be powered for small aggregate effects rather than dramatic
+ones. As a pragmatic design envelope consistent with the existing
+presentiment meta-analytic literature \cite{Mossbridge2012}, we
+recommend preregistering physiological targets in the low-single-digit
+correlation range (roughly $|r| = 0.01$--$0.05$) or standardized mean
+differences below $d = 0.2$. In blinded four-choice dream matching,
+the practically relevant signal is likewise expected to appear as a
+modest lift above the 25\% chance baseline rather than near-perfect
+classification. These numerical bands are study-design heuristics,
+not proved theorems.
+
+\subsection{Predictions}
+
+\begin{prediction}[Deep-Sleep Precognitive Dominance]\label{pred:sleep}
+In a prospective blinded rank-matching design, reports collected
+after polysomnography-confirmed N3 awakenings should achieve higher
+top-rank accuracy and mean reciprocal rank than reports collected
+after N1 or REM awakenings, by Theorem~\ref{thm:stage3}.
+\end{prediction}
+
+\begin{prediction}[Low Debt, Low Match Rate]\label{pred:debt}
+Nights with lower preregistered future-event load proxy
+$\widehat{\mathcal{D}}_n(H)$ should yield fewer above-chance
+future-event matches than nights with higher
+$\widehat{\mathcal{D}}_n(H)$, by
+Theorem~\ref{thm:dreamless}.
+\end{prediction}
+
+\begin{prediction}[Debt-Content Correlation]\label{pred:content}
+Within the blinded future-event packets, higher-impact and more
+proximate events should receive higher match scores than lower-impact
+or more distant events, consistent with the proxy
+$\widehat{\mathcal{D}}_n(H)$ and Theorem~\ref{thm:phantom-props}(b).
+\end{prediction}
+
+\begin{prediction}[Response Time Scaling]\label{pred:response}
+Pre-stimulus physiological response should show a positive slope
+against the preregistered proxy
+$\widehat{\Phi}_t = a_t/(r_t + 1)$, with earlier and larger responses
+for higher-intensity stimuli, by Theorem~\ref{thm:response}.
+\end{prediction}
+
+\begin{prediction}[Boundary Reset]\label{pred:reset}
+The presentiment effect, if it exists, should show periodic
+attenuation at intervals corresponding to 8-tick boundaries, by
+Theorem~\ref{thm:reset}.
+\end{prediction}
+
+\subsection{Falsification Criteria}
+
+\begin{falsifier}[No Precognition Effect]\label{fal:no-precog}
+If $N > 10{,}000$ trials yield a 95\% confidence interval excluding
+positive correlations larger than $r = 0.01$ between pre-stimulus
+physiology and the preregistered proxy $\widehat{\Phi}_t$, the
+phantom sensing hypothesis ($\sigma > 0$) is falsified at practically
+relevant human effect sizes.
+\end{falsifier}
+
+\begin{falsifier}[No Sleep-Stage Effect]\label{fal:no-sleep}
+If N3 dream reports are no more accurate than N1 or REM reports on
+the preregistered primary endpoint across $N > 200$ subjects with
+polysomnographic staging, the sleep-stage visibility hierarchy is
+falsified.
+\end{falsifier}
+
+\begin{falsifier}[Uniform Presentiment]\label{fal:uniform}
+If presentiment magnitude is statistically indistinguishable across
+stimulus intensities ($p > 0.05$, $BF_{01} > 3$), the debt-scaling
+model is falsified.
+\end{falsifier}
+
+\subsection{Experimental Design Principles}
+
+Any experimental test must adhere to:
+\begin{enumerate}
+    \item \textbf{Pre-registration}: Full protocol registered on
+    OSF or AsPredicted before data collection.
+    \item \textbf{Time-locking}: Dream reports must be recorded,
+    time-stamped, and locked before the future interval opens.
+    \item \textbf{Polysomnographic staging}: Sleep-stage labels must be
+    assigned from preregistered scoring rules by raters blind to dream
+    content and outcome.
+    \item \textbf{Double-blinding}: Experimenters interacting with
+    subjects, dream judges, and data analysts must be blind to
+    condition, stimulus schedule, and target identity until lock.
+    \item \textbf{Matched decoys}: Each dream must be scored against
+    one true future-event packet and decoy packets matched for
+    category and base rate.
+    \item \textbf{Judge reliability}: Inter-rater reliability on the
+    primary dream-scoring rubric should satisfy
+    Fleiss' $\kappa \geq 0.70$ before confirmatory unblinding.
+    \item \textbf{Hardware RNG}: Future events determined by quantum
+    or thermal random number generators with verified entropy.
+    \item \textbf{Fixed primary endpoints}: Primary outcome measures
+    (top-rank accuracy, mean reciprocal rank, regression slope,
+    latency window) must be designated in advance.
+    \item \textbf{Multiple-comparison correction}: Bonferroni or
+    FDR (Benjamini-Hochberg) for multiple physiological channels.
+    \item \textbf{Bayesian analysis}: Report both frequentist
+    $p$-values and Bayes factors ($BF_{10}$) to distinguish
+    ``evidence for null'' from ``inconclusive.''
+    \item \textbf{Permutation controls}: Shuffle time labels and
+    packet identities to generate null distributions.
+\end{enumerate}
+
+These standards are drawn from the methodological critiques of
+Wagenmakers et al.\ \cite{Wagenmakers2012}, who argued that prior
+presentiment studies suffered from optional stopping, flexible
+analysis, and insufficient reporting of null results.
+
+
+%=======================================================================
+\section{Related Work}\label{sec:related}
+%=======================================================================
+
+\subsection{Two-Time Boundary Conditions in Physics}
+
+The idea that future boundary conditions constrain present dynamics
+has a long history. Hamilton's Principle of Least Action selects
+trajectories by minimizing the action integral over a fixed time
+interval with fixed endpoints \cite{Lanczos1970}. Feynman's path
+integral sums amplitudes over all paths connecting initial and final
+states. Most directly relevant is Aharonov's TSVF
+\cite{Aharonov1964,Aharonov2008}, which describes quantum systems
+using both a forward-evolving state (from preparation) and a
+backward-evolving state (from post-selection). The present model is
+a discrete, finite-dimensional analog: the window neutrality
+constraint plays the role of post-selection, and the phantom
+magnitude quantifies how strongly the post-selection constrains
+the present.
+
+The Wheeler-Feynman absorber theory \cite{WheelerFeynman1945}
+similarly requires advanced (backward-in-time) solutions for
+consistency, though these are usually interpreted as canceling in
+the classical limit. Cramer's Transactional Interpretation
+\cite{Cramer1986} extends this to a full interpretation of quantum
+mechanics.
+
+\subsection{Consciousness and Time}
+
+The relationship between consciousness and temporal experience has
+been explored from multiple directions. Tononi's Integrated
+Information Theory (IIT) \cite{Tononi2004} proposes that
+consciousness corresponds to integrated information ($\Phi$), which
+depends on the causal structure of a system over time. The ``temporal
+depth'' of $\Phi$ in IIT bears a structural resemblance to our
+phantom magnitude: both quantify how much the past-future structure
+of a system matters for its present state.
+
+Global Workspace Theory (GWT) \cite{Baars1988,Dehaene2011} models
+consciousness as a broadcast mechanism. In GWT terms, phantom light
+would correspond to a constraint-derived signal that becomes
+available for global broadcast during reduced-coherence states
+(sleep), when the usual sensory competition for the workspace is
+diminished.
+
+\subsection{Dreams and Precognition}
+
+The claim that dreams sometimes contain future information has a
+long history in both anecdotal reports and experimental
+investigation. Rhine \cite{Rhine1962} and Van de Castle
+\cite{VanDeCastle1994} compiled systematic case collections.
+Kramer \cite{Kramer2007} reviewed the dream-cognition literature
+from a psychiatric perspective.
+
+Hobson's AIM model \cite{Hobson2000,Hobson2005} explains dream
+phenomenology through three dimensions: Activation, Input gating,
+and chemical Modulation. In AIM terms, our coherence budget $C$
+corresponds to the Activation dimension, and the prediction that
+deep-sleep dreams carry stronger phantom content maps to the
+low-A region of AIM state space.
+
+\subsection{The Presentiment Literature}
+
+Presentiment (physiological anticipation of random future stimuli)
+has been reported by Radin \cite{Radin2004}, Bierman and Radin
+\cite{Bierman1997}, McCraty et al.\ \cite{McCraty2004}, and
+reviewed by Mossbridge et al.\ \cite{Mossbridge2012}, who conducted
+a meta-analysis of 26 studies and reported a small but statistically
+significant anticipatory effect.
+
+However, this literature has been subject to serious methodological
+critique. Wagenmakers et al.\ \cite{Wagenmakers2012} argued that
+Bem's precognition results were artifacts of optional stopping and
+flexible analysis. Alcock \cite{Alcock2003} reviewed the broader
+history of parapsychological claims and argued that replication
+failures are systematic. Rouder and Morey \cite{Rouder2011}
+reanalyzed Bem's data using Bayesian methods and found the evidence
+equivocal.
+
+Our model does not assume the presentiment literature is correct.
+It provides a framework within which presentiment, \emph{if it
+exists}, would have specific properties (sleep-stage hierarchy,
+debt scaling, response time law) that are not predicted by artifact
+explanations. The falsification criteria in \S\ref{sec:predictions}
+are designed to distinguish genuine phantom sensing from the
+methodological artifacts identified by critics.
+
+
+%=======================================================================
+\section{Claim Hygiene}\label{sec:hygiene}
+%=======================================================================
+
+Every claim in this paper is classified below. ``PROVED'' means
+machine-verified from the RS axioms together with any explicitly
+declared modeling assumptions used in the statement. ``MODEL'' means
+a definition, operationalization, or parameter choice that is
+consistent with empirical data but not itself derived from axioms.
+``HYPOTHESIS''
+means a falsifiable empirical claim.
+
+\begin{center}
+\small
+\begin{longtable}{p{4.2cm}cp{3.8cm}}
+\toprule
+\textbf{Claim} & \textbf{Status} & \textbf{Reference} \\
+\midrule
+\endhead
+\multicolumn{3}{l}{\textit{RS Axioms (taken as given)}} \\
+$J$ unique (T5) & AXIOM & \cite{RSCost2025} \\
+$\varphi$ forced (T6) & AXIOM & \cite{RSAxioms2025} \\
+$D=3$ (T8) & AXIOM & \cite{RSGeometry2025} \\
+8-tick period (T7) & AXIOM & \cite{RSAxioms2025} \\
+Window neutrality & AXIOM & \cite{RSAxioms2025} \\
+Cost minimization & AXIOM & \cite{RSAxioms2025} \\
+\midrule
+\multicolumn{3}{l}{\textit{Phantom Light (proved from axioms)}} \\
+Recognition forces balance & PROVED & Thm.~\ref{thm:lock} \\
+$\Phi_{\mathrm{mag}} \geq 0$ & PROVED & Thm.~\ref{thm:phantom-props} \\
+Monotone in $|\mathcal{D}|$ & PROVED & Thm.~\ref{thm:phantom-props} \\
+Anti-monotone in $R$ & PROVED & Thm.~\ref{thm:phantom-props} \\
+Zero debt $=$ zero phantom & PROVED & Thm.~\ref{thm:phantom-props} \\
+Backward projection & PROVED & Thm.~\ref{thm:backward} \\
+Cost inflation & PROVED & Thm.~\ref{thm:inflates} \\
+Boundary reset & PROVED & Thm.~\ref{thm:reset} \\
+\midrule
+\multicolumn{3}{l}{\textit{Sleep model (proved from axioms + ordering)}} \\
+Coherence ordering & MODEL & Def.~\ref{def:coherence} \\
+Canonical integer budget & MODEL & Rem.~after Thm.~\ref{thm:stage3} \\
+Stage window durations & MODEL & empirical \\
+N3 $\geq$ N1 visibility & PROVED & Thm.~\ref{thm:stage3} \\
+N3 $\geq$ REM visibility & PROVED & Thm.~\ref{thm:stage3} \\
+Canonical budget: N3 $= 2\times$ N1 & PROVED & Thm.~\ref{thm:stage3} \\
+N3 exposure dominates & PROVED & Thm.~\ref{thm:exposure} \\
+Zero debt eliminates sleep phantom & PROVED & Thm.~\ref{thm:dreamless} \\
+16 ultradians/day & PROVED & Thm.~\ref{thm:ultradians} \\
+\midrule
+\multicolumn{3}{l}{\textit{Consciousness interface}} \\
+Sensitivity parameter & MODEL & \S\ref{sec:consciousness} \\
+Readout positivity & PROVED & Thm.~\ref{thm:sensing} \\
+Response time law & PROVED & Thm.~\ref{thm:response} \\
+$\Theta$-coupling & PROVED & Thm.~\ref{thm:theta} \\
+GCIC assumption & HYPOTHESIS & conditional \\
+\midrule
+\multicolumn{3}{l}{\textit{Empirical interface}} \\
+Dream future-event proxy $\widehat{\mathcal{D}}_n(H)$ & MODEL & \S\ref{sec:operational} \\
+Presentiment proxy $\widehat{\Phi}_t$ & MODEL & \S\ref{sec:operational} \\
+Small-effect power envelope & MODEL & \S\ref{sec:effects} \\
+\midrule
+\multicolumn{3}{l}{\textit{Empirical predictions}} \\
+Deep-sleep dominance & HYPOTHESIS & Pred.~\ref{pred:sleep} \\
+Low debt, low match rate & HYPOTHESIS & Pred.~\ref{pred:debt} \\
+Debt-content correlation & HYPOTHESIS & Pred.~\ref{pred:content} \\
+Response time scaling & HYPOTHESIS & Pred.~\ref{pred:response} \\
+Boundary reset periodicity & HYPOTHESIS & Pred.~\ref{pred:reset} \\
+$\sigma > 0$ for humans & HYPOTHESIS & open \\
+\bottomrule
+\end{longtable}
+\end{center}
+
+
+%=======================================================================
+\section{Discussion}\label{sec:discussion}
+%=======================================================================
+
+\subsection{What This Paper Does and Does Not Claim}
+
+This paper presents a formal model, not a theory of precognition.
+The model shows that within a specific mathematical framework (RS),
+future conservation constraints create a computable cost inflation
+in the present. The model then shows that this inflation has a
+sleep-stage structure that matches the empirical coherence ordering.
+Whether biological neural systems can detect this inflation is an
+open empirical question.
+
+The model does not require retrocausation, new particles, or
+violation of any established physical law. It requires only the
+RS axioms (which have independent motivation from information
+theory and discrete dynamics \cite{RSAxioms2025,RSdalembert2026})
+and the standard sleep-science finding that cortical coherence
+decreases from waking through deep sleep.
+
+It also does not claim that raw autobiographical narrative can be
+read off directly from the latent RS variables. The operational
+quantities in \S\ref{sec:operational} are empirical proxies intended
+to preserve the model's monotonic structure under blinded,
+preregistered scoring.
+
+\subsection{Relationship to Existing Theories}
+
+The phantom light mechanism is compatible with, but distinct from,
+several existing theoretical frameworks:
+
+\begin{itemize}
+    \item \textbf{TSVF}: Both involve future boundary conditions
+    constraining present states. Phantom Light provides a discrete,
+    computable version with explicit sleep-stage predictions.
+    \item \textbf{IIT}: Both define a quantity ($\Phi$ in IIT,
+    $\Phi_{\mathrm{mag}}$ here) that measures the significance of
+    temporal structure. IIT's $\Phi$ measures integrated information;
+    Phantom Light's $\Phi_{\mathrm{mag}}$ measures outstanding
+    balance debt.
+    \item \textbf{GWT}: During sleep, reduced sensory competition
+    for the global workspace could allow phantom signals to reach
+    broadcast---consistent with our coherence-budget model.
+\end{itemize}
+
+\subsection{Limitations}
+
+\begin{enumerate}
+    \item The RS axioms are assumed, not derived in this paper. A
+    reader who rejects the RS framework will reject the premises.
+    The axioms are falsifiable independently
+    \cite{RSAxioms2025,RSFermionMasses2025}.
+    \item The coherence budget is a modeling choice. The qualitative
+    predictions (ordering) are robust, but the exact ratios depend
+    on the chosen integers.
+    \item The empirical proxies
+    $\widehat{\mathcal{D}}_n(H)$ and $\widehat{\Phi}_t$ are not the
+    latent RS variables themselves. Their adequacy must be judged by
+    prospective predictive performance under blinded protocols.
+    \item The sensitivity parameter $\sigma$ is a free parameter at
+    the modeling level. Its positivity and population scale are core
+    empirical questions.
+    \item The experimental predictions concern small effects in a
+    domain with a troubled replication history. Stringent
+    pre-registration and blinding are essential.
+\end{enumerate}
+
+
+%=======================================================================
+\section{Conclusion}\label{sec:conclusion}
+%=======================================================================
+
+We have shown that within the RS framework, window neutrality creates
+a two-time boundary condition in which recognition events generate
+balance debts that the future must discharge. This balance debt
+inflates the present cost function, creating a ``phantom
+light''---a computable, bounded shadow of the future on the present
+cost landscape. The mechanism requires no retrocausation.
+
+A sleep-stage hierarchy emerges: lower cortical coherence increases
+phantom visibility, with deep sleep (N3) dominating light sleep (N1)
+and REM. Zero balance debt annihilates the effect in all modes.
+
+All mathematical claims are machine-verified (52 theorems, zero
+unproved placeholders). Every statement is classified as PROVED,
+MODEL, or HYPOTHESIS. Falsification criteria with quantitative
+thresholds are provided. Whether biological systems can read the
+phantom field is an open question. We have therefore coupled the
+formal structure to explicit operational proxies, a blinded
+prospective dream-scoring design, and small-effect study-design
+targets so that the empirical claims can be tested directly.
+
+
+%=======================================================================
+\begin{thebibliography}{99}
+%=======================================================================
+
+\bibitem{Aharonov1964}
+Y.~Aharonov, P.~G.~Bergmann, and J.~L.~Lebowitz,
+``Time symmetry in the quantum process of measurement,''
+\textit{Phys.\ Rev.}\ \textbf{134}, B1410, 1964.
+
+\bibitem{Aharonov2008}
+Y.~Aharonov and L.~Vaidman,
+``The Two-State Vector Formalism: An Updated Review,''
+\textit{Lecture Notes in Physics} \textbf{734}, 399--447, 2008.
+
+\bibitem{Alcock2003}
+J.~E.~Alcock,
+``Give the null hypothesis a chance: Reasons to remain doubtful
+about the existence of psi,''
+\textit{J.\ Consciousness Studies} \textbf{10}(6--7), 29--50, 2003.
+
+\bibitem{Aserinsky1953}
+E.~Aserinsky and N.~Kleitman,
+``Regularly occurring periods of eye motility, and concomitant
+phenomena, during sleep,''
+\textit{Science} \textbf{118}, 273--274, 1953.
+
+\bibitem{Baars1988}
+B.~J.~Baars,
+\textit{A Cognitive Theory of Consciousness},
+Cambridge University Press, 1988.
+
+\bibitem{Bierman1997}
+D.~J.~Bierman and D.~I.~Radin,
+``Anomalous anticipatory response on randomized future
+conditions,''
+\textit{Percept.\ Mot.\ Skills} \textbf{84}, 689--690, 1997.
+
+\bibitem{Cramer1986}
+J.~G.~Cramer,
+``The transactional interpretation of quantum mechanics,''
+\textit{Rev.\ Mod.\ Phys.}\ \textbf{58}, 647--687, 1986.
+
+\bibitem{Dehaene2011}
+S.~Dehaene and J.-P.~Changeux,
+``Experimental and theoretical approaches to conscious processing,''
+\textit{Neuron} \textbf{70}, 200--227, 2011.
+
+\bibitem{Hobson2000}
+J.~A.~Hobson, E.~F.~Pace-Schott, and R.~Stickgold,
+``Dreaming and the brain: Toward a cognitive neuroscience of
+conscious states,''
+\textit{Behavioral and Brain Sciences} \textbf{23}(6), 793--842,
+2000.
+
+\bibitem{Hobson2005}
+J.~A.~Hobson,
+``Sleep is of the brain, by the brain and for the brain,''
+\textit{Nature} \textbf{437}, 1254--1256, 2005.
+
+\bibitem{Kleitman1963}
+N.~Kleitman,
+\textit{Sleep and Wakefulness},
+University of Chicago Press, revised ed., 1963.
+
+\bibitem{Kramer2007}
+M.~Kramer,
+\textit{The Dream Experience: A Systematic Exploration},
+Routledge, 2007.
+
+\bibitem{Lanczos1970}
+C.~Lanczos,
+\textit{The Variational Principles of Mechanics},
+Dover Publications, 1970.
+
+\bibitem{Massimini2005}
+M.~Massimini et~al.,
+``Breakdown of cortical effective connectivity during sleep,''
+\textit{Science} \textbf{309}, 2228--2232, 2005.
+
+\bibitem{McCraty2004}
+R.~McCraty, M.~Atkinson, and R.~T.~Bradley,
+``Electrophysiological evidence of intuition: Part~1. The
+surprising role of the heart,''
+\textit{J.\ Altern.\ Complement.\ Med.}\ \textbf{10}(1),
+133--143, 2004.
+
+\bibitem{Mossbridge2012}
+J.~A.~Mossbridge, P.~Tressoldi, and J.~Utts,
+``Predictive physiological anticipation preceding seemingly
+unpredictable stimuli: A meta-analysis,''
+\textit{Frontiers in Psychology} \textbf{3}, 390, 2012.
+
+\bibitem{Radin2004}
+D.~I.~Radin,
+``Electrodermal presentiments of future emotions,''
+\textit{J.\ Sci.\ Explor.}\ \textbf{18}, 253--274, 2004.
+
+\bibitem{Rhine1962}
+L.~E.~Rhine,
+``Psychological processes in ESP experiences. Part I. Waking
+experiences,''
+\textit{J.\ Parapsychology} \textbf{26}, 88--111, 1962.
+
+\bibitem{Rouder2011}
+J.~N.~Rouder and R.~D.~Morey,
+``A Bayes factor meta-analysis of Bem's ESP claim,''
+\textit{Psychonomic Bulletin \& Review} \textbf{18}(4),
+682--689, 2011.
+
+\bibitem{RSAxioms2025}
+J.~Washburn,
+``The Algebra of Reality: A Recognition Science Derivation of
+Physical Law,''
+\textit{Axioms (MDPI)} \textbf{15}(2), 90, 2025.
+
+\bibitem{RSCost2025}
+J.~Washburn,
+``Uniqueness of the Canonical Reciprocal Cost,''
+\textit{Mathematics (MDPI)} \textbf{14}(6), 935, 2025.
+
+\bibitem{RSdalembert2026}
+J.~Washburn,
+``The d'Alembert Inevitability Theorem,''
+arXiv:2603.16237, 2026.
+
+\bibitem{RSFermionMasses2025}
+J.~Washburn and E.~Allahyarov,
+``A Complete Derivation of the Fermion Spectrum from the
+Recognition Composition Law,''
+arXiv:2506.12859, 2025.
+
+\bibitem{RSGeometry2025}
+J.~Washburn,
+``Recognition Geometry,''
+\textit{Axioms (MDPI)} \textbf{15}(2), 2025.
+
+\bibitem{RSLeanRepo}
+J.~Washburn,
+``Recognition Science Lean Repository,''
+\url{https://github.com/jonwashburn/recognition-science}, 2026.
+
+\bibitem{Tononi2004}
+G.~Tononi,
+``An information integration theory of consciousness,''
+\textit{BMC Neuroscience} \textbf{5}, 42, 2004.
+
+\bibitem{Tononi2006}
+G.~Tononi,
+``Consciousness, information integration, and the brain,''
+\textit{Prog.\ Brain Res.}\ \textbf{150}, 109--126, 2006.
+
+\bibitem{VanDeCastle1994}
+R.~L.~Van de Castle,
+\textit{Our Dreaming Mind},
+Ballantine Books, 1994.
+
+\bibitem{Wagenmakers2012}
+E.-J.~Wagenmakers, R.~Wetzels, D.~Borsboom, and
+H.~L.~J.~van der Maas,
+``Why psychologists must change the way they analyze their data:
+The case of psi,''
+\textit{J.\ Personality and Social Psychology} \textbf{100}(3),
+426--432, 2011.
+
+\bibitem{Walker2017}
+M.~P.~Walker,
+\textit{Why We Sleep: Unlocking the Power of Sleep and Dreams},
+Scribner, 2017.
+
+\bibitem{WheelerFeynman1945}
+J.~A.~Wheeler and R.~P.~Feynman,
+``Interaction with the Absorber as the Mechanism of Radiation,''
+\textit{Rev.\ Mod.\ Phys.}\ \textbf{17}(2--3), 157, 1945.
+
+\end{thebibliography}
+
+
+%=======================================================================
+\appendix
+%=======================================================================
+
+\section{Lean Artifact Summary}\label{app:lean}
+
+All theorems are verified in four Lean~4 modules:
+
+\begin{center}
+\small
+\begin{tabular}{lrl}
+\toprule
+\textbf{Module} & \textbf{Theorems} & \textbf{Status} \\
+\midrule
+\texttt{PhantomLight.lean} & 17 & 0 sorry, 0 axiom \\
+\texttt{PhantomSleep.lean} & 22 & 0 sorry, 0 axiom \\
+\texttt{SleepCycles.lean} & 8 & 0 sorry, 0 axiom \\
+\texttt{CayceBridge.lean} & 5 & 0 sorry, 0 axiom \\
+\midrule
+\textbf{Total} & \textbf{52} & \textbf{0 sorry, 0 axiom} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+To verify:
+\begin{verbatim}
+lake build IndisputableMonolith.Consciousness.PhantomSleep
+\end{verbatim}
+This transitively builds all dependencies. Source code is available
+at \cite{RSLeanRepo}.
+
+
+\end{document}

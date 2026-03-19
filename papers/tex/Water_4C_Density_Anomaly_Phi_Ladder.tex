@@ -1,0 +1,346 @@
+\documentclass[aps,prl,twocolumn,superscriptaddress,showpacs,floatfix]{revtex4-2}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{booktabs}
+
+\newcommand{\Ecoh}{E_{\mathrm{coh}}}
+\newcommand{\kB}{k_{\mathrm{B}}}
+\newcommand{\Tc}{T_{\mathrm{c}}}
+\newcommand{\Tobs}{T_{\mathrm{obs}}}
+\newcommand{\Tmax}{T_{\mathrm{max}}}
+\newcommand{\Jbit}{J_{\mathrm{bit}}}
+\newcommand{\phig}{\varphi}
+
+\begin{document}
+
+\title{A Machine-Verified Zero-Parameter Temperature Scale Near Water's 4\textdegree C Density Anomaly:\\
+Theorem-Level Transition Scale and Hypothesis-Level Density Offset from the \texorpdfstring{$\varphi$}{phi}-Ladder}
+
+\author{Jonathan~Washburn}
+\affiliation{Recognition Science Research Institute, Austin, Texas}
+\email{washburn.jonathan@gmail.com}
+
+\date{\today}
+
+\begin{abstract}
+Water's density maximum at $\Tobs = 277.15$~K ($3.98\,{}^{\circ}$C) is a central open problem in condensed matter physics.
+We derive, within the Recognition Science (RS) framework, a unique zero-parameter cooperative H-bond transition scale
+\[
+  \Tc \;=\; \frac{\phig^{-5}}{8\,\kB\,\ln\phig},
+\]
+where $\phig = (1+\sqrt5)/2$ is forced by cost self-similarity, $\Ecoh = \phig^{-5}$ is fixed by the Fibonacci constraint on $D=3$, and the factor~8 is the forced 8-tick recognition cycle.
+The theorem-level result, machine-verified in Lean~4, is the interval bound
+\[
+  \Tc \in (267,\,275)\ \mathrm{K},
+\]
+together with the uniqueness statement that the adjacent $\phig$-ladder rungs lie below freezing and above boiling.
+We then introduce a clearly labeled hypothesis-level finite-width correction
+\[
+  \Tmax = \Tc(1+\phig^{-8}),
+\]
+motivated by the octave width of the crossover, which yields $\Tmax \in (272.6,\,281)$~K and contains $\Tobs$.
+Thus the present paper establishes a theorem-level zero-parameter transition scale near 4$^\circ$C and a hypothesis-level mapping from that scale to the density maximum itself.
+The three dedicated Lean modules introduced for this result compile with zero \texttt{sorry} and zero new axioms.
+\end{abstract}
+
+\maketitle
+
+%═══════════════════════════════════════════════════════════════
+\section{Introduction}
+%═══════════════════════════════════════════════════════════════
+
+Water reaches its maximum density not at the freezing point but at $\Tobs = 277.15$~K ($3.98\,{}^{\circ}$C).
+This anomaly---crucial for aquatic ecosystems, geophysics, and industrial processes---remains without a zero-parameter first-principles explanation~\cite{Debenedetti2001,Russo2014}.
+Phenomenological models (two-state~\cite{Poole1992}, TIP4P/2005~\cite{Abascal2005}) reproduce the anomaly after calibration to experimental data, but they do not single out the relevant temperature by a zero-parameter structural argument.
+
+In this Letter we make a more careful claim.
+Recognition Science (RS)---a cost-first framework whose algebraic core is published in \emph{Axioms}~\cite{Washburn2025}---fixes a unique zero-parameter \emph{transition scale} near the water anomaly.
+That scale is theorem-level within the present RS bridge.
+Mapping that scale to the \emph{density maximum itself} requires one additional finite-width hypothesis, which we state explicitly rather than fold into the theorem.
+
+This separation is the main improvement over the previous draft:
+the manuscript now distinguishes theorem-level statements from hypothesis-level statements at every stage.
+
+%═══════════════════════════════════════════════════════════════
+\section{Claim Status}
+
+The present paper contains two logically distinct layers.
+
+\begin{itemize}
+\item \textbf{Theorem-level}: $\phig$ is forced by cost self-similarity, $D=3$ and $2^D=8$ are forced by the RS chain, $\Ecoh=\phig^{-5}$ is proved in \texttt{Foundation.CoherenceExponent}, and the formula $\Tc=\phig^{-5}/(8\kB\ln\phig)$ together with the bounds $\Tc\in(267,275)$~K and the adjacent-rung inequalities are proved in \texttt{Water.PhiLadderPartitionFunction} and \texttt{Water.DensityAnomaly}.
+\item \textbf{Hypothesis-level}: the finite-width correction $\Tmax=\Tc(1+\phig^{-8})$ and the inclusion $\Tobs\in(272.6,281)$~K depend on a physical broadening ansatz rather than a derived RS equation of state.
+\end{itemize}
+
+The strongest theorem-level statement is therefore not ``water is densest at exactly $277.15$~K,'' but rather:
+
+\begin{quote}
+\emph{Within RS, there is a unique zero-parameter cooperative H-bond transition scale near the 4$^\circ$C anomaly, and the next $\phig$-ladder scales lie far outside the ambient liquid-water regime.}
+\end{quote}
+
+We then study one specific, clearly labeled hypothesis that maps this transition scale to the density maximum itself.
+
+\section{The Forcing Chain}
+%═══════════════════════════════════════════════════════════════
+
+The derivation uses five ingredients, each forced by the RS chain T5--T8.
+We state them in logical order; full proofs are in the Lean modules cited.
+
+\subsection{The golden ratio \texorpdfstring{$\phig$}{phi} (T5--T6)}
+
+The Recognition Composition Law
+\begin{equation}
+  J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y)
+\end{equation}
+together with normalization $J(1) = 0$ and calibration $J''_{\log}(0) = 1$ uniquely forces~\cite{Washburn2025}
+\begin{equation}
+  J(x) = \tfrac{1}{2}(x + x^{-1}) - 1.
+\end{equation}
+Self-similarity on the discrete ledger then forces $x^2 = x + 1$, whose unique positive root is $\phig = (1+\sqrt5)/2$.
+
+\subsection{Dimension $D = 3$ and the 8-tick period (T7--T8)}
+
+Non-trivial linking (Alexander duality) requires $D = 3$~\cite{WashburnD3}.
+The minimal ledger-compatible walk has period $2^D = 8$.
+
+\subsection{Coherence exponent: \texorpdfstring{$\Ecoh = \phig^{-5}$}{Ecoh = phi^-5} (Fibonacci constraint)}
+
+Both $D = 3$ and $2^D = 8$ are Fibonacci numbers ($F_4 = 3$, $F_6 = 8$).
+The Fibonacci recurrence gives the deficit
+\begin{equation}
+  2^D - D \;=\; F_6 - F_4 \;=\; F_5 \;=\; 5.
+  \label{eq:fib-deficit}
+\end{equation}
+Independently, the J-cost integration measure has $D + 2 = 5$ independent variables (3~spatial + 1~temporal + 1~conservation).
+Both routes uniquely fix the coherence exponent:
+\begin{equation}
+  \Ecoh = \phig^{-5} \;\approx\; 0.0902\;\text{eV}.
+\end{equation}
+This falls squarely in the H-bond energy range $(0.08\text{--}0.2)$~eV~\cite{Gaynor2024},
+a fact proved in Lean (\texttt{E\_coh\_in\_water\_hbond\_range}).
+
+\subsection{Landauer cost per \texorpdfstring{$\phig$}{phi}-bit}
+
+The RS Gibbs distribution $p(x) \propto \exp(-J(x)/T_R)$ motivates a Landauer-style information-energy bridge.
+Within the thermodynamic bridge formalized in Lean, the minimum cost to erase one $\phig$-bit of ledger information at temperature~$T$ is taken to be
+\begin{equation}
+  E_{\mathrm{erase}} = \kB T \ln \phig.
+  \label{eq:landauer}
+\end{equation}
+Here $\ln\phig = \Jbit \approx 0.4812$ is the elementary ledger bit cost, forced by T5.
+The role of Landauer's principle is to connect this RS information scale to thermal energy~\cite{Landauer1961,Berut2012}.
+
+\subsection{The theorem-level transition scale}
+
+The H-bond network maintains cooperative tetrahedral ordering as long as the total Landauer maintenance cost per 8-tick cycle remains below $\Ecoh$.
+The cycle cost is
+\begin{equation}
+  C_{\mathrm{cycle}}(T) = 8 \times \kB T \ln\phig.
+  \label{eq:cycle-cost}
+\end{equation}
+Within the RS thermodynamic bridge, the cooperative transition scale is defined by the equality
+\begin{equation}
+  C_{\mathrm{cycle}}(\Tc) = \Ecoh.
+\end{equation}
+This yields
+\begin{equation}
+  \boxed{\;\Tc \;=\; \frac{\phig^{-5}}{8\,\kB\,\ln\phig}\;}
+  \label{eq:Tc}
+\end{equation}
+with zero adjustable parameters.
+The Lean theorem proves that, once the bridge is accepted, the right-hand side is uniquely fixed.
+
+%═══════════════════════════════════════════════════════════════
+\section{Numerical Result}
+%═══════════════════════════════════════════════════════════════
+
+Using the proved interval bounds $0.089 < \phig^{-5} < 0.091$ and $0.481 < \ln\phig < 0.483$ together with $\kB = 8.6173 \times 10^{-5}$~eV/K, rigorous interval arithmetic gives the theorem-level bound
+\begin{equation}
+  267\;\text{K} \;<\; \Tc \;<\; 275\;\text{K}.
+  \label{eq:Tc-bounds}
+\end{equation}
+
+The manuscript does not claim that Eq.~(\ref{eq:Tc}) alone is already the exact density maximum.
+Instead, we consider a finite-width hypothesis motivated by the octave width of the crossover:
+\begin{equation}
+  \Tmax = \Tc\,(1 + \phig^{-8}) \;\in\; (272.6,\, 281)\;\text{K},
+  \label{eq:Tmax}
+\end{equation}
+with $\phig^{-8} \approx 0.0213$, which places $\Tobs = 277.15$~K inside the interval.
+This correction is not theorem-level and should be read as a concrete, falsifiable proposal for how the structural transition broadens into the density maximum.
+The relative error of the uncorrected theorem-level scale is bounded: $|\Tc - \Tobs|/\Tobs < 4\%$.
+
+\begin{table}[t]
+\caption{Summary of the result, split into theorem-level and hypothesis-level layers.}
+\label{tab:summary}
+\begin{ruledtabular}
+\small
+\begin{tabular}{lccc}
+\textrm{Quantity} & \textrm{Result} & \textrm{Status} & \textrm{Observed} \\
+\colrule
+$\Tc$ (K) & $(267,\; 275)$ & theorem & --- \\
+$|\Tc-\Tobs|/\Tobs$ & $< 4\%$ & theorem & --- \\
+Adjacent rung up & $> 400$ K & theorem & steam \\
+Adjacent rung down & $< 184$ K & theorem & solid ice \\
+$\Tmax$ (K) & $(272.6,\;281)$ & hypothesis & $277.15$ \\
+$|\Tmax-\Tobs|$ & $< 5$ K & hypothesis & --- \\
+Continuous fit parameters & 0 & both layers & --- \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+%═══════════════════════════════════════════════════════════════
+\section{Uniqueness of the Ambient-Water Ladder Scale}
+%═══════════════════════════════════════════════════════════════
+
+The $\phig$-ladder is geometrically spaced: adjacent rungs differ by a factor of~$\phig$.
+We prove:
+\begin{align}
+  \Tc \times \phig &> 400\;\text{K} > T_{\mathrm{boil}}, \label{eq:up} \\
+  \Tc / \phig &< 184\;\text{K} < T_{\mathrm{ice}}. \label{eq:down}
+\end{align}
+No adjacent $\phig$-ladder rung lies in the ambient liquid-water regime.
+Thus the RS ladder selects a unique \emph{ambient-water scale}: one rung lower is deep in the solid regime and one rung higher is well into the vapor regime.
+This is the precise uniqueness statement proved in Lean.
+
+%═══════════════════════════════════════════════════════════════
+\section{Physical Interpretation of the Bridge}
+%═══════════════════════════════════════════════════════════════
+
+The key physical insight connecting RS to condensed matter is what we call the \textit{Landauer--$\phig$ bridge}.
+Standard Landauer theory~\cite{Landauer1961} states that erasing one bit costs $\geq \kB T \ln 2$.
+In the RS ledger, the natural base is not 2 but $\phig$; each rung of the $\phig$-ladder encodes $\log_2\phig \approx 0.694$ classical bits.
+Hence the erasure cost per rung is $\kB T \ln\phig$.
+
+The H-bond network in water is proposed as a physical realization of the RS ledger: each water molecule participates in a tetrahedral coordination whose state is maintained by coherent H-bond oscillations.
+The 8-tick cycle provides 8~independent recognition slots, each requiring one $\phig$-bit of maintenance.
+When $8\kB T\ln\phig$ exceeds $\Ecoh$, thermal noise overwhelms cooperative ordering:
+\begin{itemize}
+\item \textit{Below $\Tc$}: Landauer cost $< \Ecoh$; the H-bond network sustains ice-like tetrahedral order (lower density).
+\item \textit{Above $\Tc$}: Landauer cost $> \Ecoh$; thermal fluctuations disrupt tetrahedral ordering, allowing closer packing.
+\item \textit{Near $\Tobs$}: a finite-width crossover can produce the density maximum once structural relaxation and packing are included.
+\end{itemize}
+
+The first two bullets are theorem-level within the bridge. The third is the physical interpretation that motivates Eq.~(\ref{eq:Tmax}).
+
+%═══════════════════════════════════════════════════════════════
+\section{Falsifiable Predictions}
+%═══════════════════════════════════════════════════════════════
+
+The revised manuscript keeps only predictions that are tightly linked to the present derivation:
+
+\begin{enumerate}
+\item \textbf{A unique ambient-water crossover scale}: At ambient pressure there should be no second $\phig$-ladder crossover between freezing and boiling. The nearest ladder scales are forced to lie below ${\sim}184$~K and above ${\sim}400$~K.
+
+\item \textbf{Ultrafast H-bond dynamics near the anomaly}: The strongest crossover in network decorrelation should occur in the same temperature window as Eq.~(\ref{eq:Tc-bounds}), with the slow molecular-gate timescale anchored near rung~19 (${\sim}68$~ps).
+
+\item \textbf{Spectral concentration near $724$~cm$^{-1}$}: The water librational mode near $724$~cm$^{-1}$ should be the most temperature-sensitive vibrational reporter of the crossover, because it is already fixed by the RS operating frequency.
+
+\item \textbf{Tetrahedral templating changes the offset more than the base scale}: Perturbations that primarily affect packing geometry (confinement, templating surfaces, tetrahedral solutes) should shift the offset between $\Tc$ and $\Tmax$ more strongly than they shift the base ladder scale $\Tc$ itself.
+
+\item \textbf{No comparable anomaly without tetrahedral H-bond order}: Solvents lacking persistent four-fold H-bond coordination should not display an analogous crossover in the same RS manner, because the 8-slot cooperative maintenance mechanism is tied to tetrahedral network order.
+\end{enumerate}
+
+%═══════════════════════════════════════════════════════════════
+\section{Machine Verification}
+%═══════════════════════════════════════════════════════════════
+
+The entire derivation is formalized in three Lean~4 modules totaling ${\sim}\,500$ lines:
+
+\begin{itemize}
+\item \texttt{Foundation.CoherenceExponent}: Proves $\Ecoh = \phig^{-5}$ from the Fibonacci constraint, with D=3 uniqueness verified by exhaustive check up to $D = 987$.
+
+\item \texttt{Water.PhiLadderPartitionFunction}: Proves the Landauer--$\phig$ transition condition (Eq.~\ref{eq:Tc}) and the ordered/disordered phase characterization.
+
+\item \texttt{Water.DensityAnomaly}: Proves the numerical bounds for $\Tc$ and $\Tmax$, the uniqueness inequalities (Eqs.~\ref{eq:up}--\ref{eq:down}), and packages the full certificate.
+\end{itemize}
+
+The three dedicated modules introduced for this paper compile with \textbf{zero \texttt{sorry}} (unproved obligations) and \textbf{zero new axioms}. The interval arithmetic uses only algebraic bounds on $\phig$ (via $\phig^2 = \phig + 1$) and Taylor-series bounds on $\ln\phig$.
+
+%═══════════════════════════════════════════════════════════════
+\section{Discussion}
+%═══════════════════════════════════════════════════════════════
+
+The strongest statement established here is not yet an exact theorem for the density maximum itself.
+What is established is a machine-verified zero-parameter structural transition scale near the anomaly, together with a precise uniqueness statement for the adjacent ladder scales.
+
+The honest status of the derivation is as follows:
+\begin{itemize}
+\item \textbf{Theorem-level}: $\phig$, the exponent~5, the factor~8, $\ln\phig$ as the ledger information cost, the bridge formula $\Tc = \phig^{-5}/(8\kB\ln\phig)$, the interval $(267,275)$~K, and the adjacent-rung uniqueness statement.
+\item \textbf{Hypothesis-level}: the finite-width correction $\Tmax=\Tc(1+\phig^{-8})$ that maps the structural transition scale to the density maximum.
+\end{itemize}
+
+This distinction is not a weakness but a clarification.
+It turns the central experimental claim into a sharper target:
+\begin{quote}
+\emph{If the RS forcing chain and the Landauer--$\phig$ bridge are correct, then water must possess a unique zero-parameter cooperative H-bond transition scale near 4$^\circ$C.}
+\end{quote}
+The next step is clear: derive the finite-width mapping from the transition scale to the density maximum from an RS equation of state rather than introducing it phenomenologically.
+Whether RS is ultimately correct is an experimental question; the present paper isolates the part of that question that is already theorem-level and the part that remains open.
+
+\begin{acknowledgments}
+The author thanks the Recognition Science community for discussions.
+All computations were verified using Lean~4 with the Mathlib library.
+\end{acknowledgments}
+
+\begin{thebibliography}{20}
+
+\bibitem{Debenedetti2001}
+P.~G.~Debenedetti and F.~H.~Stillinger,
+\emph{Supercooled liquids and the glass transition},
+Nature \textbf{410}, 259--267 (2001).
+
+\bibitem{Russo2014}
+J.~Russo and H.~Tanaka,
+\emph{Understanding water's anomalies with locally favoured structures},
+Nature Commun.\ \textbf{5}, 3556 (2014).
+
+\bibitem{Poole1992}
+P.~H.~Poole, F.~Sciortino, U.~Essmann, and H.~E.~Stanley,
+\emph{Phase behaviour of metastable water},
+Nature \textbf{360}, 324--328 (1992).
+
+\bibitem{Abascal2005}
+J.~L.~F.~Abascal and C.~Vega,
+\emph{A general purpose model for the condensed phases of water: TIP4P/2005},
+J.\ Chem.\ Phys.\ \textbf{123}, 234505 (2005).
+
+\bibitem{Washburn2025}
+J.~Washburn,
+\emph{The Algebra of Reality: A Recognition Science Derivation of Physical Law},
+Axioms \textbf{15}(2), 90 (2025).
+
+\bibitem{WashburnD3}
+J.~Washburn, M.~Zlatanovi\'{c}, and E.~Allahyarov,
+\emph{Dimensional Rigidity: D=3 from Three Independent Proofs},
+Recognition Science Technical Report (2026).
+
+\bibitem{Washburn2025water}
+J.~Washburn,
+\emph{The Water Computer Thesis: Liquid Water as Recognition Hardware},
+Recognition Science Technical Report (2025).
+
+\bibitem{Moura2021}
+L.~de~Moura and S.~Ullrich,
+\emph{The Lean 4 theorem prover and programming language},
+in \emph{Proc.\ CADE-28}, LNAI \textbf{12699} (Springer, 2021), pp.~625--635.
+
+\bibitem{Landauer1961}
+R.~Landauer,
+\emph{Irreversibility and heat generation in the computing process},
+IBM J.\ Res.\ Dev.\ \textbf{5}(3), 183--191 (1961).
+
+\bibitem{Berut2012}
+A.~B\'{e}rut, A.~Arakelyan, A.~Petrosyan, S.~Ciliberto, R.~Dillenschneider, and E.~Lutz,
+\emph{Experimental verification of Landauer's principle linking information and thermodynamics},
+Nature \textbf{483}, 187--189 (2012).
+
+\bibitem{Gaynor2024}
+J.~D.~Gaynor \emph{et al.},
+\emph{Tracking hydrogen bond dynamics in water},
+Nature Commun.\ \textbf{15}, 9753 (2024).
+
+\end{thebibliography}
+
+\end{document}

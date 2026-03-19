@@ -1,0 +1,325 @@
+\documentclass[prb,twocolumn,nofootinbib,superscriptaddress]{revtex4-2}
+
+% ---------- Packages ----------
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linktoc=page,linkcolor=purple,citecolor=teal,urlcolor=magenta]{hyperref}
+
+% ---------- Macros ----------
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Rp}{\mathbb{R}_{>0}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\J}{J}
+\newcommand{\phig}{\varphi}
+\newcommand{\lean}[1]{\texttt{\small #1}}
+
+\begin{document}
+
+\title{Coherent Energy Concentration in Periodic Lattices:\\
+Exact $N$-Factor Amplification from Ratio-Energy Minimization}
+
+\author{Jonathan Washburn}
+\email{jon@recognitionphysics.org}
+\affiliation{Recognition Physics Research Institute, Austin, Texas 78701, USA}
+
+\begin{abstract}
+We prove that periodic configurations on finite connected unit-cell lattices are the unique global minimizers of the reciprocal ratio energy $\J(x)=\frac12(x+x^{-1})-1$, and therefore have exactly zero edge-cost density.
+Any nonperiodic configuration must contain at least one edge with strictly positive cost.
+Combining this with the compact-phase quotient construction, a perfect crystal corresponds to a phase-uniform state.
+We then analyze a linear coherent-observable model in which each unit cell contributes the same amplitude $A_0$.
+Within that model, coherent summation gives energy $N^2 A_0^2$, while a random-phase baseline gives $N A_0^2$.
+The resulting concentration factor is therefore exactly $N$, is monotone in crystal size, and is bounded below by $8$ on any lattice with at least two cells per axis.
+All results are proved as theorems in the Lean~4 interactive theorem prover with zero remaining \texttt{sorry} markers.
+The framework yields a falsifiable prediction: under matched normalization, coherent enhancement should track coherent-domain size and decrease with defect density or mosaic breakup, testable via diffraction or Brillouin-style spectroscopy.
+\end{abstract}
+
+\maketitle
+
+%=====================================================================
+\section{Introduction}
+\label{sec:intro}
+%=====================================================================
+
+We study the reciprocal ratio energy
+\begin{equation}
+C_G[x] = \sum_{\langle v,w \rangle \in E} \J\!\left(\frac{x_v}{x_w}\right),
+\qquad \J(x) = \frac12\!\left(x + x^{-1}\right) - 1,
+\label{eq:energy}
+\end{equation}
+on positive fields $x: V \to \Rp$ over finite connected graphs $G = (V,E)$.
+Two structural features of this framework drive the present paper:
+\begin{enumerate}
+\item zero-temperature minimizers of~\eqref{eq:energy} are constant on connected lattices;
+\item after imposing a discrete scaling quotient $x \sim b^n x$, the induced compact phase $\Theta = \log_b x \bmod 1 \in \R/\Z$ is likewise uniform in the minimized state.
+\end{enumerate}
+These two facts mean that the ratio-energy framework enforces global uniformity of both the scale field and the induced compact phase on connected lattices.
+
+The present paper asks the physical question that follows immediately from this uniformity: \emph{what quantitative consequence does periodicity have for coherent energy concentration in a crystal lattice?}
+
+The new content is fourfold.
+First, we state the crystal-specific corollary of rigidity in a unit-cell lattice model: perfect periodicity gives zero edge-cost density, while any departure from that state introduces at least one positive-cost edge.
+Second, we combine the zero-cost crystal with the compact-phase quotient model to obtain a phase-uniform crystal state.
+Third, we introduce an explicit linear observation model that compares coherent summation against a random-phase benchmark and proves an exact concentration factor of $N$ within that model.
+Fourth, we identify a direct experimental discriminator: the coherent enhancement should track coherent-domain size as defect density increases.
+
+A \emph{crystal} in the present paper is modeled by a scalar unit-cell field in which every unit cell is identical to its neighbors: a periodic repetition of the same local state across the lattice.
+By zero-temperature rigidity, such a configuration places every edge ratio at $x_v/x_w = 1$, achieving the unique global minimum $\J(1) = 0$ on every edge.
+The crystal therefore has \emph{exactly zero local cost density}---a property that no amorphous (nonperiodic) structure can share.
+
+This zero-cost property has a direct physical consequence once one adopts a linear coherent-observable model: because all unit cells in a crystal contribute to the measured observable at the same phase, amplitudes sum coherently.
+An observable contributed by $N$ identical cells in phase has amplitude $N A_0$ and energy $N^2 A_0^2$, while $N$ cells with random phases have an expected energy of only $N A_0^2$.
+The ratio---the \emph{concentration factor}---is exactly $N$.
+For a macroscopic crystal with $N \sim 10^{23}$ unit cells, this is a factor of $10^{23}$: an enormous coherent amplification that distinguishes crystalline from amorphous matter in the ratio-energy framework.
+
+All results in this paper are stated as theorems and machine-verified in Lean~4 with zero remaining \texttt{sorry} markers.
+We also derive a falsifiable experimental prediction (Sec.~\ref{sec:prediction}).
+
+%=====================================================================
+\section{Zero cost density of periodic configurations}
+\label{sec:zero_cost}
+%=====================================================================
+
+We begin with the result that distinguishes crystals from amorphous structures in the ratio-energy framework.
+
+\subsection{Definitions}
+
+A \emph{periodic configuration} in the present scalar unit-cell reduction is a positive field $x: V \to \Rp$ on the graph of unit cells such that $x_v = x_w$ for every edge $\langle v,w \rangle \in E$.
+On a connected graph, this is equivalent to $x_v \equiv c$ for some constant $c > 0$.
+Physically, this represents the reduction in which each unit cell carries the same scalar local state.
+It is not, by itself, a full theorem about arbitrary crystallographic motifs or full structure factors.
+
+An \emph{amorphous configuration} is any positive field that is not periodic.
+On a connected graph, this means that there exists at least one edge $\langle v,w \rangle$ with $x_v \neq x_w$.
+
+\subsection{Results}
+
+\vspace{2mm}
+\underline{\bf Theorem 1 (Zero cost density).}
+\emph{In a periodic configuration, the edge cost vanishes on every edge:}
+\begin{equation}
+x_v = x_w \quad \Longrightarrow \quad \J(x_v / x_w) = \J(1) = 0.
+\label{eq:zero_cost}
+\end{equation}
+\emph{Lean reference:} \lean{periodic\_Jcost\_zero}.
+\vspace{2mm}
+
+This is an immediate consequence of $\J(1) = 0$, which follows from $\J(x) = (x-1)^2/(2x) = 0$ at $x = 1$.
+
+\vspace{2mm}
+\underline{\bf Theorem 2 (Positive amorphous cost).}
+\emph{If $x > 0$ and $x \neq 1$, then $\J(x) > 0$.}
+\begin{equation}
+x > 0, \quad x \neq 1 \quad \Longrightarrow \quad \J(x) > 0.
+\label{eq:positive_cost}
+\end{equation}
+\emph{Lean reference:} \lean{amorphous\_cell\_cost\_positive}.
+\vspace{2mm}
+
+This follows from $\J(x) = (x-1)^2/(2x)$, which is strictly positive when $x \neq 1$ and $x > 0$.
+
+\vspace{2mm}
+\underline{\bf Theorem 3 (Crystal advantage).}
+\emph{A periodic configuration has strictly lower cost than any nonperiodic perturbation on every affected edge:}
+\begin{equation}
+x > 0, \quad x \neq 1 \quad \Longrightarrow \quad \J(1) < \J(x).
+\label{eq:advantage}
+\end{equation}
+\emph{Lean reference:} \lean{crystal\_Jcost\_advantage}.
+\vspace{2mm}
+
+Theorems~1--3 together establish that among all positive fields on a connected graph, the periodic (constant) configurations are the unique minimizers of the local cost density, and any departure from periodicity incurs a strict cost penalty.
+
+\paragraph{GCIC corollary.}
+The zero-cost crystal acquires a compact-phase interpretation when combined with the quotient model.
+There, zero edge cost together with connectedness implies uniform compact phase in the discrete quotient model.
+Applying that result to the crystal field produced by Theorem~1 yields a phase-uniform crystal: in the quotient description, all unit cells share the same compact phase $\Theta$.
+In the broader Recognition Science language, this is the precise sense in which a macroscopic crystal acts as a static phase-uniform, or GCIC-aligned, body.
+
+%=====================================================================
+\section{Coherent energy concentration}
+\label{sec:concentration}
+%=====================================================================
+
+We now quantify the physical consequence of zero cost density within an explicit observation model.
+
+\subsection{Crystal lattice model}
+
+We model a three-dimensional crystal as a rectangular parallelepiped of unit cells with dimensions $n_1 \times n_2 \times n_3$, where $n_i \geq 2$.
+The total number of unit cells is
+\begin{equation}
+N = n_1 \cdot n_2 \cdot n_3 \geq 8.
+\label{eq:N}
+\end{equation}
+This model is formalized as the structure \lean{CrystalLattice} with the constraint \lean{totalCells\_ge\_8}.
+
+\subsection{Observation model: coherent and incoherent benchmarks}
+
+Each unit cell contributes to a collective observable with amplitude $A_0 > 0$.
+In the Lean-certified RS instantiation, the choice is $A_0 = \phig^{-5}$, where $\phig = (1+\sqrt{5})/2$ is the golden ratio.
+For the scaling results below, however, only positivity of $A_0$ matters.
+The exact $N$-factor result is therefore best understood as an exact consequence of combining the crystal-alignment theorem with a linear coherent-observable model.
+
+\paragraph{Coherent case (crystal).}
+Because all unit cells are periodic (identical local state), and because the quotient model assigns them a common compact phase, they contribute at the same phase.
+The total amplitude is $N A_0$ and the total energy is
+\begin{equation}
+E_{\mathrm{coh}} = (N A_0)^2 = N^2 A_0^2.
+\label{eq:E_coh}
+\end{equation}
+
+\paragraph{Incoherent benchmark.}
+As a comparison baseline, consider a random-phase superposition in which the phases of the $N$ unit-cell contributions are uncorrelated.
+Then the expected energy is
+\begin{equation}
+E_{\mathrm{inc}} = N A_0^2.
+\label{eq:E_inc}
+\end{equation}
+
+\subsection{Concentration factor}
+
+Within this observation model, the ratio of coherent to incoherent energy is the \emph{concentration factor}:
+\begin{equation}
+\eta(N) \equiv \frac{E_{\mathrm{coh}}}{E_{\mathrm{inc}}} = \frac{N^2 A_0^2}{N A_0^2} = N.
+\label{eq:eta}
+\end{equation}
+
+\vspace{2mm}
+\underline{\bf Theorem 4 (Concentration factor is exactly $N$).}
+\emph{Within the coherent/incoherent benchmark model above, for any crystal lattice with $N$ unit cells,}
+\begin{equation}
+\eta(N) = N.
+\end{equation}
+\emph{Lean reference:} \lean{concentrationFactor\_eq\_totalCells}.
+\vspace{2mm}
+
+\vspace{2mm}
+\underline{\bf Theorem 5 (Crystal focuses energy).}
+\emph{Within the same benchmark model, for any crystal lattice with $N \geq 8$, the coherent energy strictly exceeds the incoherent energy:}
+\begin{equation}
+E_{\mathrm{inc}} < E_{\mathrm{coh}}.
+\end{equation}
+\emph{Lean reference:} \lean{crystal\_focuses\_theta\_energy}.
+\vspace{2mm}
+
+\vspace{2mm}
+\underline{\bf Theorem 6 (Minimum concentration).}
+\emph{The concentration factor is bounded below by $8$ for any crystal lattice:}
+\begin{equation}
+\eta(N) \geq 8.
+\end{equation}
+\emph{Lean reference:} \lean{concentrationFactor\_ge\_8}.
+\vspace{2mm}
+
+\vspace{2mm}
+\underline{\bf Theorem 7 (Monotonicity).}
+\emph{The concentration factor is monotone increasing in crystal size:}
+\begin{equation}
+N_1 \leq N_2 \quad \Longrightarrow \quad \eta(N_1) \leq \eta(N_2).
+\end{equation}
+\emph{Lean reference:} \lean{concentration\_monotone}.
+\vspace{2mm}
+
+%=====================================================================
+\section{Collective cost subadditivity}
+\label{sec:collective}
+%=====================================================================
+
+The concentration factor describes how a crystal amplifies a coherent signal relative to an incoherent baseline.
+A complementary result concerns the cost comparison between aligned and misaligned collections of boundaries.
+
+\vspace{2mm}
+\underline{\bf Corollary 8 (Collective subadditivity).}
+\emph{If $N \geq 1$ boundaries have costs $c_1, \ldots, c_N > 0$ (non-unit ratios), then:}
+\begin{equation}
+\J(1) = 0 < \sum_{i=1}^{N} c_i.
+\end{equation}
+\emph{That is, the perfectly aligned configuration (all ratios at unity, collective cost zero) strictly beats any collection of misaligned boundaries.}
+
+\emph{Lean reference:} \lean{aligned\_beats\_any\_perturbation}.
+\vspace{2mm}
+
+This result is algebraically elementary, but conceptually useful: it replaces what had previously been an empirical hypothesis about collective amplification.
+It follows directly from two proved properties of $\J$: (i) $\J(1) = 0$ and (ii) $\J(x) > 0$ for $x \neq 1$, $x > 0$.
+No additional axiom or empirical input is required.
+
+%=====================================================================
+\section{Machine verification}
+\label{sec:lean}
+%=====================================================================
+
+All theorems in this paper have been formalized and verified in Lean~4 using Mathlib, with zero remaining \texttt{sorry} markers.
+The formalization is organized as follows:
+
+\begin{itemize}
+\item \lean{GraphRigidity}: ratio rigidity, edge cost characterization.
+\item \lean{ReducedPhasePotential}: reduced phase potential $\widetilde{\J}_b$, periodicity, stiffness.
+\item \lean{GCICDerivation}: phase uniformity from rigidity and gauge, collective subadditivity.
+\item \lean{CrystalThetaFocusing}: crystal lattice, zero cost density, coherent/incoherent energy, concentration factor, monotonicity.
+\end{itemize}
+
+The master certificate \lean{CrystalThetaFocusingFullCert} bundles all twelve theorem fields (Theorems~1--8 and supporting lemmas) into a single Lean structure with default proofs for every field, confirming that the entire derivation chain compiles without axioms, hypotheses, or incomplete proofs.
+
+%=====================================================================
+\section{Experimental prediction}
+\label{sec:prediction}
+%=====================================================================
+
+The concentration factor $\eta = N$ yields a sharp, falsifiable prediction.
+
+\paragraph{Prediction.}
+A useful experimental discriminator is the dependence of coherent enhancement on coherent-domain size.
+Consider a set of samples with the same composition and total mass but different defect density, grain size, or mosaicity.
+If one measures a normalized ratio of coherent spectral weight to diffuse background, the present framework predicts that the ratio should track the number of unit cells in a coherent domain.
+
+For a 1\,kg quartz crystal with lattice parameter $a \approx 5$\,\AA, the unit-cell count is of order
+\begin{equation}
+N \sim \frac{m}{\rho\, a^3}
+  \sim \frac{1\,\text{kg}}{2650\,\frac{\text{kg}}{\text{m}^3}
+       \cdot (5{\times}10^{-10}\,\text{m})^3}
+  \sim 3 \times 10^{24}.
+\end{equation}
+The ideal coherent-domain concentration factor is therefore $\eta \sim 3 \times 10^{24}$ for a kilogram-scale single crystal.
+This exhibits the familiar $N^2$ versus $N$ contrast between coherent and diffuse contributions.
+Within the present framework, that contrast is derived from ratio-energy minimization and departures from ideal scaling are interpreted as signatures of defect-induced positive-cost edges.
+
+The $N$-factor amplification is therefore not merely an empirical observation about constructive interference, but a consequence of the cost functional~\eqref{eq:energy} and the uniqueness of its global minimizer within the present model.
+
+\paragraph{Stronger test.}
+A more discriminating experiment would compare the ratio of coherent to incoherent spectral weight as a function of crystal quality (defect density, grain size, mosaicity), with normalization chosen so that total sample mass does not trivially dominate the comparison.
+The prediction is that the concentration factor decreases from $N$ toward $N_{\text{dom}}$ (the number of cells per coherent domain) as defects break the perfect periodicity, since defects introduce edges with $\J(x_v/x_w) > 0$ and thereby fragment the zero-cost manifold into smaller coherent regions.
+
+%=====================================================================
+\section{Discussion}
+\label{sec:discussion}
+%=====================================================================
+
+The results of this paper establish three things.
+
+First, periodic configurations are the unique zero-cost-density states of the ratio energy.
+This is a structural theorem about the functional~\eqref{eq:energy} that does not depend on any physical interpretation: on any finite connected graph, the constant fields are the only configurations for which every edge contributes zero cost.
+
+Second, within the linear coherent-observable model introduced in Sec.~\ref{sec:concentration}, the physical consequence of zero cost density is coherent amplification by a factor of $N$.
+This connects the rigidity statement to a concrete, measurable quantity while keeping clear which part of the argument is rigidity-based and which part comes from the observation model.
+Crystalline structures are, in this precise sense, \emph{macroscopic coherence amplifiers} within the ratio-energy framework.
+
+Third, collective cost subadditivity---the fact that the aligned collective strictly beats any sum of misaligned individuals---follows from the cost functional alone, with no additional empirical input.
+Although elementary, this corollary is useful because it gives a direct theorem-level statement of collective advantage within the same formal framework.
+
+In the quotient model, the crystal's zero cost density means that all $N$ unit cells share the same compact phase $\Theta$.
+A macroscopic crystal is therefore a structure in which the phase field is perfectly uniform across $\sim 10^{23}$ sites, amplifying any phase-coupled observable by the full number of unit cells.
+Whether this amplification has consequences beyond ordinary diffraction and coherent vibrational measurements---for instance, whether it enables detectable coupling between macroscopic crystals through the phase-rigidity mechanism---is an open experimental question that the present mathematical framework motivates but does not resolve.
+The more immediate empirical target is the predicted dependence on coherent-domain size and defect-controlled fragmentation of the zero-cost manifold.
+
+Our analysis is limited to the zero-temperature, static setting used here.
+Finite-temperature effects, dynamics, topological defects, and boundary conditions all represent directions for future work within the broader uniformly convex gradient-model setting to which the ratio energy belongs.
+
+%=====================================================================
+\begin{acknowledgments}
+We thank Sebastian Pardo-Guerra for discussions.
+This work utilized the computing resources of the Recognition Physics Research Institute.
+We acknowledge the use of AI-assisted tools for drafting and language refinement.
+All scientific content, interpretations, and conclusions were reviewed and validated by the authors.
+\end{acknowledgments}
+
+\end{document}

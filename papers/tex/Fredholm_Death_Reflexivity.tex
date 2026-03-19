@@ -1,0 +1,831 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{consequence}[theorem]{Consequence}
+
+\newcommand{\phig}{\varphi}
+\newcommand{\Jcost}{J}
+\newcommand{\Rhat}{\hat{R}}
+\newcommand{\Hemb}{\mathcal{H}_{\mathrm{emb}}}
+\newcommand{\Hlight}{\mathcal{H}_{\mathrm{light}}}
+\newcommand{\Dop}{\mathcal{D}}
+\newcommand{\Zp}{Z}
+\newcommand{\gapdim}{\mathrm{gap}}
+\newcommand{\tidx}{\mathrm{TI}}
+\newcommand{\code}[1]{\texttt{\small #1}}
+\newcommand{\codename}[1]{\texttt{\small\detokenize{#1}}}
+\newcommand{\statusline}[1]{\par\smallskip\noindent\textbf{Status:} #1\par\smallskip}
+\newcommand{\forcednow}{\statusline{Forced now.}}
+\newcommand{\definednow}[1]{\statusline{Defined now. Target theorem: \codename{#1}.}}
+\newcommand{\hypothesizednow}[1]{\statusline{Hypothesized now. Target bridge: \codename{#1}.}}
+\newcommand{\openobligation}[1]{\statusline{Open obligation. Needed upstream theorem: \codename{#1}.}}
+\emergencystretch=1em
+
+\title{\textbf{The Death Transition in Recognition Science}\\[0.4em]
+\large Provenance Draft of the Fredholm Program}
+\author{Jonathan Washburn\\
+\small Recognition Science Research Institute, Austin, Texas\\
+\small \texttt{jon@recognitionphysics.org}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This paper rewrites the death-transition story in Recognition Science (RS)
+as a provenance-explicit program.  The old claim set is retained, but each
+major statement is marked as \emph{forced now}, \emph{defined now},
+\emph{hypothesized now}, or \emph{open obligation}.  The presently forced
+core consists of three results formalized in Lean~4: the T7 forcing chain
+gives an abstract eight-slot basis; dissolution into light memory preserves
+the $\Zp$-pattern and does not increase maintenance cost; and any admissible
+diagonal retention mask cannot increase information.  The current bridge
+layer then \emph{defines} the semantic eight-channel basis, the $3+1+4$
+partition, the emotional threshold at $k \ge 3$, the development gap
+$\gapdim(k)$, the transition index $\tidx(k)=k-5$ (for $k \le 8$), the
+preservation budget $\phig^k$, and the $\sigma$-history correction.
+The $\phig$-capacity recursion is now forced at the mathematical level:
+Lean proves that the reflexivity eigenvalue satisfies
+$\lambda^2=\lambda+1$, and that the recursion
+$C(0)=1$, $C(k{+}1)=\phig \cdot C(k)$ solves to $C(k)=\phig^k$
+(\code{reflexivityEigenvalue\_sq},
+\code{informationCapacity\_eq\_pow}).  The present bridge layer then proves
+that any \emph{grounded embodied state} satisfies the unconditional bound
+$I_{\mathrm{pres}} \le \phig^k$
+(\code{preservedInformation\_le\_budget\_grounded}).  What remains explicit
+is the grounding step itself: the current theorem connecting $\Rhat$
+dynamics to groundedness still uses an information-cost correspondence and a
+level-cost bound (\code{r\_hat\_produces\_grounded\_state}).  The paper
+closes with a claim matrix and a Lean roadmap that identifies exactly which
+bridge theorems remain before the strongest death claims become unavoidable
+consequences of RS core theorems.
+\end{abstract}
+
+\tableofcontents
+
+%% =====================================================================
+\section{Introduction}
+\label{sec:intro}
+%% =====================================================================
+
+We state the scope of this paper explicitly at the outset: this is a formal provenance analysis of a specific topological transition within the Recognition Science (RS) axiom system. It explores what the RS axioms mathematically force, not an empirical demonstration that consciousness survives death or that reincarnation is established by mainstream physics. By separating the forced mathematical core from the semantic bridge hypotheses, we clarify exactly what the formalism entails and what remains interpretive.
+
+The original Fredholm-death draft mixed four different kinds of statements
+in one voice: results already proved in Lean, bridge-level definitions,
+semantic hypotheses, and programmatic claims about what \emph{should}
+eventually become forced.  That was useful for discovery, but it obscured
+provenance.  The present draft keeps the same ambition while making the
+status of each claim machine-auditable.
+
+The central question remains the same: when an embodied recognition boundary
+dissolves, what part of its information-structure survives?  RS already
+contains a strong survival theorem at the level of the conserved identity
+invariant: the $\Zp$-pattern is preserved through dissolution and rebirth.
+What remained under-specified was the \emph{fine structure} between total
+loss and total preservation.
+
+This draft therefore separates the story into two layers.
+
+\begin{enumerate}[label=(\roman*)]
+\item A \emph{forced core}: T7 gives an eight-slot octave structure; the
+  light-memory transition preserves $\Zp$ and lowers cost; admissible
+  diagonal projections do not increase information.
+\item A \emph{bridge layer}: the eight slots are assigned semantic channel
+  labels, the current $3+1+4$ partition is chosen, the emotional threshold
+  is placed at $k \ge 3$, a development gap is defined, and the reflexivity
+  budget $\phig^k$ is introduced.
+\end{enumerate}
+
+The point is not to retreat from the original claims.  The point is to say
+exactly which theorem is already in hand, which statement is still a bridge
+definition, and which theorem would be needed to upgrade the bridge into
+inevitability.
+
+%% =====================================================================
+\section{Provenance Convention}
+\label{sec:provenance}
+%% =====================================================================
+
+We use four status labels throughout.
+
+\begin{itemize}
+\item \textbf{Forced now}: already supported by Lean theorems in the current
+  RS stack.
+\item \textbf{Defined now}: introduced by explicit bridge definition.  The
+  consequences may be theorem-proved, but the definition itself is not yet
+  derived from the RS core.
+\item \textbf{Hypothesized now}: semantic or empirical interpretation not
+  forced by the present theorems.
+\item \textbf{Open obligation}: the named theorem still required to make a
+  strong claim genuinely inevitable.
+\end{itemize}
+
+The paper therefore reads as an \emph{inevitability program}.  Every time
+the older draft would have said ``forced,'' the present draft either proves
+it from the current Lean chain or explicitly replaces it with a named theorem
+obligation.
+
+%% =====================================================================
+\section{Forced Core}
+\label{sec:core}
+%% =====================================================================
+
+\subsection{Eight-Slot Basis from T7}
+
+\begin{theorem}[Eight-Slot Core]
+\label{thm:eight-slot}
+The T7 forcing chain yields an abstract octave basis with exactly eight
+slots.
+\statusline{Forced now. Lean support: \code{octave\_slot\_count\_from\_t7},
+\code{eight\_slot\_basis\_from\_t7} in \code{DeathOperatorCore.lean}.}
+\end{theorem}
+
+\begin{proof}
+The new core module defines an abstract type \code{OctaveSlot} and proves
+\[
+  \#\,\text{OctaveSlot} = 8
+\]
+from \code{UnifiedForcingChain.t7\_holds}.  It also exhibits the canonical
+equivalence between \code{Fin 8} and \code{OctaveSlot}.
+\end{proof}
+
+\subsection{Dissolution Certificate}
+
+\begin{theorem}[Abstract Dissolution Certificate]
+\label{thm:dissolution}
+For a boundary dissolving into light memory, the presently formalized RS
+core proves two facts:
+\begin{enumerate}[label=(\alph*)]
+\item the $\Zp$-pattern is preserved;
+\item maintenance cost does not increase.
+\end{enumerate}
+\statusline{Forced now relative to the current recognition-axiom bundle.
+Lean support: \code{dissolution\_certificate\_preserves\_Z},
+\code{dissolution\_certificate\_prefers\_light},
+\code{recognition\_axioms\_preserve\_Z}.}
+\end{theorem}
+
+\begin{proof}
+The core module packages dissolution through the light-memory map and proves
+that the resulting state preserves \codename{Z_light_memory = Z_boundary}
+while satisfying \code{lightMemoryCost} $\le$ \code{BoundaryCost}.  This is the
+presently forced content of the death transition before any semantic
+channel interpretation is added.
+\end{proof}
+
+\begin{theorem}[Projection Monotonicity]
+\label{thm:proj-bound}
+Let $m$ be any admissible diagonal retention mask on the eight-slot basis,
+with $0 \le m_i \le 1$ for every slot.  Then the projected information does
+not exceed the total information:
+\[
+  I_{\mathrm{proj}}(m,s) \le I_{\mathrm{tot}}(s).
+\]
+\statusline{Forced now. Lean support: \code{projectedInformation\_le\_total}
+in \code{DeathOperatorCore.lean}.}
+\end{theorem}
+
+\begin{proof}
+Each projected amplitude is multiplied by a factor in $[0,1]$, so each
+squared contribution decreases or stays fixed.  The Lean theorem sums these
+slotwise inequalities.
+\end{proof}
+
+\begin{remark}[What the Core Does Not Yet Force]
+\label{rem:core-limit}
+The forced core does \emph{not} yet determine which slots are sensory,
+linguistic, ethical, or reflexive.  It also does not determine a distinguished
+$3+1+4$ partition, an emotional threshold, or the special budget $\phig^k$.
+\statusline{Forced now as a provenance statement about the current Lean
+surface.}
+\end{remark}
+
+%% =====================================================================
+\section{Bridge Layer}
+\label{sec:bridge}
+%% =====================================================================
+
+\subsection{Semantic Channels}
+
+\begin{definition}[Semantic Eight-Channel Basis]
+\label{def:channels}
+The current bridge layer assigns the eight octave slots the labels
+\[
+(\text{sensory},\ \text{motor},\ \text{linguistic},\ \text{emotional},\
+\text{personality},\ \text{ethical},\ \text{relational},\ \text{reflexivity}).
+\]
+\definednow{semantic_channel_basis_from_t7}
+\end{definition}
+
+\begin{proposition}[Current Bridge Partition]
+\label{prop:partition}
+The current semantic bridge uses the partition
+\[
+3\ \text{substrate-dependent} \;+\; 1\ \text{transitional} \;+\; 4\ \Zp\text{-structural}.
+\]
+Equivalently, the present channel assignment counts three channels as
+body-bound, one as threshold-gated, and four as structurally preservable.
+\definednow{semantic_partition_from_rs}
+\end{proposition}
+
+\begin{proof}
+The bridge module proves the arithmetic facts
+\code{substrate\_dependent\_count}, \code{transitional\_count}, and
+\code{z\_structural\_count}.  These are theorems of the chosen assignment,
+not yet theorems of the RS core.
+\end{proof}
+
+\begin{remark}[Semantic Labels]
+\label{rem:labels}
+Even if the $3+1+4$ shape eventually becomes forced, the further claim that
+slot~5 is specifically ``ethical development'' or slot~6 specifically
+``relational topology'' remains a semantic bridge until a unique RS
+interpretation theorem is proved.
+\hypothesizednow{semantic_channel_assignment_unique}
+\end{remark}
+
+\subsection{Bridge Survival Rule}
+
+\begin{definition}[Bridge Survival Factors]
+\label{def:survival}
+For reflexivity level $k$, the current bridge survival rule is
+\[
+s_j(k)=
+\begin{cases}
+0 & j \in \{\text{sensory},\text{motor},\text{linguistic}\},\\
+1 & j \in \{\text{personality},\text{ethical},\text{relational},\text{reflexivity}\},\\
+\mathbf{1}_{k \ge 3} & j = \text{emotional}.
+\end{cases}
+\]
+\definednow{emotional_threshold_from_reflexivity}
+\end{definition}
+
+\begin{theorem}[Bridge Projection]
+\label{thm:bridge-proj}
+With the above survival rule, the bridge projection
+\[
+  \Dop(\psi)=\sum_j s_j(k)\alpha_j e_j
+\]
+is idempotent.
+\statusline{Forced now \emph{given the bridge rule}. Lean support:
+\code{deathProjection\_idempotent\_amplitude}.}
+\end{theorem}
+
+\begin{proof}
+The survival factors take values in $\{0,1\}$, so applying the projection
+twice leaves amplitudes unchanged after the first application.
+\end{proof}
+
+\begin{theorem}[Bridge Survival Bounds]
+\label{thm:survival-bounds}
+For every bridge channel $c$ and every level $k$,
+\[
+0 \le s_c(k) \le 1.
+\]
+Substrate-dependent channels have zero survival, while $\Zp$-structural
+channels have unit survival.
+\statusline{Forced now \emph{given the bridge rule}. Lean support:
+\code{survivalFactor\_nonneg}, \code{survivalFactor\_le\_one},
+\code{substrate\_dependent\_zero\_survival},
+\code{z\_structural\_full\_survival}.}
+\end{theorem}
+
+\begin{proof}
+This is a case split on the current semantic rule.
+\end{proof}
+
+%% =====================================================================
+\section{Development Gap and Transition Index}
+\label{sec:index}
+%% =====================================================================
+
+\begin{definition}[Development Gap and Transition Index]
+\label{def:index}
+The current bridge layer defines
+\[
+  \gapdim(k)=
+  \begin{cases}
+    0 & k \ge 8,\\
+    8-k & k < 8,
+  \end{cases}
+  \qquad
+  \tidx(k)=3-\gapdim(k).
+\]
+Here $\gapdim(k)$ is the unrealized reflexive capacity remaining at level
+$k$, and $\tidx(k)$ is the corresponding transition index.
+\definednow{development_gap_from_core}
+\end{definition}
+
+\begin{theorem}[Finite Lost Dimension and Development Gap]
+\label{thm:finite}
+For every $k$, the bridge data satisfy
+\[
+  \dim_{\mathrm{lost}} < 8,
+  \qquad
+  \gapdim(k) \le 8.
+\]
+\statusline{Forced now \emph{from the bridge definitions}. Lean support:
+\code{transition\_property} in \code{DeathOperatorBridge.lean}.}
+\end{theorem}
+
+\begin{proof}
+The bridge layer packages these inequalities in
+\code{transition\_property}.
+\end{proof}
+
+\begin{theorem}[Transition Index Formula]
+\label{thm:tidx}
+For $k \le 8$,
+\[
+  \tidx(k)=k-5.
+\]
+\statusline{Defined now, then theorem-proved from those definitions. Lean
+support: \code{transitionIndex\_eq}; legacy wrapper:
+\code{fredholmIndex\_eq}.}
+\end{theorem}
+
+\begin{proof}
+Substituting $\gapdim(k)=8-k$ into $\tidx(k)=3-\gapdim(k)$ yields
+$3-(8-k)=k-5$.
+\end{proof}
+
+\begin{remark}[Historical Fredholm Label]
+\label{rem:fredholm}
+Earlier drafts called $\gapdim(k)$ a ``cokernel dimension'' and $\tidx(k)$ a
+``Fredholm index.''  The present draft treats those as \emph{historical}
+labels for the program, not as mathematically standard names.  Until a
+genuine standard cokernel theorem is derived from the RS core, the formal
+quantities are the \emph{development gap} and the \emph{transition index}.
+\definednow{transition_index_from_forced_gap}
+\end{remark}
+
+%% =====================================================================
+\section{Reflexivity Budget}
+\label{sec:budget}
+%% =====================================================================
+
+\begin{definition}[Bridge Preservation Budget]
+\label{def:budget}
+The bridge layer assigns the reflexivity budget
+\[
+  B(k)=\phig^k.
+\]
+\definednow{reflexivity_budget_from_cost}
+\end{definition}
+
+\begin{theorem}[Budget Properties]
+\label{thm:budget-props}
+The current budget assignment satisfies:
+\begin{enumerate}[label=(\alph*)]
+\item $B(k)>0$ for all $k$;
+\item $k_1<k_2 \Rightarrow B(k_1)<B(k_2)$;
+\item $B(0)=1$;
+\item $4.0 < B(3) < 4.25$;
+\item $29 < B(7)$.
+\end{enumerate}
+\statusline{Defined now, then theorem-proved from the chosen budget.
+Lean support: \code{preservationBudget\_pos},
+\code{higher\_reflexivity\_preserves\_more},
+\code{preservationBudget\_at\_zero},
+\code{preservationBudget\_at\_three},
+\code{preservationBudget\_at\_seven\_lower}. Legacy wrapper names:
+\code{preservedDimBound\_...}.}
+\end{theorem}
+
+\begin{proof}
+These are algebraic consequences of the chosen budget $B(k)=\phig^k$ and the
+standard inequalities for $\phig$ already present in the RS constants layer.
+\end{proof}
+
+\begin{theorem}[Current Proved Information Bound]
+\label{thm:conditional-bound}
+If an embodied state has already been normalized so that
+\[
+  I_{\mathrm{tot}}(s) \le B(k),
+\]
+then the presently formalized bridge proves
+\[
+  I_{\mathrm{pres}}(s) \le B(k).
+\]
+\statusline{Forced now under the explicit normalization hypothesis. Lean
+support: \code{preservedInformation\_le\_budget\_of\_total\_le\_budget}
+and \code{preservedInformation\_le\_budget}.}
+\end{theorem}
+
+\begin{proof}
+This is the core projection inequality
+\code{projectedInformation\_le\_bound\_of\_total\_le\_bound} instantiated
+with the bridge survival mask and the chosen budget.
+\end{proof}
+
+\begin{theorem}[$\phig$-Capacity Recursion]
+\label{thm:phi-capacity}
+Let $\lambda = \phig$ be the reflexivity eigenvalue (forced at T6).  Define
+the information capacity recursively:
+\[
+  C(0) = 1, \qquad C(k+1) = \lambda \cdot C(k).
+\]
+Then $C(k) = \phig^k$ for all $k \ge 0$.
+\end{theorem}
+
+\begin{proof}
+By induction on $k$.  The base case is $C(0) = 1 = \phig^0$.  The step
+follows from $C(k+1) = \phig \cdot C(k) = \phig \cdot \phig^k = \phig^{k+1}$.
+
+\medskip\noindent
+Lean reference: \code{informationCapacity\_eq\_pow}.
+\end{proof}
+
+\forcednow
+
+\begin{theorem}[Grounded-State Budget Theorem]
+\label{thm:budget-forced}
+Let $s$ be a grounded embodied state at reflexivity level~$k$.  Then
+\[
+  I_{\mathrm{pres}}(s) \;\le\; \phig^{k}.
+\]
+\end{theorem}
+
+\begin{proof}
+The derivation has three links:
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{Eigenvalue equation.}
+  The reflexivity eigenvalue satisfies $\lambda^2 = \lambda + 1$, so
+  $\lambda = \phig$ (\code{reflexivityEigenvalue\_sq}).
+
+\item \textbf{Capacity recursion.}
+  By Theorem~\ref{thm:phi-capacity}, the information capacity at level~$k$
+  is $C(k) = \phig^k = B(k)$.  Since
+  $B(k) = \text{reflexivityCost}(k) + 1$
+  (\code{preservationBudget\_eq\_cost\_plus\_one}), the capacity equals the
+  cost-plus-baseline budget.
+
+\item \textbf{Grounded-state bound.}
+  For a grounded state, the cost constraint
+  $I_{\mathrm{total}} - 1 \le \phig^k - 1$ follows automatically
+  (\code{GroundedEmbodiedState.costConstraintHolds}).  The admissible-mask
+  projection inequality then gives $I_{\mathrm{pres}}(s) \le \phig^k$
+  (\code{preservedInformation\_le\_budget\_grounded}).
+\end{enumerate}
+\end{proof}
+
+\definednow{grounded_state_from_rhat_core}
+
+\begin{remark}[Remaining grounding obligation]
+\label{rem:grounded}
+A \code{GroundedEmbodiedState} is an \code{EmbodiedState} whose total
+information respects the $\phig$-capacity bound.  Not every mathematically
+constructible octave state is grounded---one could set all amplitudes to~100
+at level~0.  The present Lean theorem
+\code{r\_hat\_produces\_grounded\_state} connects admissible $\Rhat$ dynamics
+to groundedness only under two explicit bridge hypotheses:
+\begin{enumerate}[label=(\roman*)]
+\item an information-cost correspondence
+  $I_{\mathrm{total}} \le \text{RecognitionCost} + 1$;
+\item a level-cost bound
+  $\text{RecognitionCost} \le \text{reflexivityCost}(k)$.
+\end{enumerate}
+Deriving those hypotheses from the RS core is the clearest remaining
+upstream task.
+\end{remark}
+
+%% =====================================================================
+\section{Ethical Correction}
+\label{sec:ethical}
+%% =====================================================================
+
+\begin{definition}[Sigma Correction]
+\label{def:sigma}
+The bridge layer defines a non-positive $\sigma$-history correction
+\[
+  \sigma_{\mathrm{corr}}(\sigma) =
+  \begin{cases}
+    -\lfloor |\sigma|/\ln \phig \rfloor & \sigma < 0,\\
+    0 & \sigma \ge 0.
+  \end{cases}
+\]
+and the extended transition index
+\[
+  \tidx_{\mathrm{ext}}(k,\sigma,z)
+  = \tidx(k) + \sigma_{\mathrm{corr}}(\sigma) + \min(k,z).
+\]
+\definednow{sigma_penalty_from_cost_skew}
+\end{definition}
+
+\begin{theorem}[Negative Sigma Reduces the Extended Index]
+\label{thm:sigma}
+If $\sigma<0$, then
+\[
+  \tidx_{\mathrm{ext}}(k,\sigma,z) \le \tidx_{\mathrm{ext}}(k,0,z).
+\]
+\statusline{Defined now, then theorem-proved from the chosen correction rule.
+Lean support: \code{sigmaCorrection\_nonpos},
+\code{ethical\_debt\_reduces\_index}.}
+\end{theorem}
+
+\begin{proof}
+The proof is immediate from the fact that the chosen sigma correction is
+always non-positive.
+\end{proof}
+
+%% =====================================================================
+\section{Z-Pattern Survival and the Cayce Bridge}
+\label{sec:z}
+%% =====================================================================
+
+\begin{theorem}[$\Zp$ Survives Death and Rebirth]
+\label{thm:z}
+The identity invariant $\Zp$ survives both dissolution and re-embodiment.
+\statusline{Forced now relative to the current recognition-axiom bundle.
+Lean support: \code{Z\_survives\_death}, \code{Z\_survives\_rebirth} in
+\code{ZPatternSoul.lean}.}
+\end{theorem}
+
+\begin{proof}
+The \code{ZPatternSoul} module formalizes both transitions directly.
+\end{proof}
+
+\begin{remark}[Cayce Bridge Status]
+\label{rem:cayce}
+The current \code{CayceBridge.lean} results are downstream bridge
+consequences, not extra forcing principles.  For example, the monotonicity of
+survival with reflexivity and the maximal-case statements for $k=8$ are
+currently consequences of the bridge budget and transition-index definitions.
+\statusline{Defined now, then theorem-proved in the current bridge stack.}
+\end{remark}
+
+%% =====================================================================
+\section{Interpretive Consequences}
+\label{sec:consequences}
+%% =====================================================================
+
+If the semantic bridge layer is accepted---identifying the abstract eight-slot basis with specific cognitive and structural channels---the formalism yields several structural consequences for boundary dissolution and subsequent re-embodiment. These are not empirical physics predictions, but formal properties of the RS semantic model.
+
+\begin{consequence}[Scaling with Reflexivity]
+\label{cons:scaling}
+The volume of preserved information scales strictly with the reflexivity level $k$ of the dissolving boundary. A highly developed boundary (e.g., $k=7$) has a vastly larger preservation capacity ($\phig^7$) than a minimally reflexive one.
+\hypothesizednow{rs_to_case_data_bridge}
+\end{consequence}
+
+\begin{consequence}[Structural Traits Outlast Episodic Detail]
+\label{cons:traits}
+Because channels 0--2 (sensory, motor, linguistic) are strictly annihilated by the death projection, while channels 4--7 (personality, ethical, relational, reflexivity) are preserved, the model dictates that abstract structural dispositions persist across boundary transitions, whereas raw episodic or sensory details do not.
+\hypothesizednow{channel_semantics_to_observables}
+\end{consequence}
+
+\begin{consequence}[Sensory Reconstruction]
+\label{cons:sensory}
+Any apparent recovery of sensory-like data after a boundary transition must be interpreted within this framework as a \emph{reconstruction} from preserved structural channels (such as relational topology or personality) rather than a direct transfer of substrate-channel qualia.
+\hypothesizednow{sensory_reconstruction_bridge}
+\end{consequence}
+
+\begin{consequence}[Ethical Debt Suppresses Preservation]
+\label{cons:sigma}
+At a fixed reflexivity level, a negative $\sigma$-history (accumulated phase divergence or ``ethical debt'') strictly reduces the extended transition index, suppressing the boundary's capacity to preserve structural information.
+\hypothesizednow{sigma_to_case_salience_bridge}
+\end{consequence}
+
+\begin{consequence}[Emotional Threshold]
+\label{cons:emotional}
+Because the emotional channel ($j=3$) survival factor is $\mathbf{1}_{k \ge 3}$, emotional continuity across boundary transitions is topologically gated. It occurs only if the dissolving boundary had achieved at least emotional self-awareness ($k \ge 3$).
+\hypothesizednow{emotional_threshold_from_reflexivity}
+\end{consequence}
+
+%% =====================================================================
+\section{Formal Verification}
+\label{sec:formal}
+%% =====================================================================
+
+The relevant Lean modules now have a provenance-explicit architecture.
+
+\begin{table}[h]
+\centering\small
+\caption{Lean modules backing the current draft.}
+\label{tab:lean}
+\begin{tabular}{p{0.27\linewidth}p{0.23\linewidth}p{0.38\linewidth}}
+\toprule
+\textbf{Module} & \textbf{Role} & \textbf{Key results} \\
+\midrule
+\code{DeathOperatorCore} & forced core &
+eight-slot basis, dissolution certificate, projection monotonicity \\
+\code{DeathOperatorBridge} & semantic bridge &
+channel basis, development gap, transition index, $\phig$-capacity recursion,
+grounded-state budget theorem, sigma correction \\
+\code{DeathOperator} & compatibility layer &
+legacy theorem names preserved for downstream imports \\
+\code{ZPatternSoul} & identity bridge &
+$\Zp$ survival through death and rebirth \\
+\code{CayceBridge} & downstream interpretation &
+soul-development and maximal-reflexivity consequences \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All of these modules compile in Lean~4 / Mathlib with zero
+\texttt{sorry} obligations in the parts used by this paper.
+
+%% =====================================================================
+\section{Discussion}
+\label{sec:discussion}
+%% =====================================================================
+
+\subsection{What Is Forced Today}
+
+The present formalization forces an eight-slot core, a Z-preserving and
+cost-nonincreasing dissolution certificate, and the fact that admissible
+projection masks do not create information.  It also proves many consequences
+of the chosen bridge definitions: the $3+1+4$ arithmetic, the transition
+index formula, the monotonic growth of the assigned budget, and the negative
+$\sigma$ penalty.
+
+\subsection{What Is Not Forced Yet}
+
+The following claims remain outside the forced core.
+
+\begin{enumerate}
+\item The semantic assignment of slots to specific channels.
+\item The uniqueness of the $3+1+4$ partition.
+\item The threshold $k \ge 3$ for emotional persistence.
+\item The unqualified theorem $I_{\mathrm{pres}} \le \phig^k$.
+\item The exact sigma quantization in units of $\ln \phig$.
+\end{enumerate}
+
+\subsection{Why the Terminology Changed}
+
+The old language of ``cokernel'' and ``Fredholm index'' was useful as an
+intuition pump, but it borrowed standard words before their standard content
+had been derived.  The present draft therefore uses ``development gap'' and
+``transition index'' for the formal quantities while keeping ``Fredholm
+program'' as a historical label for the research agenda.
+
+%% =====================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% =====================================================================
+
+The death paper is now an explicit program rather than an overcompressed
+mixture of theorem and metaphor.  The current Lean stack already forces a
+meaningful core: an eight-slot death-transition skeleton, Z-preserving
+dissolution, and projection monotonicity.  The bridge layer retains the
+original ambitious claims, but it now states them honestly as present
+definitions, hypotheses, or named proof obligations.  That makes it possible
+to keep the original target in view while still measuring real progress
+toward a version of the paper in which the strongest claims are unavoidable
+consequences of RS core theorems.
+
+%% =====================================================================
+\appendix
+\section{Major-Claim Matrix}
+\label{app:matrix}
+%% =====================================================================
+
+\begin{center}
+\small
+\begin{tabular}{p{0.26\linewidth}p{0.16\linewidth}p{0.24\linewidth}p{0.24\linewidth}}
+\toprule
+\textbf{Claim} & \textbf{Status} & \textbf{Lean support now} & \textbf{Needed for full forcing} \\
+\midrule
+T7 gives eight slots & Forced now &
+\code{octave\_slot\_count\_from\_t7} &
+none \\
+\addlinespace
+Dissolution preserves $\Zp$ and lowers cost & Forced now &
+\code{dissolution\_certificate\_preserves\_Z},
+\code{dissolution\_certificate\_prefers\_light} &
+\code{pattern\_conservation\_from\_cost\_chain} only if one wants to remove the present recognition postulate stack \\
+\addlinespace
+Semantic eight-channel basis & Defined now &
+\code{channel\_count} &
+\code{semantic\_channel\_basis\_from\_t7} \\
+\addlinespace
+Current $3+1+4$ partition & Defined now &
+\code{substrate\_dependent\_count},
+\code{transitional\_count},
+\code{z\_structural\_count} &
+\code{semantic\_partition\_from\_rs} \\
+\addlinespace
+Emotional threshold $k \ge 3$ & Defined now &
+\code{survivalFactor} &
+\code{emotional\_threshold\_from\_reflexivity} \\
+\addlinespace
+Development gap / transition index & Defined now &
+\code{transitionIndex\_eq} &
+\code{development\_gap\_from\_core} \\
+\addlinespace
+Budget $B(k)=\phig^k$ & Defined now; forced as capacity formula &
+\code{informationCapacity\_eq\_pow},
+\code{informationCapacity\_eq\_budget},
+\code{preservationBudget\_eq\_cost\_plus\_one} &
+\code{grounded\_state\_from\_rhat\_core} \\
+\addlinespace
+Bound $I_{\mathrm{pres}} \le \phig^k$ & Forced now for grounded states &
+\code{GroundedEmbodiedState.costConstraintHolds},
+\code{preservedInformation\_le\_budget\_grounded} &
+derive grounding from $\Rhat$ core; current bridge uses explicit
+information-cost and level-cost hypotheses \\
+\addlinespace
+Interpretive consequences & Hypothesized now &
+bridge formalism only &
+empirical bridge theorems \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Data Availability}
+
+The Lean~4 source code is available at
+\url{https://github.com/jonwashburn/reality}.  The provenance rewrite in this
+paper is implemented around:
+\begin{itemize}
+\item \code{IndisputableMonolith/Foundation/RecognitionOperator.lean} ($\Rhat$ axioms and cost minimization)
+\item \code{IndisputableMonolith/Foundation/ReflexivityIndex.lean} (consciousness taxonomy and cost structure)
+\item \code{IndisputableMonolith/Consciousness/DeathOperatorCore.lean} (forced eight-slot core)
+\item \code{IndisputableMonolith/Consciousness/DeathOperatorBridge.lean} ($\phig$-capacity recursion, grounded-state bound)
+\item \code{IndisputableMonolith/Consciousness/DeathOperator.lean} (compatibility wrapper)
+\item \code{IndisputableMonolith/Consciousness/ZPatternSoul.lean}
+\item \code{IndisputableMonolith/Consciousness/CayceBridge.lean}
+\end{itemize}
+
+\begin{thebibliography}{99}
+
+\bibitem{RS_Afterlife}
+J.~Washburn,
+``$Z$-Pattern Conservation Through Boundary Dissolution,''
+Recognition Science Technical Report, 2025.
+
+\bibitem{RS_BioClocking}
+J.~Washburn,
+``Bio-Clocking: The Fractal Gearbox,''
+Recognition Science Technical Report, 2025.
+
+\bibitem{Stevenson1997}
+I.~Stevenson,
+\textit{Reincarnation and Biology: A Contribution to the Etiology
+of Birthmarks and Birth Defects}.
+Westport, CT: Praeger, 1997.
+
+\bibitem{Tucker2005}
+J.~B. Tucker,
+\textit{Life Before Life: A Scientific Investigation of
+Children's Memories of Previous Lives}.
+New York: St.\ Martin's Press, 2005.
+
+\bibitem{Stevenson1984}
+I.~Stevenson,
+\textit{Unlearned Language: New Studies in Xenoglossy}.
+Charlottesville, VA: University Press of Virginia, 1984.
+
+\bibitem{Haraldsson2000}
+E.~Haraldsson,
+``Birthmarks and claims of previous-life memories: I.\ The case
+of Purnima Ekanayake,''
+\textit{J.\ Society for Psychical Research}, vol.~64, pp.~16--25,
+2000.
+
+\bibitem{vanLommel2010}
+P.~van~Lommel,
+\textit{Consciousness Beyond Life: The Science of the
+Near-Death Experience}.
+New York: HarperOne, 2010.
+
+\bibitem{Greyson2003}
+B.~Greyson,
+``Incidence and correlates of near-death experiences in a cardiac
+care unit,''
+\textit{General Hospital Psychiatry}, vol.~25, pp.~269--276, 2003.
+
+\bibitem{Kato1995}
+T.~Kato,
+\textit{Perturbation Theory for Linear Operators}, reprint~ed.
+Berlin: Springer, 1995.
+
+\bibitem{Penrose1994}
+R.~Penrose,
+\textit{Shadows of the Mind: A Search for the Missing Science of
+Consciousness}.
+Oxford: Oxford University Press, 1994.
+
+\bibitem{Stapp2004}
+H.~P. Stapp,
+\textit{Mind, Matter and Quantum Mechanics}, 2nd~ed.
+Berlin: Springer, 2004.
+
+\end{thebibliography}
+
+\end{document}
