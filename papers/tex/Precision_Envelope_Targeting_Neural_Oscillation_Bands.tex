@@ -1,0 +1,1032 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{natbib}
+\bibliographystyle{plainnat}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{hypothesis}{Hypothesis}
+
+\title{Precision Envelope Targeting of Neural Oscillation Bands:\\
+Exact Rhythmic Formulas, a Conflict-Coherence Framework,\\
+and a Unique Carrier Theorem for the Theta Band}
+
+\author{Jonathan Washburn\\
+Austin, Texas\\
+\texttt{jon@recognitionphysics.org}}
+
+\date{March 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We present a conditional theoretical framework for how music could
+interact with neural oscillation bands through low-frequency amplitude
+envelopes. The framework is conditioned on a falsifiable seven-mode
+hypothesis: neural
+oscillation timing has a period-8 structure (motivated by the minimal
+neutral cycle on a 3-dimensional binary hypercube) whose DFT produces
+seven non-DC modes with a rigid $3{+}1{+}3$ conjugate-pair architecture.
+With one calibration ($f_0 = 40$~Hz), the mode frequencies become
+$5, 10, \ldots, 35$~Hz. From this conditional model we derive four
+results.
+\emph{First}, ordinary musical structures---rhythm, beating, and
+tremolo---generate amplitude envelopes at calculable frequencies; for
+every mode there exists a specific tempo-subdivision pair that targets
+it exactly.
+\emph{Second}, a cost function $J(r)=\tfrac{1}{2}(r+r^{-1})-1$
+on frequency ratios feeds into a phenomenological conflict-coherence
+model: lower aggregate cost yields higher coherence and, within a proxy
+strain model, larger predicted strain reduction.
+\emph{Third}, mode~1 (theta, 5~Hz) is the unique full-ladder
+carrier---the only mode whose integer harmonics span all seven
+modes---predicting that theta stability is a structural prerequisite
+for higher-band coherence.
+\emph{Fourth}, the gamma/theta nesting ratio $f_7/f_1 = 7$ is a
+parameter-free consequence of the period alone within the model,
+consistent with the empirically reported ${\approx}\,7{:}1$
+gamma-to-theta nesting. All structural results are parameter-free
+within the model; Hz values require only the single calibration. The
+core derivations have machine-checked proofs in Lean~4, while the
+empirical band identifications and therapeutic claims remain to be
+tested. We present eight falsifiable predictions together with proposed
+preregistration anchors for refutation.
+\end{abstract}
+
+\paragraph{Keywords.} Neural oscillations, theta-gamma coupling, music
+therapy, amplitude envelope, auditory steady-state response, formal
+verification, cross-frequency coupling, EEG
+
+% ====================================================================
+\section{Introduction}
+\label{sec:intro}
+
+Music therapy has well-documented effects on mood, pain perception,
+cognitive function, and neurological rehabilitation
+\citep{thaut2014,bradt2021}. Electroencephalographic (EEG) studies
+consistently show that musical stimuli modulate neural oscillation power
+and cross-frequency coupling, with theta-gamma coupling receiving
+particular attention as a substrate for memory encoding and attentional
+control \citep{lisman2013,canolty2010}. Auditory steady-state responses
+(ASSRs) demonstrate that amplitude-modulated sound can entrain neural
+oscillations at the modulation frequency \citep{galambos1981,picton2003}.
+
+Despite these empirical foundations, a unifying theoretical framework is
+lacking. To our knowledge, existing models describe \emph{which}
+frequencies entrain and
+\emph{that} music affects neural state, but do not provide:
+\begin{enumerate}[label=(\alph*)]
+  \item A structural reason why specific frequency bands (theta, alpha,
+    beta, gamma) are privileged rather than arbitrary empirical
+    categories;
+  \item Exact formulas connecting musical tempo, subdivision, and
+    modulation to specific target frequencies;
+  \item A quantitative measure of musical ``conflict'' or ``coherence''
+    that predicts therapeutic efficacy;
+  \item A structural explanation for the empirically observed privileged
+    role of the theta band in cross-frequency coupling.
+\end{enumerate}
+
+This paper proposes a candidate framework aimed at all four gaps. Its
+claims are explicitly conditional: if neural timing is well-modeled by
+the eight-slot structure of Hypothesis~\ref{hyp:eight}, then the
+envelope-driving formulas, carrier hierarchy, and nesting ratio follow.
+We begin with that single falsifiable hypothesis about the periodic
+structure of neural oscillation timing
+(Section~\ref{sec:hypothesis}). From it we derive an envelope-driving
+mechanism (Section~\ref{sec:envelope}), a cost-based
+conflict-coherence model (Section~\ref{sec:conflict}), and a unique
+carrier theorem for the theta band (Section~\ref{sec:carrier}).
+Section~\ref{sec:predictions} presents eight testable predictions and
+suggested study-design anchors for falsification.
+Section~\ref{sec:verification} summarizes the machine-checked support
+for the core derivations. Section~\ref{sec:discussion} discusses
+limitations, comparisons with existing theories, and future directions.
+
+% ====================================================================
+\section{The Seven-Mode Hypothesis}
+\label{sec:hypothesis}
+
+\begin{hypothesis}[Eight-Slot Periodic Structure]
+\label{hyp:eight}
+Neural oscillation timing possesses a minimal periodic structure with
+period $N=8$. The seven non-trivial (non-DC) modes of this structure
+define a discrete frequency ladder at integer multiples of a base
+frequency $f_0$.
+\end{hypothesis}
+
+\paragraph{Motivation.}
+The period $N = 8 = 2^3$ can be motivated from several directions.
+\emph{Binary-walk argument:} a system whose state is described by
+$D = 3$ independent binary variables has $2^3 = 8$ possible
+configurations; the minimal neutral cycle (a closed walk that visits
+every vertex of the 3-cube with zero net displacement on each axis)
+requires exactly $8$ steps. Three is the lowest dimension
+admitting non-trivial topological linking of closed
+curves~\citep{rolfsen1976}, which is relevant whenever a system must
+support topologically protected conserved quantities.
+\emph{Empirical convergence:} (i)~the ubiquity of octave
+(factor-of-2) structure in auditory processing, (ii)~the existence of
+approximately seven canonical EEG frequency bands from theta through
+high gamma, and (iii)~the empirical success of 40~Hz stimulation
+protocols~\citep{iaccarino2016}, suggesting 40~Hz as a natural ceiling
+frequency, collectively motivate testing $N = 8$.
+The present paper does not require commitment to any particular
+derivation of $N = 8$; Hypothesis~\ref{hyp:eight} is offered as a
+standalone, falsifiable model. The contribution of the paper is to make
+its downstream consequences explicit and experimentally vulnerable.
+
+\paragraph{Provenance convention.}
+Each claim in this paper carries one of four labels.
+A \textbf{core theorem} depends only on formal definitions internal to
+the model (including, where relevant, $N = 8$ and the DFT structure),
+with no empirical calibration or data.
+A \textbf{calibrated corollary} additionally requires
+$f_{\mathrm{cycle}} = 40$~Hz.
+An \textbf{empirical identification} maps a derived quantity onto an
+independently measured phenomenon.
+A \textbf{hypothesis} is a testable claim whose failure would not
+invalidate the core derivation.
+Table~\ref{tab:provenance} in
+Section~\ref{sec:discussion} records the status of every claim.
+
+\paragraph{DFT-8 structure.} The Discrete Fourier Transform of an
+$N$-point periodic signal has $N$ frequency bins indexed $k=0,\ldots,N-1$.
+For $N=8$:
+\begin{itemize}
+  \item Bin $k=0$ is the DC (mean) component.
+  \item Bins $k=1$ through $k=7$ are the seven non-DC modes.
+  \item Conjugate symmetry of real signals pairs bins $k$ and $8-k$:
+    modes $(1,7)$, $(2,6)$, $(3,5)$ carry conjugate information.
+  \item Bin $k=4$ (Nyquist) is the unique self-conjugate non-DC mode.
+\end{itemize}
+
+\noindent This gives a $3+1+3$ mirror structure: three sub-Nyquist
+modes, one Nyquist mode, and three super-Nyquist modes.
+
+\paragraph{Frequency assignment.} If the full 8-slot cycle completes at
+rate $f_{\mathrm{cycle}}=40$~Hz, mode $k$ has frequency
+\begin{equation}
+  \label{eq:mode-freq}
+  f_k = \frac{k \cdot f_{\mathrm{cycle}}}{N} = 5k \quad \text{Hz},
+  \qquad k=1,\ldots,7.
+\end{equation}
+The resulting ladder is:
+
+\begin{table}[H]
+\centering
+\caption{Seven-mode frequency ladder and EEG band correspondence.}
+\label{tab:modes}
+\begin{tabular}{@{}clll@{}}
+\toprule
+Mode $k$ & Frequency (Hz) & EEG Band & Conjugate \\
+\midrule
+1 & 5  & Theta       & 7 \\
+2 & 10 & Alpha       & 6 \\
+3 & 15 & Low Beta    & 5 \\
+4 & 20 & Beta (Nyquist) & self \\
+5 & 25 & High Beta   & 3 \\
+6 & 30 & Low Gamma   & 2 \\
+7 & 35 & Gamma       & 1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{proposition}[Strict mode ordering]
+\label{prop:mode-order}
+If $1 \le i < j \le 7$, then $f_i < f_j$.
+\end{proposition}
+
+\begin{proof}
+Equation~\eqref{eq:mode-freq} gives $f_i = 5i$ and $f_j = 5j$; since
+$5>0$, the inequality $i<j$ implies $f_i < f_j$.
+\end{proof}
+
+\paragraph{Falsification criterion.} Hypothesis~\ref{hyp:eight}
+predicts that source-resolved or task-resolved spectral decompositions,
+and especially entrainment experiments, should reveal preferred response
+maxima at or near $5,10,15,20,25,30,35$~Hz rather than at arbitrary
+offsets. The conjugate structure further predicts enhanced
+cross-frequency phase coupling between paired modes
+(1$\leftrightarrow$7, 2$\leftrightarrow$6, 3$\leftrightarrow$5).
+
+% ====================================================================
+\section{Envelope Driving: How Music Reaches the Mode Ladder}
+\label{sec:envelope}
+
+Audible musical pitch (roughly 100--4000~Hz) is far above the 5--35~Hz
+mode ladder and cannot directly entrain these oscillations. However,
+music naturally generates low-frequency \emph{amplitude envelopes}
+through three mechanisms.
+
+\subsection{Rhythmic envelopes}
+
+A musical performance at tempo $T$ beats per minute (BPM) with rhythmic
+subdivision $s$ (e.g., $s=2$ for eighth notes, $s=4$ for sixteenths)
+produces amplitude fluctuations at frequency
+\begin{equation}
+  \label{eq:rhythm}
+  f_{\mathrm{env}} = \frac{T \cdot s}{60} \quad \text{Hz}.
+\end{equation}
+
+\begin{definition}[Target tempo]
+\label{def:target-tempo}
+For mode $k\in\{1,\ldots,7\}$ and subdivision $s>0$, the
+\emph{target tempo} is the BPM at which the rhythmic envelope exactly
+matches mode $k$:
+\begin{equation}
+  \label{eq:target-bpm}
+  T_k(s) = \frac{60 \cdot f_k}{s} = \frac{300k}{s} \quad \text{BPM}.
+\end{equation}
+\end{definition}
+
+\begin{theorem}[Exact rhythmic mode targeting]
+\label{thm:rhythm}
+For every mode $k\in\{1,\ldots,7\}$ and every positive subdivision
+$s$, playing music at tempo $T_k(s)$ with subdivision $s$ produces an
+envelope frequency equal to exactly $f_k=5k$~Hz.
+\end{theorem}
+
+\begin{proof}
+Direct substitution: $f_{\mathrm{env}} = T_k(s)\cdot s / 60
+= (300k/s)\cdot s/60 = 5k = f_k$.
+\end{proof}
+
+\noindent In the companion Lean formalization this calculation is
+formalized in the envelope-driving module. Table
+~\ref{tab:targets} gives concrete examples.
+
+\begin{table}[H]
+\centering
+\caption{Target tempos for mode-specific entrainment via rhythmic subdivision.
+Each cell gives the BPM at which subdivision $s$ produces an envelope at
+exactly $f_k$ Hz.}
+\label{tab:targets}
+\begin{tabular}{@{}c|ccccc@{}}
+\toprule
+& $s=2$ & $s=4$ & $s=6$ & $s=8$ & $s=16$ \\
+\midrule
+Mode 1 (5 Hz)  & 150 & 75  & 50  & 37.5 & 18.75 \\
+Mode 2 (10 Hz) & 300 & 150 & 100 & 75   & 37.5  \\
+Mode 3 (15 Hz) & 450 & 225 & 150 & 112.5 & 56.25 \\
+Mode 4 (20 Hz) & 600 & 300 & 200 & 150  & 75    \\
+Mode 5 (25 Hz) & 750 & 375 & 250 & 187.5 & 93.75 \\
+Mode 6 (30 Hz) & 900 & 450 & 300 & 225  & 112.5 \\
+Mode 7 (35 Hz) & 1050& 525 & 350 & 262.5 & 131.25\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Musically realistic tempos (60--200 BPM) with standard
+subdivisions ($s=4$ to $s=16$) cover modes 1 through 4 directly. Higher
+modes require either fast tempos with large subdivisions or one of the
+additional mechanisms below.
+
+\subsection{Beat envelopes}
+
+Two simultaneous tones at frequencies $f_1$ and $f_2$ produce an
+amplitude modulation (``beating'') at frequency
+\begin{equation}
+  \label{eq:beat}
+  f_{\mathrm{beat}} = |f_1 - f_2|.
+\end{equation}
+
+\begin{theorem}[Beat-envelope mode targeting]
+\label{thm:beat}
+For any carrier frequency $f_c > 0$ and mode $k$, the tone pair
+$(f_c,\; f_c + f_k)$ produces a beat envelope at exactly $f_k$.
+\end{theorem}
+
+\noindent This is the mechanism exploited by binaural-beat protocols
+\citep{oster1973}. The present framework specifies \emph{which}
+beat frequencies should be most effective: those at exactly $5k$~Hz for
+$k=1,\ldots,7$.
+
+\subsection{Tremolo and amplitude modulation}
+
+Tremolo (periodic amplitude variation) at rate $f_{\mathrm{mod}}$ directly
+generates an envelope at that frequency. Vibrato (periodic pitch
+variation) generates sidebands whose beating produces additional
+low-frequency envelopes. In both cases the envelope frequency can be
+chosen to match a target mode.
+
+\subsection{Summary of envelope channels}
+
+\begin{table}[H]
+\centering
+\caption{Three channels by which music generates low-frequency envelopes
+in the 5--35~Hz range.}
+\label{tab:channels}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Channel & Formula & Control parameter \\
+\midrule
+Rhythm    & $f_{\mathrm{env}} = Ts/60$ & Tempo $T$, subdivision $s$ \\
+Beating   & $f_{\mathrm{env}} = |f_1 - f_2|$ & Frequency separation \\
+Tremolo   & $f_{\mathrm{env}} = f_{\mathrm{mod}}$ & Modulation rate \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ====================================================================
+\section{The Cost-Conflict-Coherence Framework}
+\label{sec:conflict}
+
+The previous section shows \emph{how} envelopes reach the mode ladder.
+This section addresses \emph{which combinations of tones} are
+most promising within the model, by introducing a quantitative measure of
+interval and chord conflict.
+
+\subsection{Interval cost}
+
+\begin{definition}[Interval cost function]
+\label{def:jcost}
+For a frequency ratio $r > 0$, define
+\begin{equation}
+  \label{eq:jcost}
+  J(r) = \tfrac{1}{2}\!\left(r + r^{-1}\right) - 1.
+\end{equation}
+\end{definition}
+
+\noindent The function $J$ has the following properties:
+\begin{enumerate}[label=(\roman*)]
+  \item $J(1) = 0$ (unison has zero cost).
+  \item $J(r) = J(r^{-1})$ (symmetric under inversion).
+  \item $J(r) > 0$ for all $r \neq 1$.
+  \item $J$ is strictly convex on $(0,\infty)$.
+\end{enumerate}
+
+\noindent The function $J$ can be derived axiomatically as the unique
+binary-symmetric, identity-anchored cost on positive reals satisfying a
+multiplicative d'Alembert functional equation.
+For the purposes of this paper, it may simply be taken as a candidate
+consonance measure and evaluated against psychoacoustic data.
+
+\subsection{The interval-cost hierarchy}
+
+Applying $J$ to standard just-intonation ratios yields:
+
+\begin{table}[H]
+\centering
+\caption{$J$-cost of standard musical intervals. Lower cost corresponds
+to lower conflict.}
+\label{tab:jcost}
+\begin{tabular}{@{}llrl@{}}
+\toprule
+Interval & Ratio $r$ & $J(r)$ & Decimal \\
+\midrule
+Unison      & $1/1$   & $0$       & 0 \\
+Minor third & $6/5$   & $1/60$    & 0.0167 \\
+Major third & $5/4$   & $1/40$    & 0.0250 \\
+Perfect fourth & $4/3$ & $1/24$   & 0.0417 \\
+Tritone     & $45/32$ & $169/2880$& 0.0587 \\
+Perfect fifth & $3/2$ & $1/12$    & 0.0833 \\
+Octave      & $2/1$   & $1/4$     & 0.2500 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{theorem}[Complete interval-cost ordering]
+\label{thm:hierarchy}
+\[
+  J(1) < J\!\left(\tfrac{6}{5}\right) < J\!\left(\tfrac{5}{4}\right)
+  < J\!\left(\tfrac{4}{3}\right) < J\!\left(\tfrac{45}{32}\right)
+  < J\!\left(\tfrac{3}{2}\right) < J(2).
+\]
+\end{theorem}
+
+\paragraph{Notable feature.} This ordering differs from traditional
+consonance rankings in a specific, testable way: the perfect fifth
+($J=1/12$) has \emph{higher} cost than the minor third ($J=1/60$),
+major third ($J=1/40$), and perfect fourth ($J=1/24$). In the present
+framework, the fifth's structural importance arises not from having the
+lowest cost, but from a different property: it is the ratio $12/8=3/2$
+linking the 12-semitone chromatic octave to the 8-slot DFT basis. The
+twelve-fifths walk around the circle of fifths closes the octave with
+error less than 2\% (the Pythagorean comma), making the fifth a
+structural bridge rather than a cost optimum.
+
+\subsection{Chord conflict and coherence}
+
+\begin{definition}[Chord conflict]
+\label{def:conflict}
+For a chord $C = \{f_1, \ldots, f_n\}$ with $f_i > 0$, the
+\emph{chord conflict} is the directed aggregate of pairwise interval
+costs:
+\begin{equation}
+  \label{eq:conflict}
+  \mathrm{Conflict}(C) = \sum_{i \neq j} J\!\left(\frac{f_i}{f_j}\right).
+\end{equation}
+\end{definition}
+
+\noindent Because $J(r)=J(r^{-1})$, this directed aggregate is exactly
+twice the usual unordered pair sum when all notes are distinct. We use
+the directed form because it matches the companion Lean
+implementation exactly.
+
+\begin{definition}[Chord coherence]
+\label{def:coherence}
+The \emph{chord coherence} normalizes conflict to a score in $(0,1]$:
+\begin{equation}
+  \label{eq:coherence}
+  \mathrm{Coh}(C) = \frac{1}{1 + \mathrm{Conflict}(C)}.
+\end{equation}
+\end{definition}
+
+\begin{proposition}[Lower conflict implies higher coherence]
+\label{prop:coherence-mono}
+If\/ $\mathrm{Conflict}(C_1) \leq \mathrm{Conflict}(C_2)$, then
+$\mathrm{Coh}(C_2) \leq \mathrm{Coh}(C_1)$.
+\end{proposition}
+
+\subsection{Effective alignment and a phenomenological strain proxy}
+
+We introduce a minimal phenomenological model that converts the
+coherence ordering above into a rank-order prediction about downstream
+response. Let $\sigma_0$ denote a latent pre-stimulus strain proxy
+(deviation from mode-optimal oscillation), $d > 0$ the driving strength
+of the envelope, and $a > 0$ the base alignment (a measure of
+stimulus-mode phase match). The proxy $\sigma$ is not claimed to be a
+directly observed biophysical state variable; rather, it stands in for a
+preregistered physiological or clinical endpoint expected to decrease as
+alignment improves. The \emph{effective alignment} of a chord is
+\begin{equation}
+  \label{eq:eff-align}
+  a_{\mathrm{eff}}(C) = a \cdot \mathrm{Coh}(C),
+\end{equation}
+and the post-stimulus strain is
+\begin{equation}
+  \label{eq:strain}
+  \sigma_1 = \sigma_0 \cdot \max\!\big(0,\; 1 - d \cdot a_{\mathrm{eff}}(C)\big).
+\end{equation}
+
+\begin{theorem}[Lower conflict lowers the strain proxy]
+\label{thm:strain}
+For fixed $\sigma_0 \geq 0$, $d > 0$, $a \geq 0$, if\/
+$\mathrm{Conflict}(C_1) \leq \mathrm{Conflict}(C_2)$, then
+$\sigma_1(C_1) \leq \sigma_1(C_2)$.
+\end{theorem}
+
+\begin{proof}
+By Proposition~\ref{prop:coherence-mono}, $\mathrm{Coh}(C_2) \leq
+\mathrm{Coh}(C_1)$, so $a_{\mathrm{eff}}(C_2) \leq
+a_{\mathrm{eff}}(C_1)$. Then $1 - d \cdot a_{\mathrm{eff}}(C_1)
+\leq 1 - d \cdot a_{\mathrm{eff}}(C_2)$, and applying $\max(0,\cdot)$
+and multiplication by $\sigma_0 \geq 0$ preserves the inequality.
+\end{proof}
+
+\noindent Theorem~\ref{thm:strain} gives a rank-order prediction within
+this proxy model: \emph{among stimuli that successfully drive the same
+target mode and are evaluated with the same preregistered endpoint,
+those with lower aggregate interval cost produce a lower post-stimulus
+strain proxy}. Whether that proxy maps to clinically meaningful benefit
+remains an empirical question outside the present derivation.
+
+% ====================================================================
+\section{The Unique Carrier-Wave Property of the Theta Band}
+\label{sec:carrier}
+
+\begin{definition}[Harmonic support]
+\label{def:support}
+Mode $b$ \emph{harmonically supports} mode $t$ if $f_t = n \cdot f_b$
+for some positive integer $n$.
+\end{definition}
+
+\begin{definition}[Full-ladder carrier]
+\label{def:carrier}
+Mode $b$ is a \emph{full-ladder carrier} if it harmonically supports
+every mode $t \in \{1,\ldots,7\}$.
+\end{definition}
+
+\begin{theorem}[Mode 1 is a full-ladder carrier]
+\label{thm:mode1-carrier}
+Mode~1 ($f_1 = 5$~Hz) harmonically supports every mode: $f_k = k
+\cdot f_1$ for $k=1,\ldots,7$.
+\end{theorem}
+
+\begin{proof}
+$f_k = 5k = k \cdot 5 = k \cdot f_1$, with multiplier $n=k>0$.
+\end{proof}
+
+\begin{theorem}[Mode 1 is the \emph{unique} full-ladder carrier]
+\label{thm:unique-carrier}
+For $b \in \{1,\ldots,7\}$, mode $b$ is a full-ladder carrier if and
+only if $b=1$.
+\end{theorem}
+
+\begin{proof}
+The forward direction is Theorem~\ref{thm:mode1-carrier}. For the
+converse, suppose $b \geq 2$. Then $f_b = 5b \geq 10$, but
+$f_1 = 5 < 10 \leq 5b$. For mode $b$ to support mode~1, we need
+$5 = n \cdot 5b$, i.e., $n = 1/b < 1$, which is not a positive integer.
+Hence mode $b$ does not support mode~1 and is not a full-ladder carrier.
+\end{proof}
+
+\paragraph{Interpretation.} Theorem~\ref{thm:unique-carrier} says that
+theta (5~Hz) is the \emph{only} mode that can serve as a harmonic
+foundation for the entire oscillation ladder. Every higher mode's
+frequency is a whole-number multiple of theta, so a stable theta
+oscillation provides a phase reference against which every higher mode
+can lock. No higher mode reciprocates: mode~2 (10~Hz) cannot generate
+5~Hz as an integer multiple; mode~3 (15~Hz) cannot generate 10~Hz; and
+so on.
+
+This gives a structural prediction about directionality in
+cross-frequency interactions:
+\begin{enumerate}
+  \item Disrupting theta should degrade coherence across all higher
+    bands.
+  \item Disrupting gamma should leave lower bands substantially intact.
+  \item Entrainment protocols that establish theta first and then
+    progressively engage higher modes should outperform protocols that
+    target higher modes directly.
+\end{enumerate}
+
+\noindent Existing literature on theta-gamma coupling
+\citep{lisman2013,canolty2010,jensen2007} and the role of theta in
+memory consolidation, navigation, and attentional gating is consistent
+with this structural prediction, but the \emph{uniqueness} of theta's
+carrier role---that no other band can serve this function---has not
+previously been stated as a mathematical theorem.
+
+\subsection{The gamma/theta nesting ratio}
+
+The ratio of the highest to the lowest non-DC mode frequency is a
+parameter-free structural invariant:
+\begin{theorem}[Nesting ratio]
+\label{thm:nesting}
+$f_7 / f_1 = (N-1) \cdot f_0 / (1 \cdot f_0) = N - 1 = 7$.
+This ratio is independent of $f_0$.
+\end{theorem}
+
+\noindent The nesting ratio of $\approx 7$ gamma cycles per theta
+cycle has been observed in cross-frequency coupling
+studies~\citep{lisman2013,canolty2010}. Within the DFT-8 model, this
+ratio is not tuned by free parameters: for \emph{any} DFT-$N$ system
+with $N = 8$, the highest-to-lowest non-DC frequency ratio is
+$N - 1 = 7$.
+
+\subsection{Conjugate coherence structure}
+
+Two modes share an oscillation family if and only if they are equal or
+conjugate.  This is proved by exhaustive case analysis on all
+$7 \times 7$ mode pairs (Lean: \texttt{family\_eq\_iff\_conjugate}).
+The structural consequence: within-family (conjugate-pair) coherence
+should exceed between-family coherence in EEG data, because conjugate
+DFT modes of a real-valued signal carry identical spectral magnitude.
+
+% ====================================================================
+\section{Testable Predictions}
+\label{sec:predictions}
+
+The framework generates eight specific predictions. Table~\ref{tab:predictions}
+records the measurement target and qualitative failure mode for each
+prediction; the numerical design anchors discussed below are proposed
+preregistration templates rather than universal evidentiary standards.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Eight testable predictions derived from the seven-mode hypothesis,
+envelope-driving formulas, conflict-coherence model, and carrier theorem.}
+\label{tab:predictions}
+\begin{tabular}{@{}c>{\raggedright\arraybackslash}p{5.2cm}>{\raggedright\arraybackslash}p{3.2cm}>{\raggedright\arraybackslash}p{3.5cm}@{}}
+\toprule
+\# & Prediction & Measure & Qualitative falsifier \\
+\midrule
+1 & Source-resolved or task-resolved EEG, and especially entrainment
+    experiments, reveal response maxima near 5, 10, 15, 20, 25, 30,
+    35~Hz ($\pm 0.5$~Hz).
+  & Power spectral density / evoked response maxima
+  & Maxima absent or at substantially different frequencies \\[6pt]
+2 & Binaural beats at on-ladder frequencies ($5k$~Hz) produce
+    stronger ASSRs than beats at off-ladder frequencies
+    ($5k \pm 1.5$~Hz).
+  & ASSR amplitude at target frequency
+  & No on-ladder vs.\ off-ladder difference \\[6pt]
+3 & Music at the calculated target tempo $T_k(s)$ entrains mode
+    $k$ more strongly than music at a randomly chosen tempo.
+  & EEG power at $f_k$ during stimulation
+  & No tempo-specific entrainment effect \\[6pt]
+4 & The $J$-cost ordering predicts inter-band EEG coherence better
+    than traditional consonance rankings (Helmholtz roughness,
+    harmonic template).
+  & Correlation between $J(r)$ rank and measured coherence, compared
+    to alternative models
+  & Traditional rankings correlate equally well or better \\[6pt]
+5 & Theta-first sequential entrainment (5$\to$10$\to$15$\to\cdots$~Hz)
+    produces higher whole-spectrum coherence than gamma-first
+    (35$\to$30$\to\cdots$~Hz) or simultaneous protocols.
+  & Average cross-frequency coherence; cognitive battery scores
+  & No order effect, or reverse order is superior \\[6pt]
+6 & Disrupting theta via TMS degrades cross-frequency coupling
+    across all higher bands; disrupting gamma leaves lower bands
+    intact.
+  & Phase-amplitude coupling before and after disruption
+  & Symmetric degradation in both directions \\[6pt]
+7 & Heart rate variability (HRV) improvement correlates with
+    $J$-cost rank of sustained intervals, not with traditional
+    consonance rank.
+  & HRV spectral power vs.\ interval $J$-cost
+  & HRV tracks traditional consonance \\[6pt]
+8 & Among chords matched for loudness and duration, those with
+    lower aggregate conflict $\sum_{i \neq j} J(f_i/f_j)$ produce greater
+    self-reported relaxation and lower EEG strain markers.
+  & Conflict score vs.\ preregistered endpoint (e.g., VAS, EEG alpha power)
+  & No correlation, or roughness-based models predict better \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Experimental design notes.}
+The numerical thresholds below should be read as proposed
+preregistration anchors. Their role is to make the model concretely
+refutable in prospective studies, not to claim that one sample size or
+significance threshold is optimal for every cohort, modality, or
+endpoint. Any actual study should recompute power from endpoint
+reliability and preregister one primary analysis.
+Predictions 1--3 require only standard EEG equipment ($\ge 64$
+channels, resting-state or task-resolved) and audio generation
+software; the target-tempo formula (Eq.~\ref{eq:target-bpm})
+provides exact stimulus parameters.
+For Prediction~1, a natural preregistration anchor is a peak-detection
+rule testing whether dominant response maxima lie within $\pm 0.5$~Hz
+of $5,10,15,20,25,30,35$~Hz and whether adjacent peaks are separated by
+approximately $5$~Hz; systematic displacement from this ladder counts
+against the model.
+For Prediction~2, a natural anchor is a preregistered on-ladder versus
+off-ladder contrast using matched carriers, matched sound levels, and
+permutation-based inference; repeated null results or confidence
+intervals centered near zero in adequately powered cohorts would count
+against the model.
+Predictions 4, 7, and 8 compare $J$-cost against established
+consonance models (Helmholtz roughness, Plomp--Levelt critical
+bandwidth, harmonic template), permitting direct model comparison;
+falsified if traditional rankings correlate equally well or better
+with the dependent variable. Prediction~8 additionally requires a
+preregistered operationalization of the latent strain proxy in
+Eq.~\ref{eq:strain}, for example a composite endpoint combining
+relaxation self-report with specified EEG markers.
+Predictions 5 and 6 test the carrier theorem's directional
+asymmetry and require either sequential stimulation protocols or
+focused TMS; falsified if disruption effects are symmetric across
+bands or if reverse-order protocols perform equally well.
+
+% ====================================================================
+\section{Formal Verification}
+\label{sec:verification}
+
+The core mathematical consequences used in
+Sections~\ref{sec:hypothesis} through~\ref{sec:carrier} have
+corresponding machine-checked proofs in the Lean~4 proof assistant
+\citep{moura2021}. The cited modules build with zero \texttt{sorry} and
+zero \texttt{admit}. The verified statements cover internal
+consequences of the DFT-8 hypothesis and the definitions introduced in
+the paper; they do not, by themselves, validate the empirical band
+identifications, the 40~Hz calibration, or any therapeutic efficacy
+claim.
+
+The key verified modules and their principal theorems are:
+
+\begin{table}[H]
+\centering
+\small
+\caption{Lean~4 modules and verified theorems corresponding to this paper's results.}
+\label{tab:lean}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Module & Key theorem(s) \\
+\midrule
+\texttt{Consciousness.NeutralModeStructure}
+  & \texttt{neutral\_dim}, \texttt{dim\_from\_spatial} \\
+  & \texttt{mode\_frequencies}, \texttt{freq\_monotone} \\
+  & \texttt{nyquist\_unique\_self\_conjugate} \\
+  & \texttt{family\_eq\_iff\_conjugate} \\
+  & \texttt{conjugate\_frequency\_complement} \\
+\texttt{Consciousness.ModeCarrier}
+  & \texttt{fullLadderCarrier\_iff\_mode1} \\
+  & \texttt{sequential\_activation\_from\_mode1} \\
+\texttt{Consciousness.SevenModesCert}
+  & \texttt{Cert.verified\_instance} (bridge certificate) \\
+\texttt{MusicTheory.EnvelopeDriving}
+  & \texttt{targetTempoForMode\_bpm\_formula} \\
+  & \texttt{subdivision\_envelope\_drives\_mode} \\
+  & \texttt{beatEnvelope\_drives\_mode} \\
+  & \texttt{tremoloEnvelope\_drives\_mode} \\
+\texttt{MusicTheory.ModeConflict}
+  & \texttt{lowerConflict\_higherCoherence} \\
+  & \texttt{higherConflict\_lower\_alignment} \\
+\texttt{MusicTheory.Consonance}
+  & \texttt{extended\_ratio\_cost\_hierarchy} \\
+\texttt{Consciousness.SoundHealing}
+  & \texttt{lowerConflict\_reduces\_strain\_more} \\
+  & \texttt{chord\_sound\_reduces\_strain} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent The full source code is available at
+\texttt{github.com/jonwashburn/reality}.
+A machine-checkable bridge certificate
+(\texttt{SevenModesCert.lean}) chains every structural result from
+the period assumption through to the final predictions.
+All modules compile with Lean~4 / Mathlib with zero unproved
+obligations, ensuring that the model's key equations
+and monotonicity claims are deductively established from the stated
+definitions once the formal assumptions are granted. The formal
+verification should therefore be read as an internal consistency
+certificate, not as empirical validation of
+Hypothesis~\ref{hyp:eight} or of the therapeutic application layer.
+
+% ====================================================================
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Provenance matrix}
+
+Table~\ref{tab:provenance} classifies every theorem-like statement.
+
+\begin{table}[H]
+\centering\small
+\caption{Provenance classification.  \textbf{C} = core theorem
+($N=8$ only), \textbf{Cal} = calibrated corollary
+($f_0 = 40$~Hz required), \textbf{E} = empirical identification,
+\textbf{H} = hypothesis.}
+\label{tab:provenance}
+\begin{tabular}{@{}llc@{}}
+\toprule
+\textbf{Statement} & \textbf{Location} & \textbf{Prov.} \\
+\midrule
+7 non-DC modes & Hyp.~\ref{hyp:eight} & C \\
+Conjugate pairing, $3{+}1{+}3$ & Sec.~\ref{sec:hypothesis} & C \\
+Family $\Leftrightarrow$ conjugacy & Sec.~\ref{sec:carrier} & C \\
+Nesting ratio $f_7/f_1 = 7$ & Thm~\ref{thm:nesting} & C \\
+Unique carrier (mode~1) & Thm~\ref{thm:unique-carrier} & C \\
+Freq.\ monotonicity & Prop.~\ref{prop:mode-order} & Cal \\
+Lower conflict $\Rightarrow$ lower strain proxy & Thm~\ref{thm:strain} & C \\
+\midrule
+Frequency ladder Hz & Eq.~\ref{eq:mode-freq} & Cal \\
+Target tempos & Def.~\ref{def:target-tempo} & Cal \\
+EEG band identification & Table~\ref{tab:modes} & E \\
+\midrule
+Eight-slot hypothesis & Hyp.~\ref{hyp:eight} & H \\
+Predictions 1--8 & Table~\ref{tab:predictions} & H \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Relationship to existing theories}
+
+\paragraph{Auditory steady-state responses.}
+The ASSR literature \citep{galambos1981,picton2003,gao2014} has
+established that amplitude-modulated sound entrains neural oscillations.
+The present framework is consistent with these findings and adds
+specificity: within the model it predicts that entrainment should be
+strongest at the seven on-ladder frequencies, provides exact formulas
+for generating those frequencies from standard musical structures, and
+offers a cost function for ranking candidate stimuli.
+
+\paragraph{Theta-gamma coupling.}
+The theta-gamma coupling literature \citep{lisman2013,canolty2010}
+documents a particularly strong and functionally important form of
+cross-frequency interaction. The carrier theorem
+(Theorem~\ref{thm:unique-carrier}) provides a candidate structural
+explanation within the model: theta is the unique mode whose harmonics
+span the full ladder, making it the natural phase reference for all
+higher oscillations.
+The nesting ratio $f_7/f_1 = 7$ (Theorem~\ref{thm:nesting}) matches
+the empirically observed $\approx 7$:$1$ gamma-to-theta nesting and
+is, within the model, a parameter-free consequence of the period.
+If the model is correct, this predicts not just that theta-gamma
+coupling exists, but that theta's role is \emph{uniquely
+privileged}---a claim testable by comparing disruption effects across
+bands (Prediction~6).
+
+\paragraph{Communication through coherence.}
+The CTC framework~\citep{fries2015} explains \emph{why} oscillatory
+coherence matters for neural communication (coherent oscillations
+create windows of effective connectivity) but does not predict the
+specific band count or frequency ratios.  The DFT-8 model is
+complementary: it derives the mode \emph{structure} (count, pairing,
+carrier hierarchy) from a symmetry assumption, while CTC explains the
+functional significance of coherence between those modes.
+
+\paragraph{Mechanistic models.}
+Thalamocortical loop models~\citep{lopes2010} derive oscillation
+frequencies from biophysical parameters (membrane time constants,
+axonal delays), and interneuron-network models~\citep{kopell2014}
+provide detailed accounts of beta and gamma generation.
+These models explain band \emph{generation} but not band
+\emph{count}.  The present approach is again complementary: the DFT-8
+structure constrains which modes are possible; biophysical models
+explain how specific circuits instantiate them.
+
+\paragraph{Consonance models.}
+The $J$-cost function differs from Helmholtz roughness
+\citep{helmholtz1863}, Plomp-Levelt critical bandwidth models
+\citep{plomp1965}, and harmonic template models
+\citep{parncutt2011} in its ordering of intervals. Specifically,
+$J$-cost ranks the minor third as less conflicting than the perfect
+fifth, whereas traditional models typically rank the fifth as more
+consonant. Predictions 4, 7, and 8 are designed to adjudicate between
+these models empirically.
+
+\subsection{Limitations}
+
+\begin{enumerate}
+  \item \textbf{The auditory demodulation pathway is not specified.}
+    The framework shows that musical structures \emph{contain}
+    envelopes at the right frequencies but does not model the neural
+    mechanism by which the auditory system extracts and transmits those
+    envelopes to oscillatory circuits. This is a gap that existing ASSR
+    physiology partially fills \citep{picton2003}.
+
+  \item \textbf{The seven-mode hypothesis is a hypothesis.}
+    While motivated by the DFT-8 structure and consistent with known
+    EEG bands, the claim that neural timing has an exact 8-slot period
+    at 40~Hz has not been independently established. Prediction~1 is
+    therefore best interpreted as a model-discrimination experiment.
+
+  \item \textbf{Clinical efficacy remains empirical.}
+    The conflict-coherence model predicts a \emph{rank ordering} within
+    a chosen endpoint, but it does not derive a unique biomarker, a
+    dose-response curve, or a guaranteed clinical effect size. The
+    magnitude of therapeutic benefit depends on biological factors
+    (individual anatomy, pathology, attention) not captured by the
+    mathematical model.
+
+  \item \textbf{The 40~Hz base rate is a single parameter.}
+    The mode frequencies depend on the cycle rate
+    $f_{\mathrm{cycle}}=40$~Hz. If the true base rate differs by more
+    than $\sim$10\%, the ladder would shift and predictions would need
+    adjustment.
+\end{enumerate}
+
+\subsection{Future directions}
+
+\paragraph{Meditation protocols.}
+The carrier theorem suggests designing meditation-entrainment protocols
+that stabilize theta first, then sequentially activate higher modes.
+Such protocols could be tested with real-time EEG-guided adaptive
+stimulation.
+
+\paragraph{Compositional algorithms.}
+The conflict-coherence functional provides an objective function for
+algorithmic music composition targeting hypothesized therapeutic
+endpoints:
+minimize conflict for relaxation, control conflict gradient for
+activation, target specific modes for band-selective entrainment.
+
+\paragraph{Cross-modal extension.}
+If the seven-mode basis extends to other sensory modalities (visual
+flicker, somatosensory vibration), coordinated multi-modal stimuli
+could produce stronger entrainment than any single channel.
+
+% ====================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+We have presented a conditional framework in which neural oscillation
+structure is modeled as a seven-mode DFT-8 ladder, musical stimuli
+reach this ladder through low-frequency amplitude envelopes, a cost
+function ranks candidate stimuli within a phenomenological strain-proxy
+model, and the theta band occupies a mathematically unique position as
+the only full-ladder harmonic carrier. The framework combines one
+falsifiable structural hypothesis, one 40~Hz cycle calibration, and one
+candidate cost function ($J$-cost), and it produces eight specific
+experimental predictions together with study-design templates for
+refutation.
+
+The goal of this paper is not to claim that music therapy ``works'' in
+any final or already-established sense---that remains an empirical
+question with a large and growing evidence base---but to provide a
+quantitative, falsifiable conditional model of \emph{how} music could
+couple to a discrete oscillation ladder, which \emph{specific} stimuli
+should be prioritized for testing within that model, and what
+structural role the theta band may play in the process. The internal
+mathematics is formally verified; the empirical interpretation remains
+open to confirmation or refutation. We invite direct experimental
+testing of the predictions in Table~\ref{tab:predictions}.
+
+% ====================================================================
+\section*{Acknowledgments}
+
+The author thanks the Lean~4 / Mathlib communities for the proof
+assistant infrastructure that enabled formal verification of these
+results.
+
+% ====================================================================
+\begin{thebibliography}{99}
+
+\bibitem[Bradt et al., 2021]{bradt2021}
+Bradt, J., Dileo, C., \& Shim, M. (2021).
+Music interventions for preoperative anxiety.
+\textit{Cochrane Database of Systematic Reviews}, 2021(6).
+
+\bibitem[Canolty \& Knight, 2010]{canolty2010}
+Canolty, R.~T. \& Knight, R.~T. (2010).
+The functional role of cross-frequency coupling.
+\textit{Trends in Cognitive Sciences}, 14(11), 506--515.
+
+\bibitem[Galambos et al., 1981]{galambos1981}
+Galambos, R., Makeig, S., \& Talmachoff, P.~J. (1981).
+A 40-Hz auditory potential recorded from the human scalp.
+\textit{Proceedings of the National Academy of Sciences}, 78(4), 2643--2647.
+
+\bibitem[Gao et al., 2014]{gao2014}
+Gao, X., Cao, H., Ming, D., et al. (2014).
+Analysis of EEG activity in response to binaural beat with different frequencies.
+\textit{International Journal of Psychophysiology}, 94(3), 399--406.
+
+\bibitem[Helmholtz, 1863]{helmholtz1863}
+von Helmholtz, H. (1863).
+\textit{Die Lehre von den Tonempfindungen als physiologische Grundlage
+f\"ur die Theorie der Musik}. Braunschweig: Vieweg.
+
+\bibitem[Iaccarino et al., 2016]{iaccarino2016}
+Iaccarino, H.~F., Singer, A.~C., Martorell, A.~J., et al. (2016).
+Gamma frequency entrainment attenuates amyloid load and modifies
+microglia. \textit{Nature}, 540(7632), 230--235.
+
+\bibitem[Jensen \& Colgin, 2007]{jensen2007}
+Jensen, O. \& Colgin, L.~L. (2007).
+Cross-frequency coupling between neuronal oscillations.
+\textit{Trends in Cognitive Sciences}, 11(7), 267--269.
+
+\bibitem[Lisman \& Jensen, 2013]{lisman2013}
+Lisman, J.~E. \& Jensen, O. (2013).
+The theta-gamma neural code.
+\textit{Neuron}, 77(6), 1002--1016.
+
+\bibitem[de Moura et al., 2021]{moura2021}
+de Moura, L., Kong, S., Avigad, J., van Doorn, F., \& von Raumer, J. (2021).
+The Lean 4 theorem prover and programming language.
+\textit{Automated Deduction---CADE 28}, LNAI 12699, 625--635.
+
+\bibitem[Oster, 1973]{oster1973}
+Oster, G. (1973).
+Auditory beats in the brain.
+\textit{Scientific American}, 229(4), 94--102.
+
+\bibitem[Parncutt \& Hair, 2011]{parncutt2011}
+Parncutt, R. \& Hair, G. (2011).
+Consonance and dissonance in music theory and psychology: disentangling
+roughness, harmonicity, and familiarity.
+\textit{Journal of Acoustical Society of America}, 130(2), 776--788.
+
+\bibitem[Picton et al., 2003]{picton2003}
+Picton, T.~W., John, M.~S., Dimitrijevic, A., \& Purcell, D. (2003).
+Human auditory steady-state responses.
+\textit{International Journal of Audiology}, 42(4), 177--219.
+
+\bibitem[Plomp \& Levelt, 1965]{plomp1965}
+Plomp, R. \& Levelt, W.~J.~M. (1965).
+Tonal consonance and critical bandwidth.
+\textit{Journal of the Acoustical Society of America}, 38(4), 548--560.
+
+\bibitem[Thaut \& Hoemberg, 2014]{thaut2014}
+Thaut, M.~H. \& Hoemberg, V. (Eds.) (2014).
+\textit{Handbook of Neurologic Music Therapy}.
+Oxford University Press.
+
+\bibitem[Fries, 2015]{fries2015}
+Fries, P. (2015).
+Rhythms for cognition: Communication through coherence.
+\textit{Neuron}, 88(1), 220--235.
+
+\bibitem[Kopell et al., 2011]{kopell2014}
+Kopell, N., Whittington, M.~A., \& Kramer, M.~A. (2011).
+Neuronal assembly dynamics in the beta1 frequency range permits
+short-term memory.
+\textit{Proceedings of the National Academy of Sciences}, 108(9),
+3779--3784.
+
+\bibitem[Lopes da Silva, 2013]{lopes2010}
+Lopes~da~Silva, F.~H. (2013).
+EEG and MEG: Relevance to neuroscience.
+\textit{Neuron}, 80(5), 1112--1128.
+
+\bibitem[Rolfsen, 1976]{rolfsen1976}
+Rolfsen, D. (1976).
+\textit{Knots and Links}.
+Providence, RI: AMS Chelsea.
+
+\end{thebibliography}
+
+\end{document}

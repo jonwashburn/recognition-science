@@ -1,0 +1,531 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+
+\definecolor{rsblue}{RGB}{30,60,114}
+\definecolor{rsgold}{RGB}{180,140,50}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=rsblue,
+    urlcolor=rsblue,
+    citecolor=rsblue
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Jcost}{J}
+\newcommand{\Rhat}{\hat{R}}
+\newcommand{\phigr}{\varphi}
+\newcommand{\lean}[1]{\texttt{\small #1}}
+
+\title{
+    Acoustic and Phase Levitation in Recognition Science\\[0.5em]
+    \large A Conditional Formal Derivation and Integration Scaffold
+}
+\author{
+    Jonathan Washburn\\
+    Recognition Science Research Institute, Austin, Texas\\
+    \texttt{washburn.jonathan@gmail.com}
+}
+\date{March 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We analyze acoustic and phase levitation within Recognition Science (RS) with explicit claim hygiene: what is fully proved in Lean, what is currently modeled as a bridge construction, and what remains an open integration step.
+The rigorously proved core consists of two results:
+(1)~gravity is coherence-seeking, in the sense that free fall is the unique acceleration that zeros the coherence defect of an extended object in a processing-density gradient; and
+(2)~if an external phase field generates a gradient that cancels the gravitational gradient, then the object is coherent while stationary, i.e.\ levitation follows.
+Around this proved conditional core, the current Lean development formalizes four additional components: an energy-to-processing bridge model, a weak-field additive interface lemma, an abstract coherence-gain model with $\sqrt{N}$ enhancement, and a resonance-aware surrogate kernel with minima at 8-tick harmonics.
+These components are assembled in a structure-valued theorem named \lean{levitation\_unconditional}; however, despite the legacy theorem name, the current certificate does \emph{not} yet derive the existence of a field satisfying the cancellation condition from the coherence-gain and resonance modules themselves.
+Accordingly, the paper presents the present RS status as a sharpened conditional mechanism and a machine-verified integration scaffold, not yet as a closed no-gap theorem of laboratory levitation.
+The emphasis throughout is on the internal logic of the RS gravity framework and on falsifiable structural predictions for any future implementation.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%==============================================================================
+\section{Introduction}
+%==============================================================================
+
+In standard physics, gravity is either a fundamental force (Newton) or the curvature of spacetime (Einstein).
+Under both paradigms, modifying gravitational coupling requires exotic matter with negative energy density or speculative metric engineering.
+Standard physics provides no accepted laboratory mechanism for such effects.
+
+Recognition Science (RS) derives all physics from a single primitive---the Recognition Composition Law---with zero adjustable parameters.
+In RS, gravity is \emph{not} a fundamental force carried by a particle; it is the emergent tendency of extended objects to accelerate toward the configuration that minimizes their coherence defect (the $J$-cost mismatch across their spatial extent).
+The natural next question is whether external phase fields can modify that coherence landscape and thereby modify gravitational coupling.
+
+The present paper answers that question in a deliberately scoped way.
+It does \emph{not} claim that the current Lean development already proves a no-gap theorem that real laboratory devices must levitate.
+Instead, it shows that RS now contains:
+\begin{enumerate}[leftmargin=2em]
+    \item a rigorous theorem of gravity-as-coherence,
+    \item a rigorous \emph{conditional} theorem that cancellation of the gravitational gradient implies levitation,
+    \item four formal bridge/interface modules that sharpen the remaining physical route from superconducting or acoustic structure to the required cancelling field.
+\end{enumerate}
+
+All referenced Lean declarations compile with zero \texttt{sorry} terms and live in the \texttt{RecognitionScience.Gravity} namespace of the RS Lean repository.
+
+%==============================================================================
+\section{Claim Hygiene and Current Status}
+\label{sec:status}
+%==============================================================================
+
+Table~\ref{tab:status} separates fully proved results from bridge models, surrogate models, and open integration steps.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{@{}p{0.30\textwidth}p{0.18\textwidth}p{0.25\textwidth}p{0.20\textwidth}@{}}
+\toprule
+\textbf{Claim} & \textbf{Status} & \textbf{Lean Anchor} & \textbf{Comment} \\
+\midrule
+Gravity is coherence-seeking & Proved & \lean{falling\_restores\_coherence} & Fully formalized \\
+If $\nabla\Phi_{\rm ext} = -\nabla\Phi_{\rm grav}$ then levitation follows & Proved conditional & \lean{acoustic\_levitation} & Exact cancellation is still an assumption \\
+Energy density creates processing field & Bridge model & \lean{energy\_processing\_bridge} & Implemented as an interface definition \\
+Weak-field gradients add & Local calculus lemma & \lean{gradient\_superposition} & Uses additive field model and \lean{deriv\_add} \\
+Coherence gain = $\sqrt{N}$ & Abstract model & \lean{coherence\_gain\_eq\_sqrt\_N} & Not yet linked to the BCS module \\
+8-tick resonance lowers weight & Surrogate kernel model & \lean{weight\_reduction\_at\_resonance} & Uses a new resonance-aware kernel, not the full ILG kernel \\
+Concrete superconducting/acoustic device generates cancelling field & Open & --- & Not yet formally derived \\
+\bottomrule
+\end{tabular}
+\caption{Current formal status of the levitation program in the RS Lean development.}
+\label{tab:status}
+\end{table}
+
+%==============================================================================
+\section{The RS Cost-First Foundation}
+\label{sec:foundation}
+%==============================================================================
+
+We briefly recall the elements of the forcing chain needed for the derivation.
+
+\subsection{The Recognition Composition Law}
+
+The sole primitive of RS is the functional equation
+\begin{equation}\label{eq:RCL}
+    \Jcost(xy) + \Jcost(x/y) = 2\Jcost(x)\Jcost(y) + 2\Jcost(x) + 2\Jcost(y),
+\end{equation}
+together with the normalization $\Jcost(1) = 0$ and calibration $\Jcost''_{\log}(0) = 1$.
+The unique solution is~\cite{washburn2025}
+\begin{equation}\label{eq:Jcost}
+    \Jcost(x) = \tfrac{1}{2}(x + x^{-1}) - 1, \qquad x > 0.
+\end{equation}
+
+\begin{theorem}[Lean: \lean{Jcost\_nonneg}, \lean{Jcost\_zero\_iff\_one}]
+    For all $x > 0$: $\Jcost(x) \geq 0$, with equality if and only if $x = 1$.
+\end{theorem}
+
+\subsection{Quadratic Regime and Energy Bridge}
+
+Near the cost minimum $x = 1$, setting $x = 1 + \varepsilon$:
+\begin{equation}\label{eq:quadratic}
+    \Jcost(1 + \varepsilon) = \frac{\varepsilon^2}{2(1 + \varepsilon)},
+\end{equation}
+which for small $|\varepsilon|$ gives $\Jcost \approx \varepsilon^2/2$---the kinetic-energy form of a harmonic oscillator.
+
+\begin{theorem}[Lean: \lean{Jcost\_one\_plus\_exact}]
+    For all $\varepsilon > -1$:
+    $\Jcost(1 + \varepsilon) = \varepsilon^2 / [2(1 + \varepsilon)]$.
+\end{theorem}
+
+This identity is the bridge between $J$-cost and energy: in the small-deviation regime, $J$-cost has the same quadratic form as the Hamiltonian.
+In the present Lean development, this relation is used as the basis for a formal bridge model from energy distributions to processing fields; the stronger claim that Einstein sourcing has already been derived in this namespace is not yet formalized here.
+
+\subsection{The Forcing Chain to Gravity}
+
+The full chain from the RCL to gravity proceeds as:
+\[
+    \text{RCL} \;\xrightarrow{\text{T5}}\; \Jcost \;\xrightarrow{\text{T6}}\; \varphi \;\xrightarrow{\text{T8}}\; D{=}3 \;\xrightarrow{\text{T7}}\; 8\text{-tick} \;\xrightarrow{}\; G = \varphi^5 \;\xrightarrow{}\; \text{Gravity} = \text{Coherence}.
+\]
+The step needed in the present paper is the final one---gravity as coherence---formalized in Theorem~\ref{thm:falling}.
+
+%==============================================================================
+\section{Gravity as Coherence-Seeking}
+\label{sec:coherence-fall}
+%==============================================================================
+
+\subsection{The Coherence Defect}
+
+\begin{definition}[Processing Field]
+A \emph{processing field} is a smooth function $\Phi : \mathbb{R} \to \mathbb{R}$ representing the local processing density (equivalently, the gravitational potential) at each position.
+\end{definition}
+
+\begin{definition}[Coherence Defect]
+For an extended object with center of mass at $h_{\rm cm}$ and half-extent $\ell > 0$, in a frame accelerating at $a$, the \emph{coherence defect} is
+\begin{equation}\label{eq:defect}
+    D(a) = \bigl|2\ell\,(\nabla\Phi_{\rm grav}\big|_{h_{\rm cm}} + a)\bigr|.
+\end{equation}
+This measures the processing-rate mismatch between the ``head'' and ``feet'' of the object.
+\end{definition}
+
+\begin{theorem}[Falling Restores Coherence]
+\label{thm:falling}
+\lean{falling\_restores\_coherence}
+
+For any processing field $\Phi$ and any extended object, there exists a unique acceleration $a^*$ such that $D(a^*) = 0$.
+This acceleration is $a^* = -\nabla\Phi|_{h_{\rm cm}}$---i.e., free fall.
+\end{theorem}
+
+\begin{proof}
+$D(a) = |2\ell(\nabla\Phi + a)| = 0$ iff $\nabla\Phi + a = 0$ (since $\ell > 0$), i.e.\ $a = -\nabla\Phi$.
+Machine-verified in Lean.
+\end{proof}
+
+\noindent\textbf{Interpretation.} Gravity is not a force pulling objects down; it is the acceleration required to maintain a locally flat processing environment.
+Free fall feels like nothing because you \emph{are} in the coherent state.
+
+%==============================================================================
+\section{Bridge 1: Energy-to-Processing Interface}
+\label{sec:gap1}
+%==============================================================================
+
+The key logical step needed for levitation is that an external energy source should create an external processing potential.
+The current Lean module supplies this as a bridge construction.
+
+\begin{theorem}[Energy--Processing Bridge Model]
+\label{thm:gap1}
+\lean{energy\_processing\_bridge}
+
+The following hold simultaneously:
+\begin{enumerate}[label=(\roman*)]
+    \item $\Jcost(1) = 0$ (balance has zero cost).
+    \item For $x > 0$, $x \neq 1$: $\Jcost(x) > 0$ (deviation costs).
+    \item For $\varepsilon > -1$: $\Jcost(1+\varepsilon) = \varepsilon^2/[2(1+\varepsilon)]$ (energy bridge).
+    \item Any energy distribution $\rho(h) \geq 0$ with coupling $G_{\rm eff}$ is assigned a processing field $\Phi(h) = G_{\rm eff}\,\rho(h)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{corollary}
+\lean{energy\_creates\_processing\_gradient}
+
+If an energy distribution has a non-zero gradient at some position, the assigned processing field has a non-zero gradient there.
+Thus the module provides a formal interface from external energy gradients to external coherence modification.
+\end{corollary}
+
+%==============================================================================
+\section{Bridge 2: Weak-Field Additive Interface}
+\label{sec:gap2}
+%==============================================================================
+
+The levitation proof requires that the processing potential from an external source \emph{adds} to the gravitational potential.
+The present Lean module proves the required local calculus lemma once an additive field model is given.
+
+\begin{theorem}[Gradient Superposition in the Additive Field Model]
+\label{thm:gap2}
+\lean{gradient\_superposition}
+
+For two differentiable processing fields $\Phi_{\rm grav}$ and $\Phi_{\rm ext}$, the gradient of their pointwise sum equals the sum of their gradients:
+\begin{equation}
+    \nabla(\Phi_{\rm grav} + \Phi_{\rm ext}) = \nabla\Phi_{\rm grav} + \nabla\Phi_{\rm ext}.
+\end{equation}
+\end{theorem}
+
+\begin{theorem}[Coherence Defect Superposition]
+\lean{coherence\_defect\_of\_combined}
+
+Given the additive field model, the coherence defect of the combined field decomposes as:
+\begin{equation}
+    D_{\rm combined}(a) = \bigl|2\ell\,(\nabla\Phi_{\rm grav} + \nabla\Phi_{\rm ext} + a)\bigr|.
+\end{equation}
+\end{theorem}
+
+The cross-term in the $J$-cost decomposition is explicitly tracked by
+\lean{cross\_term\_factored}.
+What is proved here is therefore a clean additive interface, not yet a derivation of linearized ILG directly from the full RS dynamics.
+
+%==============================================================================
+\section{Bridge 3: Abstract Coherence Gain}
+\label{sec:gap3}
+%==============================================================================
+
+This is the central physical mechanism in narrative form, but the present Lean proof is intentionally abstract.
+It formalizes the coherent versus incoherent source-summation algebra without yet importing the existing BCS module.
+
+\begin{definition}[Ensemble Model]
+An \emph{ensemble} of $N > 0$ particles, each contributing a vector gravitational source of amplitude $a > 0$, can be in two states:
+\begin{itemize}
+    \item \textbf{Incoherent:} independent random phases $\theta_i$.  The ledger processes $N$ separate entries.  By the central limit theorem, the effective source magnitude is $\sqrt{N} \cdot a$ (random walk).
+    \item \textbf{Coherent:} all particles share phase $\theta$ (BEC/superconductor).  The ledger sees one entry with multiplicity $N$.  The effective source is $N \cdot a$ (constructive summation).
+\end{itemize}
+\end{definition}
+
+\begin{theorem}[Coherence Gain $= \sqrt{N}$ in the Ensemble Model]
+\label{thm:gain}
+\lean{coherence\_gain\_eq\_sqrt\_N}
+
+The ratio of coherent to incoherent effective source is
+\begin{equation}
+    \Gamma = \frac{N \cdot a}{\sqrt{N} \cdot a} = \sqrt{N}.
+\end{equation}
+For $N \sim 10^{22}$ this gives $\Gamma \sim 10^{11}$.
+\end{theorem}
+
+\begin{theorem}[Coherent Exceeds Incoherent]
+\lean{coherent\_exceeds\_incoherent}
+
+For $N \geq 2$, the coherent effective source strictly exceeds the incoherent effective source.
+\end{theorem}
+
+\begin{theorem}[Coherence Gate in the Current Lean Model]
+\lean{coherence\_gate}
+
+A designated coherent branch has a strictly enhanced effective source compared to the incoherent branch.
+In the current Lean file this branch is implemented through an explicit Boolean switch in
+\lean{superconductor\_effective\_source sc true};
+linking that switch to the thermodynamic transition $T < T_c$ remains future work.
+\end{theorem}
+
+\noindent Internally to the current model, if one interprets a superconducting condensate as the coherent branch and takes $N \sim 10^{22}$, the resulting enhancement scale is approximately $10^{11}$.
+But the current Lean development should still be described as an abstract coherence-gain scaffold, not yet as a full BCS-to-gravity derivation.
+
+%==============================================================================
+\section{Bridge 4: A Resonance-Aware Surrogate Kernel}
+\label{sec:gap4}
+%==============================================================================
+
+The RS ledger updates on a discrete 8-tick cycle with period $8\tau_0$ (forced by T7: $2^D$ with $D=3$).
+The present Lean module does not derive resonance directly from the full ILG kernel used in the RS theory text.
+Instead, it introduces a clean surrogate kernel that captures the desired synchronization behavior.
+
+\begin{definition}[Interpolation Cost]
+The \emph{interpolation cost} for a dynamical timescale ratio $r = T_{\rm dyn}/(8\tau_0)$ is
+\begin{equation}
+    C_{\rm interp}(r) = \min\bigl(\{r\},\; 1 - \{r\}\bigr),
+\end{equation}
+where $\{r\}$ is the fractional part.
+At integer $r$ (synchronized with ledger clock): $C_{\rm interp} = 0$.
+At half-integer $r$ (maximally desynchronized): $C_{\rm interp} = 1/2$.
+\end{definition}
+
+\begin{definition}[Resonance-Aware Surrogate Kernel]
+\begin{equation}\label{eq:w-resonant}
+    w(r) = 1 + C_{\rm lag} \cdot C_{\rm interp}(r), \qquad C_{\rm lag} = \varphi^{-5} \approx 0.09.
+\end{equation}
+\end{definition}
+
+\begin{theorem}[Weight at Resonance in the Surrogate Kernel]
+\lean{w\_at\_resonance}
+
+At integer $r$ (resonance): $w(n) = 1$ for all $n \in \mathbb{Z}$.
+\end{theorem}
+
+\begin{theorem}[Weight Off Resonance]
+\lean{w\_off\_resonance}
+
+For $C_{\rm interp}(r) > 0$: $w(r) > 1$.
+\end{theorem}
+
+\begin{theorem}[Weight Reduction at Resonance]
+\lean{weight\_reduction\_at\_resonance}
+
+$w(n) < w(r_{\rm off})$ for any on-resonance integer $n$ and off-resonance $r_{\rm off}$.
+\end{theorem}
+
+\begin{definition}[Resonant Frequencies]
+The $\varphi$-sub-harmonic ladder of resonant frequencies is
+\begin{equation}
+    f_{\rm res}(n, k) = \frac{n}{8\tau_0 \cdot \varphi^k}, \qquad n \in \mathbb{N},\; k \in \mathbb{N}.
+\end{equation}
+\end{definition}
+
+\begin{theorem}[Sub-Harmonic Ladder]
+\lean{resonant\_frequency\_decreasing}
+
+$f_{\rm res}(n, k+1) < f_{\rm res}(n, k)$---higher $\varphi$-depth gives lower resonant frequency.
+\end{theorem}
+
+\noindent This is best read as a formal resonance surrogate that makes the 8-tick synchronization story precise.
+It does not yet prove that the original ILG kernel
+$1 + C_{\rm lag}[(T_{\rm dyn}/\tau_0)^\alpha - 1]$
+has the same resonance minima.
+
+%==============================================================================
+\section{The Conditional Levitation Theorem}
+\label{sec:levitation}
+%==============================================================================
+
+\subsection{Modified Coherence Defect}
+
+With an external phase field $\Phi_{\rm ext}$ added to the gravitational field:
+\begin{equation}
+    D(a) = \bigl|2\ell\,(\nabla\Phi_{\rm grav} + \nabla\Phi_{\rm ext} + a)\bigr|.
+\end{equation}
+
+\begin{theorem}[Modified Falling Condition]
+\lean{modified\_falling\_condition}
+
+The unique coherence-restoring acceleration becomes $a^* = -(\nabla\Phi_{\rm grav} + \nabla\Phi_{\rm ext})$.
+The external field \emph{shifts} the equilibrium.
+\end{theorem}
+
+\begin{theorem}[Acoustic Levitation, Conditional Form]
+\lean{acoustic\_levitation}
+
+If $\nabla\Phi_{\rm ext} = -\nabla\Phi_{\rm grav}$, then $D(0) = 0$: the object is in the coherent state while stationary.
+This is the core conditional levitation theorem.
+\end{theorem}
+
+\begin{theorem}[Anti-Coherence Reduces Coupling]
+\lean{anti\_coherence\_reduces\_coupling}
+
+If $\nabla\Phi_{\rm ext}$ opposes $\nabla\Phi_{\rm grav}$ with $|\nabla\Phi_{\rm ext}| \leq |\nabla\Phi_{\rm grav}|$, then
+$|a_{\rm eq}| \leq |\nabla\Phi_{\rm grav}|$---the effective gravitational coupling is reduced.
+\end{theorem}
+
+\begin{theorem}[Complete Cancellation]
+\lean{complete\_cancellation\_is\_levitation}
+
+When $\nabla\Phi_{\rm ext} = -\nabla\Phi_{\rm grav}$ exactly, the effective gravitational coupling drops to zero.
+\end{theorem}
+
+\subsection{The Current Master Certificate}
+
+\begin{theorem}[Current Integration Certificate]
+\label{thm:master}
+\lean{levitation\_unconditional}
+
+The Lean theorem \lean{levitation\_unconditional} proves that a structure
+\lean{UnconditionalLevitationCert} is inhabited.
+Its fields package the four bridge/interface certificates together with the already proved gravity-as-coherence and conditional cancellation results:
+\begin{enumerate}[label=\textbf{G\arabic*}:]
+    \item \textbf{Energy-to-processing bridge} (\S\ref{sec:gap1}).
+    \item \textbf{Weak-field additive interface} (\S\ref{sec:gap2}).
+    \item \textbf{Abstract coherence-gain model} (\S\ref{sec:gap3}).
+    \item \textbf{Resonance-aware surrogate kernel} (\S\ref{sec:gap4}).
+    \item \textbf{Gravity $=$ Coherence}: free fall uniquely zeros the coherence defect.
+    \item \textbf{External Shift}: external phase field shifts the equilibrium acceleration.
+    \item \textbf{Cancellation $=$ Levitation}: opposing gradient zeros the effective coupling, still under the hypothesis
+    $\nabla\Phi_{\rm ext} = -\nabla\Phi_{\rm grav}$.
+\end{enumerate}
+\end{theorem}
+
+\noindent This is the single most important point for accurate interpretation.
+Despite the legacy theorem name, the current result is a \emph{structure-valued integration checkpoint}, not yet a theorem of the form
+``for some physically realized device, levitation occurs with no remaining hypotheses.'' 
+One of its fields still has the logical shape
+\[
+    (\nabla\Phi_{\rm ext} = -\nabla\Phi_{\rm grav}) \to D(0)=0.
+\]
+That is useful and nontrivial, but it is still conditional.
+
+%==============================================================================
+\section{Structural Consequences and Falsifiers}
+\label{sec:experiment}
+%==============================================================================
+
+\subsection{Novel Falsifiable Predictions}
+
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{Coherence Threshold:} Effect onset is sharp at $T_c$, not gradual.
+    \item \textbf{Discrete Bands:} Weight loss occurs only at specific rotation frequencies (Banding Falsifier).
+    \item \textbf{$\varphi$-Ratio Dependence:} Geometric ratios near $\varphi$ outperform arbitrary ratios.
+    \item \textbf{Cooling Signature:} Any working device must absorb heat from the environment.
+    \item \textbf{8-Tick Modulation:} Pulsing the drive at $8\tau_0$ harmonics enhances the effect.
+    \item \textbf{Cross-Coupling:} Adding coherent material to a resonance-tuned device increases the effect.
+\end{enumerate}
+
+%==============================================================================
+\section{What Remains Open}
+\label{sec:empirical}
+%==============================================================================
+
+Two kinds of items remain open: formal integration work and empirical testing.
+
+\subsection{Remaining Formal Work}
+
+\begin{itemize}[leftmargin=2em]
+    \item Derive the existence of a concrete external field from a physically modeled device, rather than assuming the cancellation gradient.
+    \item Replace the bridge definition \lean{energy\_to\_processing\_field} with a derivation from the RS gravity/relativity layer.
+    \item Connect \texttt{CoherenceGain.lean} directly to \texttt{RecognitionScience/Physics/CooperPair.lean} and the thermodynamic transition at $T_c$.
+    \item Replace the surrogate kernel $w_{\rm resonant}$ with a derivation from the actual ILG kernel.
+\end{itemize}
+
+\subsection{Remaining Empirical Work}
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Magnitude:} The exact percentage weight reduction depends on engineering parameters (disk size, coherence length, rotation speed, geometry).
+    \item \textbf{Engineering feasibility:} Whether current technology can achieve the required coherence, rotation, and geometry simultaneously.
+\end{itemize}
+
+The present Lean development therefore supports the following more careful statement:
+\emph{RS currently provides a machine-verified conditional levitation mechanism together with formal bridge modules that make the remaining integration work explicit.}
+
+%==============================================================================
+\section{Lean Formalization Summary}
+\label{sec:lean}
+%==============================================================================
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Module} & \textbf{Gap Closed} & \textbf{Key Theorem} \\
+\midrule
+\lean{CoherenceFall} & Foundation & \lean{falling\_restores\_coherence} \\
+\lean{EnergyProcessingBridge} & Gap 1 & \lean{energy\_processing\_bridge} \\
+\lean{WeakFieldSuperposition} & Gap 2 & \lean{superposition\_justified} \\
+\lean{CoherenceGain} & Gap 3 & \lean{coherence\_gain\_eq\_sqrt\_N} \\
+\lean{EightTickResonance} & Gap 4 & \lean{eight\_tick\_resonance\_certified} \\
+\lean{AcousticPhaseLevitation} & Integration & \lean{levitation\_unconditional} \\
+\bottomrule
+\end{tabular}
+\caption{Lean modules and their current role in the levitation program.  All compile with zero \texttt{sorry}.}
+\label{tab:lean}
+\end{table}
+
+\noindent Total: 6 modules, 7814 build jobs, 0 errors, 0 \texttt{sorry} terms.
+
+%==============================================================================
+\section{Conclusion}
+%==============================================================================
+
+We have clarified the present RS status of acoustic and phase levitation.
+What is now machine-verified is not yet a complete no-gap theorem of laboratory levitation, but something more disciplined and more useful:
+\begin{enumerate}[leftmargin=2em]
+    \item a rigorous theorem that gravity is coherence-seeking,
+    \item a rigorous conditional theorem that cancellation of the gravitational gradient yields levitation,
+    \item a set of formal bridge/interface modules that isolate the remaining physics which must still be integrated.
+\end{enumerate}
+
+In that sense the argument is no longer speculative intuition; it is a sharpened formal program.
+The present chain of Lean results establishes:
+\begin{enumerate}[leftmargin=2em]
+    \item Gravity \emph{is} coherence-seeking (Theorem~\ref{thm:falling}).
+    \item Given an additive bridge model, processing potentials superpose locally (Theorem~\ref{thm:gap2}).
+    \item In the current ensemble model, coherence enhancement scales as $\sqrt{N}$ (Theorem~\ref{thm:gain}).
+    \item In the current resonance surrogate, synchronized motion reduces the weight kernel.
+    \item If a concrete device is shown to generate the cancelling gradient, levitation follows immediately from the conditional theorem.
+\end{enumerate}
+
+The key conceptual shift remains:
+if gravity is not a force carried by a particle but an emergent coherence constraint on the ledger, then modifying the local coherence landscape is the right place to look for gravity modification.
+What still remains is the last integration step from concrete phase-coherent device physics to the explicit cancelling field required by the proved conditional levitation theorem.
+
+\begin{thebibliography}{9}
+
+\bibitem{washburn2025}
+J.~Washburn, ``The Algebra of Reality: A Recognition Science Derivation of Physical Law,''
+\emph{Axioms} \textbf{15}(2), 90 (2025).
+\url{https://www.mdpi.com/2075-1680/15/2/90}
+
+\end{thebibliography}
+
+\end{document}

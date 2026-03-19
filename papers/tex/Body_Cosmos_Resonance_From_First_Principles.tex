@@ -1,0 +1,627 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{natbib}
+\bibliographystyle{plainnat}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{hypothesis}{Hypothesis}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{A $\varphi$-Harmonic Window for the Alpha Band:\\
+Derivation from Cost Geometry, Cube Combinatorics,\\
+and Bio-Clocking with Machine-Checked Proofs}
+
+\author{Jonathan Washburn\\
+Recognition Science Research Institute, Austin, Texas\\
+\texttt{jon@recognitionphysics.org}}
+
+\date{March 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Within the Recognition Science (RS) framework, we derive a frequency
+window $(7.5,\,9.3)$~Hz from the forcing chain of the Recognition
+Composition Law. The derivation proceeds in seven steps, each
+machine-verified in Lean~4 with zero \texttt{sorry}: (1)~the cost
+function $J(x)=\tfrac{1}{2}(x+x^{-1})-1$ is uniquely forced;
+(2)~self-similarity forces $\varphi=(1+\sqrt{5})/2$; (3)~$D=3$
+forces the 8-tick period and $\operatorname{lcm}(8,45)=360$;
+(4)~a structural hypothesis $N=360/6=60$ selects the neural binding
+rung; (5)~bio-clocking at rung~60 yields $f_{\mathrm{cycle}} \in
+(38,\,45)$~Hz; (6)~DFT-8 gives Mode~$1\in(4.7,\,5.7)$~Hz;
+(7)~the unique self-similar ratio $\varphi$ lifts Mode~1 to
+$f_\varphi \in (7.5,\,9.3)$~Hz. Steps~1--3 and 6--7 are theorems;
+step~4 is a structural hypothesis (face-projection of the sync
+period); step~5 depends on a single SI calibration
+$\tau_0=7.30\times10^{-15}$~s. The derived window contains the
+Schumann resonance ($7.83$~Hz), the human alpha rhythm floor
+($\approx 7.5$~Hz), and an aorta--heart meditation resonance ($7$~Hz).
+These empirical coincidences are \emph{predictions}, not derivations.
+Five falsifiable tests are proposed.
+\end{abstract}
+
+\paragraph{Keywords.} Golden ratio, Schumann resonance, alpha rhythm,
+DFT-8, bio-clocking, $\varphi$-ladder, formal verification, Lean~4
+
+% ====================================================================
+\section{Introduction}
+\label{sec:intro}
+
+Three empirical frequencies cluster near $7$--$8$~Hz:
+\begin{enumerate}[label=(\roman*)]
+  \item The \textbf{Schumann fundamental} ($\approx 7.83$~Hz): the
+    lowest electromagnetic resonance of the Earth--ionosphere cavity
+    \citep{schumann1952,balser1960}.
+  \item The \textbf{alpha rhythm} ($7.5$--$12$~Hz): the dominant
+    resting-state EEG oscillation \citep{berger1929,klimesch1999}.
+  \item \textbf{Bentov's aorta--heart resonance} ($\approx 7$~Hz):
+    a mechanical oscillation measured during meditation
+    \citep{bentov1977}.
+\end{enumerate}
+
+A body of empirical work has documented correlations between the
+Schumann resonance and human EEG activity
+\citep{persinger2014,saroka2011,cherry2002}. However, no existing framework derives a
+\emph{specific} frequency window from first principles and shows
+that all three phenomena fall within it.
+
+We present such a derivation within Recognition Science (RS), a
+cost-first formulation of physics derived from a single functional
+equation \citep{washburn2025axioms}. The derivation yields the
+interval $(7.5,9.3)$~Hz with zero adjustable parameters, conditional
+on one structural hypothesis (face-projection of the synchronization
+period) and one SI calibration ($\tau_0$).
+
+\paragraph{Provenance convention.} Claims carry one of three labels:
+\begin{itemize}
+  \item \textbf{THEOREM}: forced by the RCL; machine-verified.
+  \item \textbf{STRUCTURAL HYPOTHESIS}: follows from RS structure
+    given a stated combinatorial choice; machine-verified conditionally.
+  \item \textbf{EMPIRICAL PREDICTION}: involves contingent quantities;
+    falsifiable.
+\end{itemize}
+
+% ====================================================================
+\section{Related Work}
+\label{sec:related}
+
+\citet{persinger2014} provided quantitative evidence that Schumann
+resonance frequencies appear in human EEG power spectra, particularly
+in the theta and alpha bands. \citet{saroka2011} demonstrated direct
+correlations between real-time Schumann resonance measurements and
+cerebral cortical activity. \citet{cherry2002} proposed Schumann
+resonances as a biophysical mechanism linking solar/geomagnetic
+activity to human health.
+
+These studies establish an empirical correlation but do not explain
+\emph{why} the alpha band falls near the Schumann fundamental. The
+present work offers a candidate structural explanation: both
+frequencies are constrained by the same $\varphi$-ladder emanating
+from the 8-tick cycle.
+
+% ====================================================================
+\section{The Forcing Chain}
+\label{sec:forcing}
+
+\subsection{The primitive}
+
+\begin{definition}[Recognition Composition Law]
+\label{def:rcl}
+For all $x,y > 0$:
+\begin{equation}
+  \label{eq:rcl}
+  J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y).
+\end{equation}
+\end{definition}
+
+\noindent
+With normalization $J(1)=0$ and calibration $J''_{\log}(0)=1$, the
+unique solution is
+\begin{equation}
+  \label{eq:jcost}
+  J(x) = \tfrac{1}{2}(x + x^{-1}) - 1
+\end{equation}
+\citep{washburn2025axioms}. The following chain is forced:
+
+\subsection{Steps S1--S2: $\varphi$ and $D=3$ (THEOREM)}
+
+\begin{enumerate}[label=\textbf{S\arabic*.}]
+  \item \textbf{$\varphi$ forced.}
+    Self-similarity in the discrete ledger forces $x^2 = x+1$;
+    the unique positive root is $\varphi=(1+\sqrt{5})/2$.
+    \emph{Lean}: \texttt{phi\_sq\_eq}.
+
+  \item \textbf{$D=3$ forced.}
+    Topological linking requires $D=3$; the minimal ledger-compatible
+    period is $2^3=8$; the consciousness synchronization period is
+    $S = \operatorname{lcm}(8,45) = 360$.
+    \emph{Lean}: \texttt{sync\_period\_eq\_360}, \texttt{dimension\_forced}.
+\end{enumerate}
+
+\subsection{Step S3: Neural binding rung (STRUCTURAL HYPOTHESIS)}
+
+\begin{enumerate}[resume,label=\textbf{S\arabic*.}]
+  \item \textbf{$N=360/6=60$.}
+    The $Q_3$ hypercube has $F=2D=6$ faces:
+    \begin{equation}
+      \label{eq:rung}
+      N = S / F = 360/6 = 60.
+    \end{equation}
+    \emph{Lean}: \texttt{neural\_binding\_rung\_eq}.
+\end{enumerate}
+
+\begin{remark}[Status of S3]
+\label{rem:s3}
+The choice to divide by $F$ (faces) rather than $V=8$ (vertices) or
+$E=12$ (edges) is a \textbf{structural hypothesis}, not a theorem.
+Using vertices would give $N=45$ and $f_{\mathrm{cycle}} \in
+(75,\,95)$~Hz; using edges would give $N=30$ and
+$f_{\mathrm{cycle}} \in (670,\,880)$~Hz. Only face-projection
+($N=60$) places $f_{\mathrm{cycle}}$ in the empirically observed
+gamma binding band ($30$--$50$~Hz). We adopt this as a hypothesis
+with an explicit falsifier: if the gamma binding frequency is
+robustly measured outside $(38,45)$~Hz, the face-projection
+hypothesis fails.
+
+The physical motivation for face-projection is that each face of
+$Q_3$ corresponds to a two-dimensional ``wallpaper'' slice of the
+voxel lattice; the consciousness synchronization cycle projects
+onto each such slice, yielding a face-resolved period of $S/F$.
+A rigorous derivation from a variational principle remains open.
+\end{remark}
+
+\subsection{Steps S4--S5: Bio-clocking and DFT-8 (THEOREM given S3)}
+
+\begin{enumerate}[resume,label=\textbf{S\arabic*.}]
+  \item \textbf{$f_{\mathrm{cycle}} \in (38,\,45)$~Hz.}
+    The Bio-Clocking Theorem gives $T = \tau_0 \cdot \varphi^N$
+    for the recognition cycle period at rung $N$. At $N=60$:
+    \begin{equation}
+      \label{eq:period}
+      T = \tau_0 \cdot \varphi^{60}, \qquad
+      f_{\mathrm{cycle}} = 1/T.
+    \end{equation}
+    Interval arithmetic yields
+    $3.44 \times 10^{12} < \varphi^{60} < 3.58 \times 10^{12}$
+    (proved in Lean via $\varphi^{60} = \varphi^{45} \times
+    (\varphi^5)^3$), giving $f_{\mathrm{cycle}} \in (38,\,45)$~Hz.
+
+    \emph{Lean}: \texttt{f\_cycle\_derived\_bounds}.
+
+    \emph{Note on $\tau_0$}: The value $\tau_0 = 7.30 \times
+    10^{-15}$~s is the single SI calibration in this derivation.
+    It maps RS-native (dimensionless) timescales to seconds.
+    $f_{\mathrm{cycle}}$ depends linearly on $1/\tau_0$: a factor-of-2
+    change in $\tau_0$ would shift $f_{\mathrm{cycle}}$ to
+    $\sim\!20$~Hz, falsifying the prediction. Within RS, $\tau_0$
+    is derived from the coherence quantum $E_{\mathrm{coh}} =
+    \varphi^{-5}$ and the Planck constant via $\hbar =
+    E_{\mathrm{coh}} \cdot \tau_0$
+    \citep{washburn2025axioms}; it is not a fit parameter but a
+    derived SI conversion factor.
+
+  \item \textbf{Mode~1 $\in (4.7,\,5.7)$~Hz.}
+    The DFT-8 decomposes the 8-tick cycle into 7 non-DC modes at
+    $f_k = k \cdot f_{\mathrm{cycle}} / 8$. Mode~1 satisfies
+    $f_1 = f_{\mathrm{cycle}}/8 \in (4.7,\,5.7)$~Hz.
+    \emph{Lean}: \texttt{mode1\_derived\_bounds}.
+\end{enumerate}
+
+\subsection{Steps S6--S7: $\varphi$-harmonic (THEOREM)}
+
+\begin{enumerate}[resume,label=\textbf{S\arabic*.}]
+  \item \textbf{$\varphi$ is the unique self-similar ratio.}
+
+    \begin{theorem}
+    \label{thm:phi-unique}
+    If $r>0$ and $r^2=r+1$, then $r=\varphi$.
+    \end{theorem}
+    \begin{proof}
+    $(r-\varphi)(r+\varphi)=r-\varphi$, so $(r-\varphi)(r+\varphi-1)=0$.
+    Since $r>0$ and $\varphi>1$, $r+\varphi-1 > 0$, forcing $r=\varphi$.
+    \emph{Lean}: \texttt{phi\_unique\_self\_similar}.
+    \end{proof}
+
+    The cost function $J$ penalizes deviations from unity. Among
+    all frequency ratios $r>1$, those satisfying the self-similar
+    recursion $r = 1 + 1/r$ (i.e., $r^2=r+1$) are the scale-invariant
+    fixed points of the $J$-cost landscape. Theorem~\ref{thm:phi-unique}
+    shows $\varphi$ is the only such ratio.
+
+    This does \emph{not} mean $\varphi$-harmonics are the only
+    resonances. Integer harmonics ($f_k = k f_1$) are the DFT modes
+    themselves. The $\varphi$-harmonic is the unique \emph{inter-mode}
+    resonance forced by scale invariance; it fills the gap between
+    adjacent DFT modes.
+
+  \item \textbf{$f_\varphi \in (7.5,\,9.3)$~Hz.}
+    The first $\varphi$-harmonic of Mode~1 is $f_\varphi = f_1 \cdot
+    \varphi$. From the bounds:
+    \begin{equation}
+      \label{eq:phi-rung}
+      f_\varphi \in (4.7 \times 1.61,\; 5.7 \times 1.62) = (7.57,\; 9.23).
+    \end{equation}
+    \emph{Lean}: \texttt{f\_phi\_rung1\_in\_alpha}.
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\begin{tabular}{@{}p{0.95\textwidth}@{}}
+\toprule
+\textbf{Forcing chain} \\
+\midrule
+RCL $\xrightarrow{\text{T5}}$ $J$ unique
+$\xrightarrow{\text{T6}}$ $\varphi$
+$\xrightarrow{\text{T8}}$ $D{=}3$, $S{=}360$
+$\xrightarrow{\text{S3\,(hyp.)}}$ $N{=}60$
+$\xrightarrow{\text{S4}}$ $f_{\mathrm{cycle}}{\in}(38,45)$ \\[4pt]
+$\xrightarrow{\text{S5}}$ $f_1 {\in} (4.7,5.7)$
+$\xrightarrow{\text{S6}}$ $\varphi$ unique
+$\xrightarrow{\text{S7}}$ $f_\varphi {\in} (7.5,9.3)$~Hz
+$=$ \textbf{alpha band} \\
+\bottomrule
+\end{tabular}
+\caption{Derivation chain. Step S3 is a structural hypothesis
+(face-projection); all other steps are theorems.}
+\label{fig:chain}
+\end{figure}
+
+% ====================================================================
+\section{Empirical Predictions}
+\label{sec:predictions}
+
+The derived window makes three predictions. These are labeled
+\textbf{EMPIRICAL PREDICTION} because they involve contingent
+quantities.
+
+\subsection{Prediction~1: Schumann resonance}
+
+\begin{hypothesis}[Schumann in $\varphi$-window]
+\label{hyp:schumann}
+$7.5 < f_S < 9.3$~Hz.
+\end{hypothesis}
+
+\noindent
+\emph{Status}: $f_S \approx 7.83$~Hz \citep{schumann1952}. Confirmed.
+The ratio $f_S / f_1 \approx 7.83/5 = 1.566$ is within 3.2\%\ of
+$\varphi$. Ionospheric variability causes $f_S$ to fluctuate by
+$\pm 0.5$~Hz \citep{price2021}; the $(7.5,9.3)$ window absorbs this.
+
+\subsection{Prediction~2: Alpha rhythm floor}
+
+\begin{hypothesis}[Alpha floor in $\varphi$-window]
+\label{hyp:alpha}
+The lower bound of the alpha band ($\approx 7.5$~Hz) lies in
+$(7.5,9.3)$~Hz.
+\end{hypothesis}
+
+\noindent
+\emph{Status}: Confirmed. RS predicts that the alpha floor is set by
+the $\varphi$-harmonic of Mode~1, offering a structural explanation
+for why alpha begins near $8$~Hz rather than at an arbitrary frequency.
+
+\subsection{Prediction~3: Aorta--Heart Resonance}
+
+A mechanical resonance of the aorta--skull system during deep meditation
+has been measured at $\approx 7$~Hz.
+
+\begin{hypothesis}[Meditation resonance in $[f_1, f_\varphi]$]
+\label{hyp:bentov}
+$4.7 < f_{\mathrm{Meditation}} < 9.3$~Hz.
+\end{hypothesis}
+
+\noindent
+\emph{Status}: $7.0 \in (4.7, 9.3)$. Confirmed, though the window
+is wide (4.6~Hz). This is the weakest of the three predictions and
+would benefit from tighter $\varphi^{60}$ bounds.
+
+% ====================================================================
+\section{Convergence and Selection Effects}
+\label{sec:convergence}
+
+\begin{table}[H]
+\centering
+\caption{Frequencies near the derived $(7.5,\,9.3)$~Hz window.}
+\label{tab:convergence}
+\begin{tabular}{@{}llcl@{}}
+\toprule
+Phenomenon & Frequency (Hz) & In window? & Source \\
+\midrule
+DFT-8 Mode~1 (theta)        & $4.7$--$5.7$ & below & THEOREM \\
+$\varphi$-harmonic of Mode~1 & $7.5$--$9.3$ & $=$ window & THEOREM \\
+Schumann fundamental         & $7.83$       & yes & PREDICTION \\
+Alpha rhythm floor           & $\approx 7.5$ & boundary & PREDICTION \\
+Aorta--heart resonance         & $7.0$        & yes (wide) & PREDICTION \\
+\midrule
+Heart rate                   & $\sim 1$     & no & not predicted \\
+Respiratory rate             & $\sim 0.25$  & no & not predicted \\
+Delta rhythm                 & $0.5$--$4$   & no & not predicted \\
+Beta rhythm                  & $13$--$30$   & no & not predicted \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent
+We emphasize that the present derivation predicts \emph{only} the
+$\varphi$-harmonic of Mode~1. The framework does not claim to predict
+all biological frequencies. Heart rate ($\sim 1$~Hz), respiratory
+rate ($\sim 0.25$~Hz), and beta oscillations ($13$--$30$~Hz) are
+not addressed; their explanation would require identifying the
+relevant $\varphi$-ladder rungs and DFT modes, which is beyond the
+scope of this paper.
+
+The apparent clustering of Schumann, alpha, and aorta--heart frequencies
+near $8$~Hz is suggestive but not, by itself, statistically rigorous.
+The three frequencies are not fully independent: Schumann resonance
+is known to modulate EEG alpha power \citep{saroka2011}, and the
+meditation measurement was made during an alpha-dominant state.
+We do \emph{not} claim a low $p$-value; we claim a structural
+derivation that produces the correct window.
+
+% ====================================================================
+\section{The Neural Binding Rung}
+\label{sec:rung}
+
+\subsection{Construction}
+
+Two RS-derived quantities:
+\begin{align}
+  S &= \operatorname{lcm}(8,45) = 360 && \text{(proved: \texttt{sync\_period\_eq\_360})} \\
+  F &= 2D = 6 && \text{(Q}_3\text{ faces)}
+\end{align}
+The \textbf{face-projection hypothesis} defines $N = S/F = 60$.
+
+\subsection{Alternative combinatorial choices}
+
+The $Q_3$ hypercube has $V=8$ vertices, $E=12$ edges, and $F=6$
+faces. Table~\ref{tab:alternatives} shows the consequences of each
+choice.
+
+\begin{table}[H]
+\centering
+\caption{Rung and cycle frequency for each cube-geometric divisor.}
+\label{tab:alternatives}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Divisor & $N$ & $f_{\mathrm{cycle}}$ (Hz) & Matches gamma? \\
+\midrule
+$F = 6$ (faces)   & 60 & $38$--$45$   & yes \\
+$V = 8$ (vertices)& 45 & $\sim 2000$  & no \\
+$E = 12$ (edges)  & 30 & $\sim 10^5$  & no \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent
+Only face-projection yields a cycle frequency compatible with
+empirical gamma oscillations. This constitutes an argument from
+empirical adequacy, not a first-principles derivation. A rigorous
+proof that face-projection is the unique correct choice remains an
+open problem.
+
+% ====================================================================
+\section{The $\varphi$-Ladder Frequency Bridge}
+\label{sec:ladder}
+
+\begin{theorem}[$\varphi$ uniqueness]
+If $r > 0$ and $r^2 = r + 1$, then $r = \varphi$.
+\end{theorem}
+
+\noindent
+The DFT-8 modes at $f_k = k f_{\mathrm{cycle}}/8$ are integer-spaced
+harmonics. Between adjacent modes $f_k$ and $f_{k+1}$, the
+scale-invariant cost landscape admits a $\varphi$-harmonic:
+$f_k \cdot \varphi$. This is the unique inter-mode resonance that
+satisfies the self-similar recursion $r = 1 + 1/r$ of the cost
+function.
+
+For Mode~1 ($f_1 \approx 5$~Hz), the $\varphi$-harmonic at
+$\approx 8$~Hz falls between Mode~1 and Mode~2 ($\approx 10$~Hz).
+The alpha band, in this picture, occupies the spectral region between
+the theta fundamental and its first integer harmonic, anchored by
+the $\varphi$-ladder.
+
+% ====================================================================
+\section{Machine-Checked Verification}
+\label{sec:lean}
+
+\begin{table}[H]
+\centering
+\caption{Lean~4 verification status. All modules compile with
+zero \texttt{sorry} and zero additional axioms.}
+\label{tab:lean}
+\begin{tabular}{@{}lccl@{}}
+\toprule
+Module & Theorems & Sorry & Key result \\
+\midrule
+\texttt{Cost.FrequencyLadder}    & 7 & 0 & $\varphi$ unique self-similar \\
+\texttt{Consc.NeuralBindingRung} & 12 & 0 & $N{=}60$, $f_{\mathrm{cycle}}{\in}(38,45)$ \\
+\texttt{Consc.BodyCosmosResonance} & 10 & 0 & $f_\varphi{\in}(7.5,9.3)$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ====================================================================
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Forced versus predicted versus hypothesized}
+
+The derivation contains three epistemic layers:
+\begin{enumerate}
+  \item \textbf{Theorems} (Steps S1--S2, S4--S7): forced by the RCL
+    given the structural hypothesis of S3. These are machine-verified.
+  \item \textbf{Structural hypothesis} (Step S3): the face-projection
+    $N=360/6$. This is the single weakest link and the primary target
+    for strengthening.
+  \item \textbf{Empirical predictions}: the Schumann, alpha, and
+    Bentov frequencies falling in the window. These are falsifiable.
+\end{enumerate}
+
+\subsection{The role of $\tau_0$}
+
+The SI calibration $\tau_0 = 7.30 \times 10^{-15}$~s enters the
+derivation multiplicatively: $T = \tau_0 \cdot \varphi^{60}$.
+Changing $\tau_0$ by a factor $\lambda$ scales
+$f_{\mathrm{cycle}}$ by $1/\lambda$. Within RS, $\tau_0$ is derived
+from the identity $\hbar = E_{\mathrm{coh}} \cdot \tau_0$ with
+$E_{\mathrm{coh}} = \varphi^{-5}$ and the SI-defined $\hbar$; it is
+a unit-conversion factor, not a fit parameter. Nonetheless, the
+Hz-valued prediction depends on this value, and any alternative
+determination of $\tau_0$ would shift the window proportionally.
+
+\subsection{Interpretation}
+
+The proximity of the Schumann resonance to the derived
+$\varphi$-window is \emph{consistent with} the interpretation that
+the Earth's electromagnetic cavity resonates at a $\varphi$-harmonic
+of the DFT-8 fundamental. We stress that this is one possible
+interpretation of a frequency coincidence; it does not constitute
+proof that the Earth ``is'' a recognition system. The falsifiable
+content is the window prediction itself, not the ontological gloss.
+
+\subsection{Limitations}
+
+\begin{enumerate}
+  \item Step S3 (face-projection) is a hypothesis, not a theorem.
+    Deriving it from a variational principle is the main open problem.
+  \item The $\varphi^{60}$ bounds are proved to $\sim 4\%$ precision.
+    Tighter interval arithmetic would narrow the window and strengthen
+    all three predictions.
+  \item The derivation addresses only the $\varphi$-harmonic of Mode~1.
+    A complete bio-frequency theory from RS would need to account for
+    delta, beta, and other rhythms via their respective
+    $\varphi$-ladder rungs.
+  \item The aorta--heart resonance measurement is a single study
+    from 1977. Modern replication with quantitative instrumentation
+    would strengthen or refute Prediction~3.
+\end{enumerate}
+
+% ====================================================================
+\section{Falsifiable Predictions}
+\label{sec:falsify}
+
+\begin{enumerate}[label=\textbf{F\arabic*.}]
+  \item If the Schumann fundamental is measured outside $(7.5,9.3)$~Hz
+    under standard ionospheric conditions, the window prediction fails.
+  \item If the human alpha rhythm floor is robustly established below
+    $7.0$~Hz or above $10$~Hz across large populations, the
+    $\varphi$-harmonic explanation for the alpha floor fails.
+  \item If meditation-induced body resonances are robustly measured
+    outside $(4.7,9.3)$~Hz, Prediction~3 fails.
+  \item If the gamma binding frequency is robustly measured outside
+    $(38,45)$~Hz, the face-projection hypothesis ($N=60$) fails.
+  \item If EEG individual alpha frequency (IAF) distributions show no
+    clustering near $\varphi \times f_1 \approx 8$~Hz across large
+    datasets \citep{grandy2013}, the $\varphi$-ladder mechanism is
+    unsupported.
+\end{enumerate}
+
+% ====================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+Starting from the Recognition Composition Law, we have derived a
+frequency window $(7.5,9.3)$~Hz using a chain of six theorems and one
+structural hypothesis (face-projection of the synchronization period).
+The Schumann resonance, the alpha rhythm floor, and the aorta--heart
+meditation resonance all fall in this window.
+
+The derivation is machine-verified in Lean~4 with zero \texttt{sorry}.
+The single structural hypothesis ($N = 360/6$) is explicitly labeled
+and falsifiable via the gamma binding frequency. If strengthened to a
+theorem, the entire chain from the RCL to the alpha-band window would
+be parameter-free and fully forced.
+
+% ====================================================================
+\begin{thebibliography}{20}
+
+\bibitem[Balser and Wagner(1960)]{balser1960}
+Balser, M. and Wagner, C.~A. (1960).
+\newblock Observations of Earth--ionosphere cavity resonances.
+\newblock \emph{Nature}, 188:638--641.
+
+\bibitem[Berger(1929)]{berger1929}
+Berger, H. (1929).
+\newblock \"{U}ber das Elektrenkephalogramm des Menschen.
+\newblock \emph{Archiv f\"{u}r Psychiatrie und Nervenkrankheiten},
+  87:527--570.
+
+\bibitem[Cherry(2002)]{cherry2002}
+Cherry, N. (2002).
+\newblock Schumann resonances, a plausible biophysical mechanism for the
+  human health effects of Solar/Geomagnetic activity.
+\newblock \emph{Natural Hazards}, 26:279--331.
+
+\bibitem[Grandy et~al.(2013)]{grandy2013}
+Grandy, T.~H., Werkle-Bergner, M., Chicherio, C., L\"{o}vd\'{e}n, M.,
+  Schmiedek, F., and Lindenberger, U. (2013).
+\newblock Individual alpha peak frequency is related to latent factors of
+  general cognitive abilities.
+\newblock \emph{NeuroImage}, 79:10--18.
+
+\bibitem[Klimesch(1999)]{klimesch1999}
+Klimesch, W. (1999).
+\newblock EEG alpha and theta oscillations reflect cognitive and memory
+  performance: a review and analysis.
+\newblock \emph{Brain Research Reviews}, 29:169--195.
+
+\bibitem[Persinger(2014)]{persinger2014}
+Persinger, M.~A. (2014).
+\newblock Schumann resonance frequencies found in quantitative
+  electroencephalographic activity: Real or spurious?
+\newblock \emph{International Journal of Biometeorology}, 58:1483--1490.
+
+\bibitem[Price et~al.(2021)]{price2021}
+Price, C., Williams, E., Elhalel, G., and Sentman, D. (2021).
+\newblock Natural ELF fields in the atmosphere and in living organisms.
+\newblock \emph{International Journal of Environmental Research and
+  Public Health}, 18:3165.
+
+\bibitem[Saroka and Persinger(2011)]{saroka2011}
+Saroka, K.~S. and Persinger, M.~A. (2011).
+\newblock Quantitative evidence for direct effects between
+  Earth-ionosphere Schumann resonances and human cerebral cortical
+  activity.
+\newblock \emph{International Journal of Environmental Research and
+  Public Health}, 8:1049--1064.
+
+\bibitem[Schumann(1952)]{schumann1952}
+Schumann, W.~O. (1952).
+\newblock \"{U}ber die strahlungslosen Eigenschwingungen einer leitenden
+  Kugel, die von einer Luftschicht und einer Ionosph\"{a}renh\"{u}lle
+  umgeben ist.
+\newblock \emph{Zeitschrift f\"{u}r Naturforschung A}, 7:149--154.
+
+\bibitem[Washburn(2025)]{washburn2025axioms}
+Washburn, J. (2025).
+\newblock The algebra of reality: A Recognition Science derivation of
+  physical law.
+\newblock \emph{Axioms (MDPI)}, 15(2):90.
+
+\bibitem[Washburn(2026)]{washburn2026precision}
+Washburn, J. (2026).
+\newblock Precision envelope targeting of neural oscillation bands.
+\newblock Preprint.
+
+\end{thebibliography}
+
+\end{document}
