@@ -1,0 +1,337 @@
+\documentclass[11pt,twocolumn]{article}
+
+\usepackage[margin=0.85in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage{authblk}
+\usepackage[numbers]{natbib}
+\usepackage{enumitem}
+\setlist{nosep}
+
+\hypersetup{colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black}
+
+\title{Constraining the Standard Codon-to-Amino-Acid Assignment\\by WToken Fine Classes and Position-Weighted Cost}
+
+\author[1]{Jonathan Washburn}
+\affil[1]{Independent Researcher}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We present a constrained derivation of the standard genetic code's
+codon-to-amino-acid assignment. The 8-tick DFT basis of Recognition
+Science generates exactly 20 semantic atoms (WTokens), which are placed
+in bijection with the 20 canonical amino acids. The WToken
+mode/phase/offset structure partitions the amino acids into 8 fine
+candidate classes, giving an upper bound of $36{,}864$ fine-class-respecting
+assignments. However, these fine classes do not refine the standard code's
+degeneracy pattern. When both constraints are imposed simultaneously, the
+admissible search space collapses to an exact 48 assignments, and the
+standard code is the unique optimum on this 48-state space under the
+position-weighted mutation cost of a companion paper. Both the 48-state
+count and the strict optimality theorem are machine-checked in Lean~4.
+This shows that the combination of WToken structure, observed degeneracy
+pattern, and position-weighted mutation cost is sufficient to single out
+the standard code from a tiny explicitly characterized residual space.
+\end{abstract}
+
+\section{Introduction}
+
+A global-optimality result by itself does not explain why the standard
+genetic code assigns \emph{these} 20 amino acids to \emph{these} codon
+families. A derivation must do more than say that the code is good under a
+cost function; it must also constrain the admissible assignment space.
+
+Recognition Science provides exactly such a constraint. The 8-tick DFT
+structure generates 20 neutral semantic atoms (WTokens), and the canonical
+WToken$\,\leftrightarrow\,$amino-acid bijection partitions the amino acids
+into eight fine classes. At first glance this seems to reduce the search
+space dramatically: if assignments must respect the fine classes, then
+$20!$ collapses to an upper bound of $2!^6 \times 4!^2 = 36{,}864$.
+
+The crucial subtlety is that the fine classes do \emph{not} refine the
+standard degeneracy pattern. For example, Val and Leu lie in the same fine
+class but have 4-fold and 6-fold degeneracy respectively. Likewise Ser and
+Thr, Lys and Arg, and the four-member ``special imaginary'' class cross
+degeneracy boundaries. So the naive 36,864-state fine-class space is not
+the right object for an exact codon-assignment derivation.
+
+This paper isolates the correct object: the intersection of
+\begin{enumerate}
+\item the WToken fine-class constraint, and
+\item the observed standard-code degeneracy pattern.
+\end{enumerate}
+That exact intersection has only 48 assignments, and we prove in Lean~4
+that the standard code is the unique optimum on this 48-state space under
+the position-weighted mutation cost from the companion global-optimality
+paper~\cite{Paper2}.
+
+\section{The WToken Constraint}
+
+\subsection{The 20 WTokens}
+
+The 8-tick DFT basis gives four mode families: modes 1+7, 2+6, 3+5, and
+the Nyquist mode 4. Together with four phase levels and the real/imaginary
+offset available only in mode 4, this yields exactly 20 WTokens:
+\[
+3 \times 4 + 1 \times 4 \times 2 = 12 + 8 = 20.
+\]
+In Lean, this is the theorem \texttt{wtoken\_count} in
+\texttt{WTokenIso.lean}. The canonical amino acid type also has cardinality
+20 (\texttt{amino\_acid\_count}), and the explicit map
+\texttt{wtoken\_to\_amino} is proved bijective
+(\texttt{wtoken\_amino\_bijection}).
+
+\subsection{Fine Candidate Classes}
+
+The canonical bijection induces eight fine classes:
+
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+Class & Members & WToken origin \\
+\midrule
+Aliphatic small & Gly, Ala & mode 1+7, $\phi$ 0--1 \\
+Aliphatic branched & Val, Leu & mode 1+7, $\phi$ 2--3 \\
+Polar hydroxyl & Ser, Thr & mode 2+6, $\phi$ 0--1 \\
+Polar amide & Asn, Gln & mode 2+6, $\phi$ 2--3 \\
+Charged negative & Asp, Glu & mode 3+5, $\phi$ 0--1 \\
+Charged positive & Lys, Arg & mode 3+5, $\phi$ 2--3 \\
+Aromatic (real) & His, Phe, Tyr, Trp & mode 4, $\tau = 0$ \\
+Special (imaginary) & Pro, Cys, Met, Ile & mode 4, $\tau = 2$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+This partition is formalized by \texttt{FineCandidateClass},
+\texttt{aminoFineClass}, and \texttt{wtokenFineClass} in
+\texttt{WTokenAssignmentBridge.lean}; the theorem
+\texttt{canonical\_bridge\_respects\_fineClass} proves that the canonical
+WToken$\,\leftrightarrow\,$amino map respects these classes.
+
+The resulting fine-class-respecting search space has size at most
+\[
+2!^6 \times 4!^2 = 36{,}864,
+\]
+formalized by \texttt{fineClassSearchBound\_eq\_factorials} in
+\texttt{NearUniqueness.lean}.
+
+\subsection{Why the Naive Fine-Class Space Is Not Enough}
+
+The eight fine classes are chemically plausible, but they do not line up
+with the standard code's degeneracy classes. Lean explicitly proves the
+basic counterexample:
+\[
+\texttt{aminoFineClass Val} = \texttt{aminoFineClass Leu}
+\quad\text{but}\quad
+\texttt{degeneracyClass Val} \neq \texttt{degeneracyClass Leu}.
+\]
+The theorem name is
+\texttt{sameFineClass\_not\_sameDegeneracy} in
+\texttt{WTokenFineClassOptimality.lean}.
+
+This matters because any exact derivation of the standard code must respect
+the observed degeneracy pattern. A fine-class-respecting assignment can swap
+Val and Leu, but such a swap changes a 4-fold family into a 6-fold family
+and is therefore not an admissible reassignment of the actual code.
+
+\section{The Exact 48-State Intersection}
+
+\subsection{Intersecting Fine Classes with Degeneracy}
+
+Once we impose both constraints simultaneously, only four nontrivial blocks
+remain:
+\begin{itemize}
+\item $\{\mathrm{Gly}, \mathrm{Ala}\}$ inside the 4-fold degeneracy class,
+\item $\{\mathrm{Asn}, \mathrm{Gln}\}$ inside the 2-fold class,
+\item $\{\mathrm{Asp}, \mathrm{Glu}\}$ inside the 2-fold class,
+\item $\{\mathrm{His}, \mathrm{Phe}, \mathrm{Tyr}\}$ inside the 2-fold class.
+\end{itemize}
+
+All other amino acids are fixed because their fine classes cross degeneracy
+boundaries. The exact intersection count is therefore
+\[
+2! \times 2! \times 2! \times 3! = 48.
+\]
+
+This is formalized in Lean by the finite type \texttt{FineDegChoice} and
+the theorems
+\begin{itemize}
+\item \texttt{fineDegChoice\_count}
+  (\texttt{Fintype.card FineDegChoice = 48}),
+\item \texttt{fineDegChoice\_count\_factorials}
+  (\texttt{2! × 2! × 2! × 3! = 48}),
+\item \texttt{choiceAssignment\_respectsFineClass},
+\item \texttt{choiceAssignment\_respectsDegeneracy}.
+\end{itemize}
+
+\subsection{Position-Weighted Cost on the 48-State Space}
+
+We now evaluate the exact 48-state space under the same position-weighted
+mutation cost used in the companion global-optimality paper~\cite{Paper2}.
+That cost is defined in \texttt{PositionWeightedCost.lean} and uses the
+integer weight vector
+\[
+(104,\,55,\,202,\,4131,\,4,\,25,\,1609,\,3870),
+\]
+corresponding to:
+\begin{itemize}
+\item hydrophobicity$^2$ at positions 1, 2, 3,
+\item charge$^2$ at position 3,
+\item side-chain volume$^2$ at positions 1, 2,
+\item biosynthetic pathway distance at positions 1, 2.
+\end{itemize}
+
+The exact theorem proved in Lean is:
+
+\begin{quote}
+\textbf{Theorem}
+(\texttt{standard\_strictly\_best\_on\_fineDegChoices}). For every
+non-identity \texttt{FineDegChoice} $c$,
+\[
+\texttt{posStandardCost globalOptimalWeights}
+<
+\texttt{posTotalCost globalOptimalWeights (choiceAssignment c)}.
+\]
+\end{quote}
+
+In words: among the 48 assignments that respect both the WToken fine
+classes and the standard degeneracy pattern, the standard code is the
+unique optimum.
+
+\subsection{Interpretation}
+
+This yields a clean two-stage derivation:
+\begin{enumerate}
+\item The 8-tick DFT structure forces 20 WTokens and an 8-class fine
+  partition of the amino acids.
+\item Intersecting that partition with the observed degeneracy pattern leaves
+  exactly 48 admissible assignments.
+\item The position-weighted mutation cost uniquely selects the standard code
+  from those 48.
+\end{enumerate}
+
+The derivation is therefore conditional in an important sense: it explains
+the standard code once the WToken structure and the observed degeneracy
+pattern are both imposed. It does not derive the degeneracy pattern itself.
+
+\section{Formal Verification}
+
+The structural pieces of this paper are formalized in Lean~4
+(version 4.27.0) with Mathlib:
+
+\begin{itemize}
+\item \texttt{WTokenIso.lean}: the 20 WTokens, the explicit inverse, and
+  the theorem \texttt{wtoken\_amino\_bijection}.
+\item \texttt{WTokenAssignmentBridge.lean}: the fine classes and the theorem
+  \texttt{canonical\_bridge\_respects\_fineClass}.
+\item \texttt{NearUniqueness.lean}: the upper bound
+  \texttt{fineClassSearchBound = 36{,}864}.
+\item \texttt{WTokenFineClassOptimality.lean}: the exact 48-state
+  intersection, the non-refinement counterexample
+  \texttt{sameFineClass\_not\_sameDegeneracy}, and the theorem
+  \texttt{standard\_strictly\_best\_on\_fineDegChoices}.
+\item \texttt{PositionWeightedCost.lean}: the position-weighted cost and the
+  classwise certificates inherited from Paper~2.
+\end{itemize}
+
+The new module contains zero axioms and zero \texttt{sorry} assertions.
+Unlike the earlier overbroad version of this paper, the present draft does
+not rely on an invalid transfer from the 363,004 classwise search to the
+naive 36,864 fine-class space. The exact 48-state theorem is internal to
+Lean.
+
+\section{Discussion}
+
+\subsection{Relation to Coevolution and Stereochemical Hypotheses}
+
+The derivation shares a structural feature with the coevolution
+hypothesis~\cite{Wong1975}: the WToken fine classes group amino acids by
+chemical and biosynthetic family, and the position-weighted cost gives
+large weight to biosynthetic pathway distance. The derivation goes beyond
+coevolution in two respects:
+\begin{enumerate}
+\item the classes are derived from the WToken DFT structure rather than
+  being postulated from biochemistry, and
+\item the exact 48-state residual space is fully enumerated and proved to
+  have a unique optimum.
+\end{enumerate}
+
+It is less aligned with the stereochemical hypothesis~\cite{Woese1966},
+since it does not posit direct codon--amino-acid affinity. The mechanism is
+structural rather than chemical: the WToken organization constrains the
+assignment space, and the mutation cost selects within that constrained
+space.
+
+\subsection{What Is and Is Not Derived}
+
+The derivation explains:
+\begin{itemize}
+\item why there are exactly 20 amino acids (= 20 WTokens),
+\item why those amino acids fall into the observed fine chemical families,
+\item why the standard code is the unique optimum once both WToken fine
+  classes and the observed degeneracy pattern are imposed.
+\end{itemize}
+
+It does not explain:
+\begin{itemize}
+\item why the degeneracy pattern itself is what it is,
+\item why stop codons occupy their current positions,
+\item the physical mechanism connecting WToken mode structure to amino acid
+  chemistry and tRNA recognition.
+\end{itemize}
+
+\section{Conclusion}
+
+The exact codon-to-amino-acid assignment problem is not solved by WToken
+structure alone, but it is sharply constrained by it. The 8-tick DFT basis
+forces 20 WTokens and an 8-class fine partition of the amino acids; when
+that partition is intersected with the observed degeneracy pattern, only 48
+assignments remain. The position-weighted mutation cost then uniquely
+selects the standard code from this exact 48-state space.
+
+This is a stronger and more precise result than the earlier overbroad claim
+about a naive 36,864-state fine-class derivation. The corrected theorem is
+fully formalized in Lean~4 and gives an exact constrained-derivation
+statement for the standard code.
+
+\section*{Data Availability}
+
+All Lean source files are in the \texttt{reality} repository under
+\texttt{IndisputableMonolith/Genetics/} and
+\texttt{IndisputableMonolith/Water/WTokenIso.lean}.
+
+\begin{thebibliography}{99}
+\bibitem{FreelandHurst1998}
+Freeland, S.J. and Hurst, L.D. (1998). The genetic code is one in a
+million. \textit{J.~Mol.~Evol.} \textbf{47}(3), 238--248.
+
+\bibitem{HaigHurst1991}
+Haig, D. and Hurst, L.D. (1991). A quantitative measure of error
+minimization in the genetic code. \textit{J.~Mol.~Evol.} \textbf{33}(5),
+412--417.
+
+\bibitem{Paper2}
+Washburn, J. (2026). The standard genetic code is globally optimal under
+position-weighted mutation cost. \textit{In preparation}.
+
+\bibitem{Woese1966}
+Woese, C.R., Dugre, D.H., Dugre, S.A., Kondo, M. and Saxinger, W.C.
+(1966). On the fundamental nature and evolution of the genetic code.
+\textit{Cold Spring Harb.~Symp.~Quant.~Biol.} \textbf{31}, 723--736.
+
+\bibitem{Wong1975}
+Wong, J.T.-F. (1975). A co-evolution theory of the genetic code.
+\textit{Proc.~Natl.~Acad.~Sci.~USA} \textbf{72}(5), 1909--1912.
+\end{thebibliography}
+
+\end{document}

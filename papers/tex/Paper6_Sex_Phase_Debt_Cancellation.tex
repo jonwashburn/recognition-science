@@ -1,0 +1,354 @@
+\documentclass[11pt,twocolumn]{article}
+
+\usepackage[margin=0.85in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage{authblk}
+\usepackage[numbers]{natbib}
+\usepackage{enumitem}
+\setlist{nosep}
+
+\hypersetup{colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black}
+
+\title{Sex as Phase-Debt Cancellation:\\A Formal Derivation of Recombination Advantage}
+
+\author[1]{Jonathan Washburn}
+\affil[1]{Independent Researcher}
+
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We present a formal model in which sexual reproduction confers a
+categorical advantage over asexual reproduction by cancelling accumulated
+antisymmetric phase debt. Each chromosome is modeled as an 8-component
+phase register, reflecting the 8-tick discrete clock of Recognition
+Science. We define the FOLD operator
+$\mathrm{FOLD}(v)_k = (v_k + v_{(8-k) \bmod 8})/2$ and prove three
+machine-checked theorems in Lean~4: (1)~FOLD is idempotent; (2)~FOLD
+annihilates the antisymmetric (imaginary) component of any phase profile;
+(3)~asexual reproduction preserves all antisymmetric debt. Together, these
+establish that sexual lineages reset their antisymmetric phase debt to
+zero each generation, while asexual lineages accumulate debt
+monotonically---a formal structural analogue of Muller's ratchet. The
+model translates cleanly into the language of standard recombination
+theory: the symmetric/antisymmetric decomposition corresponds to
+additive/epistatic genetic variance, and FOLD corresponds to the
+recombination step that breaks up negative linkage disequilibrium.
+\end{abstract}
+
+\section{Introduction}
+
+Why sex exists is one of the oldest open questions in evolutionary
+biology. Asexual reproduction is faster, cheaper, and avoids the
+``twofold cost of males''~\cite{Maynard1978}. Yet sexual reproduction
+is nearly universal among eukaryotes. The classical explanations invoke
+Muller's ratchet~\cite{Muller1964} (deleterious mutations accumulate
+irreversibly in asexual lineages), the Fisher--Muller
+effect~\cite{Fisher1930, Muller1932} (recombination speeds adaptation by
+assembling beneficial alleles from different lineages), and
+Hill--Robertson interference~\cite{Hill1966} (linked loci interfere with
+each other's response to selection).
+
+These explanations are powerful but largely verbal or population-genetic.
+They describe \emph{what} sex does (breaks up linkage, restores variation)
+but do not identify a single structural operation that captures the
+advantage formally. In this paper we provide such an operation.
+
+Recognition Science~\cite{Washburn2025} derives an 8-tick discrete clock
+from algebraic first principles. We model each chromosome as an
+8-component \textbf{phase register}---a vector
+$v \in \mathbb{R}^8$---and define the \textbf{FOLD operator}
+\begin{equation}\label{eq:fold}
+  \mathrm{FOLD}(v)_k = \frac{v_k + v_{(8-k) \bmod 8}}{2},
+  \qquad k \in \{0, \ldots, 7\}.
+\end{equation}
+We prove three properties of FOLD in Lean~4:
+\begin{enumerate}
+\item \textbf{Idempotence}: $\mathrm{FOLD}(\mathrm{FOLD}(v)) =
+  \mathrm{FOLD}(v)$.
+\item \textbf{Antisymmetric annihilation}: the antisymmetric part of
+  $\mathrm{FOLD}(v)$ is identically zero.
+\item \textbf{Asexual preservation}: asexual reproduction preserves the
+  antisymmetric part unchanged.
+\end{enumerate}
+The biological interpretation is that sexual reproduction physically
+instantiates FOLD: meiotic crossover with a complementary partner averages
+the two parental phase registers, annihilating accumulated antisymmetric
+drift. Asexual lineages skip FOLD, so their antisymmetric component grows
+monotonically with each generation of mutation---a phase-profile version
+of Muller's ratchet.
+
+\section{Definitions}
+
+\subsection{Phase Profiles}
+
+A \textbf{phase profile} is a function $v : \mathrm{Fin}\,8 \to
+\mathbb{R}$. We interpret each component $v_k$ as encoding the
+distribution of recognition phases across the chromosome's genomic
+content at tick $k$ of the 8-tick cycle.
+
+Every phase profile decomposes uniquely into symmetric and antisymmetric
+parts:
+\begin{align}
+  v^{\mathrm{sym}}_k &= \frac{v_k + v_{(8-k) \bmod 8}}{2},
+  \label{eq:sym} \\
+  v^{\mathrm{anti}}_k &= \frac{v_k - v_{(8-k) \bmod 8}}{2}.
+  \label{eq:anti}
+\end{align}
+This decomposition is proved to be exact:
+$v_k = v^{\mathrm{sym}}_k + v^{\mathrm{anti}}_k$ for all $k$
+(\texttt{profile\_decomposition} in
+\texttt{ChromosomePhaseProfile.lean}).
+
+The symmetric part represents the ``real'' or additive component of the
+phase register. The antisymmetric part represents the ``imaginary'' or
+epistatic component---the phase debt that accumulates when the register
+drifts away from its conjugate-symmetric ground state.
+
+\subsection{The FOLD Operator}
+
+FOLD is defined by Eq.~\eqref{eq:fold}. Comparing with
+Eq.~\eqref{eq:sym}, we see immediately that $\mathrm{FOLD}(v) =
+v^{\mathrm{sym}}$: FOLD projects onto the symmetric subspace.
+
+\subsection{Crossover Model}
+
+Meiotic crossover between two parental profiles $p_1, p_2$ is modeled
+as pointwise averaging:
+\begin{equation}\label{eq:crossover}
+  \mathrm{crossover}(p_1, p_2)_k = \frac{(p_1)_k + (p_2)_k}{2}.
+\end{equation}
+When the second parent has the \textbf{complementary profile}
+$p_2 = p_1^{\mathrm{comp}}$, defined by
+$(p_1^{\mathrm{comp}})_k = (p_1)_{(8-k) \bmod 8}$, the crossover
+reduces to exactly FOLD:
+\begin{equation}\label{eq:complement}
+  \mathrm{crossover}(p, p^{\mathrm{comp}})_k = \mathrm{FOLD}(p)_k.
+\end{equation}
+This is proved as \texttt{crossover\_complement\_is\_fold} in Lean.
+
+\section{Results}
+
+\subsection{FOLD Is Idempotent}
+
+\begin{quote}
+\textbf{Theorem} (\texttt{fold\_idempotent}). For all
+$v : \mathrm{Fin}\,8 \to \mathbb{R}$ and $k \in \mathrm{Fin}\,8$,
+$\mathrm{FOLD}(\mathrm{FOLD}(v))_k = \mathrm{FOLD}(v)_k$.
+\end{quote}
+
+The proof proceeds by exhaustive case analysis on all 8 values of $k$,
+followed by ring normalization. Idempotence means that once a lineage
+has applied FOLD (i.e., reproduced sexually once), further applications
+do not change the profile. FOLD is a projection.
+
+\subsection{FOLD Annihilates Antisymmetric Phase Debt}
+
+\begin{quote}
+\textbf{Theorem} (\texttt{fold\_kills\_antisymmetric}). For all
+$p : \mathrm{PhaseProfile}$ and $k \in \mathrm{Fin}\,8$,
+$(\mathrm{FOLD}(p))^{\mathrm{anti}}_k = 0$.
+\end{quote}
+
+In words: after one application of FOLD, the antisymmetric component of
+the resulting profile is identically zero. All accumulated imaginary phase
+debt is cancelled. The proof again proceeds by exhaustive
+\texttt{fin\_cases} and \texttt{ring}.
+
+\subsection{Asexual Reproduction Preserves All Debt}
+
+\begin{quote}
+\textbf{Theorem} (\texttt{asexual\_preserves\_antisymmetric}). For all
+$p : \mathrm{PhaseProfile}$ and $k \in \mathrm{Fin}\,8$,
+$(\mathrm{asexual}(p))^{\mathrm{anti}}_k = p^{\mathrm{anti}}_k$.
+\end{quote}
+
+Asexual reproduction is modeled as the identity on phase profiles: the
+offspring inherits the parent's profile unchanged. Since no averaging
+occurs, the antisymmetric part is preserved exactly.
+
+\subsection{The Sexual Advantage Theorem}
+
+Combining the three results above:
+
+\begin{quote}
+\textbf{Theorem} (\texttt{sexual\_advantage}). The conjunction holds:
+\begin{enumerate}
+\item For all $p$ and $k$:
+  $(\mathrm{FOLD}(p))^{\mathrm{anti}}_k = 0$.
+\item For all $p$ and $k$:
+  $(\mathrm{asexual}(p))^{\mathrm{anti}}_k = p^{\mathrm{anti}}_k$.
+\end{enumerate}
+\end{quote}
+
+The interpretation: sexual lineages reset antisymmetric phase debt to zero
+each generation. Asexual lineages preserve it. If mutations inject
+positive debt $\delta > 0$ per generation, asexual debt grows as
+$n\delta$ (proved monotone by \texttt{debt\_monotone}), while sexual
+debt is bounded at zero after each mating event. This is a formal
+structural analogue of Muller's ratchet.
+
+\section{Translation into Standard Genetics}
+
+The 8-register phase model is abstract, but it maps onto standard
+concepts:
+
+\begin{center}
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+Phase-profile language & Standard genetics \\
+\midrule
+Phase register $v \in \mathbb{R}^8$ & Genotype \\
+Symmetric part $v^{\mathrm{sym}}$ & Additive genetic value \\
+Antisymmetric part $v^{\mathrm{anti}}$ & Epistatic / dominance variance \\
+FOLD operator & Recombination \\
+Complementary profile & Mate with opposing haplotype \\
+$\mathrm{FOLD}(v) = v^{\mathrm{sym}}$ & Recombination extracts additive value \\
+Asexual $=$ identity & Clonal inheritance \\
+Debt accumulation $n\delta$ & Muller's ratchet \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The key structural insight is that FOLD does not merely ``shuffle''
+alleles (as in the Fisher--Muller picture) or ``break up'' linked loci
+(as in the Hill--Robertson picture). It performs a specific algebraic
+operation---projection onto the symmetric subspace---that has a provably
+clean result: the antisymmetric part is exactly zeroed, not merely
+reduced.
+
+\subsection{Muller's Ratchet}
+
+In the classical formulation~\cite{Muller1964}, an asexual population
+cannot regain a mutation-free genotype once it is lost by drift. In
+phase-profile language, the antisymmetric part of the register cannot
+decrease without FOLD. Each generation of mutation adds $\delta > 0$ to
+the antisymmetric component, and the proof \texttt{debt\_monotone} shows
+that accumulated debt is strictly monotone in generation number.
+
+\subsection{Hill--Robertson Interference}
+
+Hill and Robertson~\cite{Hill1966} showed that selection at one locus
+interferes with selection at a linked locus. In the phase model, linkage
+corresponds to correlation between register components. FOLD decorrelates
+the symmetric and antisymmetric parts by projecting onto the symmetric
+subspace, eliminating the interference.
+
+\section{Formal Verification}
+
+All results are formalized in Lean~4 (version 4.27.0) with Mathlib. The
+two principal modules are:
+
+\begin{itemize}
+\item \texttt{TemporalCoordinationLayer.lean}: defines \texttt{foldReal},
+  proves \texttt{fold\_idempotent}, and defines the
+  \texttt{SexualFold} structure.
+\item \texttt{ChromosomePhaseProfile.lean}: defines
+  \texttt{PhaseProfile}, \texttt{symmetricPart},
+  \texttt{antisymmetricPart}, \texttt{crossoverProfile},
+  \texttt{complementaryProfile}, and \texttt{asexualOffspring}. Proves
+  \texttt{profile\_decomposition},
+  \texttt{crossover\_complement\_is\_fold},
+  \texttt{fold\_kills\_antisymmetric},
+  \texttt{asexual\_preserves\_antisymmetric},
+  \texttt{debt\_monotone}, and the combined
+  \texttt{sexual\_advantage}.
+\end{itemize}
+
+The formalization contains zero axioms and zero \texttt{sorry} assertions.
+Every proof terminates by exhaustive \texttt{fin\_cases} on
+$\mathrm{Fin}\,8$ followed by \texttt{ring} normalization, or by direct
+computation.
+
+\section{Discussion}
+
+\subsection{What the Model Does and Does Not Show}
+
+The model shows that a single algebraic operation (FOLD on an 8-register)
+is sufficient to produce a categorical sexual advantage: bounded vs.\
+unbounded antisymmetric debt. This is a theorem about the operator, not
+about a particular population model.
+
+The model does \emph{not} show:
+\begin{itemize}
+\item That chromosomes literally carry 8-component phase registers. This
+  is a model-level interpretation.
+\item That meiotic crossover literally implements FOLD. The crossover
+  model (pointwise averaging with a complementary partner) is a
+  simplification; real crossover involves physical strand exchange at
+  specific loci.
+\item That the twofold cost of males is overcome. The model addresses the
+  qualitative advantage of recombination, not the quantitative
+  cost--benefit balance.
+\end{itemize}
+
+\subsection{Why 8?}
+
+The 8-tick register is not an arbitrary choice. In Recognition Science,
+the minimal ledger-compatible walk in three spatial dimensions has period
+$2^3 = 8$~\cite{Washburn2025}. The double helix provides $4$ nucleotides
+$\times$ $2$ strands $= 8$ recognition slots per position. The FOLD
+operator is the natural projection on this 8-periodic structure.
+
+\subsection{Falsifiability}
+
+The model makes two testable predictions:
+\begin{enumerate}
+\item Asexual lineages should show monotonically increasing epistatic
+  variance (phase debt) over evolutionary time, measurable as increasing
+  negative linkage disequilibrium.
+\item Sexual lineages should show episodic resets of epistatic variance
+  correlated with mating events, not gradual decline.
+\end{enumerate}
+
+\section{Conclusion}
+
+Sexual reproduction can be understood as the physical instantiation of the
+FOLD operator on an 8-component phase register. FOLD projects onto the
+symmetric subspace, annihilating accumulated antisymmetric (imaginary)
+phase debt. Asexual reproduction preserves all debt. This gives a formal
+structural derivation of recombination advantage that is complementary to,
+and consistent with, the classical explanations of Muller, Fisher, and
+Hill--Robertson. The entire argument is machine-checked in Lean~4.
+
+\section*{Data Availability}
+
+All Lean source files are in the \texttt{reality} repository under
+\texttt{IndisputableMonolith/Genetics/}.
+
+\begin{thebibliography}{99}
+\bibitem{Fisher1930}
+Fisher, R.A. (1930). \textit{The Genetical Theory of Natural Selection}.
+Clarendon Press.
+
+\bibitem{Hill1966}
+Hill, W.G. and Robertson, A. (1966). The effect of linkage on limits to
+artificial selection. \textit{Genet.~Res.} \textbf{8}(3), 269--294.
+
+\bibitem{Maynard1978}
+Maynard Smith, J. (1978). \textit{The Evolution of Sex}. Cambridge
+University Press.
+
+\bibitem{Muller1932}
+Muller, H.J. (1932). Some genetic aspects of sex.
+\textit{Am.~Nat.} \textbf{66}(703), 118--138.
+
+\bibitem{Muller1964}
+Muller, H.J. (1964). The relation of recombination to mutational advance.
+\textit{Mutat.~Res.} \textbf{1}(1), 2--9.
+
+\bibitem{Washburn2025}
+Washburn, J. (2025). The Algebra of Reality: A Recognition Science
+Derivation of Physical Law. \textit{Axioms} \textbf{15}(2), 90.
+\end{thebibliography}
+
+\end{document}
