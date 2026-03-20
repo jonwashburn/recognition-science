@@ -13,7 +13,7 @@ namespace without importing confidential parts of the full development.
 -/
 
 namespace RecognitionScience
-namespace Papers
+namespace Foundation
 namespace DimensionalConstraints
 namespace CostLayer
 
@@ -65,5 +65,5 @@ theorem public_cost_layer : PublicCostLayer := by
 
 end CostLayer
 end DimensionalConstraints
-end Papers
+end Foundation
 end RecognitionScience

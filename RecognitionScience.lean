@@ -59,5 +59,5 @@ import RecognitionScience.Foundation.LinkingNumbers
 import RecognitionScience.Masses.MassLaw
 import RecognitionScience.Masses.BaselineDerivation
 import RecognitionScience.Gravity.ZeroParameterGravity
-import RecognitionScience.Papers.DimensionalConstraints.Core
+import RecognitionScience.Foundation.DimensionalConstraints.Core
 import RecognitionScience.Verification.DimensionalConstraintsCert
