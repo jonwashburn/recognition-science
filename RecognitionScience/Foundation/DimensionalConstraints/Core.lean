@@ -1,7 +1,7 @@
 import Mathlib
-import RecognitionScience.Papers.DimensionalConstraints.CostLayer
-import RecognitionScience.Papers.DimensionalConstraints.ContinuumLayer
-import RecognitionScience.Papers.DimensionalConstraints.DimensionLayer
+import RecognitionScience.Foundation.DimensionalConstraints.CostLayer
+import RecognitionScience.Foundation.DimensionalConstraints.ContinuumLayer
+import RecognitionScience.Foundation.DimensionalConstraints.DimensionLayer
 
 /-!
 # Dimensional Constraints: Public Core
@@ -14,7 +14,7 @@ dimension layers needed for the paper-facing argument.
 -/
 
 namespace RecognitionScience
-namespace Papers
+namespace Foundation
 namespace DimensionalConstraints
 namespace Core
 
@@ -43,5 +43,5 @@ theorem dimension_three_is_forced :
 
 end Core
 end DimensionalConstraints
-end Papers
+end Foundation
 end RecognitionScience

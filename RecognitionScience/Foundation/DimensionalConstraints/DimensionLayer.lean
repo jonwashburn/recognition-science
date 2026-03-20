@@ -9,7 +9,7 @@ dimensional constraints rebuttal.
 -/
 
 namespace RecognitionScience
-namespace Papers
+namespace Foundation
 namespace DimensionalConstraints
 namespace DimensionLayer
 
@@ -48,5 +48,5 @@ theorem public_dimension_layer : PublicDimensionLayer := by
 
 end DimensionLayer
 end DimensionalConstraints
-end Papers
+end Foundation
 end RecognitionScience

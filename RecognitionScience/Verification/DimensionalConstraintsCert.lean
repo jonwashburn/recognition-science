@@ -1,5 +1,5 @@
 import Mathlib
-import RecognitionScience.Papers.DimensionalConstraints.Core
+import RecognitionScience.Foundation.DimensionalConstraints.Core
 
 /-!
 # Dimensional Constraints Certificate
@@ -21,12 +21,12 @@ structure DimensionalConstraintsCert where
 
 /-- The certificate verifies exactly when the public core is available. -/
 @[simp] def DimensionalConstraintsCert.verified (_c : DimensionalConstraintsCert) : Prop :=
-  Papers.DimensionalConstraints.Core.PublicCore
+  Foundation.DimensionalConstraints.Core.PublicCore
 
 /-- The public dimensional-constraints certificate verifies. -/
 @[simp] theorem DimensionalConstraintsCert.verified_any (c : DimensionalConstraintsCert) :
     DimensionalConstraintsCert.verified c :=
-  Papers.DimensionalConstraints.Core.public_core
+  Foundation.DimensionalConstraints.Core.public_core
 
 /-- Public-facing corollary: the compatible dimension is uniquely `3`. -/
 theorem unique_public_dimension :
@@ -34,7 +34,7 @@ theorem unique_public_dimension :
       Foundation.DimensionForcing.RSCompatibleDimension D) ∧
     (∀ D : Foundation.DimensionForcing.Dimension,
       Foundation.DimensionForcing.RSCompatibleDimension D → D = 3) :=
-  Papers.DimensionalConstraints.Core.dimension_three_is_forced
+  Foundation.DimensionalConstraints.Core.dimension_three_is_forced
 
 end DimensionalConstraintsCert
 end Verification

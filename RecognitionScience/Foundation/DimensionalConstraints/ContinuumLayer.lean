@@ -10,7 +10,7 @@ dimensional constraints rebuttal.
 -/
 
 namespace RecognitionScience
-namespace Papers
+namespace Foundation
 namespace DimensionalConstraints
 namespace ContinuumLayer
 
@@ -72,5 +72,5 @@ theorem public_continuum_layer : PublicContinuumLayer := by
 
 end ContinuumLayer
 end DimensionalConstraints
-end Papers
+end Foundation
 end RecognitionScience
