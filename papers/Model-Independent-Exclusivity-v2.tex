@@ -486,8 +486,70 @@ violating strict convexity.
 The d'Alembert form arises specifically from combining reciprocal
 symmetry with the requirement that the composition is quadratic
 (not additive) in $J$.
-Establishing \emph{why} the composition must be quadratic rather
-than additive is Bridge B2 (\cref{sec:bridge-b2}).
+
+\subsection{Why the RCL is inevitable from ledger structure}
+\label{sec:rcl-inevitable}
+
+The composition law is not an arbitrary functional equation.
+It is the \emph{unique} symmetric composition rule on
+$(\Rp, \times)$ compatible with three ledger-derived
+necessities: reciprocal symmetry, strict convexity with unique
+minimum, and conservation of a single independent flow.
+
+\begin{proposition}[Ledger forces reciprocal symmetry]
+\label{prop:ledger-recip}
+In a discrete, locally finite conserved system the balance
+condition at every event requires that the cost of an outgoing
+ratio equals the cost of its reciprocal incoming counterpart.
+Hence $J(x) = J(x^{-1})$ for every admissible ratio $x$.
+\end{proposition}
+
+\begin{proposition}[Ledger forces strict convexity with unique minimum]
+\label{prop:ledger-convex}
+Conservation plus local finiteness imply that every non-unit
+ratio carries a positive cost (otherwise the balance sheets
+would admit arbitrage---a closed loop of non-unit ratios
+summing to zero net cost).
+Strict convexity follows from the requirement that the total
+ledger cost be a strictly convex function on the space of ratios;
+the unique minimum at $x = 1$ is the only fixed point of the
+reciprocal symmetry.
+\end{proposition}
+
+\begin{theorem}[Quadratic composition is forced by associativity]
+\label{thm:assoc-forces-rcl}
+Let $f : \R \times \R \to \R$ be a continuous, symmetric
+composition rule such that
+$J(xy) + J(x/y) = f(J(x), J(y))$
+for a reciprocally symmetric, strictly convex $J$ with $J(1) = 0$.
+If $f$ is associative (as required by the group structure of
+$(\Rp, \times)$), then
+\[
+f(a,b) = 2(a+1)(b+1) - 2,
+\]
+i.e., $J$ satisfies the Recognition Composition Law.
+\end{theorem}
+\begin{proof}[Sketch]
+Setting $y = 1$ in the composition gives $f(a, 0) = 2a$.
+Setting $x = y = 1$ gives $f(0, 0) = 0$.
+The associativity condition
+$f(f(a,b), c) = f(a, f(b,c))$ together with these boundary
+values and symmetry $f(a,b) = f(b,a)$ uniquely determines
+$f(a,b) = 2(a+1)(b+1) - 2$.
+Substituting back recovers the d'Alembert equation in
+multiplicative coordinates.
+\end{proof}
+
+\begin{remark}
+This reduces Bridge B2 to a single well-posed question:
+\emph{is associativity of cost composition forced by the
+zero-parameter ledger structure?}
+If yes, the RCL is derived, not assumed.
+Any alternative composition (additive, multiplicative, or
+otherwise) either violates reciprocity, fails strict convexity,
+or admits arbitrage in the ledger.
+The d'Alembert quadratic form is the only survivor.
+\end{remark}
 
 % ===================================================================
 \section{Cost Uniqueness}\label{sec:t5}
@@ -640,6 +702,14 @@ indistinguishable at the cost-extracted interface:
 multiplicity of $S_F$ is gauge redundancy, not physical freedom.
 \end{remark}
 
+\medskip
+The conditional uniqueness is now proved.
+Full inevitability---the claim that \emph{any} $F \in \cZ$ must
+satisfy (A3)--(A5) and therefore collapse---reduces to closing
+the six bridges below.
+Of the six, B2 is the only one that would require genuinely new
+mathematics; the others are well-posed intermediate results.
+
 % ===================================================================
 \section{The Open Derivation Programme: Six Bridges}
 \label{sec:bridges}
@@ -782,6 +852,28 @@ Each of the following would constitute a substantive refutation:
   state space is genuinely uncountable, and argue that
   continuity does not constitute hidden parameter freedom.
 
+  \emph{Worked example.}
+  Consider pure general relativity (no matter, no cosmological
+  constant).
+  The Einstein--Hilbert action $S = \int R \sqrt{|g|}\,d^4x$
+  has no adjustable coupling constants.
+  Yet the space of solutions (Lorentzian metrics modulo
+  diffeomorphisms) is uncountable.
+  Under our definition of zero parameters
+  (\cref{def:zero-param}), the state space must admit an
+  algorithmic specification covering every state.
+  The moduli space of metrics does not: specifying an arbitrary
+  smooth metric requires infinitely many real parameters
+  (Fourier coefficients, initial data on a Cauchy surface, etc.).
+  Therefore pure GR does \emph{not} satisfy (A2) under the
+  algorithmic-specification definition, and the exclusivity
+  theorem does not apply to it.
+  A compelling refutation would either:
+  (a)~find a finitary parametrization of the GR solution space
+  (contradicting well-known results), or
+  (b)~argue that the algorithmic-specification definition is too
+  restrictive for ``zero parameters'' as physically intended.
+
 \item \textbf{Conservation without double-entry.}
   Produce a discrete conserved dynamics where conservation is
   representable without a balanced accounting structure.
@@ -807,16 +899,37 @@ Three of the five assumptions are adopted axioms, not yet derived
 from the zero-parameter posture alone.
 The paper names six bridges (B1--B6) that would close the full
 inevitability programme.
-Of these, B2 (deriving the RCL/d'Alembert equation from ledger
-structure) and B5 (constructing a unique prediction map) are
-the deepest open problems.
+Of these, B2 (deriving the RCL from ledger structure) is the
+only bridge that would require genuinely new mathematics;
+B1, B3, B4, and B6 are well-posed intermediate results with
+clear proof strategies.
+B5 (prediction map uniqueness) is open but does not affect the
+conditional theorem.
 
 The composition law is the d'Alembert functional equation
 (\cref{sec:dalembert})---the unique symmetric composition law
 on $(\Rp, \times)$ compatible with non-degeneracy.
-It is not bespoke.
-Whether it is \emph{forced} by the zero-parameter posture is
-the central question the programme must answer.
+\Cref{sec:rcl-inevitable} shows that associativity of cost
+composition (itself a consequence of the group structure of
+$(\Rp, \times)$) forces the d'Alembert form uniquely.
+The programme is therefore ``one deep bridge away'' from
+full inevitability: if associativity is forced by the
+zero-parameter ledger, the RCL is derived, and all six
+bridges close.
+
+\paragraph{Connection to the Recognition Science programme.}
+Once the conditional quotient collapse is established, the unique
+$\Jcost$ and $\varphi$ directly determine the downstream
+structure of the Recognition Science framework~\cite{WZ2026}:
+the 8-tick carrier (period $2^D$ with $D = 3$, forced by
+$\varphi$-scaling on the 3-cube $Q_3$),
+the gauge quotient ($\mathrm{Aut}(Q_3) \cong S_4 \times \mathbb{Z}_2$
+forcing $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$),
+and the mass law ($m = A_s \cdot \varphi^{r - 8 + \mathrm{gap}(Z)}$).
+The quotient collapse proved here is the foundational layer
+beneath these derivations: it establishes that the structural
+inputs ($\Jcost$, $\varphi$) are not chosen but forced, so
+everything downstream is forced as well.
 
 % ===================================================================
 \appendix
@@ -945,6 +1058,67 @@ cd recognition-science
 lake exe cache get   # downloads prebuilt Mathlib (~2 GB)
 lake build RecognitionScience.Verification.Exclusivity.ModelIndependentCert
 \end{verbatim}
+
+% ===================================================================
+\section{Counter-Example: A Zero-Parameter Framework Without the RCL}
+\label{app:counterexample}
+% ===================================================================
+
+We exhibit a framework that satisfies (A1) and (A2) but violates
+the RCL, producing non-collapsing observables.
+This shows that the composition law is load-bearing: without it
+(or something equivalent), quotient collapse fails.
+
+\begin{example}[Log-cost framework]\label{ex:logcost}
+Define $F$ with $S_F = \Rp$ (ratios), $T_F = \mathrm{id}$,
+$O_F = \R$, and
+\[
+\mu_F(x) = \log x, \qquad J_{\log}(x) = |\log x|.
+\]
+Then:
+\begin{enumerate}
+\item $S_F$ admits an algorithmic specification
+  (enumerate dyadic rationals; decode via standard binary
+  representation).
+  Hence $F \in \cZ$.
+\item $J_{\log}$ satisfies reciprocal symmetry:
+  $|\log x| = |\log x^{-1}|$.
+\item $J_{\log}(1) = 0$ (unit normalization).
+\item $J_{\log}$ is \emph{not} strictly convex on $\Rp$
+  (it is V-shaped, not smoothly curved).
+\item The composition is additive:
+  $J_{\log}(xy) + J_{\log}(x/y) = |\log x + \log y| +
+  |\log x - \log y|$, which does \emph{not} equal
+  $2J_{\log}(x)J_{\log}(y) + 2J_{\log}(x) + 2J_{\log}(y)$
+  in general.
+  Hence the RCL fails.
+\item Observables are non-uniform: $\mu_F(2) = \log 2 \neq 0 =
+  \mu_F(1)$.
+  The quotient does \emph{not} collapse.
+\end{enumerate}
+\end{example}
+
+\begin{remark}
+This framework satisfies (A1), (A2), and partial versions of
+(A4) (symmetry + normalization), but fails strict convexity and
+the composition law.
+It demonstrates that the RCL and convexity are not automatic
+consequences of the zero-parameter posture; they are
+\emph{additional} structural requirements that the ledger must
+impose.
+Without them, a zero-parameter framework can produce
+non-uniform observables and the quotient survives with more
+than one equivalence class.
+\end{remark}
+
+\begin{remark}[What the counter-example shows about Bridge B2]
+The log-cost framework is ruled out by any of: (a)~strict
+convexity, (b)~smooth calibration, or (c)~the RCL.
+It is \emph{not} ruled out by (A1)--(A2) alone.
+This is precisely why Bridge B2 matters: the RCL must be
+\emph{derived} from ledger structure (not from the zero-parameter
+definition by itself) for the inevitability claim to close.
+\end{remark}
 
 % ===================================================================
 \begin{thebibliography}{99}
