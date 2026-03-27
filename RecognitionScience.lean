@@ -61,3 +61,15 @@ import RecognitionScience.Masses.BaselineDerivation
 import RecognitionScience.Gravity.ZeroParameterGravity
 import RecognitionScience.Foundation.DimensionalConstraints.Core
 import RecognitionScience.Verification.DimensionalConstraintsCert
+
+-- Model-Independent Exclusivity Programme (v2, March 2026)
+-- Paper: "Observational Uniqueness for Zero-Parameter Frameworks"
+import RecognitionScience.Verification.Exclusivity.Framework
+import RecognitionScience.Verification.Exclusivity.ModelIndependent
+import RecognitionScience.Verification.Exclusivity.HierarchyTheorem
+import RecognitionScience.Verification.Exclusivity.DimensionlessForcing
+import RecognitionScience.Verification.Exclusivity.GroundStateRestriction
+import RecognitionScience.Verification.Exclusivity.ObservableTypeEquiv
+import RecognitionScience.Verification.Exclusivity.RCLDerivation
+import RecognitionScience.Verification.Exclusivity.PredictionMap
+import RecognitionScience.Verification.Exclusivity.ModelIndependentCert
