@@ -161,6 +161,13 @@ The cost-uniqueness theorem (T5) was proved independently by
 Washburn--Zlatanovi\'c~\cite{WZ2026} and
 Washburn--Rahnamai~Barghi~\cite{Barghi2026};
 the d'Alembert reduction was formalized in~\cite{DAlembert2026}.
+The inevitability of the d'Alembert polynomial form (ruling out
+non-quadratic composition laws) was established
+in~\cite{Inevitability2026}.
+The cost-first ledger framework connecting the composition law
+to discrete conservation was developed in~\cite{CostLedger2026},
+and the recognition-geometric quotient formalism
+in~\cite{RecogGeom2026}.
 The classical reference for the d'Alembert functional equation is
 Acz\'el~\cite{Aczel1966}.
 
@@ -476,6 +483,11 @@ Jordan--von~Neumann (1935) proved that the parallelogram identity
 uniquely characterizes inner-product spaces among normed spaces;
 the d'Alembert identity uniquely characterizes $\cosh$ among
 symmetric composition functions on abelian groups.
+More sharply, \cite{Inevitability2026} proves that among all
+symmetric polynomial combiners $P$ satisfying
+$F(xy) + F(x/y) = P(F(x), F(y))$ with $F$ nonnegative and convex,
+the d'Alembert form $P(u,v) = 2u + 2v + 2uv$ is the unique
+survivor once degree and convexity constraints are imposed.
 \end{remark}
 
 \subsection{Why additive composition fails}
@@ -744,8 +756,15 @@ Deriving hierarchical structure from (A2) alone remains open.
 
 The RCL~\eqref{eq:rcl} is adopted as an axiom in (A4).
 \Cref{sec:dalembert} showed it is the d'Alembert equation---not
-a bespoke formula.
-The open problem is to \emph{derive} it:
+a bespoke formula---and \cite{Inevitability2026} proved it is
+the unique polynomial combiner compatible with nonnegative
+convex cost.
+The cost-first ledger framework of~\cite{CostLedger2026}
+develops the discrete accounting structure (atomic ticks,
+double-entry balance, cycle flux conservation) from which the
+composition law should follow, but the derivation of the RCL
+from that structure alone is not yet complete.
+The open problem is to close this gap:
 
 \begin{openproblem}[Composition Rule Classification]
 \label{op:rcl}
@@ -792,7 +811,10 @@ each ratio is uniquely determined by a computable,
 $\mathbb{Z}/2\mathbb{Z}$-invariant predicate---any $x \neq 1$
 requires at least 1 bit to select from $\{x, x^{-1}\}$,
 contradicting zero parameters.
-Deriving (SD) from (A2) alone is open.
+On finite graphs, unique minimizers within flux sectors are
+established in~\cite{GCIC2026} via uniform convexity of
+$\sum_E J(x_v / x_w)$ in log variables.
+Deriving (SD) from (A2) alone in the abstract setting is open.
 
 \begin{example}[Concrete falsifier for automatic ground-state]
 Let $S_F = \{s_0\}$, $r(s_0) = 2$.
@@ -813,8 +835,11 @@ $\mathcal{P} : (\Jcost, \varphi) \to \Odim$ would need to:
 (iii)~have $O(1)$ description length, and
 (iv)~be unique.
 Existence (i)--(iii) can be established by formalizing the RS
-ledger algorithm; uniqueness (iv) and value identification
-remain open.
+ledger algorithm; the concrete construction of the recognition
+operator and its spectral structure are developed
+in~\cite{RecogOp2026}, and the connection to measurement
+probabilities in~\cite{BornRule2026}.
+Uniqueness (iv) and value identification remain open.
 
 \subsection{Bridge B6: the observable-type equivalence}
 \label{sec:bridge-b6}
@@ -823,6 +848,9 @@ remain open.
 After quotient collapse, $\mathrm{im}(\mu_F)$ is a singleton.
 Any two singleton types are abstractly isomorphic,
 so the type-level equivalence is trivially constructible.
+The recognition-geometric formalization of quotients by
+observational indistinguishability is developed
+in~\cite{RecogGeom2026}.
 Non-trivial content (value identification) reduces to B5.
 
 % ===================================================================
@@ -920,14 +948,22 @@ bridges close.
 \paragraph{Connection to the Recognition Science programme.}
 Once the conditional quotient collapse is established, the unique
 $\Jcost$ and $\varphi$ directly determine the downstream
-structure of the Recognition Science framework~\cite{WZ2026}:
+structure:
+the discrete ledger and its conservation
+laws~\cite{CostLedger2026},
 the 8-tick carrier (period $2^D$ with $D = 3$, forced by
-$\varphi$-scaling on the 3-cube $Q_3$),
-the gauge quotient ($\mathrm{Aut}(Q_3) \cong S_4 \times \mathbb{Z}_2$
-forcing $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$),
-and the mass law ($m = A_s \cdot \varphi^{r - 8 + \mathrm{gap}(Z)}$).
+$\varphi$-scaling on the 3-cube $Q_3$)
+with its recognition-operator dynamics~\cite{RecogOp2026},
+the gauge quotient ($\mathrm{Aut}(Q_3) \cong S_4 \times
+\mathbb{Z}_2$ forcing
+$\mathrm{SU}(3) \times \mathrm{SU}(2) \times
+\mathrm{U}(1)$)~\cite{RecogGeom2026},
+the mass law ($m = A_s \cdot \varphi^{r - 8 +
+\mathrm{gap}(Z)}$)~\cite{WZ2026},
+and the Born rule from the cost-plus-geometry
+input~\cite{BornRule2026}.
 The quotient collapse proved here is the foundational layer
-beneath these derivations: it establishes that the structural
+beneath all of these: it establishes that the structural
 inputs ($\Jcost$, $\varphi$) are not chosen but forced, so
 everything downstream is forced as well.
 
@@ -1132,15 +1168,52 @@ Academic Press, 1966.
 J.~Washburn and M.~Zlatanovi\'c,
 ``Uniqueness of the Canonical Reciprocal Cost,''
 \emph{Mathematics} \textbf{14}, 935 (2026).
+\texttt{arXiv:2602.05753}.
 
 \bibitem{Barghi2026}
 J.~Washburn and A.~Rahnamai~Barghi,
-``Reciprocal Convex Costs for Ratio Matching,''
+``Reciprocal Convex Costs for Ratio Matching: Functional-Equation
+Characterization and Decision Geometry,''
 \emph{Axioms} \textbf{15}(2), 151 (2026).
 
 \bibitem{DAlembert2026}
 J.~Washburn,
-``D'Alembert Uniqueness is Fully Unconditional,''
+``D'Alembert Uniqueness is Fully Unconditional: A Complete Lean~4
+Formalization,''
+Preprint (2026).
+
+\bibitem{Inevitability2026}
+J.~Washburn, M.~Zlatanovi\'c, and E.~Allahyarov,
+``The d'Alembert Inevitability Theorem,''
+\emph{Mathematics} (2026).
+\texttt{arXiv:2603.16237}.
+
+\bibitem{CostLedger2026}
+S.~Pardo-Guerra, M.~Simons, A.~Thapa, and J.~Washburn,
+``Coherent Comparison as Information Cost: A Cost-First Ledger
+Framework for Discrete Dynamics,''
+\texttt{arXiv:2601.12194} (2026).
+
+\bibitem{GCIC2026}
+A.~Thapa and J.~Washburn,
+``Finite-Volume Rigidity and Flux Sectors in a Reciprocal Ratio
+Gradient Model on Graphs,''
+Preprint (2026).
+
+\bibitem{RecogGeom2026}
+J.~Washburn, M.~Zlatanovi\'c, and E.~Allahyarov,
+``Recognition Geometry,''
+\emph{Axioms} \textbf{15}(2), 90 (2026).
+
+\bibitem{RecogOp2026}
+A.~Thapa and J.~Washburn,
+``Recognition-Operator Dynamics from a Cost-First Ledger,''
+Preprint (2026).
+
+\bibitem{BornRule2026}
+M.~Simons and J.~Washburn,
+``A Born-Rule Derivation from the d'Alembert Cost Functional
+and a Two-Branch Comparison Geometry,''
 Preprint (2026).
 
 \end{thebibliography}
