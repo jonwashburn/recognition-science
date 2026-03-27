@@ -823,54 +823,128 @@ the central question the programme must answer.
 \section{Formal Verification}\label{app:lean}
 % ===================================================================
 
-All proved results are formally verified in Lean~4.
-The following table maps paper results to Lean modules.
-The Lean codebase uses one external axiom:
-\texttt{aczel\_representation\_axiom} (the Acz\'el
-classification, \cref{thm:aczel}).
-
-\medskip
+All proved results are formally verified in Lean~4 (v4.27.0-rc1,
+Mathlib4).
+The complete formalization lives at:
 \begin{center}
-\renewcommand{\arraystretch}{1.15}
+\url{https://github.com/jonwashburn/recognition-science}
+\end{center}
+All files relevant to this paper are under
+\texttt{RecognitionScience/Verification/Exclusivity/}.
+The codebase uses one external axiom:
+\texttt{aczel\_representation\_axiom} (\cref{thm:aczel}),
+encoding the Acz\'el classification theorem; all other steps
+are fully proved.
+
+\subsection*{File map}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
 \small
-\begin{tabular}{lll}
+\begin{tabular}{p{3.4cm}p{3.2cm}p{5.0cm}}
 \hline
-\textbf{Paper result} & \textbf{Lean theorem} & \textbf{Module} \\
+\textbf{Paper result} & \textbf{Lean theorem} & \textbf{File (prefix \texttt{Exclusivity/})} \\
 \hline
+\multicolumn{3}{l}{\textit{Core definitions}} \\
+\cref{def:framework} &
+  \texttt{PhysicsFramework} &
+  \texttt{Framework.lean} \\
+\cref{def:obs-equiv,def:quotient} &
+  \texttt{ObsEquiv},\;\texttt{StateQuotient} &
+  \texttt{Framework.lean} \\
+\cref{lem:uniform-collapse} &
+  \texttt{quotient\_subsingleton\_of\_uniform} &
+  \texttt{Framework.lean} \\[4pt]
+\multicolumn{3}{l}{\textit{Main theorem components}} \\
 \cref{thm:phi} ($\varphi$ forcing) &
-  \texttt{phi\_forced} &
-  \texttt{PhiForcing} \\
-\cref{thm:t5} (cost uniqueness) &
-  \texttt{T5\_uniqueness\_complete} &
-  \texttt{CostUniqueness} \\
+  \texttt{selfSim\_fibonacci} &
+  \texttt{ModelIndependent.lean} \\
+\cref{thm:t5} (cost uniqueness T5) &
+  \texttt{washburn\_zlatanovic\_uniqueness} &
+  \texttt{Cost/FunctionalEquation.lean} \\
 \cref{thm:derived-uniform} (derived uniformity) &
-  \texttt{zero\_params\_forces\_uniform} &
-  \texttt{ModelIndependent} \\
-\cref{thm:main} (quotient collapse) &
+  \texttt{derived\_uniform\_observables} &
+  \texttt{ModelIndependent.lean} \\
+\cref{thm:main} (Theorem 7.1, quotient collapse) &
   \texttt{derived\_model\_independent\_exclusivity} &
-  \texttt{ModelIndependent} \\
-\cref{cor:equiv} (framework equivalence) &
-  \texttt{model\_independent\_framework\_equiv} &
-  \texttt{ModelIndependent} \\
-B1 hierarchy theorem &
+  \texttt{ModelIndependent.lean} \\
+\cref{cor:equiv} (quotient $\simeq \mathbf{1}$) &
+  \texttt{quotient\_equiv\_unit} &
+  \texttt{ModelIndependent.lean} \\[4pt]
+\multicolumn{3}{l}{\textit{Bridge B1 (proved, zero \texttt{sorry})}} \\
+\cref{sec:bridge-b1} &
   \texttt{hierarchy\_forces\_fibonacci\_recurrence} &
-  \texttt{HierarchyTheorem} \\
-B4 ground-state corollary &
+  \texttt{HierarchyTheorem.lean} \\[4pt]
+\multicolumn{3}{l}{\textit{Bridge B3 (ratio existence proved)}} \\
+\cref{sec:bridge-b3} &
+  \texttt{bridge\_B3\_single\_channel\_forces\_ratio} &
+  \texttt{DimensionlessForcing.lean} \\[4pt]
+\multicolumn{3}{l}{\textit{Bridge B4 (corollary proved; core sorry)}} \\
+\cref{sec:bridge-b4} corollary &
   \texttt{ground\_state\_implies\_cost\_minimum} &
-  \texttt{GroundStateRestriction} \\
-B6 type equivalence &
-  \texttt{bridge\_B6\_observable\_type\_equiv\_trivial} &
-  \texttt{ObservableTypeEquiv} \\
+  \texttt{GroundStateRestriction.lean} \\
+\cref{sec:bridge-b4} falsifier &
+  \texttt{example : Cost.Jcost 2 $\neq$ 0} &
+  \texttt{GroundStateRestriction.lean} \\[4pt]
+\multicolumn{3}{l}{\textit{Bridge B6 (proved, zero \texttt{sorry})}} \\
+\cref{sec:bridge-b6} &
+  \texttt{bridge\_B6\_quotient\_equiv\_unit} &
+  \texttt{ObservableTypeEquiv.lean} \\[4pt]
+\multicolumn{3}{l}{\textit{Bridge B2 scaffold (Open Problem B is \texttt{sorry})}} \\
+Boundary conditions &
+  \texttt{composition\_rule\_f00\_eq\_zero} &
+  \texttt{RCLDerivation.lean} \\
+Boundary conditions &
+  \texttt{composition\_rule\_f\_at\_zero} &
+  \texttt{RCLDerivation.lean} \\
+\cref{op:rcl} (Open Problem B) &
+  \texttt{composition\_rule\_classification} &
+  \texttt{RCLDerivation.lean} \\[4pt]
+\multicolumn{3}{l}{\textit{Bridge B5 scaffold (Open Problems 2--3 are \texttt{sorry})}} \\
+OP1 (existence) &
+  \texttt{bridge\_B5\_prediction\_map\_exists} &
+  \texttt{PredictionMap.lean} \\
+OP2 (uniqueness) &
+  \texttt{prediction\_map\_unique} &
+  \texttt{PredictionMap.lean} \\[4pt]
+\multicolumn{3}{l}{\textit{Master certificate}} \\
+All of Thm.~7.1 & \texttt{ExclusivityV2Cert.verified\_any} &
+  \texttt{ModelIndependentCert.lean} \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{Epistemic status summary}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.1}
+\small
+\begin{tabular}{lcc}
+\hline
+\textbf{Result} & \textbf{Sorry?} & \textbf{Note} \\
+\hline
+Framework, quotient, uniformity lemmas & 0 & Fully proved \\
+Self-similarity forces $\varphi$ & 0 & Fully proved \\
+T5 cost uniqueness & 0 & Conditional on Acz\'el axiom \\
+Main Theorem 7.1 & 0 & Conditional on Acz\'el axiom \\
+B1 hierarchy recurrence & 0 & Fully proved \\
+B6 quotient $\simeq \mathbf{1}$ & 0 & Fully proved \\
+B3 ratio extraction & 1 & AIT dimensionless argument open \\
+B4 ground-state core & 1 & SD derivation from (A2) open \\
+B2 composition classification & 1 & Open Problem B (deepest) \\
+B5 prediction map uniqueness & 1 & Open Problem 2 \\
 \hline
 \end{tabular}
 \end{center}
 
 \medskip\noindent
-All modules listed above compile with zero \texttt{sorry}.
-The B2 scaffold (\texttt{RCLDerivation}) and B5 scaffold
-(\texttt{PredictionMap}) contain explicit \texttt{sorry}-marked
-open problems corresponding to \cref{op:rcl} and
-\cref{sec:bridge-b5}.
+To check out and build:
+\begin{verbatim}
+git clone https://github.com/jonwashburn/recognition-science
+cd recognition-science
+lake exe cache get   # downloads prebuilt Mathlib (~2 GB)
+lake build RecognitionScience.Verification.Exclusivity.ModelIndependentCert
+\end{verbatim}
 
 % ===================================================================
 \begin{thebibliography}{99}
