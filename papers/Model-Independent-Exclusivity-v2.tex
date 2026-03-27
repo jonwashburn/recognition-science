@@ -1,0 +1,900 @@
+% ============================================================================
+%  Observational Uniqueness for Zero-Parameter Frameworks
+%  Jonathan Washburn, March 2026
+% ============================================================================
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, amsthm, mathtools}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=teal,urlcolor=magenta]{hyperref}
+\IfFileExists{cleveref.sty}{%
+  \usepackage[nameinlink,capitalise]{cleveref}%
+}{%
+  \providecommand{\cref}[1]{\ref{##1}}%
+  \providecommand{\Cref}[1]{\ref{##1}}%
+}%
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Rp}{\mathbb{R}_{>0}}
+\newcommand{\Jcost}{J_{\mathrm{cost}}}
+\newcommand{\SQ}{\mathrm{SQ}}
+\newcommand{\cZ}{\mathcal{Z}}
+\newcommand{\Odim}{\mathcal{O}_{\mathrm{dim}}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{openproblem}[theorem]{Open Problem}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Observational Uniqueness for Zero-Parameter Frameworks\\[4pt]
+\large Quotient Collapse Under the Admissibility Posture,\\
+and the Open Programme for Full Inevitability}
+\author{Jonathan Washburn}
+\date{March 2026}
+
+\hypersetup{
+  pdftitle={Observational Uniqueness for Zero-Parameter Frameworks},
+  pdfauthor={Jonathan Washburn},
+}
+
+\begin{document}
+\maketitle
+
+% ===================================================================
+\begin{abstract}
+We prove that any physics framework satisfying five structural
+constraints---inhabitedness, zero adjustable parameters, self-similarity,
+an admissible cost functional obeying a coherent composition law, and
+observables extracted via cost minimization---is forced into a unique
+observational state.
+Formally: the quotient of the state space by observational
+indistinguishability collapses to a singleton.
+The preferred scale is forced to the golden ratio
+$\varphi = (1+\sqrt{5})/2$, and the cost functional is uniquely
+$\Jcost(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+
+Three of the five assumptions (self-similarity, the composition law, and
+cost-minimum semantics) are \emph{adopted} axioms whose derivation from
+the zero-parameter posture alone is an open programme.
+We name six structural bridges that would close this programme,
+characterize why each is hard, and identify the derivation of the
+composition law from ledger structure as the deepest open problem.
+The composition law is not a bespoke equation: we show it is equivalent
+to the d'Alembert functional equation, classified by
+Acz\'el (1966).
+
+All proved results are formally verified in Lean~4 with zero
+\texttt{sorry}.
+Core results are conditional on one external axiom (the Acz\'el
+classification theorem for continuous d'Alembert solutions).
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% ===================================================================
+\section{Introduction}\label{sec:intro}
+% ===================================================================
+
+\subsection{The question}
+
+The Standard Model of particle physics has its symmetry group
+fixed by gauge consistency, but its 19 free parameters---coupling
+constants, masses, mixing angles---must be measured, not derived.
+What would happen if one demanded \emph{zero} adjustable
+dimensionless constants?
+
+This paper answers a precise version of that question.
+We define a minimal interface for a ``physics framework''
+(a state space, evolution, and measurement map),
+formalize ``zero parameters'' as algorithmic describability
+of the state space,
+and prove:
+
+\begin{quote}
+\emph{Under five explicit structural assumptions, every admissible
+framework has exactly one observational state on the quotient.}
+\end{quote}
+
+\noindent
+The five assumptions divide into two tiers (\cref{sec:assumptions}):
+two that are forced by the zero-parameter posture (Tier~1),
+and three that are adopted as structural axioms whose derivation
+from Tier~1 alone is an open programme (Tier~2).
+
+\subsection{What this paper proves and what it does not}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|p{3.5cm}|p{4.5cm}|p{4.5cm}|}
+\hline
+\textbf{Level} & \textbf{Proved} & \textbf{Open} \\
+\hline
+\textbf{Tier 1} (A1)+(A2) &
+  Discreteness, comparison structure, countable skeleton &
+  --- \\
+\hline
+\textbf{Bridges B1--B4} &
+  Fibonacci minimality among self-similar schemas &
+  (HS)$\Rightarrow$B1; RCL derivation (B2, deepest);
+  ratio interface B3; ground-state B4 \\
+\hline
+\textbf{Tier 2} (A1)--(A5) &
+  $\sigma = \varphi$,\; $J = \Jcost$,\;
+  $\mu_F$ uniform,\; $\SQ(F) \simeq \mathbf{1}$ &
+  --- \\
+\hline
+\textbf{Reduction} &
+  Both $F$ and canonical framework have trivial quotient &
+  B5: prediction map;\; B6: value equality \\
+\hline
+\end{tabular}
+\end{center}
+
+\medskip\noindent
+The core contribution is the ``Tier~2'' row.
+Full inevitability requires closing bridges B1--B6
+(\cref{sec:bridges}).
+
+\subsection{Relation to existing work}
+
+Wigner (1939) classified particles by Poincar\'e representations.
+Coleman--Mandula (1967) showed the $S$-matrix symmetry group
+is uniquely determined.
+Both share the logic: \emph{structural constraints collapse
+the space of admissible theories}.
+Our result is of this type, applied to the zero-parameter posture
+rather than to relativistic symmetry.
+
+The cost-uniqueness theorem (T5) was proved independently by
+Washburn--Zlatanovi\'c~\cite{WZ2026} and
+Washburn--Rahnamai~Barghi~\cite{Barghi2026};
+the d'Alembert reduction was formalized in~\cite{DAlembert2026}.
+The classical reference for the d'Alembert functional equation is
+Acz\'el~\cite{Aczel1966}.
+
+\subsection{Roadmap}
+
+\Cref{sec:framework} defines the framework interface and the
+observational quotient.
+\Cref{sec:assumptions} states the five assumptions and their tier
+classification.
+\Cref{sec:necessity} provides the necessity stack justifying
+why the assumptions are not ad hoc.
+\Cref{sec:dalembert} exposes the d'Alembert structure of the
+composition law---the strongest argument that (A4) is forced.
+\Cref{sec:t5} proves cost uniqueness ($J = \Jcost$).
+\Cref{sec:main} proves the main theorem (quotient collapse).
+\Cref{sec:bridges} names the six open bridges and
+characterizes the open derivation programme.
+\Cref{sec:falsifiers} lists concrete falsifiers.
+
+% ===================================================================
+\section{Frameworks and the Observational Quotient}\label{sec:framework}
+% ===================================================================
+
+\begin{definition}[Physics Framework]\label{def:framework}
+A \emph{physics framework} is a tuple
+$F = (S_F, T_F, O_F, \mu_F)$
+where $S_F$ is a nonempty set (states),
+$T_F : S_F \to S_F$ is an evolution operator,
+$O_F$ is a set (observables),
+and $\mu_F : S_F \to O_F$ is a measurement map.
+\end{definition}
+
+\begin{definition}[Algorithmic Specification]\label{def:alg-spec}
+A set $S$ admits an \emph{algorithmic specification} if there exist
+a finite binary string $d$,
+an enumeration $g : \N \to \{0,1\}^* \cup \{\bot\}$,
+and a decoder $\psi : \{0,1\}^* \to S \cup \{\bot\}$
+such that for every $s \in S$ there exist $n \in \N$ and
+$c \in \{0,1\}^*$ with $g(n) = c$ and $\psi(c) = s$.
+\end{definition}
+
+\begin{definition}[Zero-Parameter Framework]\label{def:zero-param}
+$F$ has \emph{zero parameters} (written $F \in \cZ$) if
+$S_F$ admits an algorithmic specification.
+\end{definition}
+
+\begin{definition}[Observational Equivalence]\label{def:obs-equiv}
+For a framework $F$, define
+$s_1 \sim_F s_2 \;\Longleftrightarrow\; \mu_F(s_1) = \mu_F(s_2)$.
+\end{definition}
+
+\begin{proposition}\label{prop:equiv-rel}
+$\sim_F$ is an equivalence relation.
+\end{proposition}
+\begin{proof}
+Reflexivity, symmetry, and transitivity of equality.
+\end{proof}
+
+\begin{definition}[Quotient State Space]\label{def:quotient}
+$\SQ(F) := S_F / {\sim_F}$, the set of observational equivalence
+classes.
+We say the quotient \emph{collapses} when $\SQ(F)$ is a subsingleton
+(at most one element).
+\end{definition}
+
+\begin{lemma}[Uniform Observables Imply Quotient Collapse]
+\label{lem:uniform-collapse}
+If $\mu_F(s_1) = \mu_F(s_2)$ for all $s_1, s_2 \in S_F$,
+then $\SQ(F)$ is a subsingleton.
+\end{lemma}
+\begin{proof}
+Any two classes $[a], [b]$ satisfy $\mu_F(a) = \mu_F(b)$,
+hence $a \sim_F b$, hence $[a] = [b]$.
+\end{proof}
+
+% ===================================================================
+\section{The Five Assumptions}\label{sec:assumptions}
+% ===================================================================
+
+\begin{definition}[Model-Independent Assumptions]\label{def:assumptions}
+The \emph{admissibility bundle} for a framework $F$ consists of:
+\begin{enumerate}
+\item[\textup{(A1)}] $F$ is \emph{inhabited}: $S_F \neq \emptyset$.
+\item[\textup{(A2)}] $F$ has \emph{zero parameters}: $F \in \cZ$.
+\item[\textup{(A3)}] $F$ admits a \emph{self-similarity structure}
+  (\cref{def:self-sim}).
+\item[\textup{(A4)}] $F$ has an \emph{admissible cost functional} $J$
+  satisfying the six conditions of \cref{def:admissible-cost}.
+\item[\textup{(A5)}] $F$'s observables are \emph{extracted via cost}
+  with all states at the cost minimum
+  (\cref{def:obs-from-cost,def:measure-by-cost}).
+\end{enumerate}
+\end{definition}
+
+\medskip
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{lll}
+\hline
+\textbf{Assumption} & \textbf{Status} & \textbf{Tier} \\
+\hline
+(A1) Inhabited & Forced (any non-empty framework) & 1 \\
+(A2) Zero parameters & Definitional (class $\cZ$) & 1 \\
+(A3) Self-similarity & Adopted; derivation from (A2) open & 2 \\
+(A4) Cost + composition law & Adopted; derivation from ledger open & 2 \\
+(A5) Observables from cost & Adopted; ratio interface + ground-state open & 2 \\
+\hline
+\end{tabular}
+\end{center}
+
+\medskip\noindent
+Tier~1 assumptions are consequences of the zero-parameter posture.
+Tier~2 assumptions import structural data whose derivation from
+(A1)--(A2) alone is the \emph{open derivation programme}
+(\cref{sec:bridges}).
+All theorems in this paper are conditional on the full bundle
+(A1)--(A5).
+
+% ===================================================================
+\section{The Necessity Stack}\label{sec:necessity}
+% ===================================================================
+
+Each Tier~2 assumption is justified---though not yet derived---by
+a chain of structural necessities:
+\[
+\text{Observables}
+\;\Rightarrow\; \text{Comparison}
+\;\Rightarrow\; \text{Discrete}
+\;\Rightarrow\; \text{Conservation}
+\;\Rightarrow\; \varphi.
+\]
+We summarize each arrow.
+
+\subsection{Observables require comparison}
+
+\begin{proposition}\label{prop:obs-comparison}
+Any framework that derives non-trivial observables in a
+zero-parameter setting without external oracles must internally
+realize a reflexive, symmetric comparison mechanism that
+distinguishes states with different observable values.
+\end{proposition}
+
+\begin{proof}[Argument]
+The measurement map $\mu_F$ is a function $S_F \to O_F$.
+If $\mu_F$ is non-constant, there exist $s_1, s_2$ with
+$\mu_F(s_1) \neq \mu_F(s_2)$.
+In a closed system with no external oracle, the detection
+of this inequality must be realized by an internal function
+$\delta : S_F \times S_F \to \{0,1\}$ satisfying
+$\mu_F(s_1) \neq \mu_F(s_2) \Rightarrow \delta(s_1, s_2) = 1$.
+Reflexivity ($\delta(s,s) = 1$) and symmetry
+($\delta(s_1, s_2) = \delta(s_2, s_1)$) follow from equality
+being an equivalence relation.
+\end{proof}
+
+\subsection{Zero parameters force discreteness}
+
+\begin{proposition}\label{prop:discrete}
+Any $F \in \cZ$ admits a surjection from a countable set onto $S_F$.
+\end{proposition}
+\begin{proof}
+The algorithmic specification provides an enumeration
+$g : \N \to \{0,1\}^*$ and a decoder $\psi$ covering every
+$s \in S_F$.
+The composite $\psi \circ g$ is a surjection from a countable
+index set.
+\end{proof}
+
+\subsection{Discrete conservation forces balanced accounting}
+
+\begin{proposition}\label{prop:ledger}
+Given a locally finite discrete event system with a conserved flow,
+the conservation law is equivalent to a balanced double-entry
+condition on events.
+\end{proposition}
+\begin{proof}[Sketch]
+Conservation at each event $e$ requires
+$\sum_{v \to e} f(v) = \sum_{e \to w} f(w)$.
+This is precisely the balance condition of a double-entry
+accounting system.
+The discrete, locally finite structure ensures the sums are
+finite and well-defined.
+\end{proof}
+
+\subsection{Self-similarity forces $\varphi$}
+
+\begin{definition}[Self-Similarity Structure]\label{def:self-sim}
+A framework admits a \emph{self-similarity structure} if there
+exist a preferred scale $\sigma > 1$ and three successive levels
+$\ell_0, \ell_1, \ell_2 > 0$ with
+$\ell_1 = \sigma \ell_0$,\;
+$\ell_2 = \sigma \ell_1$,\; and
+$\ell_2 = \ell_1 + \ell_0$.
+\end{definition}
+
+\begin{theorem}[Self-Similarity Forces $\varphi$]\label{thm:phi}
+If $F$ admits a self-similarity structure with scale $\sigma$, then
+\[
+\sigma^2 = \sigma + 1,
+\qquad\text{hence}\qquad
+\sigma = \varphi := \frac{1 + \sqrt{5}}{2}.
+\]
+\end{theorem}
+\begin{proof}
+From the definitions:
+$\ell_2 = \sigma^2 \ell_0$ and
+$\ell_2 = (\sigma + 1)\ell_0$.
+Since $\ell_0 > 0$, cancel to get $\sigma^2 = \sigma + 1$.
+The polynomial $x^2 - x - 1$ has roots
+$(1 \pm \sqrt{5})/2$.
+Since $\sigma > 1$, we have $\sigma = (1 + \sqrt{5})/2 = \varphi$.
+\end{proof}
+
+% ===================================================================
+\section{The d'Alembert Structure of the Composition Law}
+\label{sec:dalembert}
+% ===================================================================
+
+This section exposes the composition law (A4) as a classical
+functional equation, not a bespoke recognition-specific identity.
+This is the strongest argument that (A4) is not ad hoc.
+
+\subsection{The Recognition Composition Law}
+
+\begin{definition}[Admissible Cost Functional]\label{def:admissible-cost}
+A cost functional $J : \Rp \to \R$ is \emph{admissible} if:
+\begin{enumerate}
+\item \emph{Reciprocal symmetry:}
+  $J(x) = J(x^{-1})$ for all $x > 0$.
+\item \emph{Unit normalization:} $J(1) = 0$.
+\item \emph{Strict convexity:} $J$ is strictly convex on $\Rp$.
+\item \emph{Calibration:}
+  $\frac{d^2}{dt^2}(J \circ \exp)\big|_{t=0} = 1$.
+\item \emph{Continuity:} $J$ is continuous on $\Rp$.
+\item \emph{Composition law (RCL):} For all $x, y > 0$,
+\begin{equation}\label{eq:rcl}
+J(xy) + J(x/y) = 2J(x)J(y) + 2J(x) + 2J(y).
+\end{equation}
+\end{enumerate}
+\end{definition}
+
+\subsection{Reduction to the d'Alembert equation}
+
+Define the reparametrizations
+\begin{equation}\label{eq:GH}
+G(t) := J(e^t), \qquad H(t) := G(t) + 1 = J(e^t) + 1.
+\end{equation}
+
+\begin{proposition}[RCL $\Leftrightarrow$ d'Alembert]
+\label{prop:dalembert-equiv}
+$J$ satisfies \eqref{eq:rcl} if and only if $H$ satisfies the
+d'Alembert functional equation:
+\begin{equation}\label{eq:dalembert}
+H(s + t) + H(s - t) = 2\,H(s)\,H(t),
+\qquad s, t \in \R.
+\end{equation}
+Moreover, the admissibility conditions translate as follows:
+\begin{itemize}
+\item $J(1) = 0 \;\Leftrightarrow\; H(0) = 1$.
+\item $J(x) = J(x^{-1}) \;\Leftrightarrow\; H(-t) = H(t)$
+  \textup{(}evenness\textup{)}.
+\item Continuity of $J$ on $\Rp \;\Leftrightarrow\;$
+  continuity of $H$ on $\R$.
+\end{itemize}
+\end{proposition}
+\begin{proof}
+Substitute $x = e^s$, $y = e^t$ into~\eqref{eq:rcl} and expand
+$K = J + 1$:
+\begin{align*}
+J(e^{s+t}) + J(e^{s-t})
+&= 2J(e^s)J(e^t) + 2J(e^s) + 2J(e^t) \\
+G(s+t) + G(s-t)
+&= 2G(s)G(t) + 2G(s) + 2G(t) \\
+(H(s+t) - 1) + (H(s-t) - 1)
+&= 2(H(s)-1)(H(t)-1) + 2(H(s)-1) + 2(H(t)-1) \\
+H(s+t) + H(s-t) - 2
+&= 2H(s)H(t) - 2 \\
+H(s+t) + H(s-t)
+&= 2H(s)H(t). \qedhere
+\end{align*}
+\end{proof}
+
+\subsection{The Acz\'el classification}
+
+The d'Alembert equation \eqref{eq:dalembert} is classical.
+Jean le Rond d'Alembert studied it in the eighteenth century
+in connection with vibrating strings.
+The complete classification of continuous solutions was established
+by Acz\'el~\cite{Aczel1966}:
+
+\begin{theorem}[Acz\'el Classification {\cite[Ch.~3]{Aczel1966}}]
+\label{thm:aczel}
+The continuous solutions of
+$H(s+t) + H(s-t) = 2H(s)H(t)$ with $H(0) = 1$ are exactly:
+\begin{enumerate}
+\item[\textup{(i)}] $H(t) = 1$ for all $t$
+  \;\textup{(}constant\textup{)},
+\item[\textup{(ii)}] $H(t) = \cosh(\lambda t)$ for some
+  $\lambda \neq 0$,
+\item[\textup{(iii)}] $H(t) = \cos(\lambda t)$ for some
+  $\lambda \neq 0$.
+\end{enumerate}
+\end{theorem}
+
+\begin{remark}[Why the RCL is not ad hoc]\label{rem:not-adhoc}
+The composition law~\eqref{eq:rcl} is not a bespoke equation
+engineered to produce a desired answer.
+It is the d'Alembert functional equation in multiplicative
+coordinates---the unique symmetric composition law on
+$(\Rp, \times)$ compatible with non-degeneracy.
+The analogy with the parallelogram law is precise:
+Jordan--von~Neumann (1935) proved that the parallelogram identity
+uniquely characterizes inner-product spaces among normed spaces;
+the d'Alembert identity uniquely characterizes $\cosh$ among
+symmetric composition functions on abelian groups.
+\end{remark}
+
+\subsection{Why additive composition fails}
+
+One might ask: why not $J(xy) = J(x) + J(y)$ (logarithmic cost)?
+Logarithms satisfy $J(x) = J(x^{-1})$ only if $J \equiv 0$,
+violating strict convexity.
+The d'Alembert form arises specifically from combining reciprocal
+symmetry with the requirement that the composition is quadratic
+(not additive) in $J$.
+Establishing \emph{why} the composition must be quadratic rather
+than additive is Bridge B2 (\cref{sec:bridge-b2}).
+
+% ===================================================================
+\section{Cost Uniqueness}\label{sec:t5}
+% ===================================================================
+
+\begin{theorem}[T5: Cost Uniqueness]\label{thm:t5}
+Let $J : \Rp \to \R$ be an admissible cost functional
+(\cref{def:admissible-cost}).
+Then for all $x > 0$:
+\begin{equation}\label{eq:jcost}
+J(x) = \Jcost(x) := \tfrac{1}{2}(x + x^{-1}) - 1.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+By \cref{prop:dalembert-equiv}, $H(t) = J(e^t) + 1$ is a
+continuous, even solution of the d'Alembert equation with
+$H(0) = 1$.
+
+\emph{Step 1: Apply the Acz\'el classification
+(\cref{thm:aczel}).}
+The three cases are: (i)~$H = 1$, (ii)~$H = \cosh(\lambda t)$,
+(iii)~$H = \cos(\lambda t)$.
+
+\emph{Step 2: Eliminate cases (i) and (iii).}
+Case~(i) gives $J \equiv 0$, contradicting strict convexity
+(which requires a unique minimum, not a flat zero).
+Case~(iii) gives $J(e^t) = \cos(\lambda t) - 1 \leq 0$
+with a maximum at $t = 0$;
+strict convexity requires a \emph{minimum} at $t = 0$, ruling
+this out.
+
+\emph{Step 3: Calibrate case (ii).}
+$H(t) = \cosh(\lambda t)$ gives
+$\frac{d^2}{dt^2} H\big|_{t=0} = \lambda^2$.
+The calibration condition forces $\lambda^2 = 1$,
+hence $\lambda = 1$ (taking $\lambda > 0$).
+
+\emph{Step 4: Conclude.}
+$J(e^t) = \cosh(t) - 1 = \frac{1}{2}(e^t + e^{-t}) - 1$.
+Substituting $x = e^t$:
+$J(x) = \frac{1}{2}(x + x^{-1}) - 1 = \Jcost(x)$.
+\end{proof}
+
+\begin{corollary}\label{cor:unique-min}
+$\Jcost(x) = 0$ if and only if $x = 1$.
+$\Jcost$ is strictly convex on $\Rp$ with unique minimum at $x = 1$.
+\end{corollary}
+\begin{proof}
+$\Jcost(x) = \frac{1}{2}(x + x^{-1}) - 1 \geq 0$ by AM--GM,
+with equality iff $x = x^{-1}$, i.e., $x = 1$ (since $x > 0$).
+\end{proof}
+
+% ===================================================================
+\section{Observables from Cost and Derived Uniformity}
+\label{sec:obs-cost}
+% ===================================================================
+
+\begin{definition}[Measure Determined by Cost]\label{def:measure-by-cost}
+$F$ has \emph{measure determined by cost} $J$ if there exists
+$r : S_F \to \Rp$ (the ratio extraction) such that
+\[
+r(s_1) = r(s_2) \;\Longrightarrow\; \mu_F(s_1) = \mu_F(s_2).
+\]
+\end{definition}
+
+\begin{definition}[Observables from Cost]\label{def:obs-from-cost}
+$F$ has \emph{observables from cost} if it has measure determined
+by cost and every state lies at the cost minimum:
+$J(r(s)) = 0$ for all $s \in S_F$.
+\end{definition}
+
+\begin{theorem}[Derived Uniformity]\label{thm:derived-uniform}
+Let $F$ be a framework with an admissible cost functional $J$,
+measure determined by cost via $r : S_F \to \Rp$,
+and $J(r(s)) = 0$ for all $s$.
+Then:
+\begin{enumerate}
+\item $J = \Jcost$ \;\textup{(}by T5\textup{)}.
+\item $r(s) = 1$ for all $s$
+  \;\textup{(}by \cref{cor:unique-min}\textup{)}.
+\item $\mu_F$ is uniform: $\mu_F(s_1) = \mu_F(s_2)$
+  for all $s_1, s_2$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+(1)~\Cref{thm:t5}.
+(2)~$\Jcost(r(s)) = 0$ and $\Jcost(x) = 0 \Leftrightarrow x = 1$
+(\cref{cor:unique-min}).
+(3)~$r(s_1) = 1 = r(s_2)$, so measure-determined-by-cost gives
+$\mu_F(s_1) = \mu_F(s_2)$.
+\end{proof}
+
+% ===================================================================
+\section{Main Theorem}\label{sec:main}
+% ===================================================================
+
+\begin{theorem}[Observational Uniqueness on the Quotient]
+\label{thm:main}
+Let $F$ be a physics framework satisfying
+\textup{(A1)--(A5)} of \cref{def:assumptions}.
+Then:
+\begin{enumerate}
+\item The preferred scale is $\varphi = (1 + \sqrt{5})/2$.
+\item The cost functional is $J = \Jcost$.
+\item The measurement map is uniform.
+\item The quotient state space is a subsingleton:
+  $\SQ(F) \simeq \mathbf{1}$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{(1)}
+By (A3) and \cref{thm:phi}, $\sigma^2 = \sigma + 1$ with
+$\sigma > 1$ gives $\sigma = \varphi$.
+
+\emph{(2)}
+By (A4) and \cref{thm:t5}, the admissible cost functional
+equals $\Jcost$ on $\Rp$.
+
+\emph{(3)}
+By (A5) and \cref{thm:derived-uniform}, cost-minimum semantics
+and cost uniqueness force $r(s) = 1$ for all $s$, hence
+$\mu_F$ is uniform.
+
+\emph{(4)}
+By \cref{lem:uniform-collapse}, uniform observables imply
+$\SQ(F)$ is a subsingleton.
+Since $F$ is inhabited (A1), $\SQ(F)$ is nonempty.
+A nonempty subsingleton is equivalent to $\mathbf{1}$.
+\end{proof}
+
+\begin{corollary}[Framework Equivalence]\label{cor:equiv}
+Let $\mathcal{C} = (\mathbf{1}, \mathrm{id}, \Odim, \mu_\mathcal{C})$
+be the canonical one-state framework.
+If $F$ satisfies \textup{(A1)--(A5)} and there exists an
+observable-type equivalence $e : O_F \simeq \Odim$, then
+\[
+\SQ(F) \simeq \SQ(\mathcal{C}) \simeq \mathbf{1}
+\qquad\text{and}\qquad
+O_F \simeq O_\mathcal{C}.
+\]
+\end{corollary}
+
+\begin{remark}[What the theorem does not claim]
+The theorem does \emph{not} assert that the raw state space
+$S_F$ is a singleton.
+It asserts that all internal states are observationally
+indistinguishable at the cost-extracted interface:
+multiplicity of $S_F$ is gauge redundancy, not physical freedom.
+\end{remark}
+
+% ===================================================================
+\section{The Open Derivation Programme: Six Bridges}
+\label{sec:bridges}
+% ===================================================================
+
+The full inevitability claim---``any $F \in \cZ$ is forced into
+the RS structure''---requires deriving (A3)--(A5) from
+(A1)--(A2) alone.
+This section names the six structural bridges.
+
+\subsection{Bridge B1: self-similarity from zero parameters}
+\label{sec:bridge-b1}
+
+\Cref{thm:phi} proves: \emph{among} self-similar schemas,
+$\varphi$ is forced.
+It does not prove: a zero-parameter ledger \emph{must} be
+self-similar.
+
+\begin{openproblem}[Hierarchy Theorem]
+Show that a discrete, zero-parameter ledger with at least two
+levels of event composition and uniform inter-level scaling
+necessarily satisfies a monic integer recurrence.
+This, combined with \cref{thm:phi}, forces $\varphi$.
+\end{openproblem}
+
+The intermediate result ``(A2) + hierarchical structure
+$\Rightarrow$ (A3)'' is well-posed.
+Deriving hierarchical structure from (A2) alone remains open.
+
+\subsection{Bridge B2: the RCL from ledger structure (deepest)}
+\label{sec:bridge-b2}
+
+The RCL~\eqref{eq:rcl} is adopted as an axiom in (A4).
+\Cref{sec:dalembert} showed it is the d'Alembert equation---not
+a bespoke formula.
+The open problem is to \emph{derive} it:
+
+\begin{openproblem}[Composition Rule Classification]
+\label{op:rcl}
+Among all continuous, symmetric composition rules
+$f : \R \times \R \to \R$ satisfying
+$J(xy) + J(x/y) = f(J(x), J(y))$ for a reciprocally symmetric
+cost $J$ with $J(1) = 0$:
+\begin{enumerate}
+\item $f(0,0) = 0$ and $f(a, 0) = 2a$
+  \;\textup{(}from setting $y = 1$\textup{)}.
+\item If cost composition is associative
+  \textup{(}derivable from the group structure of
+  $(\Rp, \times)$\textup{)}, then
+  $f(a,b) = 2(a+1)(b+1) - 2$,
+  i.e., $J$ satisfies the RCL.
+\end{enumerate}
+Prove or disprove that associativity is forced by the
+zero-parameter posture.
+\end{openproblem}
+
+This is the most significant open problem in the programme.
+
+\subsection{Bridge B3: the ratio-extraction interface}
+\label{sec:bridge-b3}
+
+(A5) posits $r : S_F \to \Rp$.
+This bundles three sub-claims:
+\begin{enumerate}
+\item \emph{Dimensionlessness:} all observables are ratios
+  (no dimensionful constants in a zero-parameter framework).
+\item \emph{One-dimensionality:} a single real per state
+  (requires the ledger to have one independent conserved
+  quantity).
+\item \emph{Positivity:} the ratio lives on $\Rp$.
+\end{enumerate}
+
+\subsection{Bridge B4: the ground-state restriction}
+\label{sec:bridge-b4}
+
+The hypothesis $J(r(s)) = 0$ for all $s$ is not automatic.
+By reciprocal symmetry, $r(S_F)$ is inversion-closed.
+Under a \emph{structural determinacy} (SD) hypothesis---that
+each ratio is uniquely determined by a computable,
+$\mathbb{Z}/2\mathbb{Z}$-invariant predicate---any $x \neq 1$
+requires at least 1 bit to select from $\{x, x^{-1}\}$,
+contradicting zero parameters.
+Deriving (SD) from (A2) alone is open.
+
+\begin{example}[Concrete falsifier for automatic ground-state]
+Let $S_F = \{s_0\}$, $r(s_0) = 2$.
+Then $\Jcost(r(s_0)) = \Jcost(2) = \frac{1}{4} \neq 0$.
+This one-state framework satisfies (A1), (A2), (A4), and
+vacuously (A5-i), but violates the ground-state restriction.
+\end{example}
+
+\subsection{Bridge B5: the constructive prediction map}
+\label{sec:bridge-b5}
+
+\Cref{thm:main} proves $\mu_F$ is constant but does not identify
+the constant.
+A prediction map
+$\mathcal{P} : (\Jcost, \varphi) \to \Odim$ would need to:
+(i)~take $\Jcost$ and $\varphi$ as sole inputs,
+(ii)~produce specific dimensionless quantities,
+(iii)~have $O(1)$ description length, and
+(iv)~be unique.
+Existence (i)--(iii) can be established by formalizing the RS
+ledger algorithm; uniqueness (iv) and value identification
+remain open.
+
+\subsection{Bridge B6: the observable-type equivalence}
+\label{sec:bridge-b6}
+
+\Cref{cor:equiv} requires $e : O_F \simeq \Odim$ as input.
+After quotient collapse, $\mathrm{im}(\mu_F)$ is a singleton.
+Any two singleton types are abstractly isomorphic,
+so the type-level equivalence is trivially constructible.
+Non-trivial content (value identification) reduces to B5.
+
+% ===================================================================
+\section{Falsifiers}\label{sec:falsifiers}
+% ===================================================================
+
+The theorem is a mathematical statement that cannot be refuted
+within its hypotheses.
+However, the \emph{inevitability framing} can be challenged by
+showing that a hypothesis is too strong, too narrow, or physically
+unwarranted.
+Each of the following would constitute a substantive refutation:
+
+\begin{enumerate}
+\item \textbf{Alternative zero-parameter framework.}
+  Construct $F \in \cZ$ that derives observables and does
+  \emph{not} collapse on the quotient (non-uniform
+  $\mu_F$ without free parameters).
+
+\item \textbf{Non-$\varphi$ self-similarity.}
+  Provide a parameter-free self-similar scaling whose preferred
+  scale is not $\varphi$, using a notion of self-similarity that
+  retains the intended physical meaning.
+
+\item \textbf{Continuous zero-parameter physics.}
+  Exhibit a theory with no adjustable dimensionless knobs whose
+  state space is genuinely uncountable, and argue that
+  continuity does not constitute hidden parameter freedom.
+
+\item \textbf{Conservation without double-entry.}
+  Produce a discrete conserved dynamics where conservation is
+  representable without a balanced accounting structure.
+
+\item \textbf{Pathological d'Alembert solution.}
+  Construct a non-standard solution to~\eqref{eq:dalembert}
+  satisfying the raw identity but violating regularity.
+  This would not refute \cref{thm:t5} (regularity is explicit),
+  but would show that regularity is a load-bearing hypothesis.
+\end{enumerate}
+
+% ===================================================================
+\section{Conclusion}\label{sec:conclusion}
+% ===================================================================
+
+We have proved that any physics framework satisfying the five
+admissibility conditions has a unique observational state on the
+quotient: $\SQ(F) \simeq \mathbf{1}$.
+The preferred scale is $\varphi = (1+\sqrt{5})/2$ and the cost
+functional is $\Jcost(x) = \frac{1}{2}(x + x^{-1}) - 1$.
+
+Three of the five assumptions are adopted axioms, not yet derived
+from the zero-parameter posture alone.
+The paper names six bridges (B1--B6) that would close the full
+inevitability programme.
+Of these, B2 (deriving the RCL/d'Alembert equation from ledger
+structure) and B5 (constructing a unique prediction map) are
+the deepest open problems.
+
+The composition law is the d'Alembert functional equation
+(\cref{sec:dalembert})---the unique symmetric composition law
+on $(\Rp, \times)$ compatible with non-degeneracy.
+It is not bespoke.
+Whether it is \emph{forced} by the zero-parameter posture is
+the central question the programme must answer.
+
+% ===================================================================
+\appendix
+\section{Formal Verification}\label{app:lean}
+% ===================================================================
+
+All proved results are formally verified in Lean~4.
+The following table maps paper results to Lean modules.
+The Lean codebase uses one external axiom:
+\texttt{aczel\_representation\_axiom} (the Acz\'el
+classification, \cref{thm:aczel}).
+
+\medskip
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\small
+\begin{tabular}{lll}
+\hline
+\textbf{Paper result} & \textbf{Lean theorem} & \textbf{Module} \\
+\hline
+\cref{thm:phi} ($\varphi$ forcing) &
+  \texttt{phi\_forced} &
+  \texttt{PhiForcing} \\
+\cref{thm:t5} (cost uniqueness) &
+  \texttt{T5\_uniqueness\_complete} &
+  \texttt{CostUniqueness} \\
+\cref{thm:derived-uniform} (derived uniformity) &
+  \texttt{zero\_params\_forces\_uniform} &
+  \texttt{ModelIndependent} \\
+\cref{thm:main} (quotient collapse) &
+  \texttt{derived\_model\_independent\_exclusivity} &
+  \texttt{ModelIndependent} \\
+\cref{cor:equiv} (framework equivalence) &
+  \texttt{model\_independent\_framework\_equiv} &
+  \texttt{ModelIndependent} \\
+B1 hierarchy theorem &
+  \texttt{hierarchy\_forces\_fibonacci\_recurrence} &
+  \texttt{HierarchyTheorem} \\
+B4 ground-state corollary &
+  \texttt{ground\_state\_implies\_cost\_minimum} &
+  \texttt{GroundStateRestriction} \\
+B6 type equivalence &
+  \texttt{bridge\_B6\_observable\_type\_equiv\_trivial} &
+  \texttt{ObservableTypeEquiv} \\
+\hline
+\end{tabular}
+\end{center}
+
+\medskip\noindent
+All modules listed above compile with zero \texttt{sorry}.
+The B2 scaffold (\texttt{RCLDerivation}) and B5 scaffold
+(\texttt{PredictionMap}) contain explicit \texttt{sorry}-marked
+open problems corresponding to \cref{op:rcl} and
+\cref{sec:bridge-b5}.
+
+% ===================================================================
+\begin{thebibliography}{99}
+
+\bibitem{Aczel1966}
+J.~Acz\'el,
+\emph{Lectures on Functional Equations and Their Applications},
+Academic Press, 1966.
+
+\bibitem{WZ2026}
+J.~Washburn and M.~Zlatanovi\'c,
+``Uniqueness of the Canonical Reciprocal Cost,''
+\emph{Mathematics} \textbf{14}, 935 (2026).
+
+\bibitem{Barghi2026}
+J.~Washburn and A.~Rahnamai~Barghi,
+``Reciprocal Convex Costs for Ratio Matching,''
+\emph{Axioms} \textbf{15}(2), 151 (2026).
+
+\bibitem{DAlembert2026}
+J.~Washburn,
+``D'Alembert Uniqueness is Fully Unconditional,''
+Preprint (2026).
+
+\end{thebibliography}
+
+\end{document}
