@@ -119,9 +119,7 @@ theorem conservation_from_efe_and_bianchi
   have h1 := h_bianchi nu
   have h2 := h_efe_div nu
   rw [h1, mul_zero, zero_add] at h2
-  exact (mul_right_cancel₀ hk h2.symm).symm ▸ by
-    field_simp [hk] at h2 ⊢
-    linarith
+  exact mul_left_cancel₀ hk (h2.symm.trans (mul_zero kappa).symm)
 
 /-- For the RS coupling kappa = 8*phi^5, conservation holds
     (since kappa > 0, hence kappa != 0). -/

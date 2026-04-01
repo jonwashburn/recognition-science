@@ -190,7 +190,7 @@ structure FullGRCertificate where
     (∀ d ∈ deficits, d = 0) → linearized_bianchi deficits
   convergence_second_order : ∀ a : ℝ, 0 < a → a < 1 → (a/2)^2 = a^2/4
 
-theorem full_gr_certificate : FullGRCertificate where
+def full_gr_certificate : FullGRCertificate where
   dimension := rs_efe_data
   dimension_ok := rs_efe_dimension
   kappa_derived := rs_efe_kappa
