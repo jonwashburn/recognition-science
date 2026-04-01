@@ -138,14 +138,15 @@ noncomputable def equilibrium_entropy (N : ℕ) (σ : ℝ) : ℝ :=
 theorem equilibrium_entropy_eq (N : ℕ) (σ : ℝ) :
     equilibrium_entropy N σ = N * (Real.cosh (σ / N) - 1) := by
   unfold equilibrium_entropy J_log
+  rfl
 
 /-- Equilibrium entropy is non-negative. -/
 theorem equilibrium_entropy_nonneg (N : ℕ) (σ : ℝ) :
     0 ≤ equilibrium_entropy N σ := by
   unfold equilibrium_entropy
   apply mul_nonneg
-  · exact Nat.cast_nonneg
-  · exact le_of_lt (J_log_nonneg (σ / N))  |>.le
+  · positivity
+  · exact J_log_nonneg (σ / N)
 
 /-- Equilibrium entropy is zero iff σ = 0. -/
 theorem equilibrium_entropy_zero_iff {N : ℕ} (hN : 0 < N) (σ : ℝ) :
@@ -197,7 +198,7 @@ theorem temperature_positive {N : ℕ} (hN : 0 < N) (σ : ℝ) (hσ : 0 < σ) :
     0 < rs_temperature N σ := by
   unfold rs_temperature
   have hN_pos : (0 : ℝ) < N := Nat.cast_pos.mpr hN
-  exact Real.sinh_pos_of_pos (div_pos hσ hN_pos)
+  exact (Real.sinh_pos_iff).2 (div_pos hσ hN_pos)
 
 /-- **THEOREM (Temperature Is Negative for Negative Energy)**:
     When σ < 0, the temperature is negative.
@@ -207,7 +208,7 @@ theorem temperature_negative {N : ℕ} (hN : 0 < N) (σ : ℝ) (hσ : σ < 0) :
     rs_temperature N σ < 0 := by
   unfold rs_temperature
   have hN_pos : (0 : ℝ) < N := Nat.cast_pos.mpr hN
-  exact Real.sinh_neg_of_neg (div_neg_of_neg_of_pos hσ hN_pos)
+  exact (Real.sinh_neg_iff).2 (div_neg_of_neg_of_pos hσ hN_pos)
 
 /-- **THEOREM (Temperature Is Odd)**:
     T(-σ) = -T(σ). Temperature is antisymmetric in energy. -/
@@ -226,8 +227,10 @@ theorem temperature_determines_equilibrium (N : ℕ) (σ₁ σ₂ : ℝ)
     σ₁ = σ₂ := by
   unfold rs_temperature at h
   have hN_pos : (0 : ℝ) < N := Nat.cast_pos.mpr hN
-  have := Real.sinh_injective h
-  exact div_left_injective₀ hN_pos.ne' this
+  have hdiv : σ₁ / N = σ₂ / N := Real.sinh_injective h
+  have hmul := congrArg (fun x : ℝ => x * N) hdiv
+  field_simp [hN_pos.ne'] at hmul
+  exact hmul
 
 /-! ## Part 4: The First Law -/
 
@@ -250,15 +253,18 @@ theorem first_law_derivative (N : ℕ) (hN : 0 < N) :
   unfold equilibrium_entropy rs_temperature J_log
   have hN_pos : (0 : ℝ) < N := Nat.cast_pos.mpr hN
   have hN_ne : (N : ℝ) ≠ 0 := hN_pos.ne'
-  simp only []
   rw [show (fun σ => (N : ℝ) * (Real.cosh (σ / ↑N) - 1)) =
     (fun σ => (N : ℝ) * Real.cosh (σ / N) - N) from by ext; ring]
   rw [deriv_sub_const]
   rw [deriv_const_mul]
-  · simp only [Real.deriv_cosh, deriv_div_const, Real.deriv_id']
-    ring_nf
-    rw [mul_comm (Real.sinh _) _, mul_div_cancel_of_imp]
-    intro h; linarith
+  · have hchain :
+        deriv (fun x : ℝ => Real.cosh (x / N)) σ =
+          Real.sinh (σ / N) * (1 / N) := by
+        simpa [deriv_div_const, deriv_id''] using
+          (Real.deriv_cosh (f := fun x : ℝ => x / N) (x := σ)
+            (differentiableAt_id.div_const (N : ℝ)))
+    rw [hchain]
+    field_simp [hN_ne]
   · exact (Real.differentiable_cosh.comp (differentiable_id.div_const _)).differentiableAt
 
 /-- The first law as a pointwise equality. -/
@@ -269,7 +275,7 @@ theorem first_law (N : ℕ) (hN : 0 < N) (σ : ℝ) :
 
 /-! ## Part 5: The Second Law -/
 
-/-- **THEOREM (Second Law)**:
+/- **THEOREM (Second Law)**:
     Entropy (total defect) is non-decreasing along variational trajectories
     when measured from the observer's perspective.
 
@@ -323,7 +329,7 @@ theorem entropy_decomposition {N : ℕ} (S : Subsystem N)
     rs_entropy c = observer_entropy S c + system_entropy S c := by
   unfold rs_entropy total_defect observer_entropy system_entropy
   rw [← Finset.sum_sdiff (Finset.subset_univ S.obs_indices)]
-  rfl
+  simpa [Subsystem.sys_indices, add_comm]
 
 /-! ## Part 6: The Canonical Ensemble -/
 
@@ -391,9 +397,13 @@ theorem specific_heat_is_second_deriv (N : ℕ) (hN : 0 < N) :
     deriv (rs_temperature N) = specific_heat N := by
   ext σ
   unfold rs_temperature specific_heat
-  have hN_ne : (N : ℝ) ≠ 0 := (Nat.cast_pos.mpr hN).ne'
-  simp only [Real.deriv_sinh, deriv_div_const, Real.deriv_id']
-  rw [one_div]
+  have hchain :
+      deriv (fun x : ℝ => Real.sinh (x / N)) σ =
+        Real.cosh (σ / N) * (1 / N) := by
+    simpa [deriv_div_const, deriv_id''] using
+      (Real.deriv_sinh (f := fun x : ℝ => x / N) (x := σ)
+        (differentiableAt_id.div_const (N : ℝ)))
+  simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using hchain
 
 /-- Specific heat at zero energy: C(0) = 1/N. -/
 theorem specific_heat_at_zero {N : ℕ} (hN : 0 < N) :
@@ -451,7 +461,11 @@ theorem thermal_eq_iff_equal_ratio (N₁ N₂ : ℕ) (hN₁ : 0 < N₁) (hN₂ :
     (σ₁ σ₂ : ℝ) :
     InThermalEquilibrium N₁ N₂ σ₁ σ₂ ↔ σ₁ / N₁ = σ₂ / N₂ := by
   unfold InThermalEquilibrium rs_temperature
-  exact ⟨Real.sinh_injective, fun h => congrArg Real.sinh h⟩
+  constructor
+  · intro h
+    exact Real.sinh_injective h
+  · intro h
+    exact congrArg Real.sinh h
 
 /-! ## Part 10: Summary Certificate -/
 
