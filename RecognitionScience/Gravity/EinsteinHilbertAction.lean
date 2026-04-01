@@ -57,7 +57,6 @@ theorem eh_proportional_to_R (R1 R2 det_g kappa : ℝ)
   have hsd : 0 < Real.sqrt (|det_g|) := Real.sqrt_pos.mpr hd
   have h2k : 0 < 2 * kappa := by linarith
   field_simp [ne_of_gt hsd, ne_of_gt h2k]
-  ring
 
 /-! ## Hilbert Variation (THE KEY RESULT) -/
 

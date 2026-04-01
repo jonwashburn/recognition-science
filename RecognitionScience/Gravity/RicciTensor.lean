@@ -57,7 +57,6 @@ noncomputable def scalar_curvature
 theorem scalar_flat :
     scalar_curvature minkowski_inverse (fun _ _ _ => 0) (fun _ _ _ _ => 0) = 0 := by
   simp [scalar_curvature, ricci_flat]
-  ring
 
 /-! ## Einstein Tensor -/
 
@@ -76,7 +75,6 @@ theorem einstein_flat (mu nu : Idx) :
     einstein_tensor minkowski minkowski_inverse
       (fun _ _ _ => 0) (fun _ _ _ _ => 0) mu nu = 0 := by
   simp [einstein_tensor, ricci_flat, scalar_flat]
-  ring
 
 /-- Einstein tensor is symmetric when the Ricci tensor is symmetric
     (which holds when the connection is torsion-free). -/
@@ -119,7 +117,7 @@ theorem minkowski_is_vacuum_solution :
     vacuum_efe_coord minkowski minkowski_inverse
       (fun _ _ _ => 0) (fun _ _ _ _ => 0) 0 := by
   intro mu nu
-  simp [vacuum_efe_coord, einstein_flat]
+  simp [einstein_flat]
 
 /-! ## Certificate -/
 

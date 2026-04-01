@@ -48,12 +48,12 @@ structure InverseMetric where
 /-- The flat Minkowski metric eta = diag(-1, +1, +1, +1). -/
 def minkowski : MetricTensor where
   g := fun mu nu => if mu = nu then (if mu = 0 then -1 else 1) else 0
-  symmetric := by intro mu nu; simp; split_ifs <;> simp [eq_comm]
+  symmetric := by intro mu nu; split_ifs <;> simp_all [eq_comm]
 
 /-- The Minkowski inverse equals the Minkowski metric itself. -/
 def minkowski_inverse : InverseMetric where
   ginv := fun mu nu => if mu = nu then (if mu = 0 then -1 else 1) else 0
-  symmetric := by intro mu nu; simp; split_ifs <;> simp [eq_comm]
+  symmetric := by intro mu nu; split_ifs <;> simp_all [eq_comm]
 
 /-! ## Christoffel Symbols -/
 
@@ -116,8 +116,8 @@ theorem flat_christoffel_vanish :
     ∀ rho mu nu : Idx,
       (christoffel_from_metric minkowski_inverse (fun _ _ _ => 0)).gamma rho mu nu = 0 := by
   intro rho mu nu
-  simp [christoffel_from_metric, minkowski_inverse]
-  ring
+  simp only [christoffel_from_metric, minkowski_inverse]
+  norm_num
 
 /-! ## Certificate -/
 

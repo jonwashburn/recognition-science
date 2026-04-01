@@ -101,9 +101,10 @@ theorem convergence_is_second_order (a : ℝ) (ha : 0 < a) (ha1 : a < 1) :
 /-- Second-order convergence implies the error vanishes as a -> 0. -/
 theorem error_vanishes (C : ℝ) (hC : 0 < C) :
     Filter.Tendsto (fun a => C * a ^ 2) (nhds 0) (nhds 0) := by
-  have : Filter.Tendsto (fun a => a ^ 2) (nhds 0) (nhds 0) := by
-    exact (continuous_pow 2).continuousAt.tendsto.comp (Filter.tendsto_id)
-  exact Filter.Tendsto.const_mul this (Or.inl rfl)
+  have h : Continuous (fun a : ℝ => C * a ^ 2) := by continuity
+  have := h.tendsto (0 : ℝ)
+  simp at this
+  exact this
 
 /-! ## Connection to RS -/
 

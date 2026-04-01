@@ -47,6 +47,7 @@ theorem D3_laplacian_three_terms (f : LatticeField3) (x : Fin 3 → ℤ) :
       (f (shift_plus 2 x) + f (shift_minus 2 x) - 2 * f x) := by
   unfold lattice_laplacian
   simp [Fin.sum_univ_three]
+  ring
 
 /-- Each axis contributes independently to the lattice Laplacian.
     The k-th term is the 1D second difference along axis k. -/
@@ -116,11 +117,11 @@ theorem jcost_neighbor_approximation_3D (f : LatticeField3) (x : Fin 3 → ℤ)
 /-! ## Certificate -/
 
 structure LatticeConvergenceCert where
-  three_terms : ∀ f x, lattice_laplacian f x =
+  three_terms : ∀ (f : LatticeField3) (x : Fin 3 → ℤ), lattice_laplacian f x =
     (f (shift_plus 0 x) + f (shift_minus 0 x) - 2 * f x) +
     (f (shift_plus 1 x) + f (shift_minus 1 x) - 2 * f x) +
     (f (shift_plus 2 x) + f (shift_minus 2 x) - 2 * f x)
-  decomposition : ∀ (f : LatticeField3) x,
+  decomposition : ∀ (f : LatticeField3) (x : Fin 3 → ℤ),
     lattice_laplacian f x = ∑ k : Fin 3, axis_second_diff f k x
   convergence : ∀ a : ℝ, a ≠ 0 → ∀ f : ℝ → ℝ, ContDiff ℝ 4 f → ∀ x : ℝ,
     ∃ C : ℝ, |(f (x+a) + f (x-a) - 2*f x)/a^2 - deriv (deriv f) x| ≤ C * a^2
