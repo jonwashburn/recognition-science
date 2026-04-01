@@ -76,14 +76,52 @@ theorem algebraic_bianchi
     riemann_tensor gamma dgamma rho sigma mu nu +
     riemann_tensor gamma dgamma rho mu nu sigma +
     riemann_tensor gamma dgamma rho nu sigma mu = 0 := by
-  simp only [riemann_tensor]
-  rw [h_dsym mu rho nu sigma, h_dsym nu rho mu sigma,
-      h_dsym sigma rho nu mu, h_dsym mu rho sigma nu,
-      h_dsym nu rho sigma mu, h_dsym sigma rho mu nu]
-  have h1 : ∀ a b : Idx, gamma a mu b = gamma a b mu := fun a b => h_sym a mu b ▸ h_sym a b mu ▸ rfl
-  ring_nf
-  simp [Finset.sum_add_distrib]
-  ring
+  have anti1 := riemann_antisymmetric_last_two gamma dgamma rho sigma mu nu
+  have anti2 := riemann_antisymmetric_last_two gamma dgamma rho mu nu sigma
+  have anti3 := riemann_antisymmetric_last_two gamma dgamma rho nu sigma mu
+  simp only [riemann_tensor] at *
+  have quad_cancel : ∀ x : Idx,
+    (gamma rho mu x * gamma x nu sigma - gamma rho nu x * gamma x mu sigma) +
+    (gamma rho nu x * gamma x sigma mu - gamma rho sigma x * gamma x nu mu) +
+    (gamma rho sigma x * gamma x mu nu - gamma rho mu x * gamma x sigma nu) = 0 := by
+    intro x
+    rw [h_sym x nu sigma, h_sym x mu sigma, h_sym x sigma mu,
+        h_sym x nu mu, h_sym x mu nu, h_sym x sigma nu]; ring
+  have h_sums : (∑ x : Idx, (gamma rho mu x * gamma x nu sigma - gamma rho nu x * gamma x mu sigma)) +
+    (∑ x : Idx, (gamma rho nu x * gamma x sigma mu - gamma rho sigma x * gamma x nu mu)) +
+    (∑ x : Idx, (gamma rho sigma x * gamma x mu nu - gamma rho mu x * gamma x sigma nu)) = 0 := by
+    rw [← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
+    exact Finset.sum_eq_zero (fun x _ => quad_cancel x)
+  have key : ∀ x : Idx,
+    (gamma rho mu x * gamma x nu sigma - gamma rho nu x * gamma x mu sigma) +
+    (gamma rho nu x * gamma x sigma mu - gamma rho sigma x * gamma x nu mu) +
+    (gamma rho sigma x * gamma x mu nu - gamma rho mu x * gamma x sigma nu) = 0 := by
+    intro x; rw [h_sym x nu sigma, h_sym x mu sigma, h_sym x sigma mu,
+                  h_sym x nu mu, h_sym x mu nu, h_sym x sigma nu]; ring
+  have sum_zero :
+    (∑ x : Idx, (gamma rho mu x * gamma x nu sigma - gamma rho nu x * gamma x mu sigma)) +
+    (∑ x : Idx, (gamma rho nu x * gamma x sigma mu - gamma rho sigma x * gamma x nu mu)) +
+    (∑ x : Idx, (gamma rho sigma x * gamma x mu nu - gamma rho mu x * gamma x sigma nu)) = 0 := by
+    rw [← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
+    exact Finset.sum_eq_zero (fun x _ => key x)
+  have neg_flip : ∀ (f g : Idx → ℝ),
+    ∑ x : Idx, (f x - g x) = -(∑ x : Idx, (g x - f x)) := by
+    intros f g
+    have : ∀ x ∈ Finset.univ, f x - g x = -(g x - f x) := by intros; ring
+    rw [Finset.sum_congr rfl this, Finset.sum_neg_distrib]
+  rw [h_dsym mu rho nu sigma, h_dsym nu rho mu sigma, h_dsym nu rho sigma mu,
+      h_dsym sigma rho nu mu, h_dsym sigma rho mu nu, h_dsym mu rho sigma nu]
+  have full_sum :
+    (∑ x : Idx, (gamma rho mu x * gamma x nu sigma)) -
+    (∑ x : Idx, (gamma rho nu x * gamma x mu sigma)) +
+    ((∑ x : Idx, (gamma rho nu x * gamma x sigma mu)) -
+     (∑ x : Idx, (gamma rho sigma x * gamma x nu mu))) +
+    ((∑ x : Idx, (gamma rho sigma x * gamma x mu nu)) -
+     (∑ x : Idx, (gamma rho mu x * gamma x sigma nu))) = 0 := by
+    rw [← Finset.sum_sub_distrib, ← Finset.sum_sub_distrib, ← Finset.sum_sub_distrib,
+        ← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
+    exact Finset.sum_eq_zero (fun x _ => key x)
+  linarith
 
 /-! ## Certificate -/
 

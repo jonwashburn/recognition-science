@@ -96,9 +96,10 @@ theorem flat_bianchi (deficits : List ℝ) (h : ∀ d ∈ deficits, d = 0) :
   induction deficits with
   | nil => simp
   | cons a as ih =>
-    simp [List.sum_cons]
-    rw [h a (List.mem_cons_self a as)]
-    simp [ih (fun d hd => h d (List.mem_cons_of_mem a hd))]
+    simp only [List.sum_cons]
+    have ha : a = 0 := h a (List.mem_cons_self ..)
+    rw [ha, zero_add]
+    exact ih (fun d hd => h d (List.mem_cons_of_mem _ hd))
 
 /-! ## Conservation from Bianchi -/
 
