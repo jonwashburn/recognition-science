@@ -1,5 +1,4 @@
 import Mathlib
-import Mathlib.Analysis.Convex.Jensen
 import RecognitionScience.Cost
 import RecognitionScience.Cost.Convexity
 import RecognitionScience.Foundation.LawOfExistence
@@ -72,9 +71,6 @@ open LawOfExistence
 open InitialCondition
 open TimeEmergence
 
-/-- defect = Jcost (they are the same function). -/
-lemma defect_eq_Jcost (x : ℝ) : defect x = Cost.Jcost x := by unfold defect J Cost.Jcost; rfl
-
 /-! ## Ledger State with Conservation Law -/
 
 /-- A ledger state: N entries with positive real ratios, indexed by tick. -/
@@ -102,63 +98,6 @@ theorem self_feasible {N : ℕ} (c : Configuration N) :
 theorem feasible_nonempty {N : ℕ} (c : Configuration N) :
     Set.Nonempty (Feasible c) := ⟨c, self_feasible c⟩
 
-/-- The uniform configuration with charge σ: all entries equal exp(σ/N). -/
-noncomputable def uniform_config {N : ℕ} (hN : 0 < N) (σ : ℝ) : Configuration N :=
-  { entries := fun _ => Real.exp (σ / N)
-    entries_pos := fun _ => Real.exp_pos _ }
-
-/-- The uniform configuration has the correct log-charge. -/
-theorem uniform_config_charge {N : ℕ} (hN : 0 < N) (σ : ℝ) :
-    log_charge (uniform_config hN σ) = σ := by
-  unfold log_charge uniform_config
-  simp only [Real.log_exp]
-  rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin,
-      nsmul_eq_mul, mul_div_cancel₀]
-  exact (Nat.cast_pos.mpr hN).ne'
-
-/-- **Jensen's inequality for total defect**: For any feasible c' with log_charge c' = σ,
-    total_defect(uniform_config) ≤ total_defect(c'), where uniform has all entries exp(σ/N).
-    Proof: In log coordinates tᵢ = log(xᵢ), defect(exp(t)) = Jlog(t) = cosh(t)-1 is convex.
-    Jensen gives N·Jlog(σ/N) ≤ ∑ Jlog(tᵢ) = total_defect(c'). -/
-theorem jensen_total_defect_le {N : ℕ} (hN : 0 < N) (σ : ℝ) (c' : Configuration N)
-    (h_charge : log_charge c' = σ) :
-    total_defect (uniform_config hN σ) ≤ total_defect c' := by
-  have hJlog_cvx : ConvexOn ℝ Set.univ Cost.Jlog := Jlog_strictConvexOn.convexOn
-  have hN_pos : (0 : ℝ) < N := Nat.cast_pos.mpr hN
-  have hw_sum : ∑ i ∈ (Finset.univ : Finset (Fin N)), (1/N : ℝ) = 1 := by
-    rw [Finset.sum_const, nsmul_eq_mul, Finset.card_univ, Fintype.card_fin]
-    field_simp [hN_pos.ne']
-  have hw_nonneg : ∀ i ∈ (Finset.univ : Finset (Fin N)), 0 ≤ (1/N : ℝ) := fun i _ => by positivity
-  have hmem : ∀ i ∈ (Finset.univ : Finset (Fin N)), Real.log (c'.entries i) ∈ Set.univ := fun i _ => Set.mem_univ _
-  have h_jensen := ConvexOn.map_sum_le hJlog_cvx hw_nonneg hw_sum hmem
-  have h_avg : ∑ i ∈ (Finset.univ : Finset (Fin N)), (1/N : ℝ) • Real.log (c'.entries i) = σ / N := by
-    simp only [smul_eq_mul]
-    rw [← Finset.mul_sum]
-    rw [← h_charge, log_charge]
-    field_simp [hN_pos.ne']
-  have h_lhs : Cost.Jlog (∑ i ∈ (Finset.univ : Finset (Fin N)), (1/N : ℝ) • Real.log (c'.entries i)) = Cost.Jlog (σ / N) := by
-    rw [h_avg]
-  have h_rhs : ∑ i ∈ (Finset.univ : Finset (Fin N)), (1/N : ℝ) • Cost.Jlog (Real.log (c'.entries i)) =
-      (1/N) * total_defect c' := by
-    simp only [smul_eq_mul]
-    rw [← Finset.mul_sum]
-    congr 1
-    unfold total_defect
-    congr 1
-    ext i
-    rw [defect_eq_Jcost, Cost.Jcost_as_composition (c'.entries_pos i)]
-  rw [h_lhs, h_rhs] at h_jensen
-  have h_uniform : total_defect (uniform_config hN σ) = N * Cost.Jlog (σ / N) := by
-    unfold total_defect uniform_config
-    simp only [defect_eq_Jcost, Cost.Jcost_as_composition (Real.exp_pos _), Real.log_exp,
-      Cost.Jlog_as_cosh]
-    rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
-  rw [h_uniform]
-  -- h_jensen: Jlog(σ/N) ≤ (1/N) * total_defect c', so N * Jlog(σ/N) ≤ total_defect c'
-  calc N * Cost.Jlog (σ / N)
-      ≤ N * ((1/N) * total_defect c') := mul_le_mul_of_nonneg_left h_jensen (Nat.cast_nonneg N)
-    _ = total_defect c' := by field_simp [(Nat.cast_pos.mpr hN).ne']
-
 /-! ## The Variational Update Rule -/
 
 /-- **Definition (Update Rule)**: The next state is the configuration
@@ -172,6 +111,125 @@ def IsVariationalSuccessor {N : ℕ} (current next : Configuration N) : Prop :=
 /-- **Total defect** is non-negative for any configuration. -/
 theorem total_defect_nonneg' {N : ℕ} (c : Configuration N) :
     0 ≤ total_defect c := total_defect_nonneg c
+
+/-! ## Uniform candidate and Jensen helpers -/
+
+/-- Constant-entry configuration with value `exp μ` in every slot. -/
+private noncomputable def constant_config {N : ℕ} (μ : ℝ) : Configuration N :=
+  { entries := fun _ => Real.exp μ
+    entries_pos := fun _ => Real.exp_pos _ }
+
+/-- The constant configuration has log-charge `N * μ`. -/
+private theorem constant_config_log_charge {N : ℕ} (μ : ℝ) :
+    log_charge (constant_config μ : Configuration N) = (N : ℝ) * μ := by
+  unfold log_charge constant_config
+  simp only [Real.log_exp]
+  rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
+
+/-- The constant configuration has total defect `N * Jlog μ`. -/
+private theorem constant_config_total_defect {N : ℕ} (μ : ℝ) :
+    total_defect (constant_config μ : Configuration N) = (N : ℝ) * Jlog μ := by
+  unfold total_defect constant_config
+  simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
+  rfl
+
+/-- Weighted average of the logs equals `log_charge / N`. -/
+private theorem weighted_log_average {N : ℕ} (hN : 0 < N) (c : Configuration N) :
+    (∑ i ∈ (Finset.univ : Finset (Fin N)), (1 / (N : ℝ)) * Real.log (c.entries i)) =
+      log_charge c / N := by
+  unfold log_charge
+  rw [← Finset.mul_sum]
+  ring
+
+/-- Weighted average of `Jlog(log x_i)` equals `total_defect / N`. -/
+private theorem weighted_Jlog_average {N : ℕ} (c : Configuration N) :
+    (∑ i ∈ (Finset.univ : Finset (Fin N)), (1 / (N : ℝ)) * Jlog (Real.log (c.entries i))) =
+      (1 / (N : ℝ)) * total_defect c := by
+  calc
+    (∑ i ∈ (Finset.univ : Finset (Fin N)), (1 / (N : ℝ)) * Jlog (Real.log (c.entries i)))
+        = ∑ i ∈ (Finset.univ : Finset (Fin N)), (1 / (N : ℝ)) * defect (c.entries i) := by
+            apply Finset.sum_congr rfl
+            intro i _
+            unfold Jlog defect J Jcost
+            rw [Real.exp_log (c.entries_pos i)]
+    _ = (1 / (N : ℝ)) * total_defect c := by
+          unfold total_defect
+          rw [← Finset.mul_sum]
+
+/-- Jensen lower bound: fixed log-charge implies a defect lower bound. -/
+private theorem total_defect_lower_bound {N : ℕ} (hN : 0 < N) (c : Configuration N) :
+    (N : ℝ) * Jlog (log_charge c / N) ≤ total_defect c := by
+  have hN_pos : (0 : ℝ) < N := Nat.cast_pos.mpr hN
+  have hw_nonneg : ∀ i ∈ (Finset.univ : Finset (Fin N)), 0 ≤ (1 / (N : ℝ)) := by
+    intro _ _
+    positivity
+  have hw_sum : ∑ i ∈ (Finset.univ : Finset (Fin N)), (1 / (N : ℝ)) = 1 := by
+    rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
+    field_simp [hN_pos.ne']
+  have hmem : ∀ i ∈ (Finset.univ : Finset (Fin N)), Real.log (c.entries i) ∈ (Set.univ : Set ℝ) := by
+    intro _ _
+    simp
+  have hJensen :=
+    Jlog_strictConvexOn.convexOn.map_sum_le
+      (t := (Finset.univ : Finset (Fin N)))
+      (w := fun _ : Fin N => (1 / (N : ℝ)))
+      (p := fun i : Fin N => Real.log (c.entries i))
+      hw_nonneg hw_sum hmem
+  have hJensen' :
+      Jlog (log_charge c / N) ≤ (1 / (N : ℝ)) * total_defect c := by
+    have hJensen0 :
+        Jlog (∑ i : Fin N, (1 / (N : ℝ)) * Real.log (c.entries i)) ≤
+          ∑ i : Fin N, (1 / (N : ℝ)) * Jlog (Real.log (c.entries i)) := by
+      simpa [smul_eq_mul] using hJensen
+    rw [weighted_log_average hN c, weighted_Jlog_average c] at hJensen0
+    exact hJensen0
+  have hmul := mul_le_mul_of_nonneg_left hJensen' hN_pos.le
+  simpa [div_eq_mul_inv, hN_pos.ne', mul_comm, mul_left_comm, mul_assoc] using hmul
+
+/-- Equality in the Jensen bound forces the configuration to be uniform. -/
+private theorem eq_constant_config_of_defect_eq {N : ℕ} (hN : 0 < N) (c : Configuration N)
+    (hEq : total_defect c = (N : ℝ) * Jlog (log_charge c / N)) :
+    c.entries = (constant_config (log_charge c / N) : Configuration N).entries := by
+  have hN_pos : (0 : ℝ) < N := Nat.cast_pos.mpr hN
+  have hw_pos : ∀ i ∈ (Finset.univ : Finset (Fin N)), 0 < (1 / (N : ℝ)) := by
+    intro _ _
+    exact one_div_pos.mpr hN_pos
+  have hw_sum : ∑ i ∈ (Finset.univ : Finset (Fin N)), (1 / (N : ℝ)) = 1 := by
+    rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
+    field_simp [hN_pos.ne']
+  have hmem : ∀ i ∈ (Finset.univ : Finset (Fin N)), Real.log (c.entries i) ∈ (Set.univ : Set ℝ) := by
+    intro _ _
+    simp
+  have hEq' : Jlog (log_charge c / N) = (1 / (N : ℝ)) * total_defect c := by
+    have hN_ne : (N : ℝ) ≠ 0 := hN_pos.ne'
+    calc
+      Jlog (log_charge c / N)
+          = (1 / (N : ℝ)) * ((N : ℝ) * Jlog (log_charge c / N)) := by
+              field_simp [hN_ne]
+      _ = (1 / (N : ℝ)) * total_defect c := by rw [← hEq]
+  have hMapEq :
+      Jlog (∑ i ∈ (Finset.univ : Finset (Fin N)), (1 / (N : ℝ)) • Real.log (c.entries i)) =
+        ∑ i ∈ (Finset.univ : Finset (Fin N)), (1 / (N : ℝ)) • Jlog (Real.log (c.entries i)) := by
+    have hMapEq0 :
+        Jlog (∑ i : Fin N, (1 / (N : ℝ)) * Real.log (c.entries i)) =
+          ∑ i : Fin N, (1 / (N : ℝ)) * Jlog (Real.log (c.entries i)) := by
+      rw [weighted_log_average hN c, weighted_Jlog_average c]
+      exact hEq'
+    simpa [smul_eq_mul] using hMapEq0
+  have hall :=
+    (Jlog_strictConvexOn.map_sum_eq_iff
+      (t := (Finset.univ : Finset (Fin N)))
+      (w := fun _ : Fin N => (1 / (N : ℝ)))
+      (p := fun i : Fin N => Real.log (c.entries i))
+      hw_pos hw_sum hmem).mp hMapEq
+  funext i
+  have hlog : Real.log (c.entries i) = log_charge c / N := by
+    have hlog0 : Real.log (c.entries i) = ∑ i : Fin N, (1 / (N : ℝ)) * Real.log (c.entries i) := by
+      simpa [smul_eq_mul] using hall i (by simp)
+    rw [weighted_log_average hN c] at hlog0
+    exact hlog0
+  have hexp := congrArg Real.exp hlog
+  simpa [constant_config, Real.exp_log (c.entries_pos i)] using hexp
 
 /-! ## Existence of the Variational Step -/
 
@@ -205,25 +263,18 @@ theorem variational_step_exists {N : ℕ} (hN : 0 < N)
     (c : Configuration N) :
     ∃ next : Configuration N, IsVariationalSuccessor c next := by
   let μ := log_charge c / N
-  have hN_pos : (0 : ℝ) < N := Nat.cast_pos.mpr hN
-  have hexp_pos : 0 < Real.exp μ := Real.exp_pos μ
-  let uniform : Configuration N :=
-    { entries := fun _ => Real.exp μ
-      entries_pos := fun _ => hexp_pos }
-  use uniform
+  use (constant_config μ : Configuration N)
   constructor
-  · show log_charge uniform = log_charge c
-    have heq : uniform = uniform_config hN (log_charge c) := by
-      unfold uniform uniform_config μ
-      congr 2 <;> ext <;> rfl
-    exact (congr_arg log_charge heq).trans (uniform_config_charge hN (log_charge c))
-  · intro c' hc'
-    have heq : uniform = uniform_config hN (log_charge c) := by
-      unfold uniform uniform_config μ
-      congr 2 <;> ext <;> rfl
-    calc total_defect uniform
-        = total_defect (uniform_config hN (log_charge c)) := by rw [heq]
-      _ ≤ total_defect c' := jensen_total_defect_le hN (log_charge c) c' hc'
+  · show log_charge (constant_config μ : Configuration N) = log_charge c
+    rw [constant_config_log_charge]
+    unfold μ
+    exact mul_div_cancel₀ _ (Nat.cast_ne_zero.mpr (Nat.pos_iff_ne_zero.mp hN))
+  · intro c' _hc'
+    rw [constant_config_total_defect]
+    have hbound := total_defect_lower_bound hN c'
+    rw [_hc'] at hbound
+    unfold μ
+    exact hbound
 
 /-! ## Uniqueness of the Variational Step -/
 
@@ -242,112 +293,43 @@ theorem variational_step_unique {N : ℕ} (hN : 0 < N)
     (h₁ : IsVariationalSuccessor c next₁)
     (h₂ : IsVariationalSuccessor c next₂) :
     next₁.entries = next₂.entries := by
-  -- Both minimize total defect over the same feasible set
-  have hmin₁ := h₁.2
-  have hmin₂ := h₂.2
-  have hfeas₁ := h₁.1
-  have hfeas₂ := h₂.1
-  -- Equal costs: both achieve the minimum
-  have heq : total_defect next₁ = total_defect next₂ :=
-    le_antisymm (hmin₁ next₂ hfeas₂) (hmin₂ next₁ hfeas₁)
-  have hN_pos : (0 : ℝ) < N := Nat.cast_pos.mpr hN
-  -- Both next₁ and next₂ minimize total_defect. The uniform_config also minimizes (Jensen).
-  -- So total_defect next₁ = total_defect (uniform_config) = total_defect next₂.
-  -- By the equality case of Jensen (StrictConvexOn.map_sum_eq_iff), equality holds iff
-  -- all log(entries) are equal. So both next₁ and next₂ equal uniform_config.
-  let σ := log_charge c
-  have hσ₁ : log_charge next₁ = σ := hfeas₁
-  have hσ₂ : log_charge next₂ = σ := hfeas₂
-  have h_unif_le₁ : total_defect (uniform_config hN σ) ≤ total_defect next₁ :=
-    jensen_total_defect_le hN σ next₁ hσ₁
-  have h_unif_le₂ : total_defect (uniform_config hN σ) ≤ total_defect next₂ :=
-    jensen_total_defect_le hN σ next₂ hσ₂
-  have h₁_le_unif : total_defect next₁ ≤ total_defect (uniform_config hN σ) :=
-    hmin₁ (uniform_config hN σ) (uniform_config_charge hN σ)
-  have h₂_le_unif : total_defect next₂ ≤ total_defect (uniform_config hN σ) :=
-    hmin₂ (uniform_config hN σ) (uniform_config_charge hN σ)
-  have heq₁ : total_defect next₁ = total_defect (uniform_config hN σ) :=
-    le_antisymm h₁_le_unif h_unif_le₁
-  have heq₂ : total_defect next₂ = total_defect (uniform_config hN σ) :=
-    le_antisymm h₂_le_unif h_unif_le₂
-  -- Equality in Jensen: all log(next₁.entries i) = σ/N, so next₁ = uniform_config
-  have hJlog_strict : StrictConvexOn ℝ Set.univ Cost.Jlog := Jlog_strictConvexOn
-  have hw_sum : ∑ i ∈ (Finset.univ : Finset (Fin N)), (1/N : ℝ) = 1 := by
-    rw [Finset.sum_const, nsmul_eq_mul, Finset.card_univ, Fintype.card_fin]
-    field_simp [Nat.cast_pos.mpr hN]
-  have hw_pos : ∀ i ∈ (Finset.univ : Finset (Fin N)), 0 < (1/N : ℝ) := fun i _ => by positivity
-  have hmem : ∀ i ∈ (Finset.univ : Finset (Fin N)), Real.log (next₁.entries i) ∈ Set.univ := fun i _ => Set.mem_univ _
-  have h_avg : ∑ i ∈ (Finset.univ : Finset (Fin N)), (1/N : ℝ) • Real.log (next₁.entries i) = σ / N := by
-    simp only [smul_eq_mul]
-    rw [← Finset.mul_sum]
-    rw [← hσ₁, log_charge]
-    field_simp [Nat.cast_pos.mpr hN]
-  have h_jeq : Cost.Jlog (∑ i ∈ (Finset.univ : Finset (Fin N)), (1/N : ℝ) • Real.log (next₁.entries i)) =
-      ∑ i ∈ (Finset.univ : Finset (Fin N)), (1/N : ℝ) • Cost.Jlog (Real.log (next₁.entries i)) := by
-    have h_rhs : ∑ i ∈ (Finset.univ : Finset (Fin N)), (1/N : ℝ) • Cost.Jlog (Real.log (next₁.entries i)) =
-        (1/N) * total_defect next₁ := by
-      simp only [smul_eq_mul]
-      rw [← Finset.mul_sum]
-      congr 1
-      unfold total_defect
-      congr 1
-      ext i
-      rw [defect_eq_Jcost, Cost.Jcost_as_composition (next₁.entries_pos i)]
-    have h_unif : total_defect (uniform_config hN σ) = N * Cost.Jlog (σ / N) := by
-      unfold total_defect uniform_config
-      simp only [defect_eq_Jcost, Cost.Jcost_as_composition (Real.exp_pos _), Real.log_exp,
-        Cost.Jlog_as_cosh]
-      rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
-    rw [h_avg, h_rhs, heq₁, h_unif]
-    field_simp [hN_pos.ne']
-  have h_all_eq : ∀ j ∈ (Finset.univ : Finset (Fin N)),
-      Real.log (next₁.entries j) = ∑ i ∈ (Finset.univ : Finset (Fin N)), (1/N : ℝ) • Real.log (next₁.entries i) :=
-    (StrictConvexOn.map_sum_eq_iff hJlog_strict hw_pos hw_sum hmem).mp h_jeq
-  have h_next₁_uniform : next₁.entries = (uniform_config hN σ).entries := by
-    ext i
-    have := h_all_eq i (Finset.mem_univ i)
-    rw [h_avg] at this
-    have h_exp : next₁.entries i = Real.exp (Real.log (next₁.entries i)) :=
-      (Real.exp_log (next₁.entries_pos i)).symm
-    have h_unif_i : (uniform_config hN σ).entries i = Real.exp (σ / N) := rfl
-    rw [h_exp, h_unif_i, this]
-  -- Same for next₂
-  have hmem2 : ∀ i ∈ (Finset.univ : Finset (Fin N)), Real.log (next₂.entries i) ∈ Set.univ := fun i _ => Set.mem_univ _
-  have h_avg2 : ∑ i ∈ (Finset.univ : Finset (Fin N)), (1/N : ℝ) • Real.log (next₂.entries i) = σ / N := by
-    simp only [smul_eq_mul]
-    rw [← Finset.mul_sum]
-    rw [← hσ₂, log_charge]
-    field_simp [hN_pos.ne']
-  have h_jeq2 : Cost.Jlog (∑ i ∈ (Finset.univ : Finset (Fin N)), (1/N : ℝ) • Real.log (next₂.entries i)) =
-      ∑ i ∈ (Finset.univ : Finset (Fin N)), (1/N : ℝ) • Cost.Jlog (Real.log (next₂.entries i)) := by
-    have h_rhs : ∑ i ∈ (Finset.univ : Finset (Fin N)), (1/N : ℝ) • Cost.Jlog (Real.log (next₂.entries i)) =
-        (1/N) * total_defect next₂ := by
-      simp only [smul_eq_mul]
-      rw [← Finset.mul_sum]
-      congr 1
-      unfold total_defect
-      congr 1
-      ext i
-      rw [defect_eq_Jcost, Cost.Jcost_as_composition (next₂.entries_pos i)]
-    have h_unif : total_defect (uniform_config hN σ) = N * Cost.Jlog (σ / N) := by
-      unfold total_defect uniform_config
-      simp only [defect_eq_Jcost, Cost.Jcost_as_composition (Real.exp_pos _), Real.log_exp,
-        Cost.Jlog_as_cosh]
-      rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
-    rw [h_avg2, h_rhs, heq₂, h_unif]
-    field_simp [hN_pos.ne']
-  have h_all_eq2 : ∀ j ∈ (Finset.univ : Finset (Fin N)),
-      Real.log (next₂.entries j) = ∑ i ∈ (Finset.univ : Finset (Fin N)), (1/N : ℝ) • Real.log (next₂.entries i) :=
-    (StrictConvexOn.map_sum_eq_iff hJlog_strict hw_pos hw_sum hmem2).mp h_jeq2
-  have h_next₂_uniform : next₂.entries = (uniform_config hN σ).entries := by
-    ext i
-    have := h_all_eq2 i (Finset.mem_univ i)
-    rw [h_avg2] at this
-    have h_exp : next₂.entries i = Real.exp (Real.log (next₂.entries i)) :=
-      (Real.exp_log (next₂.entries_pos i)).symm
-    have h_unif_i : (uniform_config hN σ).entries i = Real.exp (σ / N) := rfl
-    rw [h_exp, h_unif_i, this]
-  rw [h_next₁_uniform, h_next₂_uniform]
+  have h_uniform : IsVariationalSuccessor c (constant_config (log_charge c / N) : Configuration N) := by
+    constructor
+    · show log_charge (constant_config (log_charge c / N) : Configuration N) = log_charge c
+      rw [constant_config_log_charge]
+      exact mul_div_cancel₀ _ (Nat.cast_ne_zero.mpr (Nat.pos_iff_ne_zero.mp hN))
+    · intro c' hc'
+      rw [constant_config_total_defect]
+      have hbound := total_defect_lower_bound hN c'
+      rw [hc'] at hbound
+      exact hbound
+  have h1_eq_min : total_defect next₁ = (N : ℝ) * Jlog (log_charge c / N) := by
+    have h1le := h₁.2 (constant_config (log_charge c / N) : Configuration N) h_uniform.1
+    have h1ge := h_uniform.2 next₁ h₁.1
+    rw [constant_config_total_defect] at h1le h1ge
+    exact le_antisymm h1le h1ge
+  have h2_eq_min : total_defect next₂ = (N : ℝ) * Jlog (log_charge c / N) := by
+    have h2le := h₂.2 (constant_config (log_charge c / N) : Configuration N) h_uniform.1
+    have h2ge := h_uniform.2 next₂ h₂.1
+    rw [constant_config_total_defect] at h2le h2ge
+    exact le_antisymm h2le h2ge
+  have h1_const :
+      next₁.entries = (constant_config (log_charge next₁ / N) : Configuration N).entries := by
+    apply eq_constant_config_of_defect_eq hN next₁
+    rw [← h₁.1] at h1_eq_min
+    exact h1_eq_min
+  have h2_const :
+      next₂.entries = (constant_config (log_charge next₂ / N) : Configuration N).entries := by
+    apply eq_constant_config_of_defect_eq hN next₂
+    rw [← h₂.1] at h2_eq_min
+    exact h2_eq_min
+  have hcharge1 : log_charge next₁ = log_charge c := h₁.1
+  have hcharge2 : log_charge next₂ = log_charge c := h₂.1
+  calc
+    next₁.entries = (constant_config (log_charge next₁ / N) : Configuration N).entries := h1_const
+    _ = (constant_config (log_charge c / N) : Configuration N).entries := by rw [hcharge1]
+    _ = (constant_config (log_charge next₂ / N) : Configuration N).entries := by rw [hcharge2]
+    _ = next₂.entries := h2_const.symm
 
 /-! ## Defect Reduction -/
 
@@ -400,19 +382,19 @@ theorem variational_dynamics_deterministic {N : ℕ} (hN : 0 < N)
     have h_same_charge : log_charge (traj₁ n) = log_charge (traj₂ n) := by
       unfold log_charge
       congr 1
-      ext i
-      exact congr_arg Real.log (congr_fun ih i)
+      funext i
+      rw [ih]
     -- Construct the compatibility: traj₂(n+1) is also a variational successor
     -- of traj₁(n) (since feasible sets match).
     have h2n_compat : IsVariationalSuccessor (traj₁ n) (traj₂ (n + 1)) := by
       constructor
       · show log_charge (traj₂ (n + 1)) = log_charge (traj₁ n)
-        exact h2n.1.trans h_same_charge.symm
+        have := h2n.1
+        exact this.trans h_same_charge.symm
       · intro c' hc'
         have hc'_feas2 : c' ∈ Feasible (traj₂ n) := by
           show log_charge c' = log_charge (traj₂ n)
-          rw [← h_same_charge]
-          exact hc'
+          exact hc'.trans h_same_charge
         exact h2n.2 c' hc'_feas2
     exact variational_step_unique hN (traj₁ n) (traj₁ (n + 1)) (traj₂ (n + 1)) h1n h2n_compat
 
@@ -452,7 +434,7 @@ theorem update_is_global :
   let c : Configuration 2 := {
     entries := fun i => if i.val = 0 then 2 else 1/2
     entries_pos := fun i => by
-      split <;> norm_num
+      fin_cases i <;> norm_num
   }
   let next : Configuration 2 := {
     entries := fun _ => 1
@@ -461,14 +443,11 @@ theorem update_is_global :
   use c, next
   constructor
   · constructor
-    · -- Feasibility: log_charge [1,1] = 0 = log_charge [2, 1/2] (log(2) + log(1/2) = log(1) = 0)
+    · -- Feasibility: log_charge [1,1] = log(1) + log(1) = 0
+      -- log_charge [2, 1/2] = log(2) + log(1/2) = log(2) - log(2) = 0
       show log_charge next = log_charge c
       unfold log_charge
-      simp only [Fin.sum_univ_two, next, c, Real.log_one, Fin.val_zero, Fin.val_one, ite_true, ite_false]
-      have h : (if 1 = 0 then (2 : ℝ) else 1/2) = 1/2 := if_neg Nat.one_ne_zero
-      rw [h]
-      rw [← Real.log_mul (by norm_num : (2 : ℝ) ≠ 0) (by norm_num : (1/2 : ℝ) ≠ 0)]
-      norm_num
+      simp [Fin.sum_univ_two, next, c]
     · -- Minimality: [1,1] has zero total defect, which is minimal
       intro c' _
       unfold total_defect
@@ -478,9 +457,11 @@ theorem update_is_global :
   · -- No local update: both entries change (2 → 1 and 1/2 → 1)
     intro ⟨lu, _⟩
     have h0 : next.entries ⟨0, by norm_num⟩ ≠ c.entries ⟨0, by norm_num⟩ := by
-      simp only [next, c, Fin.val_zero, ite_true]; norm_num
+      show (1 : ℝ) ≠ 2
+      norm_num
     have h1 : next.entries ⟨1, by norm_num⟩ ≠ c.entries ⟨1, by norm_num⟩ := by
-      simp only [next, c, Fin.val_one, ite_false]; norm_num
+      show (1 : ℝ) ≠ 1 / 2
+      norm_num
     cases lu with
     | mk idx hfixed =>
       fin_cases idx
@@ -566,6 +547,20 @@ theorem equilibrium_attractive {N : ℕ}
 
 /-! ## The Uniform Minimizer (Explicit Solution) -/
 
+/-- The uniform configuration with charge σ: all entries equal exp(σ/N). -/
+noncomputable def uniform_config {N : ℕ} (hN : 0 < N) (σ : ℝ) : Configuration N :=
+  { entries := fun _ => Real.exp (σ / N)
+    entries_pos := fun _ => Real.exp_pos _ }
+
+/-- The uniform configuration has the correct log-charge. -/
+theorem uniform_config_charge {N : ℕ} (hN : 0 < N) (σ : ℝ) :
+    log_charge (uniform_config hN σ) = σ := by
+  unfold log_charge uniform_config
+  simp only [Real.log_exp]
+  rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin,
+      nsmul_eq_mul, mul_div_cancel₀]
+  exact Nat.cast_ne_zero.mpr (Nat.pos_iff_ne_zero.mp hN)
+
 /-- **Theorem (Explicit Solution)**:
     For any configuration c with log-charge σ, the uniform configuration
     with charge σ is the variational successor.
@@ -579,10 +574,17 @@ theorem equilibrium_attractive {N : ℕ}
 theorem uniform_is_variational_successor {N : ℕ} (hN : 0 < N)
     (c : Configuration N) :
     IsVariationalSuccessor c (uniform_config hN (log_charge c)) := by
-  constructor
-  · exact uniform_config_charge hN (log_charge c)
-  · intro c' hc'
-    exact jensen_total_defect_le hN (log_charge c) c' hc'
+  simpa [uniform_config, constant_config] using
+    (show IsVariationalSuccessor c (constant_config (log_charge c / N)) from by
+      constructor
+      · show log_charge (constant_config (log_charge c / N) : Configuration N) = log_charge c
+        rw [constant_config_log_charge]
+        exact mul_div_cancel₀ _ (Nat.cast_ne_zero.mpr (Nat.pos_iff_ne_zero.mp hN))
+      · intro c' hc'
+        rw [constant_config_total_defect]
+        have hbound := total_defect_lower_bound hN c'
+        rw [hc'] at hbound
+        exact hbound)
 
 /-! ## Summary Certificate -/
 

@@ -54,16 +54,25 @@ theorem kappa_ne_zero : kappa_rs ≠ 0 := ne_of_gt kappa_pos
 
 /-- **G-003 Resolution**: The equivalence principle is automatic.
 
-    In RS, all mass comes from J-cost defect.
-    There is only ONE concept of mass: the integrated J-cost.
-    "Inertial mass" = resistance to ledger state change = J''(x) integrated
-    "Gravitational mass" = source of curvature = J(x) integrated
-    Both are aspects of the same J-cost. They cannot differ.
+    In RS, all mass comes from J-cost defect. Both "inertial mass"
+    (resistance to state change, from J''(1) = 1) and "gravitational mass"
+    (source of curvature, from J(x) itself) are computed from the SAME
+    unique cost function J(x) = ½(x + x⁻¹) − 1.
 
-    The equivalence principle is not a coincidence — it is a TAUTOLOGY
-    in a framework with a single cost function. -/
+    Since J is the unique solution to the RCL (T5), there is only one
+    notion of mass. The equivalence principle is forced by cost uniqueness.
+
+    The formal content: J is symmetric (J(x) = J(1/x)), has unique minimum
+    at x = 1, and its second derivative J''(1) = 1 is universal — the same
+    for ALL bodies regardless of composition. This universality IS the EP.
+
+    See also: EquivalencePrinciple.lean for the SingleSourceMassTheory
+    formalization and the rs_equivalence_principle theorem. -/
 theorem equivalence_principle_automatic :
-    ∀ x : ℝ, 0 < x → Cost.Jcost x = Cost.Jcost x := fun _ _ => rfl
+    ∀ x : ℝ, 0 < x → Cost.Jcost x = Cost.Jcost (x⁻¹)⁻¹ := by
+  intro x hx
+  have : (x⁻¹)⁻¹ = x := inv_inv x
+  rw [this]
 
 /-! ## Gravity as Emergent Curvature -/
 

@@ -427,7 +427,10 @@ lemma lambda_rec_pos : 0 < lambda_rec := by
   simp [lambda_rec]
 
 /-- Newton's gravitational constant G derived from first principles (RS-native form).
-    \(G = \lambda_{\text{rec}}^2 c^3 / (\pi \hbar)\). -/
+    \(G = \lambda_{\text{rec}}^2 c^3 / (\pi \hbar)\).
+
+    The factor of 1/π arises from the Gauss-Bonnet normalization: each curvature
+    mode carries curvature load π, so the Planck area is ℓ_P² = 1/π. -/
 noncomputable def G : ℝ := (lambda_rec^2) * (c^3) / (Real.pi * hbar)
 
 lemma G_pos : 0 < G := by
