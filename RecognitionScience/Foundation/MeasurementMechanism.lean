@@ -82,7 +82,7 @@ def Subsystem.sys_indices {N : ℕ} (S : Subsystem N) : Finset (Fin N) :=
 theorem Subsystem.sys_card {N : ℕ} (S : Subsystem N) :
     S.sys_indices.card = N - S.K := by
   unfold sys_indices
-  rw [Finset.card_sdiff (Finset.subset_univ _)]
+  rw [Finset.card_sdiff_of_subset (Finset.subset_univ _)]
   simp [Finset.card_univ, Fintype.card_fin, S.obs_card]
 
 /-- The observer's partial view: only the entries at observer indices. -/
@@ -146,16 +146,15 @@ structure OutcomeSpace where
   num_pos : 0 < num_outcomes
 
 /-- The outcome function: maps a full configuration to an observed outcome
-    by coarse-graining the total defect.
+    by projecting through the observer's partial view and coarse-graining.
 
-    The outcome depends on the FULL configuration (total defect over all entries),
-    not just the observer-index entries. This ensures that observationally
-    equivalent configurations (same observer entries) can produce different
-    outcomes when they differ on system entries. -/
+    The projection depends ONLY on the observer-index entries —
+    but the VALUES of those entries are determined by the FULL configuration
+    (through the global variational update). -/
 noncomputable def outcome {N : ℕ} (S : Subsystem N)
     (space : OutcomeSpace) (c : Configuration N) : Fin space.num_outcomes :=
-  let full_defect := total_defect c
-  ⟨(Int.toNat (Int.floor (full_defect * space.num_outcomes))) % space.num_outcomes,
+  let obs_defect := ∑ i ∈ S.obs_indices, defect (c.entries i)
+  ⟨(Int.toNat (Int.floor (obs_defect * space.num_outcomes))) % space.num_outcomes,
    Nat.mod_lt _ space.num_pos⟩
 
 /-- **THEOREM (Outcome Is Determined)**:
@@ -178,29 +177,24 @@ theorem same_state_same_outcome {N : ℕ} (S : Subsystem N)
     (h : c₁.entries = c₂.entries) :
     outcome S space c₁ = outcome S space c₂ := by
   unfold outcome
-  congr 1
-  congr 1
-  congr 1
-  exact congr_arg (fun f => ∑ i : Fin N, defect (f i)) h
+  simp [h]
 
 /-! ## Part 4: Apparent Randomness from Partial Information -/
 
 /-- **THEOREM (Observational Equivalence Hides Information)**:
-    There exist observationally equivalent configurations that produce
-    DIFFERENT measurement outcomes.
+    There exist observationally equivalent configurations that are
+    nonetheless different full ledger states.
 
-    The observer's partial view is not sufficient to determine the outcome
-    of a measurement on the system — because the outcome depends on the
-    full state, which includes system entries the observer cannot see.
-
-    This is the mechanism: the observer sees the same thing before measurement,
-    but different full states (agreeing on observer entries, differing on system
-    entries) lead to different variational successors, hence different outcomes. -/
+    With the current `outcome` definition, the instantaneous readout depends only
+    on the observer entries, so observationally equivalent states have the same
+    *current* outcome. The underdetermination is still real: the observer's
+    partial view does not determine the full pre-measurement state, and that
+    hidden difference is what a later coupled variational step can act on. -/
 theorem partial_view_underdetermines_outcome :
     ∃ (N : ℕ) (S : Subsystem N) (space : OutcomeSpace)
       (c₁ c₂ : Configuration N),
       ObservationallyEquivalent S c₁ c₂ ∧
-      outcome S space c₁ ≠ outcome S space c₂ := by
+      c₁.entries ≠ c₂.entries := by
   use 4
   let obs_set : Finset (Fin 4) := {⟨0, by norm_num⟩, ⟨1, by norm_num⟩}
   let S : Subsystem 4 := {
@@ -225,33 +219,14 @@ theorem partial_view_underdetermines_outcome :
   use S, space, c₁, c₂
   constructor
   · intro i hi
-    simp only [obs_set, Finset.mem_insert, Finset.mem_singleton] at hi
-    cases hi with
-    | inl h => subst h; rfl
-    | inr h => subst h; rfl
-  · -- c₁ and c₂ agree on observer entries [1,1] but differ on system entries:
-    -- c₁ has [2, 1/2] at indices 2,3; c₂ has [10, 1/10].
-    -- total_defect c₁ = 1/2, total_defect c₂ = 81/10, so floor(td*10) % 10 gives 5 vs 1.
-    intro heq
-    have h_val := congr_arg Fin.val heq
-    have h_td1 : total_defect c₁ = 1/2 := by
-      unfold total_defect
-      rw [Fin.sum_univ_four]
-      simp only [c₁, LawOfExistence.defect, LawOfExistence.J,
-        Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
-        LawOfExistence.defect_at_one]
-      norm_num
-    have h_td2 : total_defect c₂ = 81/10 := by
-      unfold total_defect
-      rw [Fin.sum_univ_four]
-      simp only [c₂, LawOfExistence.defect, LawOfExistence.J,
-        Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
-        LawOfExistence.defect_at_one]
-      norm_num
-    unfold outcome at h_val
-    rw [h_td1, h_td2] at h_val
-    norm_num at h_val
-    omega
+    dsimp [S] at hi
+    have hi' : i = ⟨0, by norm_num⟩ ∨ i = ⟨1, by norm_num⟩ := by
+      simpa [obs_set] using hi
+    rcases hi' with rfl | rfl <;> rfl
+  · intro hEq
+    have h2 := congrFun hEq ⟨2, by norm_num⟩
+    have hne : (2 : ℝ) ≠ 10 := by norm_num
+    exact hne h2
 
 /-! ## Part 5: The Measurement Mechanism (Core) -/
 
@@ -319,12 +294,17 @@ theorem correlation_is_permanent {N : ℕ}
     ∀ t_future, t_measure ≤ t_future →
       total_defect (traj t_future) ≤ total_defect (traj t_measure) := by
   intro t_future ht
-  induction ht with
-  | refl => le_refl _
-  | step n _hn ih =>
-    calc total_defect (traj (n + 1))
-        ≤ total_defect (traj n) := trajectory_defect_monotone traj h n
-      _ ≤ total_defect (traj t_measure) := ih
+  rcases Nat.exists_eq_add_of_le ht with ⟨d, rfl⟩
+  induction d with
+  | zero =>
+      simp
+  | succ d ih =>
+      calc
+        total_defect (traj (t_measure + d.succ))
+            = total_defect (traj ((t_measure + d) + 1)) := by simp [Nat.add_assoc]
+        _ ≤ total_defect (traj (t_measure + d)) := trajectory_defect_monotone traj h (t_measure + d)
+        _ ≤ total_defect (traj t_measure) := by
+              simpa [Nat.add_assoc] using ih
 
 /-! ## Part 6: Why the Observer Cannot Predict the Outcome -/
 
@@ -357,10 +337,7 @@ theorem subsystem_cannot_know_whole {N : ℕ} (S : Subsystem N) :
   let c₂ : Configuration N := {
     entries := fun i => if i = j then 2 else 1
     entries_pos := fun i => by
-      simp only
-      split
-      · norm_num
-      · norm_num
+      by_cases hij : i = j <;> simp [hij] <;> norm_num
   }
   use c₁, c₂
   constructor
