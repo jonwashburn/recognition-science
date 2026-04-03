@@ -38,10 +38,11 @@ A zero-parameter derivation of fundamental physics from a single functional
 equation (the Recognition Composition Law) and the combinatorics of the
 3-cube Q₃.
 
-The `IndisputableMonolith` library provides the cost functional, constants,
-and structural certification infrastructure named in the Lean-formalization
-paper (Pardo-Guerra et al., 2026). This `RecognitionScience` library extends
-it with the forcing chain, mass derivations, gravity, and physics predictions.
+This is the canonical namespace for the artifact analyzed in the submitted
+JAR paper (Simons & Washburn, 2026), *Certificate-Based Verification of
+Derivation-Graph Structural Properties in Lean 4/Mathlib*. The
+`IndisputableMonolith` library provides internal support for structural
+certification and observable-payload types.
 
 ## Module Structure
 

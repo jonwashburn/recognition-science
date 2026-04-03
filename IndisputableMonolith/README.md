@@ -1,16 +1,14 @@
 ## IndisputableMonolith
 
-Canonical framework library for the Recognition Science Lean 4 formalization.
+Internal support library for the Recognition Science Lean 4 formalization.
 
-This is the framework name used in the submitted paper:
+This library provides structural certification, observable-payload types
+(`LeptonMassRatios`, `CkmMixingAngles`), and bridge modules. The canonical
+public namespace is `RecognitionScience/`, which matches the artifact
+analyzed in the submitted JAR paper:
 
-> Pardo-Guerra, S., Simons, M., Thapa, A., Washburn, J., and Werner, B.
-> *Coherent Comparison Costs from the d'Alembert Composition Law:
-> Discrete Ledger Structure with a Lean 4 Formalization.*
+> Simons, M. and Washburn, J.
+> *Certificate-Based Verification of Derivation-Graph Structural Properties
+> in Lean 4/Mathlib.*
 
-It contains the cost functional, constants, observable-payload types,
-structural certification, and bridge modules.
-
-The `RecognitionScience/` tree extends this library with the forcing chain
-(T0–T8), mass derivations, gravity, numerics, and verification certificates.
 Both libraries are part of one framework; `lake build` compiles both.

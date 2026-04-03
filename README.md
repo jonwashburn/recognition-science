@@ -13,26 +13,22 @@ This repository contains **Lean 4** proofs (built on [Mathlib](https://github.co
 
 All from a single starting point: the **Recognition Composition Law** (RCL).
 
-## Framework Structure
+## Canonical Public Framework
 
-This repository implements a single framework under two complementary
-Lean library roots:
+The canonical public namespace is **`RecognitionScience`**.
 
-- **`IndisputableMonolith`** — the canonical framework name used in the
-  submitted Lean-formalization paper:
-  Pardo-Guerra, Simons, Thapa, Washburn, and Werner,
-  *Coherent Comparison Costs from the d'Alembert Composition Law:
-  Discrete Ledger Structure with a Lean 4 Formalization*.
-  This library contains the cost functional, constants, structural
-  certification, observable-payload types, and bridge modules.
+This matches the namespace used throughout the submitted JAR paper:
+Simons, M. and Washburn, J.,
+*Certificate-Based Verification of Derivation-Graph Structural Properties
+in Lean 4/Mathlib*.
+That paper references paths such as
+`RecognitionScience.Cost.FunctionalEquation`,
+`RecognitionScience.Masses.BaselineDerivation`, and the 36 verification
+certificates under `RecognitionScience/Verification/`.
 
-- **`RecognitionScience`** — the applied physics layer that hosts the
-  forcing chain (T0–T8), masses, gravity, numerics, and verification
-  certificates.
-
-Both libraries are part of **one** theory. `IndisputableMonolith` is the
-name the Lean paper uses; `RecognitionScience` extends it with the full
-derivation chain and physical predictions.
+The `IndisputableMonolith/` tree is an **internal support library** for
+structural certification, observable-payload types, and bridge modules.
+It is not a second framework.
 
 ## The Logical Chain
 
@@ -61,8 +57,8 @@ m = A_s · φ^(r − 8 + gap(Z))                     [all fermion masses]
 The repaired public snapshot currently contains:
 
 - **175 Lean files**
-- **1,486 theorem/lemma declarations**
-- **32,185 lines of Lean source**
+- **1,490 theorem/lemma declarations**
+- **32,621 lines of Lean source**
 - **36 verification certificate modules**
 - A successful package-wide `lake build`
 
@@ -106,9 +102,9 @@ RecognitionScience/
 └── Patterns.lean                     # Root namespace module
 ```
 
-`IndisputableMonolith/` is the canonical framework name from the Lean paper.
-`RecognitionScience/` extends it with the forcing chain and physical predictions.
-Both are one framework; `lake build` compiles both.
+`RecognitionScience/` is the canonical public namespace (matching the JAR paper).
+`IndisputableMonolith/` is an internal support library for structural
+certification and bridge modules.
 
 ---
 
@@ -229,27 +225,26 @@ lake build            # build both IndisputableMonolith and RecognitionScience
 ## Verification Status
 
 - **175+ Lean files** in the current public snapshot
-- **1,486+ theorem/lemma declarations**
+- **1,490+ theorem/lemma declarations**
 - **36+ verification certificate modules**
 - **Successful package-wide `lake build`**
 - **Aczél smoothness internalized**: `aczel_representation_axiom` is now a theorem in `Cost/AczelTheorem.lean`
 - **Full d'Alembert inevitability chain restored**: `Foundation/DAlembert/FullUnconditional.lean` builds successfully
 - **Not yet globally `sorry`-free**: some peripheral modules still contain admitted placeholders
 
-### Paper vs. public export
+### JAR paper artifact
 
-The Lean-formalization paper (Pardo-Guerra et al.) references modules under
-`IndisputableMonolith/Foundation/`, `IndisputableMonolith/CostUniqueness.lean`,
-and `IndisputableMonolith/Verification/Tier1Cert.lean`. Some of these modules
-have deep internal import chains and are not yet included in the public export.
-The forcing-chain theorems T0–T8 currently live in the public tree under
-`RecognitionScience/Foundation/`. Porting the remaining paper-referenced paths
-into the public `IndisputableMonolith/` namespace is in progress.
+The JAR paper (Simons & Washburn) analyzes the `RecognitionScience` namespace
+at commit `0f9fcbe8` (Lean `v4.29.0-rc6`, Mathlib `d7ea5678`). The public
+export on this branch includes the same directory structure and certificates
+described in that paper, plus recent additions (hierarchy modules, typed
+observable payloads, structural derivation certificates) from the ongoing
+formalization effort.
 
 ## Papers
 
-- Pardo-Guerra, S., Simons, M., Thapa, A., Washburn, J., and Werner, B. (2026). *Coherent Comparison Costs from the d'Alembert Composition Law: Discrete Ledger Structure with a Lean 4 Formalization.* This is the canonical paper for the `IndisputableMonolith` framework.
-- Washburn, J. and Zlatanović, M. (2026). *Uniqueness of the Canonical Reciprocal Cost.* Axioms (MDPI), March 2026.
+- Simons, M. and Washburn, J. (2026). *Certificate-Based Verification of Derivation-Graph Structural Properties in Lean 4/Mathlib.* Submitted to Journal of Automated Reasoning. This is the canonical paper for this repository; the `RecognitionScience` namespace matches the artifact analyzed in that paper.
+- Washburn, J. and Zlatanović, M. (2026). [*Uniqueness of the Canonical Reciprocal Cost.*](https://doi.org/10.3390/axioms15020090) Axioms (MDPI), March 2026.
 - Washburn, J. (2026). *Particle Masses from First Principles: A Complete Derivation of the Fermion Spectrum from the Recognition Composition Law.*
 - Washburn, J. (2026). *Inevitability from Three Attributes.*
 
