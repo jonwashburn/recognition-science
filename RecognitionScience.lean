@@ -38,6 +38,11 @@ A zero-parameter derivation of fundamental physics from a single functional
 equation (the Recognition Composition Law) and the combinatorics of the
 3-cube Q₃.
 
+The `IndisputableMonolith` library provides the cost functional, constants,
+and structural certification infrastructure named in the Lean-formalization
+paper (Pardo-Guerra et al., 2026). This `RecognitionScience` library extends
+it with the forcing chain, mass derivations, gravity, and physics predictions.
+
 ## Module Structure
 
 ### Cost — The unique cost functional J(x)

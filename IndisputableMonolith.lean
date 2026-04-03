@@ -4,10 +4,10 @@ import IndisputableMonolith.Cost
 /-!
 # IndisputableMonolith
 
-Public support library for the structural certification lane used by the
-Recognition Science Lean framework.
+Canonical framework library for the Recognition Science Lean formalization,
+as presented in Pardo-Guerra, Simons, Thapa, Washburn, and Werner (2026),
+*Coherent Comparison Costs from the d'Alembert Composition Law*.
 
-This umbrella remains intentionally minimal in the public repository. Downstream
-code should prefer importing specific modules from `IndisputableMonolith/` to
-keep import closures small and auditable.
+The `RecognitionScience` library extends this with the forcing chain T0–T8,
+mass derivations, gravity, and verification certificates.
 -/
