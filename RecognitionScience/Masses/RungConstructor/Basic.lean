@@ -1,5 +1,5 @@
 import Mathlib
--- import RecognitionScience.RSBridge.Anchor  -- [not in public release]
+import RecognitionScience.Masses.RSBridge.Anchor
 
 namespace RecognitionScience
 namespace Masses

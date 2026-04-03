@@ -1,6 +1,6 @@
 import Mathlib
 import RecognitionScience.Constants
--- import RecognitionScience.Masses.RSBridge  -- [excluded from public release]
+import RecognitionScience.Masses.RSBridge.Anchor
 
 /-!
 # Gap Function Forcing (Constrained Family Closure)

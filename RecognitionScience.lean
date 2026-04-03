@@ -1,3 +1,36 @@
+import RecognitionScience.Constants
+import RecognitionScience.Cost
+import RecognitionScience.Foundation.EightTick
+import RecognitionScience.Foundation.PhiForcing
+import RecognitionScience.Foundation.LedgerCanonicality
+import RecognitionScience.Foundation.HierarchyMinimality
+import RecognitionScience.Foundation.HierarchyEmergence
+import RecognitionScience.Foundation.HierarchyForcing
+import RecognitionScience.Foundation.HierarchyDynamics
+import RecognitionScience.Foundation.DimensionForcing
+import RecognitionScience.Foundation.VariationalDynamics
+import RecognitionScience.Foundation.MeasurementMechanism
+import RecognitionScience.Foundation.Entanglement
+import RecognitionScience.Foundation.GaugeFromCube
+import RecognitionScience.Foundation.Thermodynamics
+import RecognitionScience.Foundation.WindingCharges
+import RecognitionScience.Foundation.ContinuumLimit
+import RecognitionScience.Foundation.LinkingNumbers
+import RecognitionScience.Masses.MassLaw
+import RecognitionScience.Masses.BaselineDerivation
+import RecognitionScience.Gravity.ZeroParameterGravity
+import RecognitionScience.Foundation.DimensionalConstraints.Core
+import RecognitionScience.Verification.DimensionalConstraintsCert
+import RecognitionScience.Verification.Exclusivity.Framework
+import RecognitionScience.Verification.Exclusivity.ModelIndependent
+import RecognitionScience.Verification.Exclusivity.HierarchyTheorem
+import RecognitionScience.Verification.Exclusivity.DimensionlessForcing
+import RecognitionScience.Verification.Exclusivity.GroundStateRestriction
+import RecognitionScience.Verification.Exclusivity.ObservableTypeEquiv
+import RecognitionScience.Verification.Exclusivity.RCLDerivation
+import RecognitionScience.Verification.Exclusivity.PredictionMap
+import RecognitionScience.Verification.Exclusivity.ModelIndependentCert
+
 /-!
 # Recognition Science — Lean 4 Formalization
 
@@ -18,6 +51,11 @@ equation (the Recognition Composition Law) and the combinatorics of the
 ### Foundation — Structural theorems T0–T8
 - `RecognitionScience.Foundation.LogicFromCost`: T0 — Logic from cost
 - `RecognitionScience.Foundation.PhiForcing`: T6 — φ from self-similarity
+- `RecognitionScience.Foundation.LedgerCanonicality`: zero-parameter comparison ledger interface
+- `RecognitionScience.Foundation.HierarchyMinimality`: minimal hierarchy closure
+- `RecognitionScience.Foundation.HierarchyEmergence`: uniform hierarchy emergence of φ
+- `RecognitionScience.Foundation.HierarchyForcing`: zero-parameter forcing of additive hierarchy
+- `RecognitionScience.Foundation.HierarchyDynamics`: T5→T6 bridge from ledger locality/minimality
 - `RecognitionScience.Foundation.EightTick`: T7 — 8-tick period
 - `RecognitionScience.Foundation.DimensionForcing`: T8 — D = 3
 - `RecognitionScience.Foundation.VariationalDynamics`: F-008 — Ledger update rule
@@ -42,34 +80,3 @@ equation (the Recognition Composition Law) and the combinatorics of the
 - `RecognitionScience.Unification.RSMasterTheorem`: T0–T8 master theorem
 - `RecognitionScience.Unification.AllConstantsFromPhi`: All constants from φ
 -/
-
-import RecognitionScience.Constants
-import RecognitionScience.Cost
-import RecognitionScience.Foundation.EightTick
-import RecognitionScience.Foundation.PhiForcing
-import RecognitionScience.Foundation.DimensionForcing
-import RecognitionScience.Foundation.VariationalDynamics
-import RecognitionScience.Foundation.MeasurementMechanism
-import RecognitionScience.Foundation.Entanglement
-import RecognitionScience.Foundation.GaugeFromCube
-import RecognitionScience.Foundation.Thermodynamics
-import RecognitionScience.Foundation.WindingCharges
-import RecognitionScience.Foundation.ContinuumLimit
-import RecognitionScience.Foundation.LinkingNumbers
-import RecognitionScience.Masses.MassLaw
-import RecognitionScience.Masses.BaselineDerivation
-import RecognitionScience.Gravity.ZeroParameterGravity
-import RecognitionScience.Foundation.DimensionalConstraints.Core
-import RecognitionScience.Verification.DimensionalConstraintsCert
-
--- Model-Independent Exclusivity Programme (v2, March 2026)
--- Paper: "Observational Uniqueness for Zero-Parameter Frameworks"
-import RecognitionScience.Verification.Exclusivity.Framework
-import RecognitionScience.Verification.Exclusivity.ModelIndependent
-import RecognitionScience.Verification.Exclusivity.HierarchyTheorem
-import RecognitionScience.Verification.Exclusivity.DimensionlessForcing
-import RecognitionScience.Verification.Exclusivity.GroundStateRestriction
-import RecognitionScience.Verification.Exclusivity.ObservableTypeEquiv
-import RecognitionScience.Verification.Exclusivity.RCLDerivation
-import RecognitionScience.Verification.Exclusivity.PredictionMap
-import RecognitionScience.Verification.Exclusivity.ModelIndependentCert

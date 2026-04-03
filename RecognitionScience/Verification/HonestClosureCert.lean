@@ -1,5 +1,5 @@
 import Mathlib
--- import RecognitionScience.RecogSpec.Spec  -- [not in public release]
+import IndisputableMonolith.RecogSpec.Spec
 import RecognitionScience.Constants
 
 /-!
@@ -32,8 +32,8 @@ namespace RecognitionScience
 namespace Verification
 namespace HonestClosure
 
-open RecognitionScience.RecogSpec
-open RecognitionScience.Constants
+open IndisputableMonolith.RecogSpec
+open IndisputableMonolith.Constants
 
 structure HonestClosureCert where
   deriving Repr
@@ -48,8 +48,8 @@ Part D: The evaluator ignores L and B (explicit acknowledgment)
 @[simp] def HonestClosureCert.verified (_c : HonestClosureCert) : Prop :=
   -- Part A: All observables are φ-closed
   (∀ φ, PhiClosed φ (alphaDefault φ)) ∧
-  (∀ φ r, r ∈ massRatiosDefault φ → PhiClosed φ r) ∧
-  (∀ φ θ, θ ∈ mixingAnglesDefault φ → PhiClosed φ θ) ∧
+  (∀ φ, (massRatiosDefault φ).Forall (PhiClosed φ)) ∧
+  (∀ φ, (mixingAnglesDefault φ).Forall (PhiClosed φ)) ∧
   (∀ φ, PhiClosed φ (g2Default φ)) ∧
   -- Part B: Structural predicates are proven (not just carried as Props)
   kGateWitness ∧
@@ -68,18 +68,13 @@ Part D: The evaluator ignores L and B (explicit acknowledgment)
     intro φ
     exact phiClosed_alphaDefault φ
   · -- Part A2: mass ratios are φ-closed
-    intro φ r hr
-    simp only [massRatiosDefault, List.mem_cons, List.mem_singleton] at hr
-    rcases hr with rfl | rfl | h
-    · exact PhiClosed.self _
-    · exact phiClosed_one_div_pow _ 2
-    · contradiction
+    intro φ
+    simp only [LeptonMassRatios.Forall, massRatiosDefault]
+    exact ⟨PhiClosed.self _, phiClosed_one_div_pow _ 2, phiClosed_one_div _⟩
   · -- Part A3: mixing angles are φ-closed
-    intro φ θ hθ
-    simp only [mixingAnglesDefault, List.mem_cons, List.mem_singleton] at hθ
-    rcases hθ with rfl | h
-    · exact phiClosed_one_div _
-    · contradiction
+    intro φ
+    simp only [CkmMixingAngles.Forall, mixingAnglesDefault]
+    exact ⟨phiClosed_one_div _, phiClosed_one_div_pow _ 2, phiClosed_one_div_pow _ 3⟩
   · -- Part A4: g-2 is φ-closed
     intro φ
     exact phiClosed_one_div_pow φ 5
