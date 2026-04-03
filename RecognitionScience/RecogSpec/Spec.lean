@@ -1,16 +1,16 @@
 import Mathlib
-import IndisputableMonolith.Constants
-import IndisputableMonolith.Constants.KDisplayCore
-import IndisputableMonolith.Verification.BridgeCore
-import IndisputableMonolith.RecogSpec.Core
-import IndisputableMonolith.RecogSpec.Anchors
-import IndisputableMonolith.RecogSpec.Bands
-import IndisputableMonolith.Patterns
-import IndisputableMonolith.Verification.TwoOutcomeBornCert
+import RecognitionScience.Constants
+import RecognitionScience.Constants.KDisplayCore
+import RecognitionScience.Verification.BridgeCore
+import RecognitionScience.RecogSpec.Core
+import RecognitionScience.RecogSpec.Anchors
+import RecognitionScience.RecogSpec.Bands
+import RecognitionScience.Patterns
+import RecognitionScience.Verification.TwoOutcomeBornCert
 
 noncomputable section
 
-namespace IndisputableMonolith
+namespace RecognitionScience
 namespace RecogSpec
 
 /-- Canonical speed determined by a pair of anchors. -/
@@ -169,12 +169,12 @@ def kGateWitness : Prop :=
   ∀ U : Constants.RSUnits,
     U.tau0 ≠ 0 →
     U.ell0 ≠ 0 →
-      (IndisputableMonolith.Constants.RSUnits.tau_rec_display U) / U.tau0 = IndisputableMonolith.Constants.RSUnits.K_gate_ratio
-      ∧ (IndisputableMonolith.Constants.RSUnits.lambda_kin_display U) / U.ell0 = IndisputableMonolith.Constants.RSUnits.K_gate_ratio
+      (RecognitionScience.Constants.RSUnits.tau_rec_display U) / U.tau0 = RecognitionScience.Constants.RSUnits.K_gate_ratio
+      ∧ (RecognitionScience.Constants.RSUnits.lambda_kin_display U) / U.ell0 = RecognitionScience.Constants.RSUnits.K_gate_ratio
 
 @[simp] theorem kGate_from_units : kGateWitness := by
   intro U hτ hℓ
-  exact IndisputableMonolith.Constants.RSUnits.K_gate_eqK U hτ hℓ
+  exact RecognitionScience.Constants.RSUnits.K_gate_eqK U hτ hℓ
 
 /-- Minimal eight-tick witness: there exists an exact 3-bit cover of period 8. -/
 @[simp] def eightTickWitness : Prop :=
@@ -185,10 +185,10 @@ def kGateWitness : Prop :=
 
 /-- Born rule compliance witness: recognition path weights match Born probabilities. -/
 @[simp] def bornHolds : Prop :=
-  IndisputableMonolith.Verification.TwoOutcomeBorn.TwoOutcomeBornCert.verified {}
+  RecognitionScience.Verification.TwoOutcomeBorn.TwoOutcomeBornCert.verified {}
 
 @[simp] theorem born_from_TruthCore : bornHolds := by
-  exact IndisputableMonolith.Verification.TwoOutcomeBorn.TwoOutcomeBornCert.verified_any {}
+  exact RecognitionScience.Verification.TwoOutcomeBorn.TwoOutcomeBornCert.verified_any {}
 
 /-! ### Explicit universal dimless pack and matching witness -/
 
@@ -352,6 +352,6 @@ theorem absolute_layer_from_eval_invariant {L : Ledger} {B : Bridge L}
   exact meetsBands_any_of_eval (L:=L) (B:=B) (X:=X) U' hEval'
 
 end RecogSpec
-end IndisputableMonolith
+end RecognitionScience
 
 end section

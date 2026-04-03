@@ -1,5 +1,5 @@
 import Mathlib
-import IndisputableMonolith.Cost
+import RecognitionScience.Cost
 
 /-!
 # Recognition Path Action (Minimal Interface)
@@ -9,7 +9,7 @@ measure-theoretic lemmas (piecewise additivity, domain shifts, etc.) are
 intentionally omitted to keep the build surface stable for paper exports.
 -/
 
-namespace IndisputableMonolith
+namespace RecognitionScience
 namespace Measurement
 
 open Real Complex Cost
@@ -51,4 +51,4 @@ theorem amplitude_mod_sq_eq_weight (γ : RecognitionPath) (φ : ℝ) :
   ring
 
 end Measurement
-end IndisputableMonolith
+end RecognitionScience

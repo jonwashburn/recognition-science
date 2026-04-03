@@ -1,7 +1,7 @@
 import Mathlib
-import IndisputableMonolith.Verification.BridgeCore
+import RecognitionScience.Verification.BridgeCore
 
-namespace IndisputableMonolith
+namespace RecognitionScience
 namespace RecogSpec
 
 structure Band where
@@ -83,12 +83,12 @@ noncomputable def meetsBandsChecker (xs : List ℝ) (c : ℝ) : Bool :=
   meetsBandsChecker_gen xs (evalBandsAt c 1)
 
 /-- Evaluate whether the anchors `U.c` lie in any of the candidate bands `X`. -/
-def evalToBands_c (U : IndisputableMonolith.Constants.RSUnits) (X : Bands) : Prop :=
+def evalToBands_c (U : RecognitionScience.Constants.RSUnits) (X : Bands) : Prop :=
   ∃ b ∈ X, Band.contains b U.c
 
 /-- Invariance of the c-band check under units rescaling (c fixed by cfix). -/
-lemma evalToBands_c_invariant {U U' : IndisputableMonolith.Constants.RSUnits}
-  (h : IndisputableMonolith.Verification.UnitsRescaled U U') (X : Bands) :
+lemma evalToBands_c_invariant {U U' : RecognitionScience.Constants.RSUnits}
+  (h : RecognitionScience.Verification.UnitsRescaled U U') (X : Bands) :
   evalToBands_c U X ↔ evalToBands_c U' X := by
   dsimp [evalToBands_c]
   have hc : U'.c = U.c := h.cfix
@@ -104,7 +104,7 @@ lemma evalToBands_c_invariant {U U' : IndisputableMonolith.Constants.RSUnits}
 
 /-- The centered `wideBand` around `U.c` always includes `U.c`. -/
 lemma evalToBands_c_wideBand_center
-  (U : IndisputableMonolith.Constants.RSUnits) (tol : ℝ) (htol : 0 ≤ tol) :
+  (U : RecognitionScience.Constants.RSUnits) (tol : ℝ) (htol : 0 ≤ tol) :
   evalToBands_c U [wideBand U.c tol] := by
   refine ⟨wideBand U.c tol, by simp, ?_⟩
   simpa using wideBand_contains_center (x:=U.c) (ε:=tol) htol
@@ -169,4 +169,4 @@ theorem lcm_pow2_45_eq_iff (D : ℕ) : Nat.lcm (2 ^ D) 45 = 360 ↔ D = 3 := by
     native_decide
 
 end RecogSpec
-end IndisputableMonolith
+end RecognitionScience

@@ -40,9 +40,7 @@ equation (the Recognition Composition Law) and the combinatorics of the
 
 This is the canonical namespace for the artifact analyzed in the submitted
 JAR paper (Simons & Washburn, 2026), *Certificate-Based Verification of
-Derivation-Graph Structural Properties in Lean 4/Mathlib*. The
-`IndisputableMonolith` library provides internal support for structural
-certification and observable-payload types.
+Derivation-Graph Structural Properties in Lean 4/Mathlib*.
 
 ## Module Structure
 

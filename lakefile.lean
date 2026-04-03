@@ -10,7 +10,3 @@ require mathlib from git "https://github.com/leanprover-community/mathlib4.git"
 
 lean_lib RecognitionScience where
   roots := #[`RecognitionScience]
-
--- Internal support library (structural certification, observable payloads).
-lean_lib IndisputableMonolith where
-  roots := #[`IndisputableMonolith]

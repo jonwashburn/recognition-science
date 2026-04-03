@@ -1,7 +1,7 @@
 import Mathlib
-import IndisputableMonolith.RecogSpec.Core
-import IndisputableMonolith.RecogSpec.RSLedger
-import IndisputableMonolith.Constants
+import RecognitionScience.RecogSpec.Core
+import RecognitionScience.RecogSpec.RSLedger
+import RecognitionScience.Constants
 
 /-!
 # RSBridge: Rich Bridge with Geometric Couplings
@@ -31,7 +31,7 @@ The mixing angles are DERIVED from geometric counts (24 edges, φ projection),
 not defined as arbitrary parameters.
 -/
 
-namespace IndisputableMonolith
+namespace RecognitionScience
 namespace RecogSpec
 
 open Constants
@@ -167,4 +167,4 @@ theorem V_cb_approx : (1 : ℚ) / 24 > 0.04 ∧ (1 : ℚ) / 24 < 0.05 := by
   constructor <;> norm_num
 
 end RecogSpec
-end IndisputableMonolith
+end RecognitionScience

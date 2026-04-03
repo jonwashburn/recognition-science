@@ -13,22 +13,10 @@ This repository contains **Lean 4** proofs (built on [Mathlib](https://github.co
 
 All from a single starting point: the **Recognition Composition Law** (RCL).
 
-## Canonical Public Framework
+## Framework
 
-The canonical public namespace is **`RecognitionScience`**.
-
-This matches the namespace used throughout the submitted JAR paper:
-Simons, M. and Washburn, J.,
-*Certificate-Based Verification of Derivation-Graph Structural Properties
-in Lean 4/Mathlib*.
-That paper references paths such as
-`RecognitionScience.Cost.FunctionalEquation`,
-`RecognitionScience.Masses.BaselineDerivation`, and the 36 verification
-certificates under `RecognitionScience/Verification/`.
-
-The `IndisputableMonolith/` tree is an **internal support library** for
-structural certification, observable-payload types, and bridge modules.
-It is not a second framework.
+The single public namespace is **`RecognitionScience`**, matching the
+artifact analyzed in the submitted JAR paper (Simons & Washburn, 2026).
 
 ## The Logical Chain
 
@@ -102,9 +90,7 @@ RecognitionScience/
 └── Patterns.lean                     # Root namespace module
 ```
 
-`RecognitionScience/` is the canonical public namespace (matching the JAR paper).
-`IndisputableMonolith/` is an internal support library for structural
-certification and bridge modules.
+Everything lives under `RecognitionScience/`.
 
 ---
 
@@ -219,7 +205,7 @@ curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh 
 git clone https://github.com/jonwashburn/recognition-science.git
 cd recognition-science
 lake exe cache get    # download pre-built Mathlib (~2GB, saves hours)
-lake build            # build both IndisputableMonolith and RecognitionScience
+lake build            # build RecognitionScience
 ```
 
 ## Verification Status

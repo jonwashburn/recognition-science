@@ -1,6 +1,6 @@
 import Mathlib
-import IndisputableMonolith.RecogSpec.Spec
-import IndisputableMonolith.RecogSpec.RSCompliance
+import RecognitionScience.RecogSpec.Spec
+import RecognitionScience.RecogSpec.RSCompliance
 
 /-!
 # MatchesEval Certificate (computed matching, non-existential)
@@ -13,11 +13,11 @@ This certificate packages two matching results:
    for the canonical RS-compliant pair, the alpha field agrees with the legacy target.
 -/
 
-namespace IndisputableMonolith
+namespace RecognitionScience
 namespace Verification
 namespace MatchesEval
 
-open IndisputableMonolith.RecogSpec
+open RecognitionScience.RecogSpec
 
 structure MatchesEvalCert where
   deriving Repr
@@ -38,4 +38,4 @@ structure MatchesEvalCert where
 
 end MatchesEval
 end Verification
-end IndisputableMonolith
+end RecognitionScience

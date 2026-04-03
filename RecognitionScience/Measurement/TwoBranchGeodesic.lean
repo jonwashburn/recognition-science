@@ -1,5 +1,5 @@
 import Mathlib
-import IndisputableMonolith.Measurement.PathAction
+import RecognitionScience.Measurement.PathAction
 
 /-!
 # Two-Branch Quantum Measurement Geodesic
@@ -13,7 +13,7 @@ Key results:
 - Born weight: exp(-2A) = sin²(θ_s) = |α₂|²
 -/
 
-namespace IndisputableMonolith
+namespace RecognitionScience
 namespace Measurement
 
 open Real
@@ -87,4 +87,4 @@ theorem residual_action_invariant (rot : TwoBranchRotation) :
   residualAction rot = π/2 - rot.θ_s := rfl
 
 end Measurement
-end IndisputableMonolith
+end RecognitionScience

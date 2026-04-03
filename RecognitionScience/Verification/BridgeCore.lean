@@ -1,7 +1,7 @@
 import Mathlib
-import IndisputableMonolith.Constants
+import RecognitionScience.Constants
 
-namespace IndisputableMonolith
+namespace RecognitionScience
 namespace Verification
 
 open Constants
@@ -16,7 +16,7 @@ certified surface (RS spec / band invariance):
 - `Observable` + `BridgeEval` + `anchor_invariance`
 - canonical K-gate observables and the bridge-level equality `K_gate_bridge`
 
-It intentionally avoids the larger rendering/manifest scaffolds in `IndisputableMonolith/Verification.lean`
+It intentionally avoids the larger rendering/manifest scaffolds in `RecognitionScience/Verification.lean`
 so the certified import-closure stays small and non-smuggled.
 -/
 
@@ -110,4 +110,4 @@ theorem K_gate_bridge : ∀ U, BridgeEval K_A_obs U = BridgeEval K_B_obs U := by
   intro U; simp [BridgeEval, K_A_obs, K_B_obs]
 
 end Verification
-end IndisputableMonolith
+end RecognitionScience

@@ -1,7 +1,7 @@
 import Mathlib
-import IndisputableMonolith.Measurement.PathAction
-import IndisputableMonolith.Measurement.TwoBranchGeodesic
-import IndisputableMonolith.Measurement.KernelMatch
+import RecognitionScience.Measurement.PathAction
+import RecognitionScience.Measurement.TwoBranchGeodesic
+import RecognitionScience.Measurement.KernelMatch
 
 /-!
 # The C = 2A Measurement Bridge
@@ -16,7 +16,7 @@ This establishes that quantum measurement and recognition are governed
 by the same unique cost functional J.
 -/
 
-namespace IndisputableMonolith
+namespace RecognitionScience
 namespace Measurement
 
 open Real Cost
@@ -221,4 +221,4 @@ theorem amplitude_modulus_bridge (rot : TwoBranchRotation) (φ : ℝ) :
         simpa [hAction]
 
 end Measurement
-end IndisputableMonolith
+end RecognitionScience

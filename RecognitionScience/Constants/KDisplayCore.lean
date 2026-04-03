@@ -1,7 +1,7 @@
 import Mathlib
-import IndisputableMonolith.Constants
+import RecognitionScience.Constants
 
-namespace IndisputableMonolith
+namespace RecognitionScience
 namespace Constants
 
 namespace RSUnits
@@ -47,4 +47,4 @@ theorem K_gate_eqK (U : RSUnits) (hτ : U.tau0 ≠ 0) (hℓ : U.ell0 ≠ 0) :
 
 end RSUnits
 end Constants
-end IndisputableMonolith
+end RecognitionScience

@@ -1,6 +1,6 @@
 import Mathlib
-import IndisputableMonolith.Measurement.C2ABridge
-import IndisputableMonolith.Measurement.TwoBranchGeodesic
+import RecognitionScience.Measurement.C2ABridge
+import RecognitionScience.Measurement.TwoBranchGeodesic
 
 /-!
 # Two-Outcome Born Certificate (normalized probabilities)
@@ -19,11 +19,11 @@ This avoids any “measurement axioms” typeclass entirely and relies only on t
 in `Measurement/C2ABridge.lean` and elementary trigonometric identities.
 -/
 
-namespace IndisputableMonolith
+namespace RecognitionScience
 namespace Verification
 namespace TwoOutcomeBorn
 
-open IndisputableMonolith.Measurement
+open RecognitionScience.Measurement
 open Real
 
 /-- Complementary action producing `exp(-C_cos) = cos²(θ_s)`. -/
@@ -100,4 +100,4 @@ structure TwoOutcomeBornCert where
 
 end TwoOutcomeBorn
 end Verification
-end IndisputableMonolith
+end RecognitionScience

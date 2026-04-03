@@ -1,7 +1,7 @@
 import Mathlib
-import IndisputableMonolith.RecogSpec.RSBridge
-import IndisputableMonolith.RecogSpec.ObservablePayloads
-import IndisputableMonolith.Constants
+import RecognitionScience.RecogSpec.RSBridge
+import RecognitionScience.RecogSpec.ObservablePayloads
+import RecognitionScience.Constants
 
 /-!
 # Bridge Derivation
@@ -26,7 +26,7 @@ The loop order is a structural integer on the bridge (default 5),
 giving g-2 = 1/φ^5 for the canonical bridge.
 -/
 
-namespace IndisputableMonolith
+namespace RecognitionScience
 namespace RecogSpec
 
 open Constants
@@ -67,4 +67,4 @@ theorem canonical_g2FromLoops (φ : ℝ) :
 end
 
 end RecogSpec
-end IndisputableMonolith
+end RecognitionScience

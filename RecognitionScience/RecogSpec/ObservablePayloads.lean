@@ -13,7 +13,7 @@ position-dependent semantics.
   CkmMixingAngles  : { vus, vcb, vub }
 -/
 
-namespace IndisputableMonolith
+namespace RecognitionScience
 namespace RecogSpec
 
 /-- Lepton-sector inter-generation mass ratios (dimensionless). -/
@@ -107,4 +107,4 @@ theorem toList_injective {a b : CkmMixingAngles} (h : a.toList = b.toList) : a =
 end CkmMixingAngles
 
 end RecogSpec
-end IndisputableMonolith
+end RecognitionScience

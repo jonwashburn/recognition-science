@@ -1,6 +1,6 @@
-import IndisputableMonolith.RecogSpec.Spec
+import RecognitionScience.RecogSpec.Spec
 
-namespace IndisputableMonolith
+namespace RecognitionScience
 namespace RecogSpec
 
 /-!
@@ -26,4 +26,4 @@ lemma matches_explicit (φ : ℝ) (L : Ledger) (B : Bridge L) :
     (matchesEval_explicit (φ:=φ) (L:=L) (B:=B))
 
 end RecogSpec
-end IndisputableMonolith
+end RecognitionScience

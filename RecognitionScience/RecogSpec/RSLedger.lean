@@ -1,6 +1,6 @@
 import Mathlib
-import IndisputableMonolith.RecogSpec.Core
-import IndisputableMonolith.Constants
+import RecognitionScience.RecogSpec.Core
+import RecognitionScience.Constants
 
 /-!
 # RSLedger: Rich Ledger with φ-Tier Structure
@@ -26,7 +26,7 @@ With torsion {0, 11, 17}, the inter-generation mass ratios are:
 These are DERIVED from the torsion structure, not defined as formulas.
 -/
 
-namespace IndisputableMonolith
+namespace RecognitionScience
 namespace RecogSpec
 
 open Constants
@@ -202,4 +202,4 @@ theorem massRatios_from_torsion_structure (L : RSLedger)
   · rw [L.rungDiff_canonical .leptons _ _ hL]; rfl
 
 end RecogSpec
-end IndisputableMonolith
+end RecognitionScience

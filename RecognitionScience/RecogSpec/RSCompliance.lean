@@ -1,11 +1,11 @@
 import Mathlib
-import IndisputableMonolith.RecogSpec.Core
-import IndisputableMonolith.RecogSpec.Spec
-import IndisputableMonolith.RecogSpec.RSLedger
-import IndisputableMonolith.RecogSpec.RSBridge
-import IndisputableMonolith.RecogSpec.MassLawFromLedger
-import IndisputableMonolith.RecogSpec.BridgeDerivation
-import IndisputableMonolith.Constants
+import RecognitionScience.RecogSpec.Core
+import RecognitionScience.RecogSpec.Spec
+import RecognitionScience.RecogSpec.RSLedger
+import RecognitionScience.RecogSpec.RSBridge
+import RecognitionScience.RecogSpec.MassLawFromLedger
+import RecognitionScience.RecogSpec.BridgeDerivation
+import RecognitionScience.Constants
 
 /-!
 # RSCompliance: Structure Compliance and Derived Evaluator
@@ -24,7 +24,7 @@ When a ledger/bridge pair is RS-compliant (has canonical torsion, edge counts, e
 the derived values EQUAL the φ-formulas. This is the non-circular derivation.
 -/
 
-namespace IndisputableMonolith
+namespace RecognitionScience
 namespace RecogSpec
 
 open Constants
@@ -127,4 +127,4 @@ theorem derivation_uses_structure_g2 (L : RSLedger) (B : RSBridge L) :
     (dimlessPack_fromStructure phi L B).g2Muon = g2FromLoops B phi := rfl
 
 end RecogSpec
-end IndisputableMonolith
+end RecognitionScience

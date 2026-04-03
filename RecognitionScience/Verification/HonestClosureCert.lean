@@ -1,108 +1,94 @@
 import Mathlib
-import IndisputableMonolith.RecogSpec.Spec
+import RecognitionScience.RecogSpec.Spec
+import RecognitionScience.RecogSpec.RSCompliance
 import RecognitionScience.Constants
 
 /-!
 # Honest Closure Certificate
 
 This certificate provides **honest framing** of what the Recognition Science
-matching certificates actually prove vs what remains placeholder.
+matching certificates actually prove, distinguishing:
 
-## What IS Certified (Non-Circular)
+- `dimlessPack_explicit` = **legacy/audit** evaluator (ignores L/B)
+- `dimlessPack_fromStructure` = **certified structural** evaluator (reads from structure)
 
-1. **φ-closure**: All observable formulas are algebraic in φ
-2. **Structural predicates**: K-gate, eight-tick, Born rule are PROVEN
-3. **Calibration uniqueness**: Every ledger/bridge has unique calibration
-4. **α = (1-1/φ)/2**: The fine-structure formula is φ-closed
+## What IS Certified
 
-## What is NOT Certified (Placeholder)
+1. **φ-closure**: All legacy observable formulas are algebraic in φ.
+2. **Structural predicates**: K-gate, eight-tick, Born rule are PROVEN.
+3. **Calibration uniqueness**: Every ledger/bridge has unique calibration.
+4. **Structural derivation**: `dimlessPack_fromStructure` reads mass ratios
+   from ledger torsion, mixing from bridge geometry, g-2 from loop order.
+5. For the canonical RS-compliant pair, derived alpha equals the φ-formula.
 
-1. **Evaluator ignores arguments**: `dimlessPack_explicit φ L B` doesn't use L or B
-2. **Values are defined, not derived**: The φ-formulas are definitions, not
-   derivations from ledger/bridge structure
-3. **No experimental comparison**: CODATA values are quarantined
+## Legacy surface
 
-## Why This Matters
-
-This certificate prevents circular reasoning: we clearly state that "matching"
-is currently tautological (φ-formula = φ-formula), not structural derivation.
+`dimlessPack_explicit` still ignores its Ledger/Bridge arguments.
+This is preserved intentionally as an audit surface.
 -/
 
 namespace RecognitionScience
 namespace Verification
 namespace HonestClosure
 
-open IndisputableMonolith.RecogSpec
-open IndisputableMonolith.Constants
+open RecognitionScience.RecogSpec
+open RecognitionScience.Constants
 
 structure HonestClosureCert where
   deriving Repr
 
-/-- Verification predicate: honest framing of what's proven.
-
-Part A: All observables are φ-closed (algebraic in φ)
-Part B: Structural predicates are proven (not placeholder)
-Part C: Calibration uniqueness is proven
-Part D: The evaluator ignores L and B (explicit acknowledgment)
--/
 @[simp] def HonestClosureCert.verified (_c : HonestClosureCert) : Prop :=
-  -- Part A: All observables are φ-closed
+  -- Part A: Legacy observables are φ-closed
   (∀ φ, PhiClosed φ (alphaDefault φ)) ∧
   (∀ φ, (massRatiosDefault φ).Forall (PhiClosed φ)) ∧
   (∀ φ, (mixingAnglesDefault φ).Forall (PhiClosed φ)) ∧
   (∀ φ, PhiClosed φ (g2Default φ)) ∧
-  -- Part B: Structural predicates are proven (not just carried as Props)
+  -- Part B: Structural predicates are proven
   kGateWitness ∧
   eightTickWitness ∧
   bornHolds ∧
-  -- Part C: Calibration uniqueness is proven
+  -- Part C: Calibration uniqueness
   (∀ (L : Ledger) (B : Bridge L) (A : Anchors), UniqueCalibration L B A) ∧
-  -- Part D: The α formula equals the Constants.alphaLock
-  (alphaDefault phi = alphaLock)
+  -- Part D: Legacy α matches constant
+  (alphaDefault phi = alphaLock) ∧
+  -- Part E (NEW): Structural evaluator uses its arguments
+  (∀ (L : RSLedger) (B : RSBridge L),
+    (dimlessPack_fromStructure phi L B).alpha = B.alphaExponent) ∧
+  (∀ (L : RSLedger) (B : RSBridge L),
+    (dimlessPack_fromStructure phi L B).massRatios = massRatiosFromTiers L phi) ∧
+  -- Part F (NEW): Canonical RS-compliant pair has structural agreement
+  RSCompliant phi canonicalRSLedger (canonicalRSBridge canonicalRSLedger)
 
-/-- Top-level theorem: the honest closure certificate verifies. -/
 @[simp] theorem HonestClosureCert.verified_any (c : HonestClosureCert) :
     HonestClosureCert.verified c := by
-  refine ⟨?phiA, ?phiM, ?phiMix, ?phiG2, ?kgate, ?tick, ?born, ?calib, ?alphaEq⟩
-  · -- Part A1: α is φ-closed
-    intro φ
-    exact phiClosed_alphaDefault φ
-  · -- Part A2: mass ratios are φ-closed
-    intro φ
+  refine ⟨?phiA, ?phiM, ?phiMix, ?phiG2, ?kgate, ?tick, ?born, ?calib, ?alphaEq,
+          ?structAlpha, ?structMass, ?compliant⟩
+  · intro φ; exact phiClosed_alphaDefault φ
+  · intro φ
     simp only [LeptonMassRatios.Forall, massRatiosDefault]
     exact ⟨PhiClosed.self _, phiClosed_one_div_pow _ 2, phiClosed_one_div _⟩
-  · -- Part A3: mixing angles are φ-closed
-    intro φ
+  · intro φ
     simp only [CkmMixingAngles.Forall, mixingAnglesDefault]
     exact ⟨phiClosed_one_div _, phiClosed_one_div_pow _ 2, phiClosed_one_div_pow _ 3⟩
-  · -- Part A4: g-2 is φ-closed
-    intro φ
-    exact phiClosed_one_div_pow φ 5
-  · -- Part B1: K-gate witness
-    exact kGate_from_units
-  · -- Part B2: Eight-tick witness
-    exact eightTick_from_TruthCore
-  · -- Part B3: Born rule
-    exact born_from_TruthCore
-  · -- Part C: Calibration uniqueness
-    intro L B A
-    exact uniqueCalibration_any L B A
-  · -- Part D: alphaDefault phi = alphaLock
-    -- Both are definitionally (1 - 1/phi) / 2
-    rfl
+  · intro φ; exact phiClosed_one_div_pow φ 5
+  · exact kGate_from_units
+  · exact eightTick_from_TruthCore
+  · exact born_from_TruthCore
+  · intro L B A; exact uniqueCalibration_any L B A
+  · rfl
+  · intro L B; exact derivation_uses_structure_alpha L B
+  · intro L B; exact derivation_uses_structure_mass L B
+  · exact canonical_is_compliant
 
-/-- The evaluator ignores its Ledger and Bridge arguments.
-
-This is an explicit acknowledgment that the current evaluator is a placeholder.
-True structural derivation would require the evaluator to actually USE L and B. -/
-theorem evaluator_ignores_structure :
+/-- The LEGACY evaluator ignores its Ledger/Bridge arguments.
+    Preserved as audit surface. -/
+theorem legacy_evaluator_ignores_structure :
     ∀ (φ : ℝ) (L₁ L₂ : Ledger) (B₁ : Bridge L₁) (B₂ : Bridge L₂),
       (dimlessPack_explicit φ L₁ B₁).alpha = (dimlessPack_explicit φ L₂ B₂).alpha ∧
       (dimlessPack_explicit φ L₁ B₁).massRatios = (dimlessPack_explicit φ L₂ B₂).massRatios ∧
       (dimlessPack_explicit φ L₁ B₁).mixingAngles = (dimlessPack_explicit φ L₂ B₂).mixingAngles ∧
       (dimlessPack_explicit φ L₁ B₁).g2Muon = (dimlessPack_explicit φ L₂ B₂).g2Muon := by
   intro φ L₁ L₂ B₁ B₂
-  -- All fields depend only on φ, not on L₁, L₂, B₁, B₂
   simp [dimlessPack_explicit]
 
 end HonestClosure

@@ -1,7 +1,7 @@
-import IndisputableMonolith.RecogSpec.Core
-import IndisputableMonolith.RecogSpec.Spec
+import RecognitionScience.RecogSpec.Core
+import RecognitionScience.RecogSpec.Spec
 
-namespace IndisputableMonolith
+namespace RecognitionScience
 namespace RecogSpec
 
 /-!
@@ -96,4 +96,4 @@ This proves the evaluator ignores the Ledger argument for numerical outputs. -/
   simp [explicitEvaluator, dimlessPack_explicit]
 
 end RecogSpec
-end IndisputableMonolith
+end RecognitionScience

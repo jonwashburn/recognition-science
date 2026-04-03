@@ -1,10 +1,10 @@
 import Mathlib
-import IndisputableMonolith.RecogSpec.RSLedger
-import IndisputableMonolith.RecogSpec.RSBridge
-import IndisputableMonolith.RecogSpec.RSCompliance
-import IndisputableMonolith.RecogSpec.MassLawFromLedger
-import IndisputableMonolith.RecogSpec.BridgeDerivation
-import IndisputableMonolith.Constants
+import RecognitionScience.RecogSpec.RSLedger
+import RecognitionScience.RecogSpec.RSBridge
+import RecognitionScience.RecogSpec.RSCompliance
+import RecognitionScience.RecogSpec.MassLawFromLedger
+import RecognitionScience.RecogSpec.BridgeDerivation
+import RecognitionScience.Constants
 
 /-!
 # RS Structural Derivation Certificate
@@ -22,12 +22,12 @@ structure (ledger torsion, bridge geometry), not defined as arbitrary φ-formula
 5. **Evaluator uses structure**: `dimlessPack_fromStructure` reads from `RSLedger`/`RSBridge`.
 -/
 
-namespace IndisputableMonolith
+namespace RecognitionScience
 namespace Verification
 namespace RSStructuralDerivation
 
-open IndisputableMonolith.RecogSpec
-open IndisputableMonolith.Constants
+open RecognitionScience.RecogSpec
+open RecognitionScience.Constants
 
 structure RSStructuralDerivationCert where
   deriving Repr
@@ -81,4 +81,4 @@ theorem g2_from_structure :
 
 end RSStructuralDerivation
 end Verification
-end IndisputableMonolith
+end RecognitionScience

@@ -1,7 +1,7 @@
 import Mathlib
-import IndisputableMonolith.Cost
-import IndisputableMonolith.Measurement.PathAction
-import IndisputableMonolith.Measurement.TwoBranchGeodesic
+import RecognitionScience.Cost
+import RecognitionScience.Measurement.PathAction
+import RecognitionScience.Measurement.TwoBranchGeodesic
 
 /-!
 # Kernel Matching: Pointwise Identity J(r) dt = 2 dA
@@ -13,7 +13,7 @@ The key lemma: for the profile
 we have J(r(ϑ)) = 2 tan ϑ pointwise, enabling the integral identity C = 2A.
 -/
 
-namespace IndisputableMonolith
+namespace RecognitionScience
 namespace Measurement
 
 open Real Cost
@@ -143,4 +143,4 @@ theorem kernel_integral_match (θ_s : ℝ) (hθ : 0 < θ_s ∧ θ_s < π/2) :
   simpa using hcongr
 
 end Measurement
-end IndisputableMonolith
+end RecognitionScience

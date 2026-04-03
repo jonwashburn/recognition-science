@@ -1,6 +1,6 @@
 import Mathlib
 
-namespace IndisputableMonolith
+namespace RecognitionScience
 namespace RecogSpec
 
 /-- Measurement anchors (minimal interface used by band checks). -/
@@ -19,4 +19,4 @@ namespace Anchors
 end Anchors
 
 end RecogSpec
-end IndisputableMonolith
+end RecognitionScience

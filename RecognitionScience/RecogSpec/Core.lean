@@ -1,7 +1,7 @@
 import Mathlib
-import IndisputableMonolith.RecogSpec.ObservablePayloads
+import RecognitionScience.RecogSpec.ObservablePayloads
 
-namespace IndisputableMonolith
+namespace RecognitionScience
 namespace RecogSpec
 
 noncomputable section
@@ -142,4 +142,4 @@ def Matches (φ : ℝ) (L : Ledger) (B : Bridge L) (U : UniversalDimless φ) : P
 end
 
 end RecogSpec
-end IndisputableMonolith
+end RecognitionScience

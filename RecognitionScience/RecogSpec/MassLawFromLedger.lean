@@ -1,7 +1,7 @@
 import Mathlib
-import IndisputableMonolith.RecogSpec.RSLedger
-import IndisputableMonolith.RecogSpec.ObservablePayloads
-import IndisputableMonolith.Constants
+import RecognitionScience.RecogSpec.RSLedger
+import RecognitionScience.RecogSpec.ObservablePayloads
+import RecognitionScience.Constants
 
 /-!
 # Mass Law from Ledger Tiers
@@ -17,7 +17,7 @@ These are inter-generation mass ratios in the lepton sector, derived from the
 torsion differences {0, 11, 17} forced by cube geometry.
 -/
 
-namespace IndisputableMonolith
+namespace RecognitionScience
 namespace RecogSpec
 
 open Constants
@@ -59,4 +59,4 @@ theorem massRatiosFromTiers_pos (L : RSLedger) (φ : ℝ) (hφ : 0 < φ)
 end
 
 end RecogSpec
-end IndisputableMonolith
+end RecognitionScience
