@@ -1,0 +1,130 @@
+{
+  "alpha_lock": 0.1909830056250526,
+  "comparator": {
+    "a0_si": 1.23e-10,
+    "name": "MOND_simple_mu",
+    "tuning": "fixed, not refit per galaxy or per sample"
+  },
+  "decision_rule": {
+    "f_good_threshold_chi2N": 2.0,
+    "fail_fraction_passed_below": 0.5,
+    "fail_mean_chi2N": 2.0,
+    "pass_fraction_passed": 0.7,
+    "pass_mean_chi2N": 2.0
+  },
+  "error_model": {
+    "alpha_beam": 0.3,
+    "f_floor": 0.05,
+    "k_turb": 0.07,
+    "outer_disk_dvdr_threshold_kms_per_kpc": -5.0,
+    "outer_disk_start_factor_Rd": 2.0,
+    "p_turb": 1.3,
+    "sigma0_kms": 10.0,
+    "sigma_asym_dwarf": 0.1,
+    "sigma_asym_spiral": 0.05
+  },
+  "falsifiers": {
+    "F1_full_Q1_median_chi2N_above": 5.0,
+    "F2_Q2_strictly_worse_than_Q1_with_mean_above": 4.0,
+    "F3_BTFR_slope_band": [
+      3.5,
+      4.5
+    ],
+    "F4_per_galaxy_parameter_used_anywhere": "any per-galaxy fit voids the prereg"
+  },
+  "git_tag_target": "prereg/sparc-2026-04-26",
+  "mask_rules": {
+    "inner_cut_rad_over_Rd": 0.3,
+    "outer_disk_cut": "exclude points with r >= 2 R_d and dv/dr < -5 km/s/kpc, applied at the first such point onward",
+    "snr_cut_vobs_over_verr": 3.0
+  },
+  "model_constants": {
+    "A": 1.0954915028125263,
+    "C_xi": 0.29179606750063086,
+    "N_r_galactic": 126.3,
+    "N_tau_galactic": 142.4,
+    "Upsilon_star": 1.618033988749895,
+    "alpha": 0.3819660112501052,
+    "p": 0.9522542485937369,
+    "tau0_seconds_seam_path": "data/calibration_tau0_seconds_gravity.json"
+  },
+  "notes": [
+    "All hashes computed at write time over the source files.",
+    "Any change to the verifier or systematics helper after the prereg invalidates the prereg.",
+    "Re-running prereg lock requires a new git tag and a new prereg note."
+  ],
+  "outputs_planned": [
+    "artifacts/gravity_paper_v07_sparc_phi_locked.json",
+    "artifacts/sparc_phi_locked_q2_holdout.json",
+    "artifacts/sparc_phi_locked_q3_holdout.json",
+    "artifacts/sparc_phi_locked_q1_random_half.json",
+    "artifacts/sparc_phi_locked_btfr_locked.json",
+    "artifacts/sparc_prereg_systematics_lock.json (this file)"
+  ],
+  "phi": 1.618033988749895,
+  "prereg_doc": "papers/RS_PhiLocked_SPARC_Prereg.md",
+  "samples": {
+    "discovery_Q": 1,
+    "external_planned": [
+      "LITTLE_THINGS",
+      "wide_binaries_Hernandez_2024"
+    ],
+    "holdout_Q": [
+      2,
+      3
+    ]
+  },
+  "sparc_catalog_path": "external/gravity/legacy/archives/snapshot-20250816-182339-tree/history/SPARC_Lelli2016c.mrt.txt",
+  "sparc_catalog_sha256": "5aa0501f6b0d881fa579030e315e7b5b6ef561a5bd3a07472f9929c7e5728243",
+  "systematics_flags": {
+    "flag_definitions": [
+      {
+        "expression": "catalog Inc_deg >= 75",
+        "id": "inclination_high_ge_75"
+      },
+      {
+        "expression": "catalog Inc_deg <= 35",
+        "id": "inclination_low_le_35"
+      },
+      {
+        "expression": "catalog f_D != 0",
+        "id": "distance_flag_nonzero"
+      },
+      {
+        "expression": "max|vbul|/max|vdisk| >= 0.25 from rotmod",
+        "id": "bulge_proxy_max_vbul_over_vdisk_ge_0p25"
+      },
+      {
+        "expression": "max|vbul|/max|vobs| >= 0.15 from rotmod",
+        "id": "bulge_proxy_max_vbul_over_vobs_ge_0p15"
+      },
+      {
+        "expression": "catalog Vflat_kms <= 0 or non-finite",
+        "id": "vflat_missing_or_zero"
+      },
+      {
+        "expression": "max(rad)/R_d < 4 from rotmod and catalog",
+        "id": "outer_extent_lt_4_Rd"
+      },
+      {
+        "expression": "catalog Vflat / max(vobs) < 0.9 (only if Vflat finite and >0)",
+        "id": "flat_velocity_decline_vflat_over_vmax_lt_0p9"
+      },
+      {
+        "expression": "f_gas = 1.33 MHI / (Upsilon_star L36 + 1.33 MHI) < 0.15",
+        "id": "gas_fraction_lt_0p15"
+      }
+    ],
+    "high_risk_threshold_n_flags": 3,
+    "policy": "n_flags(g) >= 3 implies high_risk; otherwise low_risk"
+  },
+  "systematics_helper_script": "scripts/analysis/mass_to_light_sparc_systematics_p0yr.py",
+  "systematics_helper_sha256": "6cd344a4d7f6b87a4d8a795e91062dd7d3388938b812abed4474391656624fc9",
+  "title": "RS_PhiLocked_SPARC_Prereg",
+  "verifier_script": "scripts/analysis/gravity_paper_v07_sparc_verify.py",
+  "verifier_sha256": "e53dffe6f8318d5fea497e3d7efea03ba18264e7e86ffb10167e4d5e1d7c8e2a",
+  "vmax_classification": {
+    "dwarf_below_kms": 80.0,
+    "spiral_max_kms": 200.0
+  }
+}
